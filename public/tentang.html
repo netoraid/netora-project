@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netora — Tentang Aplikasi</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="css/netora.css">
+</head>
+<body>
+
+<div class="device">
+  <div class="bg-grid"></div>
+  <div class="bg-glow one"></div>
+  <div class="bg-glow two"></div>
+
+  <div class="content">
+
+    <div class="header-nav">
+      <a href="beranda.html" class="btn-back">
+        <svg style="width:16px; height:16px; stroke:currentColor; fill:none;" viewBox="0 0 24 24" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>Beranda</span>
+      </a>
+      <span style="font-size:12px; color:var(--text-low); font-weight:600;">Netora Info</span>
+    </div>
+
+    <!-- Hero Small SVG -->
+    <div class="hero" style="margin-bottom:16px;">
+      <div style="padding:24px 20px; text-align:center;">
+        <div class="logo-mark" style="width:60px; height:60px; margin:0 auto 10px; border-radius:18px;">
+          <img src="assets/logo.png" alt="Logo Netora">
+        </div>
+        <h2 style="margin:0; font-size:24px; font-weight:800;">Net<span>ora</span> <span style="font-size:12px; vertical-align:middle;" class="badge badge-purple">v2.0.0</span></h2>
+        <p style="margin:4px 0 0; color:var(--text-mid); font-size:12px;">Platform Belajar Jurusan TKJ Terpadu</p>
+      </div>
+    </div>
+
+    <div class="card-panel">
+      <h3 style="margin:0 0 10px; font-size:16px; color:var(--purple);">Tentang Netora</h3>
+      <p style="font-size:13px; color:var(--text-mid); line-height:1.6; margin:0 0 12px;">
+        Netora adalah platform aplikasi pembelajaran modern yang dirancang khusus untuk memenuhi kebutuhan siswa jurusan Teknik Komputer dan Jaringan (TKJ).
+      </p>
+      <p style="font-size:13px; color:var(--text-mid); line-height:1.6; margin:0;">
+        Dengan antarmuka bergaya Cyberpunk yang interaktif, Netora menyajikan materi teknis, simulasi vidio praktik, kuis interaktif, serta utilitas kalkulator IP subnetting dalam satu aplikasi yang praktis.
+      </p>
+    </div>
+
+    <!-- Section Fitur -->
+    <div class="card-panel">
+      <h3 style="margin:0 0 12px; font-size:15px; color:var(--cyan);">Fitur Unggulan Netora</h3>
+      <ul style="margin:0; padding-left:18px; font-size:13px; color:var(--text-mid); line-height:1.7;">
+        <li><strong>Materi Terstruktur</strong>: Pembahasan lengkap Mikrotik, Jaringan Komputer, Cisco & Linux.</li>
+        <li><strong>Video Tutorial</strong>: Pemutaran langsung konfigurasi RouterOS interaktif.</li>
+        <li><strong>Kuis Interaktif</strong>: Uji pemahaman dengan bank soal terstandar & skor instan.</li>
+        <li><strong>Kalkulator Subnetting</strong>: Perhitungan akurat IPv4 & alokasi CIDR prefix.</li>
+        <li><strong>Pusat Notifikasi</strong>: Informasi & update agenda praktikum sekolah real-time.</li>
+      </ul>
+    </div>
+
+    <!-- Section Teknologi & Pengembang -->
+    <div class="card-panel">
+      <h3 style="margin:0 0 10px; font-size:15px; color:var(--blue);">Arsitektur Teknologi</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;">
+        <span class="badge badge-purple">Node.js</span>
+        <span class="badge badge-blue">Express.js</span>
+        <span class="badge badge-cyan">SQLite Database</span>
+        <span class="badge badge-green">bcryptjs & Session</span>
+        <span class="badge badge-red">Multer Upload</span>
+      </div>
+
+      <div style="border-top:1px solid rgba(108,124,255,0.15); padding-top:10px; margin-top:10px; font-size:12px; color:var(--text-low);">
+        Pengembang: <strong>Tim Netora Dev Senior © 2026</strong>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+  <!-- Bottom Navigation Bar (Desktop 1920x1080 & Responsif: 3 Menu Rata Tengah) -->
+  <nav class="app-bottom-nav" aria-label="Navigasi Utama">
+    <div class="app-bottom-nav-inner">
+      <a href="beranda.html" class="nav-tab" title="Beranda Netora">
+        <div class="nav-tab-icon icon-home">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+        </div>
+        <span class="nav-tab-label">Beranda</span>
+      </a>
+
+      <a href="pengumuman.html" class="nav-tab" title="Pengumuman & Informasi">
+        <div class="nav-tab-icon icon-info">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+          </svg>
+        </div>
+        <span class="nav-tab-label">Pengumuman</span>
+      </a>
+
+      <a href="profil.html" class="nav-tab" title="Profil Siswa">
+        <div class="nav-tab-icon icon-profil">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+          </svg>
+        </div>
+        <span class="nav-tab-label">Profil</span>
+      </a>
+    </div>
+  </nav>
+
+  <script src="js/netora.js"></script>
+</body>
+</html>

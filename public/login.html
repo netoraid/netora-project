@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta name="description" content="Netora - Platform Pembelajaran Teknik Komputer dan Jaringan (TKJ). Masuk atau daftar untuk mulai belajar.">
+  <title>Netora — Platform Belajar TKJ</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="css/netora.css">
+  <style>
+    /* ===================================================
+       NETORA WELCOME & AUTH SYSTEM
+       RESPONSIVE DESKTOP & MOBILE-FIRST
+    =================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0 !important;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: #F8FAFC;
+      color: #0F172A;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background layer */
+    .netora-bg-mesh {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(13, 91, 255, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 88% 82%, rgba(255, 122, 0, 0.10) 0%, transparent 40%),
+        #F8FAFC;
+    }
+
+    /* Outer layout container */
+    .page-main-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* ===================================================
+       1. WELCOME SCREEN (MULAI SEKARANG)
+    =================================================== */
+    .welcome-card-shell {
+      width: 100%;
+      max-width: 540px;
+      background: #FFFFFF;
+      border-radius: 28px;
+      border: 1.5px solid #E2E8F0;
+      box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.08), 0 0 1px rgba(15, 23, 42, 0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 32px 34px;
+      text-align: center;
+      margin: auto;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .welcome-logo-box {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      box-shadow: 0 8px 24px rgba(13, 91, 255, 0.08);
+    }
+    .welcome-logo-box img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+    }
+
+    .welcome-brand-title {
+      margin: 0 0 2px;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.6px;
+      color: #0F172A;
+    }
+    .welcome-brand-title span {
+      color: #0D5BFF;
+    }
+
+    .welcome-tagline {
+      margin: 0 0 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #64748B;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .welcome-headline {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #1E293B;
+      line-height: 1.4;
+      letter-spacing: -0.2px;
+    }
+    .welcome-desc {
+      margin: 0 auto 24px;
+      font-size: 13.5px;
+      color: #64748B;
+      line-height: 1.6;
+      max-width: 420px;
+    }
+
+    /* 3 Feature cards */
+    .welcome-feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+    .welcome-feature-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 16px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1E293B;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .welcome-feature-card:hover {
+      background: #F1F5F9;
+      border-color: #CBD5E1;
+    }
+    .welcome-feature-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* CTA Mulai Sekarang */
+    .btn-cta-start {
+      width: 100%;
+      height: 54px;
+      background: linear-gradient(135deg, #FF7A00 0%, #FF9500 100%);
+      border: none;
+      border-radius: 27px;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 10px 28px rgba(255, 122, 0, 0.36);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      touch-action: manipulation;
+      letter-spacing: 0.2px;
+    }
+    .btn-cta-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(255, 122, 0, 0.44);
+    }
+    .btn-cta-start:active {
+      transform: scale(0.98);
+    }
+
+
+    /* ===================================================
+       2. AUTH SCREEN (MASUK & DAFTAR SISWA)
+    =================================================== */
+    .auth-card-shell {
+      width: 100%;
+      max-width: 960px;
+      background: #FFFFFF;
+      border-radius: 28px;
+      border: 1.5px solid #E2E8F0;
+      box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.08), 0 0 1px rgba(15, 23, 42, 0.06);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin: auto;
+      transition: all 0.3s ease;
+    }
+
+    /* Desktop split (>= 880px) */
+    @media (min-width: 880px) {
+      .auth-card-shell {
+        flex-direction: row;
+        min-height: 600px;
+      }
+      .auth-left-showcase {
+        width: 44%;
+        flex-shrink: 0;
+        display: flex !important;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 44px 38px;
+        background: linear-gradient(160deg, #F8FAFC 0%, #EFF6FF 50%, #F0F9FF 100%);
+        border-right: 1.5px solid #E2E8F0;
+      }
+      .auth-right-form-panel {
+        width: 56%;
+        flex: 1;
+        padding: 44px 44px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .mobile-only-header {
+        display: none !important;
+      }
+      .btn-back-to-welcome-mobile {
+        display: none !important;
+      }
+    }
+
+    /* Mobile view (< 880px) - HYPER RESPONSIVE */
+    @media (max-width: 879px) {
+      .page-main-container {
+        padding: 0;
+        align-items: stretch;
+      }
+      .welcome-card-shell {
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-width: 100%;
+        padding: 28px 20px max(28px, env(safe-area-inset-bottom, 28px));
+        justify-content: space-between;
+      }
+      .welcome-desc {
+        font-size: 13px;
+        margin-bottom: 20px;
+      }
+      .auth-card-shell {
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-width: 100%;
+      }
+      .auth-left-showcase {
+        display: none !important;
+      }
+      .auth-right-form-panel {
+        width: 100%;
+        flex: 1;
+        padding: 20px 20px max(28px, env(safe-area-inset-bottom, 28px));
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+      .mobile-only-header {
+        display: block !important;
+        margin-bottom: 18px;
+      }
+    }
+
+    /* Left showcase styles (Desktop) */
+    .showcase-brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 26px;
+    }
+    .showcase-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(13, 91, 255, 0.08);
+      flex-shrink: 0;
+    }
+    .showcase-logo img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
+    .showcase-brand-name {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #0F172A;
+      line-height: 1.1;
+    }
+    .showcase-brand-name span {
+      color: #0D5BFF;
+    }
+    .showcase-brand-sub {
+      font-size: 12px;
+      color: #64748B;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-top: 3px;
+    }
+
+    .showcase-hero-title {
+      font-size: 21px;
+      font-weight: 900;
+      color: #0F172A;
+      line-height: 1.35;
+      margin: 0 0 10px;
+      letter-spacing: -0.3px;
+    }
+    .showcase-hero-desc {
+      font-size: 13.5px;
+      color: #475569;
+      line-height: 1.6;
+      margin: 0 0 24px;
+    }
+
+    .btn-back-welcome-desktop {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #64748B;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      margin-top: auto;
+      padding-top: 20px;
+      transition: color 0.15s ease;
+    }
+    .btn-back-welcome-desktop:hover {
+      color: #0D5BFF;
+    }
+
+    /* Mobile Header */
+    .mobile-top-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 14px;
+    }
+    .btn-back-welcome-mobile {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+      background: #F1F5F9;
+      border: 1px solid #E2E8F0;
+      padding: 7px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .btn-back-welcome-mobile:active {
+      background: #E2E8F0;
+    }
+
+    .mobile-brand-hero {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .mobile-logo-circle {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+    .mobile-logo-circle img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
+    .mobile-hero-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #0F172A;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+    .mobile-hero-title span {
+      color: #0D5BFF;
+    }
+    .mobile-hero-sub {
+      font-size: 12.5px;
+      color: #64748B;
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    /* Segmented Tab Switcher */
+    .auth-tab-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #F1F5F9;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 4px;
+      gap: 6px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+    .auth-tab-btn {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      background: transparent;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      touch-action: manipulation;
+    }
+    .auth-tab-btn:hover:not(.active) {
+      color: #0F172A;
+      background: rgba(255, 255, 255, 0.5);
+    }
+    .auth-tab-btn.active.tab-login {
+      background: #0D5BFF;
+      color: #FFFFFF;
+      font-weight: 800;
+      box-shadow: 0 4px 14px rgba(13, 91, 255, 0.28);
+    }
+    .auth-tab-btn.active.tab-register {
+      background: #FF7A00;
+      color: #FFFFFF;
+      font-weight: 800;
+      box-shadow: 0 4px 14px rgba(255, 122, 0, 0.28);
+    }
+
+    /* In-card Error Banner */
+    .auth-error-banner {
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      background: #FEF2F2;
+      border: 1.5px solid #FECACA;
+      border-radius: 14px;
+      color: #DC2626;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.45;
+      margin-bottom: 18px;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    /* Form Fields */
+    .auth-form-body {
+      width: 100%;
+    }
+    .form-header-meta {
+      margin-bottom: 18px;
+    }
+    .form-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0F172A;
+      margin: 0 0 4px;
+      letter-spacing: -0.2px;
+    }
+    .form-subtitle {
+      font-size: 13px;
+      color: #64748B;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group:last-of-type {
+      margin-bottom: 22px;
+    }
+    .form-label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 7px;
+    }
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94A3B8;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Crucial: 16px font-size prevents mobile auto-zoom on iOS & Android */
+    .form-input {
+      width: 100%;
+      height: 50px;
+      background: #F8FAFC;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 14px;
+      padding: 0 46px 0 44px;
+      font-size: 16px !important;
+      font-family: inherit;
+      color: #0F172A;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+    }
+    .form-input::placeholder {
+      color: #94A3B8;
+      font-size: 14px;
+    }
+    .form-input:focus {
+      background: #FFFFFF;
+      border-color: #0D5BFF;
+      box-shadow: 0 0 0 3px rgba(13, 91, 255, 0.16);
+    }
+    .form-input.focus-orange:focus {
+      border-color: #FF7A00;
+      box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.16);
+    }
+
+    /* Eye toggle button */
+    .btn-pwd-eye {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: none;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94A3B8;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+    .btn-pwd-eye:hover, .btn-pwd-eye:active {
+      color: #334155;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    /* Submit Button */
+    .btn-submit-action {
+      width: 100%;
+      min-height: 52px;
+      border: none;
+      border-radius: 14px;
+      font-size: 15.5px;
+      font-weight: 800;
+      color: #FFFFFF;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+      letter-spacing: 0.2px;
+      touch-action: manipulation;
+      box-sizing: border-box;
+    }
+    .btn-submit-action.btn-blue {
+      background: linear-gradient(135deg, #0D5BFF 0%, #2563EB 100%);
+      box-shadow: 0 8px 24px rgba(13, 91, 255, 0.32);
+    }
+    .btn-submit-action.btn-blue:hover {
+      box-shadow: 0 12px 28px rgba(13, 91, 255, 0.42);
+      transform: translateY(-1px);
+    }
+    .btn-submit-action.btn-orange {
+      background: linear-gradient(135deg, #FF7A00 0%, #EA580C 100%);
+      box-shadow: 0 8px 24px rgba(255, 122, 0, 0.32);
+    }
+    .btn-submit-action.btn-orange:hover {
+      box-shadow: 0 12px 28px rgba(255, 122, 0, 0.42);
+      transform: translateY(-1px);
+    }
+    .btn-submit-action:active {
+      transform: scale(0.98) !important;
+    }
+
+    /* Switch mode helper text */
+    .auth-toggle-hint {
+      text-align: center;
+      font-size: 13px;
+      color: #64748B;
+      margin-top: 18px;
+      margin-bottom: 0;
+    }
+    .auth-toggle-link {
+      font-weight: 700;
+      text-decoration: none;
+      padding: 4px 6px;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .auth-toggle-link.blue { color: #0D5BFF; }
+    .auth-toggle-link.orange { color: #FF7A00; }
+    .auth-toggle-link:hover { text-decoration: underline; }
+
+    /* Screen transition states (Super Halus & Smooth Horizontal Glide) */
+    .screen-fade-enter {
+      animation: screenSmoothEnter 0.32s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+      will-change: opacity, transform;
+    }
+    .screen-fade-exit {
+      animation: screenSmoothExit 0.22s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+      pointer-events: none !important;
+      will-change: opacity, transform;
+    }
+    .screen-fade-exit-back {
+      animation: screenSmoothExitBack 0.22s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+      pointer-events: none !important;
+      will-change: opacity, transform;
+    }
+
+    @keyframes screenSmoothEnter {
+      0% {
+        opacity: 0.1;
+        transform: translate3d(36px, 0, 0);
+      }
+      100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    @keyframes screenSmoothExit {
+      0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+      100% {
+        opacity: 0.1;
+        transform: translate3d(-30px, 0, 0);
+      }
+    }
+
+    @keyframes screenSmoothExitBack {
+      0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+      100% {
+        opacity: 0.1;
+        transform: translate3d(30px, 0, 0);
+      }
+    }
+
+    /* Sub-panel Tab transitions */
+    .fade-panel {
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient background -->
+  <div class="netora-bg-mesh"></div>
+
+  <!-- Page Main Container -->
+  <div class="page-main-container">
+
+    <!-- ============================================== -->
+    <!-- 1. WELCOME SCREEN (MULAI SEKARANG)             -->
+    <!-- ============================================== -->
+    <div id="welcome-view" class="welcome-card-shell fade-panel">
+      <div>
+        <!-- Logo -->
+        <div class="welcome-logo-box">
+          <img src="assets/logo.png" alt="Netora Logo">
+        </div>
+
+        <h1 class="welcome-brand-title">Net<span>ora</span></h1>
+        <p class="welcome-tagline">Learn &bull; Connect &bull; Grow</p>
+
+        <h2 class="welcome-headline">Platform Belajar Jaringan Komputer SMK</h2>
+        <p class="welcome-desc">Pelajari konfigurasi MikroTik, subnetting IPv4, kuis mandiri, dan video praktikum terstruktur dalam satu platform terpadu.</p>
+
+        <!-- 3 Fitur unggulan -->
+        <div class="welcome-feature-list">
+          <div class="welcome-feature-card">
+            <div class="welcome-feature-icon" style="background: rgba(13,91,255,0.08); color: #0D5BFF;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <span>Modul MikroTik, Cisco & Linux Server</span>
+          </div>
+
+          <div class="welcome-feature-card">
+            <div class="welcome-feature-icon" style="background: rgba(255,122,0,0.08); color: #FF7A00;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="8" y1="14" x2="8" y2="14.01"/></svg>
+            </div>
+            <span>Kalkulator IP Subnetting & CIDR</span>
+          </div>
+
+          <div class="welcome-feature-card">
+            <div class="welcome-feature-icon" style="background: rgba(22,163,74,0.08); color: #16A34A;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <span>Kuis Kompetensi & Rekap Nilai Real-time</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tombol Mulai Sekarang -->
+      <div style="padding-top: 10px;">
+        <button id="btn-mulai-sekarang" type="button" class="btn-cta-start">
+          <span>Mulai Sekarang</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- 2. AUTH SCREEN (MASUK & DAFTAR SISWA)          -->
+    <!-- ============================================== -->
+    <div id="auth-view" class="auth-card-shell fade-panel" style="display: none;">
+
+      <!-- Left Showcase Panel (Desktop) -->
+      <div class="auth-left-showcase">
+        <div>
+          <div class="showcase-brand-wrap">
+            <div class="showcase-logo">
+              <img src="assets/logo.png" alt="Netora Logo">
+            </div>
+            <div>
+              <div class="showcase-brand-name">Net<span>ora</span></div>
+              <div class="showcase-brand-sub">PORTAL PEMBELAJARAN TKJ</div>
+            </div>
+          </div>
+
+          <h2 class="showcase-hero-title">Platform Belajar Praktikum & Kompetensi Jaringan Komputer</h2>
+          <p class="showcase-hero-desc">Akses modul praktikum MikroTik, Cisco, kalkulator subnetting IP, kuis mandiri, dan video tutorial kurikulum SMK dalam satu portal terpadu.</p>
+
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px; font-size:13px; color:#1E293B; font-weight:600;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Materi kurikulum TKJ standar industri</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; font-size:13px; color:#1E293B; font-weight:600;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Sinkronisasi nilai kuis ke guru real-time</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; font-size:13px; color:#1E293B; font-weight:600;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Kalkulator subnetting IP & alat praktikum</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-back-to-welcome-desktop" type="button" class="btn-back-welcome-desktop">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+          <span>Kembali ke Halaman Awal</span>
+        </button>
+      </div>
+
+
+      <!-- Right Form Panel (Desktop & Mobile) -->
+      <div class="auth-right-form-panel">
+
+        <!-- Mobile Header -->
+        <div class="mobile-only-header">
+          <div class="mobile-top-nav-bar">
+            <button id="btn-back-to-welcome-mobile" type="button" class="btn-back-welcome-mobile">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+              <span>Kembali</span>
+            </button>
+          </div>
+
+          <div class="mobile-brand-hero">
+            <div class="mobile-logo-circle">
+              <img src="assets/logo.png" alt="Netora Logo">
+            </div>
+            <h1 class="mobile-hero-title">Net<span>ora</span></h1>
+            <div class="mobile-hero-sub">Portal Pembelajaran Teknik Jaringan</div>
+          </div>
+        </div>
+
+        <!-- Segmented Tab Switcher (Masuk / Daftar Siswa) -->
+        <div class="auth-tab-group" role="tablist">
+          <button id="tab-btn-login" type="button" class="auth-tab-btn active tab-login" role="tab" aria-selected="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Masuk</span>
+          </button>
+          <button id="tab-btn-register" type="button" class="auth-tab-btn" role="tab" aria-selected="false">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            <span>Daftar Siswa</span>
+          </button>
+        </div>
+
+        <!-- In-card Alert Error Banner -->
+        <div id="alert-error" class="auth-error-banner" role="alert"></div>
+
+        <!-- TAB PANEL 1: MASUK (LOGIN) -->
+        <div id="panel-login" class="auth-form-body fade-panel">
+          <div class="form-header-meta">
+            <h3 class="form-title">Selamat Datang Kembali</h3>
+            <p class="form-subtitle">Masukkan akun Netora untuk mengakses modul dan tugas</p>
+          </div>
+
+          <form id="form-login" novalidate autocomplete="on">
+            <div class="form-group">
+              <label for="email" class="form-label">Email atau Username</label>
+              <div class="input-wrapper">
+                <span class="input-icon">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                <input type="text" id="email" class="form-input" placeholder="nama@email.com atau username" required autocomplete="username" inputmode="email">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">Kata Sandi</label>
+              <div class="input-wrapper">
+                <span class="input-icon">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input type="password" id="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('password', this)" title="Lihat/Sembunyikan kata sandi" aria-label="Toggle password visibility">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="btn-submit-login" class="btn-submit-action btn-blue">
+              <span>Masuk Sekarang</span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </form>
+
+          <p class="auth-toggle-hint">
+            Belum memiliki akun siswa?
+            <a href="#" onclick="switchAuthTab('register'); return false;" class="auth-toggle-link orange">Daftar Akun Baru</a>
+          </p>
+        </div>
+
+
+        <!-- TAB PANEL 2: DAFTAR SISWA (REGISTER) -->
+        <div id="panel-register" class="auth-form-body fade-panel" style="display: none;">
+          <div class="form-header-meta">
+            <h3 class="form-title">Pendaftaran Siswa Baru</h3>
+            <p class="form-subtitle">Buat akun siswa untuk mengikuti materi dan kuis online</p>
+          </div>
+
+          <form id="form-register" novalidate autocomplete="on">
+            <div class="form-group">
+              <label for="reg-nama" class="form-label">Nama Lengkap Siswa</label>
+              <div class="input-wrapper">
+                <span class="input-icon">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                <input type="text" id="reg-nama" class="form-input focus-orange" placeholder="Contoh: Muhammad Rizky" required autocomplete="name">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="reg-email" class="form-label">Alamat Email</label>
+              <div class="input-wrapper">
+                <span class="input-icon">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </span>
+                <input type="email" id="reg-email" class="form-input focus-orange" placeholder="rizky@siswa.smk.sch.id" required autocomplete="email" inputmode="email">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="reg-password" class="form-label">Kata Sandi (Min. 6 Karakter)</label>
+              <div class="input-wrapper">
+                <span class="input-icon">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input type="password" id="reg-password" class="form-input focus-orange" placeholder="••••••••" required autocomplete="new-password">
+                <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('reg-password', this)" title="Lihat/Sembunyikan kata sandi" aria-label="Toggle password visibility">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="btn-submit-register" class="btn-submit-action btn-orange">
+              <span>Buat Akun Siswa</span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </form>
+
+          <p class="auth-toggle-hint">
+            Sudah memiliki akun?
+            <a href="#" onclick="switchAuthTab('login'); return false;" class="auth-toggle-link blue">Masuk Sekarang</a>
+          </p>
+        </div>
+
+      </div><!-- /auth-right-form-panel -->
+
+    </div><!-- /auth-card-shell -->
+
+  </div><!-- /page-main-container -->
+
+  <!-- Scripts -->
+  <script src="js/netora.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // ===== Password Visibility Toggle =====
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+      } else {
+        input.type = 'password';
+        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+      }
+    }
+
+    // ===== Screen Navigation Logic (Welcome <-> Auth) =====
+    const welcomeView = document.getElementById('welcome-view');
+    const authView = document.getElementById('auth-view');
+    const btnMulai = document.getElementById('btn-mulai-sekarang');
+    const btnBackMobile = document.getElementById('btn-back-to-welcome-mobile');
+    const btnBackDesktop = document.getElementById('btn-back-to-welcome-desktop');
+
+    let isScreenTransitioning = false;
+
+    function showAuthScreen(tabMode = 'login', immediate = false) {
+      if (!welcomeView || !authView) return;
+      if (isScreenTransitioning && !immediate) return;
+
+      if (immediate) {
+        welcomeView.style.display = 'none';
+        welcomeView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        authView.style.display = 'flex';
+        authView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        authView.classList.add('screen-fade-enter');
+        switchAuthTab(tabMode, true);
+        return;
+      }
+
+      isScreenTransitioning = true;
+      welcomeView.classList.remove('screen-fade-enter');
+      welcomeView.classList.add('screen-fade-exit');
+
+      setTimeout(() => {
+        welcomeView.style.display = 'none';
+        welcomeView.classList.remove('screen-fade-exit');
+
+        authView.style.display = 'flex';
+        authView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        authView.classList.add('screen-fade-enter');
+        switchAuthTab(tabMode, true);
+
+        setTimeout(() => {
+          isScreenTransitioning = false;
+        }, 340);
+      }, 220);
+    }
+
+    function showWelcomeScreen(immediate = false) {
+      if (!welcomeView || !authView) return;
+      if (isScreenTransitioning && !immediate) return;
+
+      if (immediate) {
+        authView.style.display = 'none';
+        authView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        welcomeView.style.display = 'flex';
+        welcomeView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        welcomeView.classList.add('screen-fade-enter');
+        return;
+      }
+
+      isScreenTransitioning = true;
+      authView.classList.remove('screen-fade-enter');
+      authView.classList.add('screen-fade-exit-back');
+
+      setTimeout(() => {
+        authView.style.display = 'none';
+        authView.classList.remove('screen-fade-exit-back');
+
+        welcomeView.style.display = 'flex';
+        welcomeView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        welcomeView.classList.add('screen-fade-enter');
+
+        setTimeout(() => {
+          isScreenTransitioning = false;
+        }, 340);
+      }, 220);
+    }
+
+    if (btnMulai) btnMulai.addEventListener('click', () => showAuthScreen('login'));
+    if (btnBackMobile) btnBackMobile.addEventListener('click', () => showWelcomeScreen());
+    if (btnBackDesktop) btnBackDesktop.addEventListener('click', () => showWelcomeScreen());
+
+    // ===== Tab Switcher (Masuk <-> Daftar Siswa) =====
+    const tabBtnLogin = document.getElementById('tab-btn-login');
+    const tabBtnReg = document.getElementById('tab-btn-register');
+    const panelLogin = document.getElementById('panel-login');
+    const panelReg = document.getElementById('panel-register');
+    const alertError = document.getElementById('alert-error');
+
+    function switchAuthTab(mode, skipFocus = false) {
+      if (alertError) {
+        alertError.textContent = '';
+        alertError.style.display = 'none';
+      }
+
+      if (mode === 'register') {
+        tabBtnLogin.classList.remove('active', 'tab-login');
+        tabBtnLogin.setAttribute('aria-selected', 'false');
+
+        tabBtnReg.classList.add('active', 'tab-register');
+        tabBtnReg.setAttribute('aria-selected', 'true');
+
+        panelLogin.style.display = 'none';
+        panelReg.style.display = 'block';
+        panelReg.classList.remove('fade-panel');
+        void panelReg.offsetWidth;
+        panelReg.classList.add('fade-panel');
+
+        const f = document.getElementById('reg-nama');
+        if (f && !skipFocus) setTimeout(() => f.focus(), 140);
+      } else {
+        tabBtnReg.classList.remove('active', 'tab-register');
+        tabBtnReg.setAttribute('aria-selected', 'false');
+
+        tabBtnLogin.classList.add('active', 'tab-login');
+        tabBtnLogin.setAttribute('aria-selected', 'true');
+
+        panelReg.style.display = 'none';
+        panelLogin.style.display = 'block';
+        panelLogin.classList.remove('fade-panel');
+        void panelLogin.offsetWidth;
+        panelLogin.classList.add('fade-panel');
+
+        const f = document.getElementById('email');
+        if (f && !skipFocus) setTimeout(() => f.focus(), 140);
+      }
+    }
+
+    window.switchAuthTab = switchAuthTab;
+    window.showAuthScreen = showAuthScreen;
+    window.showWelcomeScreen = showWelcomeScreen;
+
+    if (tabBtnLogin) tabBtnLogin.addEventListener('click', () => switchAuthTab('login'));
+    if (tabBtnReg) tabBtnReg.addEventListener('click', () => switchAuthTab('register'));
+
+    // Auto-detect URL parameter (jika dari register.html atau link khusus, langsung ke form)
+    (function initFromUrl() {
+      const p = new URLSearchParams(window.location.search);
+      const tab = p.get('tab') || p.get('action');
+      const registered = p.get('registered');
+
+      if (tab === 'register') {
+        showAuthScreen('register', true);
+      } else if (tab === 'login' || registered === 'true') {
+        showAuthScreen('login', true);
+      } else {
+        // Tampilan awal standar: Tampilkan layar Mulai Sekarang
+        showWelcomeScreen(true);
+      }
+    })();
+  </script>
+</body>
+</html>

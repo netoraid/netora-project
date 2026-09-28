@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Netora - Dashboard Pembelajaran Terpadu Jurusan Teknik Komputer dan Jaringan (TKJ), Cisco, MikroTik, dan Linux Server.">
+  <title>Netora — Beranda Pembelajaran TKJ</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="css/netora.css">
+  <style>
+    /* ===== Banner Carousel ===== */
+    .banner-carousel-wrap {
+      position: relative;
+      margin: 10px 14px 8px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    }
+    .banner-carousel-track {
+      display: flex;
+      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+    .banner-slide {
+      min-width: 100%;
+      flex-shrink: 0;
+      height: 150px;       /* Tinggi tetap di mobile */
+      overflow: hidden;
+    }
+    .banner-img {
+      width: 100%;
+      height: 100%;        /* Isi penuh slot */
+      display: block;
+      object-fit: cover;   /* Crop tengah, tidak stretch */
+      object-position: center center;
+    }
+    .banner-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      position: absolute;
+      bottom: 8px;
+      left: 0;
+      right: 0;
+    }
+    .banner-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .banner-dot.active {
+      width: 22px;
+      border-radius: 4px;
+      background: #FFFFFF;
+    }
+    /* Desktop: banner lebih tinggi */
+    @media (min-width: 768px) {
+      .banner-slide {
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body style="background:#E2E8F0; margin:0; padding:0;">
+
+  <!-- Mobile-first App Shell (Sesuai Desain Mockup) -->
+  <div class="netora-mobile-app">
+
+    <!-- Top Status Bar & Header Biru Royal Solid -->
+    <header class="app-top-header-royal">
+
+      <div class="header-nav-row">
+        <div>
+          <h2 class="header-greeting-title" id="user-greeting">Selamat Datang di Netora</h2>
+          <p class="header-greeting-sub">Portal Pembelajaran Teknik Komputer & Jaringan</p>
+        </div>
+
+        <!-- Menu Navigasi Desktop (Tampil Khusus di Layar Komputer / Laptop) -->
+        <nav class="desktop-top-nav-links">
+          <a href="beranda.html" class="desktop-nav-link active" title="Beranda">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Beranda</span>
+          </a>
+          <a href="materi.html" class="desktop-nav-link" title="Materi Pembelajaran">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <span>Materi</span>
+          </a>
+          <a href="video.html" class="desktop-nav-link" title="Vidio Praktik">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            <span>Vidio Praktik</span>
+          </a>
+          <a href="quiz.html" class="desktop-nav-link" title="Kuis Interaktif">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span>Quiz</span>
+          </a>
+          <a href="kalkulator.html" class="desktop-nav-link" title="Kalkulator IP Subnetting">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="16" y1="18" x2="16" y2="18"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="12" y1="18" x2="12" y2="18"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="8" y1="18" x2="8" y2="18"/></svg>
+            <span>Kalkulator</span>
+          </a>
+          <a href="progres.html" class="desktop-nav-link" title="Progress Belajar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span>Progress</span>
+          </a>
+          <a href="profil.html" class="desktop-nav-link" title="Profil Siswa">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Profil</span>
+          </a>
+        </nav>
+
+        <div style="display:flex; align-items:center; gap:8px;">
+          <!-- Tombol Akses Khusus Panel Admin (Jika Login sebagai Admin) -->
+          <span id="user-status-text" style="display:none;"></span>
+          <div class="beranda-header-right"></div>
+        </div>
+      </div>
+    </header>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- ====== BANNER CAROUSEL ====== -->
+    <div class="banner-carousel-wrap">
+      <div class="banner-carousel-track" id="bannerTrack">
+        <div class="banner-slide">
+          <img src="assets/banner1.jpg" alt="Promo Banner 1" class="banner-img" loading="lazy">
+        </div>
+        <div class="banner-slide">
+          <img src="assets/banner2.jpg" alt="Promo Banner 2" class="banner-img" loading="lazy">
+        </div>
+      </div>
+      <!-- Dots Indicator -->
+      <div class="banner-dots" id="bannerDots">
+        <span class="banner-dot active" data-idx="0"></span>
+        <span class="banner-dot" data-idx="1"></span>
+      </div>
+    </div>
+
+    <!-- Judul Bagian: Menu Utama -->
+    <div class="section-header-orange">Menu Utama Pembelajaran</div>
+
+    <!-- 2x2 Grid Menu Utama -->
+    <div class="menu-grid-2x2">
+      
+      <!-- 1. Modul Materi -->
+      <a href="materi.html" class="menu-card-2x2" id="card-menu-materi">
+        <div class="menu-card-top">
+          <div class="menu-card-iconbox iconbox-materi">
+            <svg style="width:20px; height:20px;" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+            </svg>
+          </div>
+          <h4 class="menu-card-title">Modul Materi</h4>
+          <p class="menu-card-desc">Referensi pembelajaran TKJ secara terstruktur.</p>
+        </div>
+        <div class="menu-card-bottom">
+          <div class="circle-arrow-btn circle-arrow-cyan">
+            <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <!-- 2. Vidio Praktik -->
+      <a href="video.html" class="menu-card-2x2" id="card-menu-video">
+        <div class="menu-card-top">
+          <div class="menu-card-iconbox iconbox-video">
+            <svg style="width:20px; height:20px;" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <h4 class="menu-card-title">Vidio Praktik</h4>
+          <p class="menu-card-desc">Visualisasi penerapan praktik dan konfigurasi TKJ.</p>
+        </div>
+        <div class="menu-card-bottom">
+          <div class="circle-arrow-btn circle-arrow-blue">
+            <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <!-- 3. Kuis Kompetensi -->
+      <a href="quiz.html" class="menu-card-2x2" id="card-menu-quiz">
+        <div class="menu-card-top">
+          <div class="menu-card-iconbox iconbox-quiz">
+            <svg style="width:20px; height:20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span class="badge-mini-orange" style="background:#7C3AED; font-size:9.5px; padding:2px 5px;">KUIS</span>
+          </div>
+          <h4 class="menu-card-title">Kuis Kompetensi</h4>
+          <p class="menu-card-desc">Evaluasi pemahaman dan kompetensi TKJ.</p>
+        </div>
+        <div class="menu-card-bottom">
+          <div class="circle-arrow-btn circle-arrow-purple">
+            <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+        </div>
+      </a>
+
+      <!-- 4. Kalkulator IP -->
+      <a href="kalkulator.html" class="menu-card-2x2" id="card-menu-kalkulator">
+        <div class="menu-card-top">
+          <div class="menu-card-iconbox iconbox-kalkulator">
+            <svg style="width:20px; height:20px;" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm0 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-4-4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm0 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm8 8H6v-2h10v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"/>
+            </svg>
+            <span class="badge-mini-orange">IP</span>
+          </div>
+          <h4 class="menu-card-title">Kalkulator IP</h4>
+          <p class="menu-card-desc">Perhitungan parameter dan subnet jaringan.</p>
+        </div>
+        <div class="menu-card-bottom">
+          <div class="circle-arrow-btn circle-arrow-orange">
+            <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Bottom Navigation Bar Putih Bersih (4 Menu Sesuai Mockup) -->
+    <nav class="app-bottom-nav-white" aria-label="Navigasi Utama">
+      <!-- 1. Beranda (Active) -->
+      <a href="beranda.html" class="nav-tab-item active">
+        <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>Beranda</span>
+      </a>
+
+      <!-- 2. Progress / Nilai -->
+      <a href="progres.html" class="nav-tab-item">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        <span>Progress</span>
+      </a>
+
+      <!-- 3. Notifikasi -->
+      <a href="pengumuman.html" class="nav-tab-item">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <span class="nav-notif-dot"></span>
+        <span>Notifikasi</span>
+      </a>
+
+      <!-- 4. Profil -->
+      <a href="profil.html" class="nav-tab-item">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span>Profil</span>
+      </a>
+    </nav>
+
+  </div>
+
+  <script src="js/netora.js"></script>
+  <script src="js/beranda.js"></script>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Netora — Profil Siswa, Pengaturan Akun, dan Rekap Prestasi Belajar.">
+  <title>Netora — Profil</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="css/netora.css">
+  <style>
+    /* ===== Profil Page Overrides ===== */
+
+    /* Tab bar: full-width, 4 kolom rata */
+    .profil-tab-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      background: #F1F5F9;
+      border-radius: 14px;
+      padding: 4px;
+      margin: 0 16px 14px;
+    }
+    .profil-tab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 8px 4px;
+      border: none;
+      background: transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #64748B;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      line-height: 1.2;
+    }
+    .profil-tab-btn svg {
+      flex-shrink: 0;
+    }
+    .profil-tab-btn.active {
+      background: #FFFFFF;
+      color: #0D5BFF;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .profil-tab-btn:not(.active):hover {
+      background: rgba(255,255,255,0.6);
+      color: #1E293B;
+    }
+
+    /* Profile avatar area */
+    .avatar-wrap {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 12px;
+      flex-shrink: 0;
+    }
+    .avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3.5px solid #0D5BFF;
+      box-shadow: 0 6px 20px rgba(13,91,255,0.2);
+      display: block;
+    }
+
+    /* Tab content */
+    .profil-tab-content { display: none; padding: 0 16px 4px; }
+    .profil-tab-content.active { display: block; }
+
+    /* Form card */
+    .profil-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 4px 18px rgba(13,91,255,0.05);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .profil-card h4 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #1E293B;
+    }
+    .form-label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+    .form-input {
+      width: 100%;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 13px;
+      color: #1E293B;
+      background: #FFFFFF;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    .form-input:focus { border-color: #0D5BFF; box-shadow: 0 0 0 3px rgba(13,91,255,0.08); }
+    .form-input:disabled { background: #F8FAFC; color: #94A3B8; border-color: #E2E8F0; cursor: not-allowed; }
+    textarea.form-input { resize: vertical; min-height: 80px; }
+
+    /* Community link items */
+    .community-link {
+      padding: 13px 16px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .community-link:hover { opacity: 0.85; transform: translateX(2px); }
+    .community-link-wa  { background: #F0FDF4; border: 1.5px solid #BBF7D0; color: #166534; }
+    .community-link-tg  { background: #EFF6FF; border: 1.5px solid #BFDBFE; color: #1E40AF; }
+  </style>
+</head>
+<body style="background:#E2E8F0; margin:0; padding:0;">
+
+  <div class="netora-mobile-app">
+
+    <!-- Header -->
+    <header class="app-top-header-royal">
+      <div class="subpage-header-row">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <a href="beranda.html" class="subpage-back-btn" title="Kembali ke Beranda">
+            <svg style="width:18px; height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </a>
+          <h2 class="subpage-title" style="text-align:left;">Profil Siswa</h2>
+        </div>
+
+        <!-- Desktop Nav -->
+        <nav class="desktop-top-nav-links">
+          <a href="beranda.html" class="desktop-nav-link">
+            <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>Beranda</span>
+          </a>
+          <a href="materi.html" class="desktop-nav-link">
+            <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>Materi</span>
+          </a>
+          <a href="video.html" class="desktop-nav-link">
+            <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+            <span>Vidio Praktik</span>
+          </a>
+          <a href="quiz.html" class="desktop-nav-link">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+            <span>Quiz</span>
+          </a>
+          <a href="kalkulator.html" class="desktop-nav-link">
+            <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="14.01"></line><line x1="12" y1="14" x2="12" y2="14.01"></line><line x1="8" y1="14" x2="8" y2="14.01"></line></svg>
+            <span>Kalkulator</span>
+          </a>
+          <a href="progres.html" class="desktop-nav-link">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>Progress</span>
+          </a>
+          <a href="profil.html" class="desktop-nav-link active">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>Profil</span>
+          </a>
+        </nav>
+
+        <button id="btn-logout" type="button" class="subpage-action-btn" title="Keluar dari Akun"
+          style="border:none; cursor:pointer; background:rgba(239,68,68,0.28); color:#FFFFFF; flex-shrink:0;">
+          <svg style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Profil Card -->
+    <div style="background:#FFFFFF; border-radius:22px; padding:24px 20px 20px; margin:-10px 16px 16px; text-align:center;
+      box-shadow:0 8px 24px rgba(13,91,255,0.07); border:1px solid rgba(0,0,0,0.04); position:relative; z-index:11;">
+
+      <!-- Avatar Foto Profil Bersih Tanpa Icon Bulat Overlay -->
+      <div class="avatar-wrap">
+        <img id="profile-img" src="uploads/default.png" alt="Foto Profil">
+        <input type="file" id="input-foto" accept="image/*" style="display:none;">
+      </div>
+
+      <!-- Tombol Teks Aksi: Ganti Foto & Hapus Foto (Di Bawah Foto Profil) -->
+      <div style="display:flex; justify-content:center; gap:8px; margin: 2px 0 12px;">
+        <label for="input-foto" style="cursor:pointer; font-size:11.5px; font-weight:700; color:#0D5BFF; background:#EFF6FF; border:1.5px solid #BFDBFE; border-radius:20px; padding:5px 14px; display:inline-flex; align-items:center; gap:5px; transition:0.2s; box-shadow:0 2px 6px rgba(13,91,255,0.08);">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <span>Ganti Foto</span>
+        </label>
+        <button type="button" id="btn-hapus-foto" style="font-size:11.5px; font-weight:700; color:#DC2626; background:#FEF2F2; border:1.5px solid #FECACA; border-radius:20px; padding:5px 14px; display:inline-flex; align-items:center; gap:5px; cursor:pointer; transition:0.2s; box-shadow:0 2px 6px rgba(220,38,38,0.08);">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <span>Hapus Foto</span>
+        </button>
+      </div>
+
+      <h3 id="profile-nama" style="margin:0 0 3px; font-size:17px; font-weight:800; color:#1E293B;">Siswa</h3>
+      <p id="profile-email" style="margin:0 0 8px; font-size:12.5px; color:#64748B;">siswa@netora.id</p>
+      <span id="profile-joined" style="font-size:11px; font-weight:600; color:#94A3B8; display:inline-flex; align-items:center; gap:4px;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span>Akun Siswa Netora</span>
+      </span>
+    </div>
+
+    <!-- Tab Bar: 4 kolom rata berjejer -->
+    <div class="profil-tab-bar" role="tablist">
+      <button class="profil-tab-btn active" data-tab="tab-edit" role="tab" aria-selected="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+        <span>Profil</span>
+      </button>
+      <button class="profil-tab-btn" data-tab="tab-pass" role="tab">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <span>Sandi</span>
+      </button>
+      <button class="profil-tab-btn" data-tab="tab-tentang" role="tab">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>Tentang</span>
+      </button>
+      <button class="profil-tab-btn" data-tab="tab-komunitas" role="tab">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span>Komunitas</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: UBAH PROFIL -->
+    <div id="tab-edit" class="profil-tab-content active">
+      <div class="profil-card">
+        <h4>
+          <svg style="width:15px;height:15px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          Edit Profil
+        </h4>
+        <form id="form-update-profil">
+          <div style="margin-bottom:14px;">
+            <label for="edit-nama" class="form-label">Nama Lengkap</label>
+            <input type="text" id="edit-nama" class="form-input" required placeholder="Nama lengkap kamu">
+          </div>
+          <div style="margin-bottom:14px;">
+            <label for="edit-email" class="form-label">Alamat Email</label>
+            <input type="email" id="edit-email" class="form-input" disabled placeholder="email@sekolah.sch.id">
+          </div>
+          <div style="margin-bottom:18px;">
+            <label for="edit-bio" class="form-label">Bio / Ringkasan Diri</label>
+            <textarea id="edit-bio" class="form-input" rows="3" placeholder="Tuliskan bio singkatmu..."></textarea>
+          </div>
+          <button type="submit" class="btn-hero-orange" style="width:100%; justify-content:center; padding:13px; border-radius:26px; font-size:14px; font-weight:700;">
+            Simpan Perubahan
+          </button>
+        </form>
+
+        <div style="margin-top:20px; padding-top:16px; border-top:1px dashed #E2E8F0;">
+          <button type="button" id="btn-hapus-akun" style="width:100%; justify-content:center; padding:11px; border-radius:14px; font-size:12.5px; font-weight:700; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            <span>Hapus Akun Siswa</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: UBAH SANDI -->
+    <div id="tab-pass" class="profil-tab-content">
+      <div class="profil-card">
+        <h4>
+          <svg style="width:15px;height:15px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Ubah Kata Sandi
+        </h4>
+        <form id="form-ganti-pass">
+          <div style="margin-bottom:14px;">
+            <label for="pass-lama" class="form-label">Kata Sandi Saat Ini</label>
+            <input type="password" id="pass-lama" class="form-input" required placeholder="••••••••">
+          </div>
+          <div style="margin-bottom:14px;">
+            <label for="pass-baru" class="form-label">Kata Sandi Baru (Min. 6 Karakter)</label>
+            <input type="password" id="pass-baru" class="form-input" required placeholder="••••••••">
+          </div>
+          <div style="margin-bottom:18px;">
+            <label for="pass-konfirm" class="form-label">Konfirmasi Kata Sandi Baru</label>
+            <input type="password" id="pass-konfirm" class="form-input" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn-hero-orange" style="width:100%; justify-content:center; padding:13px; border-radius:26px; font-size:14px; font-weight:700;">
+            Perbarui Kata Sandi
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- TAB 3: TENTANG -->
+    <div id="tab-tentang" class="profil-tab-content">
+      <div class="profil-card">
+        <h4>
+          <svg style="width:15px;height:15px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Tentang Netora
+        </h4>
+        <div style="background:#EFF6FF; border-radius:14px; padding:16px; margin-bottom:14px;">
+          <p style="margin:0; font-size:12.5px; color:#1E40AF; line-height:1.65; font-weight:500;">
+            Netora adalah platform pembelajaran terpadu untuk siswa SMK jurusan Teknik Komputer dan Jaringan (TKJ). Mendukung praktikum RouterBOARD MikroTik, kalkulasi subnetting IPv4, video panduan, dan persiapan sertifikasi kompetensi.
+          </p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:#F8FAFC; border-radius:12px; border:1px solid #E2E8F0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            <div>
+              <div style="font-size:11px; color:#94A3B8; font-weight:600;">Versi Platform</div>
+              <div style="font-size:13px; font-weight:700; color:#1E293B;">Netora v2.0</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:#F8FAFC; border-radius:12px; border:1px solid #E2E8F0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <div>
+              <div style="font-size:11px; color:#94A3B8; font-weight:600;">Hak Cipta</div>
+              <div style="font-size:13px; font-weight:700; color:#1E293B;">© 2026 Tim Netora Edukasi</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: KOMUNITAS (SALURAN WHATSAPP) -->
+    <div id="tab-komunitas" class="profil-tab-content">
+      <div class="profil-card">
+        <h4>
+          <svg style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          Saluran WhatsApp Resmi
+        </h4>
+        <p style="margin:0 0 16px; font-size:12.5px; color:#64748B; line-height:1.55;">Ikuti Saluran WhatsApp resmi Netora untuk mendapatkan informasi terbaru seputar materi TKJ, modul praktikum, dan tips jaringan komputer.</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <a href="https://whatsapp.com/channel/0029VbDRoLzF6smvXc9vh90j" target="_blank" rel="noopener noreferrer" class="community-link community-link-wa" style="padding:16px; border-radius:16px;">
+            <div style="width:42px; height:42px; border-radius:12px; background:#DCFCE7; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+            </div>
+            <div>
+              <div style="font-size:11px; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.5px;">Saluran Resmi Netora</div>
+              <div style="font-size:14px; font-weight:800; color:#14532D;">Gabung Saluran WhatsApp</div>
+            </div>
+            <svg style="margin-left:auto; color:#166534;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="app-bottom-nav-white" aria-label="Navigasi Utama">
+      <a href="beranda.html" class="nav-tab-item">
+        <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>Beranda</span>
+      </a>
+      <a href="progres.html" class="nav-tab-item">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        <span>Progress</span>
+      </a>
+      <a href="pengumuman.html" class="nav-tab-item">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <span class="nav-notif-dot"></span>
+        <span>Notifikasi</span>
+      </a>
+      <a href="profil.html" class="nav-tab-item active">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span>Profil</span>
+      </a>
+    </nav>
+
+  </div>
+
+  <script src="js/netora.js"></script>
+  <script src="js/profil.js"></script>
+  <script>
+    // Tab switching logic
+    document.querySelectorAll('.profil-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+        document.querySelectorAll('.profil-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.profil-tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        const panel = document.getElementById(target);
+        if (panel) panel.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

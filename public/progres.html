@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Netora — Rekap Progress Belajar, Nilai Kuis, dan Pencapaian Siswa TKJ.">
+  <title>Netora — Progress Belajar</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="css/netora.css">
+  <style>
+    .stat-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 14px 16px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    @media (min-width: 480px) {
+      .stat-summary-grid {
+        gap: 12px;
+        padding: 16px;
+      }
+    }
+    .stat-card-progress {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 12px 6px 10px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+      border: 1px solid #E2E8F0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .stat-card-progress:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
+    }
+    .stat-icon-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+    .stat-card-progress:hover .stat-icon-badge {
+      transform: scale(1.08);
+    }
+    .stat-icon-badge.badge-amber {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: #D97706;
+    }
+    .stat-icon-badge.badge-blue {
+      background: rgba(13, 91, 255, 0.09);
+      border: 1px solid rgba(13, 91, 255, 0.22);
+      color: #0D5BFF;
+    }
+    .stat-icon-badge.badge-green {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #10B981;
+    }
+    .stat-card-val {
+      font-size: clamp(17px, 4.4vw, 22px);
+      font-weight: 900;
+      color: #0F172A;
+      line-height: 1.15;
+      margin: 0 0 3px;
+      letter-spacing: -0.4px;
+    }
+    .stat-card-lbl {
+      font-size: clamp(9px, 2.3vw, 10.5px);
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    .skill-progress-card {
+      background: #FFFFFF;
+      border-radius: 18px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 12px rgba(13, 91, 255, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+    .skill-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .skill-name {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #1E293B;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .skill-pct {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0D5BFF;
+    }
+    .skill-bar-track {
+      width: 100%;
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .skill-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body style="background:#E2E8F0; margin:0; padding:0;">
+
+  <div class="netora-mobile-app">
+
+    <!-- Top Status Bar & Header Biru Royal -->
+    <header class="app-top-header-royal">
+
+      <div class="subpage-header-row">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <a href="beranda.html" class="subpage-back-btn" title="Kembali ke Beranda">
+            <svg style="width:18px; height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </a>
+          <div>
+            <h2 class="subpage-title" style="text-align:left; font-size:17px;">Progress Belajar</h2>
+            <span id="progress-role-badge" style="font-size:11px; opacity:0.85; font-weight:600;">Siswa Aktif</span>
+          </div>
+        </div>
+
+        <!-- Menu Navigasi Desktop -->
+        <nav class="desktop-top-nav-links">
+          <a href="beranda.html" class="desktop-nav-link" title="Beranda">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Beranda</span>
+          </a>
+          <a href="materi.html" class="desktop-nav-link" title="Materi Pembelajaran">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <span>Materi</span>
+          </a>
+          <a href="video.html" class="desktop-nav-link" title="Vidio Praktik">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            <span>Vidio Praktik</span>
+          </a>
+          <a href="quiz.html" class="desktop-nav-link" title="Kuis Interaktif">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span>Quiz</span>
+          </a>
+          <a href="kalkulator.html" class="desktop-nav-link" title="Kalkulator IP Subnetting">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="16" y1="18" x2="16" y2="18"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="12" y1="18" x2="12" y2="18"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="8" y1="18" x2="8" y2="18"/></svg>
+            <span>Kalkulator</span>
+          </a>
+          <a href="progres.html" class="desktop-nav-link active" title="Progress Belajar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span>Progress</span>
+          </a>
+          <a href="profil.html" class="desktop-nav-link" title="Profil Siswa">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Profil</span>
+          </a>
+        </nav>
+
+        <a href="quiz.html" class="subpage-action-btn" title="Mulai Kuis Baru">
+          <svg style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- Ringkasan Statistik Siswa (3 Kotak Indikator Responsif) -->
+    <div class="stat-summary-grid">
+      <!-- 1. Skor Tertinggi (Trophy Emas/Amber) -->
+      <div class="stat-card-progress">
+        <div class="stat-icon-badge badge-amber" title="Skor Tertinggi">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+            <path d="M4 22h16"/>
+            <path d="M10 14.66V17c0 .55-.45 1-1 1H8v2h8v-2h-1c-.55 0-1-.45-1-1v-2.34"/>
+            <path d="M18 4H6v7a6 6 0 0 0 12 0V4z"/>
+          </svg>
+        </div>
+        <div class="stat-card-val" id="stat-highest-score">0</div>
+        <div class="stat-card-lbl">Skor Tertinggi</div>
+      </div>
+
+      <!-- 2. Rata-rata Nilai (Chart Biru Royal) -->
+      <div class="stat-card-progress">
+        <div class="stat-icon-badge badge-blue" title="Rata-rata Nilai">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+            <polyline points="16 7 22 7 22 13"/>
+          </svg>
+        </div>
+        <div class="stat-card-val" id="stat-average-score">0%</div>
+        <div class="stat-card-lbl">Rata-rata Nilai</div>
+      </div>
+
+      <!-- 3. Kuis Selesai (Check Hijau Emerald) -->
+      <div class="stat-card-progress">
+        <div class="stat-icon-badge badge-green" title="Kuis Selesai">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="stat-card-val" id="stat-completed-quiz">0 Sesi</div>
+        <div class="stat-card-lbl">Kuis Selesai</div>
+      </div>
+    </div>
+
+    <!-- BAGIAN 1: PENGUASAAN KOMPETENSI TKJ -->
+    <div style="padding:0 16px 8px;">
+      <div class="section-header-orange" style="margin:0 0 12px; font-size:16px;">Penguasaan Kompetensi Keahlian</div>
+
+      <div class="desktop-grid-2col" style="padding:0;">
+        <div class="skill-progress-card">
+          <div class="skill-progress-header">
+            <div class="skill-name">
+              <svg style="width:16px; height:16px; color:#0D5BFF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span>Dasar Mikrotik RouterOS</span>
+            </div>
+            <div class="skill-pct" id="skill-pct-mikrotik">0%</div>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" id="skill-bar-mikrotik" style="width:0%; background:linear-gradient(90deg, #0D5BFF, #38BDF8); transition:width 0.6s cubic-bezier(0.16,1,0.3,1);"></div>
+          </div>
+        </div>
+
+        <div class="skill-progress-card">
+          <div class="skill-progress-header">
+            <div class="skill-name">
+              <svg style="width:16px; height:16px; color:#FF7A00;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="8" y1="14" x2="8" y2="14"/></svg>
+              <span>Subnetting IP & CIDR</span>
+            </div>
+            <div class="skill-pct" id="skill-pct-subnet">0%</div>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" id="skill-bar-subnet" style="width:0%; background:linear-gradient(90deg, #FF7A00, #F59E0B); transition:width 0.6s cubic-bezier(0.16,1,0.3,1);"></div>
+          </div>
+        </div>
+
+        <div class="skill-progress-card">
+          <div class="skill-progress-header">
+            <div class="skill-name">
+              <svg style="width:16px; height:16px; color:#7C3AED;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Firewall & Keamanan Jaringan</span>
+            </div>
+            <div class="skill-pct" id="skill-pct-firewall">0%</div>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" id="skill-bar-firewall" style="width:0%; background:linear-gradient(90deg, #7C3AED, #A855F7); transition:width 0.6s cubic-bezier(0.16,1,0.3,1);"></div>
+          </div>
+        </div>
+
+        <div class="skill-progress-card">
+          <div class="skill-progress-header">
+            <div class="skill-name">
+              <svg style="width:16px; height:16px; color:#22C55E;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+              <span>Administrasi Server Linux</span>
+            </div>
+            <div class="skill-pct" id="skill-pct-linux">0%</div>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" id="skill-bar-linux" style="width:0%; background:linear-gradient(90deg, #22C55E, #10B981); transition:width 0.6s cubic-bezier(0.16,1,0.3,1);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BAGIAN 2: RIWAYAT NILAI KUIS -->
+    <div style="padding:0 16px 4px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin:14px 0 12px;">
+        <div class="section-header-orange" style="margin:0; font-size:16px;">Histori Evaluasi Kuis</div>
+        <a href="quiz.html" style="font-size:12.5px; font-weight:700; color:#0D5BFF; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+          <span>Kuis Baru</span>
+          <svg style="width:13px; height:13px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+
+      <div id="quiz-history-container">
+        <!-- Skeleton Loading Shimmer Histori Kuis -->
+        <div class="skeleton-item-card" style="margin:0 0 10px;">
+          <div class="skeleton-item-left">
+            <div class="netora-skeleton skeleton-square-thumb" style="border-radius:12px;"></div>
+            <div class="skeleton-meta-col">
+              <div class="netora-skeleton skeleton-line h-18 w-60"></div>
+              <div class="netora-skeleton skeleton-line w-40"></div>
+            </div>
+          </div>
+          <div class="netora-skeleton" style="width:40px; height:24px; border-radius:6px;"></div>
+        </div>
+        <div class="skeleton-item-card" style="margin:0 0 10px;">
+          <div class="skeleton-item-left">
+            <div class="netora-skeleton skeleton-square-thumb" style="border-radius:12px;"></div>
+            <div class="skeleton-meta-col">
+              <div class="netora-skeleton skeleton-line h-18 w-60"></div>
+              <div class="netora-skeleton skeleton-line w-40"></div>
+            </div>
+          </div>
+          <div class="netora-skeleton" style="width:40px; height:24px; border-radius:6px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar Putih Bersih -->
+    <nav class="app-bottom-nav-white" aria-label="Navigasi Utama">
+      <a href="beranda.html" class="nav-tab-item">
+        <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>Beranda</span>
+      </a>
+      <a href="progres.html" class="nav-tab-item active">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        <span>Progress</span>
+      </a>
+      <a href="pengumuman.html" class="nav-tab-item">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <span class="nav-notif-dot"></span>
+        <span>Notifikasi</span>
+      </a>
+      <a href="profil.html" class="nav-tab-item">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span>Profil</span>
+      </a>
+    </nav>
+
+  </div>
+
+  <script src="js/netora.js"></script>
+  <script src="js/progres.js"></script>
+</body>
+</html>

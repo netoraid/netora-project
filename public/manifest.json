@@ -1,0 +1,24 @@
+{
+  "name": "Netora — Belajar TKJ",
+  "short_name": "Netora",
+  "description": "Portal Pembelajaran Terpadu Teknik Komputer & Jaringan (TKJ), Cisco, MikroTik, dan Linux Server",
+  "start_url": "/login.html",
+  "display": "standalone",
+  "background_color": "#0D5BFF",
+  "theme_color": "#0D5BFF",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
