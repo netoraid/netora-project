@@ -45,7 +45,7 @@ if (fs.existsSync(rootLogo) && !fs.existsSync(publicLogo)) {
 
 const app = express();
 app.set('trust proxy', 1); // Mengizinkan cookie session bekerja normal saat diakses lewat Dev Tunnels / Reverse Proxy / Pterodactyl
-const PORT = process.env.PORT || process.env.SERVER_PORT || 3000;
+const PORT = process.env.SERVER_PORT || process.env.PORT || 3000;
 const HOST = '0.0.0.0'; // Mengizinkan akses dari semua interface jaringan (Wi-Fi / LAN / Pterodactyl Container)
 
 // Middleware CORS (Memastikan request dari perangkat lain diizinkan)
