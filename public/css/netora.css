@@ -4212,76 +4212,29 @@ body.admin-page {
   }
 }
 
-/* 1. Navigasi ke KANAN: Halaman baru meluncur masuk halus dari KANAN */
-.netora-slide-in-from-right,
-.netora-glide-in-right {
-  animation: netoraGlideInRight 0.22s cubic-bezier(0.2, 0.9, 0.3, 1) forwards !important;
-  will-change: transform, opacity;
-}
+/* ========================================================================== */
+/* NETORA ULTRA-SMOOTH SEAMLESS TRANSITIONS (BEBAS PATAH-PATAH & FLICKER)     */
+/* ========================================================================== */
 
-@keyframes netoraGlideInRight {
-  0% {
-    opacity: 0.35;
-    transform: translate3d(14px, 0, 0);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-/* 2. Navigasi ke KANAN: Halaman saat ini fade halus ke KIRI */
-.netora-slide-out-to-left {
-  animation: netoraSlideOutToLeft 0.1s ease forwards !important;
-  pointer-events: none !important;
-  will-change: transform, opacity;
-}
-
-@keyframes netoraSlideOutToLeft {
-  0% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    opacity: 0.7;
-    transform: translate3d(-8px, 0, 0);
-  }
-}
-
-/* 3. Navigasi ke KIRI (Kembali): Halaman baru meluncur masuk halus dari KIRI */
-.netora-slide-in-from-left,
+.netora-page-fade-enter,
+.netora-glide-in-right,
 .netora-glide-in-left {
-  animation: netoraGlideInLeft 0.22s cubic-bezier(0.2, 0.9, 0.3, 1) forwards !important;
-  will-change: transform, opacity;
+  animation: netoraPageFadeEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  will-change: opacity;
 }
 
-@keyframes netoraGlideInLeft {
+@keyframes netoraPageFadeEnter {
   0% {
-    opacity: 0.35;
-    transform: translate3d(-14px, 0, 0);
+    opacity: 0.88;
   }
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
   }
 }
 
-/* 4. Navigasi ke KIRI (Kembali): Halaman saat ini fade halus ke KANAN */
+.netora-slide-out-to-left,
 .netora-slide-out-to-right {
-  animation: netoraSlideOutToRight 0.1s ease forwards !important;
-  pointer-events: none !important;
-  will-change: transform, opacity;
-}
-
-@keyframes netoraSlideOutToRight {
-  0% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    opacity: 0.7;
-    transform: translate3d(8px, 0, 0);
-  }
+  display: none !important;
 }
 
 /* Tab crossfade di dalam dashboard */

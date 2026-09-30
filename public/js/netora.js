@@ -497,7 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================================================
 // NETORA ULTRA-SMOOTH DIRECTIONAL TRANSITIONS ENGINE (STABIL & KONSISTEN 100%)
 // ==========================================================================
-(function initNetoraTransitions() {
+(function initNetoraSeamlessNavigation() {
   const PAGE_ORDER = [
     'beranda.html',     // 0
     'materi.html',      // 1
@@ -516,58 +516,215 @@ document.addEventListener('DOMContentLoaded', () => {
       const filename = u.pathname.split('/').pop() || 'beranda.html';
       return filename === '' ? 'beranda.html' : filename;
     } catch {
-      return '';
+      return 'beranda.html';
     }
   }
 
-  // 1. Eksekusi Animasi Masuk (Glide In) saat Halaman Selesai Dimuat di Halaman Tujuan
-  function handleEnterAnimation() {
-    const savedDir = sessionStorage.getItem('netora_nav_dir');
-    sessionStorage.removeItem('netora_nav_dir');
+  // 1. Script Loader Dinamis jika script halaman belum termuat
+  function loadScriptOnce(src, cb) {
+    const cleanSrc = src.split('?')[0];
+    const existing = Array.from(document.querySelectorAll('script')).find(s => s.src && s.src.includes(cleanSrc));
+    if (existing) {
+      if (cb) cb();
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = () => { if (cb) cb(); };
+    s.onerror = () => { if (cb) cb(); };
+    document.body.appendChild(s);
+  }
 
-    const appContainer = document.querySelector('.netora-mobile-app');
-    if (appContainer && savedDir) {
-      const enterClass = (savedDir === 'left') ? 'netora-glide-in-left' : 'netora-glide-in-right';
-      appContainer.classList.add(enterClass);
-      setTimeout(() => {
-        appContainer.classList.remove(enterClass);
-      }, 260);
+  // 2. Dispatcher Inisialisasi Halaman Baru
+  function triggerPageLifecycle(cleanPath) {
+    getUser().then(u => updateNavHeader(u));
+
+    const path = cleanPath.toLowerCase();
+
+    if (path === 'beranda.html' || path === '') {
+      if (window.initBerandaPage) {
+        window.initBerandaPage();
+      } else {
+        loadScriptOnce('js/beranda.js', () => window.initBerandaPage && window.initBerandaPage());
+      }
+    } else if (path === 'pengumuman.html') {
+      if (window.initPengumumanPage) {
+        window.initPengumumanPage();
+      } else {
+        loadScriptOnce('js/pengumuman.js', () => window.initPengumumanPage && window.initPengumumanPage());
+      }
+    } else if (path === 'materi.html') {
+      if (window.initMateriPage) {
+        window.initMateriPage();
+      } else {
+        loadScriptOnce('js/materi.js', () => window.initMateriPage && window.initMateriPage());
+      }
+    } else if (path === 'materi-detail.html') {
+      if (window.initMateriPage) {
+        window.initMateriPage();
+      } else {
+        loadScriptOnce('js/materi.js', () => window.initMateriPage && window.initMateriPage());
+      }
+    } else if (path === 'video.html') {
+      if (window.initVideoPage) {
+        window.initVideoPage();
+      } else {
+        loadScriptOnce('js/video.js', () => window.initVideoPage && window.initVideoPage());
+      }
+    } else if (path === 'quiz.html') {
+      if (window.initQuizPage) {
+        window.initQuizPage();
+      } else {
+        loadScriptOnce('js/quiz.js', () => window.initQuizPage && window.initQuizPage());
+      }
+    } else if (path === 'progres.html') {
+      if (window.initProgresPage) {
+        window.initProgresPage();
+      } else {
+        loadScriptOnce('js/progres.js', () => window.initProgresPage && window.initProgresPage());
+      }
+    } else if (path === 'profil.html') {
+      if (window.initProfilPage) {
+        window.initProfilPage();
+      } else {
+        loadScriptOnce('js/profil.js', () => window.initProfilPage && window.initProfilPage());
+      }
+    } else if (path === 'kalkulator.html') {
+      if (window.initKalkulatorPage) {
+        window.initKalkulatorPage();
+      } else {
+        loadScriptOnce('js/kalkulator.js', () => window.initKalkulatorPage && window.initKalkulatorPage());
+      }
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', handleEnterAnimation);
-  } else {
-    handleEnterAnimation();
+  // 3. Smart HTML Cache & Prefetching untuk Perpindahan 0ms Instan Tanpa Patah-Patah
+  const _htmlPageCache = new Map();
+
+  async function fetchPageHtml(url) {
+    const clean = getCleanPath(url);
+    if (_htmlPageCache.has(clean)) {
+      return _htmlPageCache.get(clean);
+    }
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Fetch status ' + res.status);
+      const htmlText = await res.text();
+      _htmlPageCache.set(clean, htmlText);
+      return htmlText;
+    } catch (e) {
+      return null;
+    }
   }
 
-  // 2. Navigasi Langsung Instan: Tanpa loading bar di halaman asal, loading ditangani oleh skeleton di halaman tujuan
+  // Prefetch halaman siswa di latar belakang agar navigasi tidak perlu reload jaringan
+  setTimeout(() => {
+    ['beranda.html', 'pengumuman.html', 'materi.html', 'video.html', 'quiz.html', 'progres.html', 'profil.html', 'kalkulator.html'].forEach(p => {
+      fetchPageHtml(p);
+    });
+  }, 600);
+
+  // 4. Update Tab Aktif Secara Visual
+  function updateActiveTabs(cleanPath) {
+    document.querySelectorAll('.app-bottom-nav-white, .app-bottom-nav, .desktop-top-nav-links, .desktop-nav-tabs').forEach(nav => {
+      nav.querySelectorAll('.nav-tab-item, .desktop-nav-link, .nav-tab').forEach(item => {
+        const href = item.getAttribute('href');
+        if (href && getCleanPath(href) === cleanPath) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    });
+  }
+
+  // 5. Seamless Native-Grade Navigation (Bebas Patah-Patah, Tanpa Layar Putih)
   let _isNavigating = false;
-  function navigateTo(targetUrl, direction = 'right') {
+
+  async function seamlessNavigateTo(targetUrl, isPopState = false) {
+    const curPath = getCleanPath(window.location.href);
+    const targetPath = getCleanPath(targetUrl);
+
+    // Halaman panel admin atau autentikasi menggunakan navigasi browser penuh
+    if (targetPath.includes('admin') || targetPath.includes('login') || targetPath.includes('register')) {
+      window.location.href = targetUrl;
+      return;
+    }
+
+    if (curPath === targetPath && !isPopState) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     if (_isNavigating) return;
     _isNavigating = true;
 
-    sessionStorage.setItem('netora_nav_dir', direction);
+    // Optimistic UI pada tab navigasi
+    updateActiveTabs(targetPath);
 
-    // Langsung berpindah ke URL tujuan seketika (0ms jeda)
-    window.location.href = targetUrl;
+    // Ambil HTML halaman tujuan (0ms dari cache atau instan fetch)
+    const html = await fetchPageHtml(targetUrl);
+    if (!html) {
+      _isNavigating = false;
+      window.location.href = targetUrl;
+      return;
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    const newApp = doc.querySelector('.netora-mobile-app') || doc.querySelector('.device');
+    const curApp = document.querySelector('.netora-mobile-app') || document.querySelector('.device');
+
+    if (!newApp || !curApp) {
+      _isNavigating = false;
+      window.location.href = targetUrl;
+      return;
+    }
+
+    // Ubah URL dan Title tanpa reload halaman
+    if (!isPopState) {
+      window.history.pushState({ path: targetUrl }, '', targetUrl);
+    }
+    if (doc.title) {
+      document.title = doc.title;
+    }
+
+    // Ganti konten dengan sangat halus bebas kedip
+    curApp.innerHTML = newApp.innerHTML;
+    curApp.classList.remove('netora-page-fade-enter');
+    void curApp.offsetWidth;
+    curApp.classList.add('netora-page-fade-enter');
+
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    updateActiveTabs(targetPath);
+
+    // Jalankan siklus hidup halaman tujuan (Skeleton aktif memuat data di halaman tujuan)
+    triggerPageLifecycle(targetPath);
+
+    _isNavigating = false;
   }
 
-  // 3. Expose Global Functions
-  window.netoraNavigate = function(targetUrl, direction = 'right') {
-    navigateTo(targetUrl, direction);
+  // 6. Handle Tombol Back / Forward Browser
+  window.addEventListener('popstate', () => {
+    seamlessNavigateTo(window.location.href, true);
+  });
+
+  // 7. Expose Global Functions
+  window.netoraNavigate = function(targetUrl) {
+    seamlessNavigateTo(targetUrl);
   };
 
   window.netoraBack = function(fallbackUrl = 'beranda.html') {
     if (window.history.length > 1) {
-      sessionStorage.setItem('netora_nav_dir', 'left');
       window.history.back();
     } else {
-      navigateTo(fallbackUrl, 'left');
+      seamlessNavigateTo(fallbackUrl);
     }
   };
 
-  // 4. Global Link Click Interceptor
+  // 8. Global Click Interceptor (Mulus Tanpa Delay)
   document.addEventListener('click', (e) => {
     // Tombol Back
     const backBtn = e.target.closest('.subpage-back-btn, .btn-back, .back-btn, [data-netora-back]');
@@ -608,46 +765,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const curPath = getCleanPath(window.location.href);
     const targetPath = getCleanPath(parsedUrl.href);
 
-    // Abaikan jika menuju halaman yang sama persis
     if (parsedUrl.pathname === window.location.pathname && parsedUrl.search === window.location.search) {
       if (parsedUrl.hash) return;
       e.preventDefault();
       return;
     }
 
-    // ====== DETEKSI ARAH TRANSISI (KANAN vs KIRI) ======
-    let direction = 'right';
-
-    const isBackBtn = link.classList.contains('subpage-back-btn') ||
-                      link.classList.contains('btn-back') ||
-                      link.classList.contains('back-btn') ||
-                      link.hasAttribute('data-back') ||
-                      (link.getAttribute('title') && link.getAttribute('title').toLowerCase().includes('kembali')) ||
-                      (link.textContent && link.textContent.trim().toLowerCase().startsWith('kembali'));
-
-    if (isBackBtn) {
-      direction = 'left';
-    } else if (targetPath === 'beranda.html' && curPath !== 'beranda.html') {
-      direction = 'left';
-    } else {
-      const curIndex = PAGE_ORDER.indexOf(curPath);
-      const targetIndex = PAGE_ORDER.indexOf(targetPath);
-      if (curIndex !== -1 && targetIndex !== -1) {
-        direction = (targetIndex < curIndex) ? 'left' : 'right';
-      }
-    }
-
     // Berikan respons visual instan pada Tab Navbar saat diklik (Optimistic UI)
-    const activeNavGroup = link.closest('.app-bottom-nav-white, .app-bottom-nav, .desktop-top-nav-links, .desktop-nav-tabs');
-    if (activeNavGroup) {
-      activeNavGroup.querySelectorAll('.nav-tab-item, .desktop-nav-link').forEach(item => item.classList.remove('active'));
-      link.classList.add('active');
-    }
+    updateActiveTabs(targetPath);
 
-    // Hanya intersep navigasi internal yang menuju halaman .html
+    // Navigasi mulus internal untuk seluruh halaman siswa .html
     if (targetPath.endsWith('.html') || parsedUrl.pathname.endsWith('.html') || parsedUrl.pathname === '/') {
       e.preventDefault();
-      navigateTo(link.href, direction);
+      seamlessNavigateTo(link.href);
     }
   }, true);
 })();

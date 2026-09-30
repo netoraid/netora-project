@@ -164,7 +164,7 @@ window.initMateriPage = async function() {
       if (res.ok && data.success && data.materi) {
         const item = data.materi;
         detailContainer.innerHTML = `
-          <div style="background:#FFFFFF; border-radius:22px; padding:24px 20px; margin:16px; box-shadow:0 4px 20px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
+          <div class="netora-fade-in" style="background:#FFFFFF; border-radius:22px; padding:24px 20px; margin:16px; box-shadow:0 4px 20px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
               <span style="font-size:11.5px; font-weight:800; color:#0D5BFF; background:rgba(13,91,255,0.08); padding:4px 12px; border-radius:20px;">
                 ${escapeHtml(item.kategori || 'TKJ')}
