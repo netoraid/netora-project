@@ -57,6 +57,8 @@ window.initQuizPage = function() {
 
   // Fetch Questions from Database with SWR Caching
   async function loadQuizData() {
+    renderQuizSkeleton();
+
     try {
       const cached = sessionStorage.getItem('netora_quiz_cache');
       if (cached) {
@@ -111,7 +113,7 @@ window.initQuizPage = function() {
     if (allQuestions.length === 0) {
       if (quizFilterRow) quizFilterRow.style.display = 'none';
       quizContainer.innerHTML = `
-        <div style="background:#FFFFFF; border-radius:20px; padding:36px 20px; text-align:center; margin:16px; box-shadow:0 4px 18px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
+        <div class="netora-fade-in" style="background:#FFFFFF; border-radius:20px; padding:36px 20px; text-align:center; margin:16px; box-shadow:0 4px 18px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
           <div style="width:52px; height:52px; border-radius:14px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px;">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           </div>
@@ -141,7 +143,7 @@ window.initQuizPage = function() {
 
     if (activeTopics.length === 0) {
       quizContainer.innerHTML = `
-        <div style="background:#FFFFFF; border-radius:20px; padding:32px 20px; text-align:center; margin:16px; box-shadow:0 4px 18px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
+        <div class="netora-fade-in" style="background:#FFFFFF; border-radius:20px; padding:32px 20px; text-align:center; margin:16px; box-shadow:0 4px 18px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
           <div style="width:48px; height:48px; border-radius:14px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           </div>
@@ -155,7 +157,7 @@ window.initQuizPage = function() {
       return;
     }
 
-    quizContainer.innerHTML = '<div class="desktop-grid-2col">' + activeTopics.map(t => {
+    quizContainer.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + activeTopics.map(t => {
       const count = getAvailableSoalCount(t.category);
       return `
         <div class="white-item-card" style="cursor:pointer;" onclick="startQuizTopic('${t.id}', '${t.title}', '${t.category}')">

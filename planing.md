@@ -1,8 +1,29 @@
-# 📋 Dokumentasi Sistem, Arsitektur, Hasil Akhir & Panduan Deployment NETORA v2
+# 📋 Master Dokumentasi Sistem, Arsitektur, Hasil Akhir & Panduan Deployment NETORA v2
+
+---
+
+## 🌐 Informasi Live Production Proyek
+
+| Parameter | Detail Konfigurasi Produksi |
+|---|---|
+| **Nama Aplikasi** | **NETORA v2 — Portal Pembelajaran TKJ** |
+| **URL Domain Resmi (HTTPS)** | 👉 **`https://netora.web.id`** |
+| **URL Server Pterodactyl Asli** | `http://203.175.125.151:2974` |
+| **Panel Hosting** | FinCloud Pterodactyl (`https://panel.fincloud.my.id/server/1f5ca09c`) |
+| **Node IP Server** | `203.175.125.151` |
+| **Port Alokasi Pterodactyl** | **`2974`** |
+| **DNS & CDN Provider** | Cloudflare Free Plan |
+| **Cloudflare Nameservers** | `fattouche.ns.cloudflare.com` & `lorna.ns.cloudflare.com` |
+| **Mode SSL / Enkripsi** | Cloudflare Flexible + Always Use HTTPS + Auto HTTPS Rewrites |
+| **Port Forwarding Rule** | Cloudflare Origin Rule (Rewrite 443 $\rightarrow$ Destination Port `2974`) |
+| **Cloud Database** | **Supabase Cloud (PostgreSQL)** |
+| **Repository Git Resmi** | `https://github.com/netoraid/netora-project` |
+| **Format Aplikasi Mobile** | Progressive Web App (PWA) & APK Ready via PWABuilder |
 
 ---
 
 ## 🚀 1. Overview & Visi Proyek
+
 **NETORA v2** adalah platform aplikasi web pembelajaran interaktif terpadu untuk jurusan **Teknik Komputer dan Jaringan (TKJ)** berbasis *full-stack*. Aplikasi ini dirancang dengan antarmuka futuristik bertema **Dark Cyberpunk & Clean Modern** yang mengusung prinsip **Native Web App (Single Page Application Transition)** dan **Responsif Penuh**:
 - **Desktop View ($\ge$ 992px)**: Tampil sebagai **Dashboard Pembelajaran Modern** yang leluasa (lebar maksimal 1180px) dengan tata letak multi-kolom simetris, header navigasi desktop, modul materi unggulan, dan laboratorium tugas siswa interaktif.
 - **Mobile View ($<$ 992px)**: Tampil ringkas, bersih, ramah jempol (*mobile-first*), tanpa batasan bingkai ponsel tiruan yang membatasi layar fisik smartphone, dilengkapi *Bottom Navigation Bar* putih bersih dan gestur *Pull-to-Refresh*.
@@ -23,9 +44,12 @@ Aplikasi dibangun dengan teknologi yang ringan, cepat, tanpa overhead framework 
   - **Native SPA Transition Router**: Pergantian halaman instan tanpa reload dokumen, bebas layar putih (*zero-white-flash*).
   - **In-Memory Pre-Caching**: Memuat halaman di RAM browser untuk respon instan < 10ms.
   - **Dynamic State & DOM Manipulation**: Event binding otomatis, Async/Await Fetch API, Modal System, Toast Notification Engine.
+- **Progressive Web App (PWA)**:
+  - `manifest.json` terpasang untuk instalasi di Android/iOS (*standalone mode*).
+  - `sw.js` (Service Worker) terdaftar untuk caching dan performa cepat.
 
 ### B. Backend (Server)
-- **Node.js**: Runtime JavaScript asynchronous berkinerja tinggi.
+- **Node.js (v24+)**: Runtime JavaScript asynchronous berkinerja tinggi.
 - **Express.js (v4.21+)**: Web application framework untuk routing RESTful API dan penyajian file statis.
 - **Session Management (`express-session`)**: Pengelolaan autentikasi berbasis cookie `httpOnly` dengan masa aktif 24 jam dan dukungan reverse proxy (`app.set('trust proxy', 1)`).
 - **Keamanan Sandi (`bcryptjs`)**: Password hashing dengan algoritma salt 10 rounds (100% Pure JavaScript, tanpa kompilasi native C++).
@@ -44,53 +68,61 @@ Aplikasi dibangun dengan teknologi yang ringan, cepat, tanpa overhead framework 
 
 ```
 Netora/
-├── server.js                  # Entrypoint server Express & port binding dinamis
-├── netora.db                  # Database SQLite (Users, Materi, Video, Quiz, Pengumuman)
+├── server.js                  # Entrypoint server Express & port binding dinamis (SERVER_PORT)
 ├── package.json               # Konfigurasi dependensi Pure JS & engines Node.js
 ├── package-lock.json          # Lockfile dependensi npm
-├── planing.md                 # Dokumentasi master sistem, arsitektur & panduan deploy
-├── .gitignore                 # Filter berkas untuk upload/git (node_modules, mp4, apk)
+├── planing.md                 # Master dokumentasi sistem, arsitektur, dan panduan deploy
+├── .env                       # File konfigurasi rahasia Supabase & Port (terlindungi .gitignore)
+├── .env.example               # Template variabel lingkungan untuk server/deploy
+├── .gitignore                 # Filter berkas keamanan (node_modules, .env, *.mp4, *.apk)
+├── logo.png                   # Master logo Netora
 │
 ├── database/
-│   └── init.js                # Skema 6 tabel SQLite, query wrapper, & data seeding awal
+│   ├── init.js                # Wrapper query kompatibilitas aplikasi
+│   ├── supabase.js            # Inisialisasi Supabase Client & verifikasi koneksi cloud
+│   └── supabase_schema.sql    # DDL skema 6 tabel PostgreSQL Supabase + initial data seed
 │
 ├── middleware/
 │   └── auth.js                # Middleware proteksi route session (requireAuth & admin check)
 │
 ├── routes/
 │   ├── auth.js                # Endpoint Login, Register, Logout, & Session Me
-│   ├── materi.js              # Endpoint Katalog & Detail Materi
+│   ├── materi.js              # Endpoint Katalog & Detail Modul Materi
 │   ├── video.js               # Endpoint Galeri Video Praktikum Mikrotik
 │   ├── quiz.js                # Endpoint Soal Quiz & Perhitungan Skor
 │   ├── pengumuman.js          # Endpoint Pengumuman & Notifikasi
-│   ├── profil.js              # Endpoint Profil, Password, & Upload Avatar
+│   ├── profil.js              # Endpoint Profil, Password, Avatar, & Hapus Akun Siswa
 │   └── admin.js               # Endpoint CRUD Lengkap Khusus Admin
 │
 └── public/                    # Seluruh Halaman & Aset Web (Static Web Root)
+    ├── manifest.json          # Manifest PWA (Nama aplikasi, warna tema, logo)
+    ├── sw.js                  # Service Worker PWA (Cache fallback)
     ├── assets/
-    │   └── logo.png           # Logo master Netora
+    │   ├── logo.png           # Logo master Netora
+    │   ├── banner1.jpg        # Banner ilustrasi materi
+    │   └── banner2.jpg        # Banner ilustrasi praktikum
     ├── uploads/
     │   └── default.png        # Avatar default pengguna & folder unggahan foto
     ├── css/
     │   └── netora.css         # Master Stylesheet (Desktop, Mobile, Animasi SPA, Layout)
     ├── js/
-    │   ├── netora.js          # Engine SPA Router, Pull-to-Refresh, Toast, Header Sync
+    │   ├── netora.js          # Engine SPA Router, PWA Auto-register, Toast, Header Sync
     │   ├── auth.js            # Logika Login, Register, & Validasi Input
     │   ├── beranda.js         # Inisialisasi Beranda & Carousel
     │   ├── materi.js          # Inisialisasi & Filter Katalog Materi
     │   ├── video.js           # Inisialisasi Galeri & Video Player Modal
-    │   ├── quiz.js            # State Machine Kuis Interaktif 10 Soal
+    │   ├── quiz.js            # State Machine Kuis Interaktif (Bebas ghost card saat kosong)
     │   ├── kalkulator.js      # Algoritma Subnetting RFC 791/4632 & Riwayat Lokal
     │   ├── progres.js         # Statistik Pembelajaran & Riwayat Nilai
     │   ├── pengumuman.js      # Daftar Notifikasi & Pengumuman
-    │   ├── profil.js          # Tab Edit Profil, Keamanan, & Ganti Avatar
+    │   ├── profil.js          # Tab Edit Profil, Keamanan, Ganti Avatar, & Hapus Akun
     │   └── admin.js           # Single Page Application Dashboard Admin
     │
     ├── beranda.html           # Dashboard Utama Siswa (4 Modul Inti & Lab Tugas)
     ├── materi.html            # Katalog Modul Pembelajaran (Grid 2 Kolom)
     ├── materi-detail.html     # Pembaca Modul Lengkap
     ├── video.html             # Galeri Video Praktik RouterOS
-    ├── quiz.html              # Uji Kompetensi Interaktif 10 Soal
+    ├── quiz.html              # Uji Kompetensi Interaktif
     ├── kalkulator.html        # Kalkulator Subnetting & CIDR Split Desktop
     ├── progres.html           # Laporan Capaian Belajar Siswa
     ├── pengumuman.html        # Pusat Pengumuman & Informasi
@@ -103,28 +135,32 @@ Netora/
 
 ---
 
-## 🗄️ 4. Skema Basis Data SQLite (`netora.db`)
+## 🗄️ 4. Skema Basis Data Supabase Cloud (PostgreSQL)
+
+Telah termigrasi 100% dari SQLite lokal ke **Supabase PostgreSQL** dengan DDL pada file `database/supabase_schema.sql`:
 
 1. **`users`**:
-   - `id` (INTEGER PK AUTOINCREMENT)
-   - `nama` (TEXT), `email` (TEXT UNIQUE), `password` (HASH BCRYPT)
+   - `id` (SERIAL PRIMARY KEY)
+   - `nama` (VARCHAR 255), `email` (VARCHAR 255 UNIQUE), `password` (VARCHAR 255 HASH BCRYPT)
    - `foto` (TEXT, default: `uploads/default.png`), `bio` (TEXT)
-   - `role` (TEXT, default: `'siswa'`, opsi: `'admin'`)
-   - `created_at` (DATETIME)
+   - `role` (VARCHAR 50, default: `'siswa'`, opsi: `'admin'`)
+   - `created_at` (TIMESTAMP WITH TIME ZONE DEFAULT NOW())
 2. **`materi`**:
-   - `id` (INTEGER PK AUTOINCREMENT), `judul` (TEXT), `kategori` (TEXT), `isi` (TEXT), `created_at` (DATETIME)
+   - `id` (SERIAL PRIMARY KEY), `judul` (VARCHAR 255), `kategori` (VARCHAR 100), `isi` (TEXT), `created_at` (TIMESTAMPTZ)
    - *(Kategori: Cisco, Mikrotik, Server & Linux, Jaringan Dasar)*
 3. **`video`**:
-   - `id` (INTEGER PK AUTOINCREMENT), `judul` (TEXT), `deskripsi` (TEXT), `url_youtube` (TEXT)
-   - `kategori` (TEXT), `durasi` (TEXT), `created_at` (DATETIME)
+   - `id` (SERIAL PRIMARY KEY), `judul` (VARCHAR 255), `deskripsi` (TEXT), `url_youtube` (TEXT)
+   - `kategori` (VARCHAR 100), `durasi` (VARCHAR 50), `created_at` (TIMESTAMPTZ)
 4. **`quiz`**:
-   - `id` (INTEGER PK AUTOINCREMENT), `pertanyaan` (TEXT)
+   - `id` (SERIAL PRIMARY KEY), `pertanyaan` (TEXT)
    - `pilihan_a` (TEXT), `pilihan_b` (TEXT), `pilihan_c` (TEXT), `pilihan_d` (TEXT)
-   - `jawaban_benar` (TEXT), `kategori` (TEXT)
+   - `jawaban_benar` (VARCHAR 10), `kategori` (VARCHAR 100), `created_at` (TIMESTAMPTZ)
 5. **`nilai_quiz`**:
-   - `id` (INTEGER PK AUTOINCREMENT), `user_id` (FK users.id), `skor` (INTEGER), `tanggal` (DATETIME)
+   - `id` (SERIAL PRIMARY KEY), `user_id` (INTEGER REFERENCES users(id) ON DELETE CASCADE)
+   - `skor` (INTEGER), `tanggal` (TIMESTAMPTZ DEFAULT NOW())
 6. **`pengumuman`**:
-   - `id` (INTEGER PK AUTOINCREMENT), `judul` (TEXT), `isi` (TEXT), `kategori` (TEXT), `penting` (INTEGER 0/1), `created_at` (DATETIME)
+   - `id` (SERIAL PRIMARY KEY), `judul` (VARCHAR 255), `isi` (TEXT), `kategori` (VARCHAR 100)
+   - `penting` (BOOLEAN DEFAULT FALSE), `created_at` (TIMESTAMPTZ)
 
 ---
 
@@ -144,7 +180,7 @@ Netora/
 - `GET /api/video` : Mengambil daftar video tutorial YouTube.
 
 ### 📝 Kuis Interaktif (`/api/quiz`)
-- `GET /api/quiz` : Mengambil 10 soal acak tanpa kunci jawaban.
+- `GET /api/quiz` : Mengambil daftar soal kuis aktif tanpa membocorkan kunci jawaban.
 - `POST /api/quiz/submit` : Menghitung skor kuis & menyimpan nilai (jika login).
 - `GET /api/quiz/riwayat` : Riwayat nilai ujian siswa yang login.
 
@@ -157,6 +193,7 @@ Netora/
 - `PUT /api/profil/ganti-password` : Mengganti kata sandi.
 - `POST /api/profil/upload-foto` : Mengunggah foto profil (Multipart Form).
 - `DELETE /api/profil/hapus-foto` : Mereset foto profil ke default.
+- `DELETE /api/profil/hapus-akun` : Menghapus akun siswa mandiri dengan validasi password.
 
 ### 🛡️ Manajemen Admin (`/api/admin`)
 - `GET /api/admin/stats` : Statistik total siswa, materi, video, dan quiz.
@@ -177,7 +214,7 @@ Netora/
 
 ```mermaid
 graph TD
-    A["Pengunjung Mengakses URL ('/')"] --> B{"Punya Sesi Login?"}
+    A["Pengunjung Mengakses URL ('https://netora.web.id')"] --> B{"Punya Sesi Login?"}
     B -->|Tidak| C["Halaman Login (login.html)"]
     B -->|Ya & Role Siswa| D["Dashboard Siswa (beranda.html)"]
     B -->|Ya & Role Admin| E["Panel Admin (admin.html)"]
@@ -196,286 +233,143 @@ graph TD
 
 ---
 
-## 🏆 7. Hasil Akhir yang Sudah Selesai 100% (Milestone Akhir)
+## 🌐 7. Panduan Deployment Lengkap ke Pterodactyl Panel (FinCloud)
 
-Berikut adalah rekapitulasi fitur dan penyempurnaan menyeluruh yang telah selesai diimplementasikan:
+Server produksi Netora v2 berjalan di container **Pterodactyl Panel FinCloud** dengan spesifikasi:
 
-### 1. Native SPA Transition Engine (Perpindahan Halaman Mulus 60 FPS)
-- **Zero Browser Reload & Layar Putih Hilang Total**: Mengeliminasi `window.location.href` pada navigasi antar halaman dashboard siswa (`beranda`, `materi`, `video`, `quiz`, `kalkulator`, `progres`, `pengumuman`, `profil`).
-- **In-Memory Pre-Caching (0ms Respons)**: Seluruh halaman siswa di-cache ke dalam memori RAM browser di latar belakang saat aplikasi dimuat pertama kali.
-- **Micro-Glide Directional Animation**: Animasi meluncur halus ke kanan saat navigasi maju, dan meluncur ke kiri saat menekan tombol Kembali atau tab di sebelah kiri.
-- **History & Gestur Back HP**: Mendukung `history.pushState` dan listener `popstate`, sehingga tombol Back fisik smartphone berfungsi sempurna tanpa reload.
-- **Re-inisialisasi Script Otomatis**: Setiap skrip halaman mengekspor fungsi inisialisasi (`initBerandaPage`, `initMateriPage`, `initVideoPage`, `initQuizPage`, `initKalkulatorPage`, `initProgresPage`, `initPengumumanPage`, `initProfilPage`) yang langsung dieksekusi saat rute berganti.
+### A. Data Alokasi & Server Node
+- **URL Panel**: `https://panel.fincloud.my.id/server/1f5ca09c`
+- **Server UUID**: `1f5ca09c-d28f-4aad-b877-1d5747d3305f`
+- **Node IP**: `203.175.125.151`
+- **Port Alokasi Pterodactyl**: **`2974`**
+- **Environment**: FinCloud Node.js Environment (Node v24.14.1)
 
-### 2. Formal Pull-to-Refresh Engine
-- **Khusus Halaman Dashboard Siswa**: Fitur tarik ke bawah untuk refresh aplikasi pada perangkat mobile.
-- **Desain Formal & Elegan**: Menggunakan spinner berputar formal yang bersih di bagian atas layar.
-- **Non-Blocking Gesture**: Memiliki threshold tarikan terukur (> 75px) dan sensitivitas tinggi tanpa mengganggu scrolling normal konten halaman.
-
-### 3. Redesain Kalkulator IP Subnetting Real-time
-- **Standar RFC Otentik**: Menghitung Subnet Mask, Network Address, Broadcast Address, Wildcard Mask, Usable Host Range, dan Total Host berdasarkan RFC 791 dan RFC 4632.
-- **Layout Split 2 Kolom Desktop**: Form input di sisi kiri dan Card Hasil Kalkulasi Interaktif di sisi kanan.
-- **Dynamic Spotlight Card**: Menampilkan nilai sorotan dengan aksen warna dinamis sesuai pilihan (Subnet, Network, Broadcast, Range).
-- **Format Biner 32-Bit Terpadu**: Visualisasi susunan bit biner subnet mask dalam kartu rapi.
-- **1-Click Copy**: Tombol salin instan dengan notifikasi toast pada setiap parameter hasil.
-- **Riwayat Perhitungan**: Menyimpan 5 perhitungan terakhir secara lokal di peramban.
-
-### 4. Bottom Spacing & Unified Bottom Navigation Bar
-- **Standarisasi Spacing 60px**: Penyeragaman tinggi navigasi bawah (60px) dan jarak aman konten mobile (padding-bottom 68px) di semua halaman.
-- **Visual Bersih & Responsif**: Berwarna putih bersih dengan indikator dot notifikasi dan penanda aktif (*active tab highlight*).
-
-### 5. Panel Kontrol Admin Terpadu (`admin.html`)
-- **Single Page Application Admin**: Manajemen data siswa, materi, video, kuis, dan pengumuman dalam satu antarmuka cepat dengan sidebar responsif.
-- **Proteksi Tingkat Tinggi**: Verifikasi peran (*role check*) di level server; pengguna berstatus siswa otomatis ditolak jika mencoba mengakses API admin.
-
----
-
-## 🌐 8. Panduan Deployment Lengkap ke Pterodactyl Panel (fincloud.my.id)
-
-Bagian ini memuat panduan lengkap untuk memasang dan menjalankan aplikasi **NETORA v2** pada server hosting **Pterodactyl Panel** di **`https://panel.fincloud.my.id`** dengan **IP Public: `203.175.125.151`**.
-
-### A. Spesifikasi & Kompatibilitas Sistem
-
-| Parameter | Spesifikasi / Konfigurasi |
-|---|---|
-| **Alamat Panel** | `https://panel.fincloud.my.id` |
-| **IP Public Server** | `203.175.125.151` |
-| **Nest / Egg** | **NodeJS** (Generic Node.js Egg) |
-| **Docker Image** | `ghcr.io/parkervcp/yolks:nodejs_22` *(Sangat Disarankan)* atau `nodejs_20` |
-| **File Utama (Startup)** | `server.js` |
-| **Perintah Startup** | `node server.js` atau `npm start` |
-| **Port Binding** | Otomatis membaca `process.env.PORT` atau `process.env.SERVER_PORT` di host `0.0.0.0` |
-
-### B. Daftar Berkas yang Wajib Di-Upload
-
-Saat membuat berkas `.zip` untuk diunggah ke File Manager Pterodactyl:
-
-#### ✅ Berkas & Folder yang HARUS Di-Upload:
-1. `public/` (Semua file HTML, CSS, JS, Gambar, dan Ikon)
-2. `routes/` (Seluruh berkas route API)
-3. `database/` (Berkas `init.js`)
-4. `middleware/` (Berkas `auth.js`)
-5. `server.js` (Server backend)
-6. `package.json` & `package-lock.json`
-7. `netora.db` *(Penting: sertakan database ini agar data materi, akun admin, video, dan quiz bawaan langsung tersedia)*
-
-#### ❌ Berkas yang JANGAN Di-Upload:
-- `node_modules/` *(Dilarang upload dari Windows! Biarkan panel menginstal dependensi melalui `npm install` agar sesuai dengan container Linux)*
-- Berkas video rekaman besar (`*.mp4`)
-- Berkas installer APK (`*.apk`)
-- Berkas script lokal Windows (`*.bat`)
-
-### C. Langkah-Langkah Pemasangan di Pterodactyl
-
-1. **Buka Server di Panel Fincloud**:
-   - Login ke `https://panel.fincloud.my.id`.
-   - Buka server Node.js Anda.
-   - Buka tab **Network / Allocation** dan catat **Port** yang diberikan sistem (Contoh: `10025`, `25565`, dll).
-
-2. **Atur Menu "Startup"**:
-   - Masuk ke tab **Startup** pada panel.
-   - Pastikan Docker Image mengarah ke **NodeJS 22** (`ghcr.io/parkervcp/yolks:nodejs_22`).
-   - Pastikan Startup Command berisi: `node server.js` (atau `npm start`).
-   - Pastikan Main File berisi: `server.js`.
-
-3. **Upload & Ekstrak Berkas di Menu "Files"**:
-   - Masuk ke tab **Files**.
-   - Unggah berkas `netora.zip`.
-   - Klik kanan atau opsi menu pada berkas zip, pilih **Unarchive / Extract**.
-   - Pastikan berkas `server.js` berada langsung di folder utama `/home/container/`.
-
-4. **Instal Dependensi (`npm install`)**:
-   - Buka tab **Console**.
-   - Jika egg tidak melakukan instalasi otomatis, jalankan perintah:
-     ```bash
-     npm install
-     ```
-   - *(Dependensi Netora 100% Pure JavaScript: `express`, `express-session`, `cors`, `bcryptjs`, dan `multer`. Proses instalasi hanya memakan waktu 3–5 detik).*
-
-5. **Nyalakan Server**:
-   - Klik tombol **Start** pada server.
-   - Amati log di Console:
-     ```text
-     ====================================================
-     🚀 Server NETORA v2 Berjalan & Siap Digunakan!
-     🌐 Akses Pterodactyl / IP Public : http://203.175.125.151:<PORT>
-     💻 Akses Lokal / Internal      : http://localhost:<PORT>
-     ====================================================
-     ```
-
-### D. Akses Aplikasi & Akun Login Bawaan
-
-Akses aplikasi melalui peramban:
-```
-http://203.175.125.151:<PORT_ALOKASI_ANDA>
-```
-*(Contoh jika port alokasi Anda adalah `10025`: `http://203.175.125.151:10025`)*
-
-#### Kredensial Akun Default:
-- **Akun Admin**:
-  - Email: `admin@netora.id`
-  - Password: `password123`
-  - *(Memiliki akses penuh ke halaman `/admin.html`)*
-- **Akun Siswa Contoh**:
-  - Email: `siswa@netora.id`
-  - Password: `password123`
-  - *(Atau buat akun siswa baru secara instan melalui menu Daftar di `/register.html`)*
-
-### E. Keunggulan Arsitektur Netora di Pterodactyl
-1. **Relative API Endpoints**: Seluruh pemanggilan data di sisi frontend menggunakan path relatif (`/api/...`). Tidak ada URL IP lokal yang terikat (*hardcoded*), sehingga aplikasi langsung berjalan normal di IP publik manapun, port berapapun, atau domain kustom bersertifikat SSL (`https://netora.fincloud.my.id`).
-2. **Dynamic Port Binding**: `server.js` secara otomatis membaca variabel lingkungan `process.env.PORT` atau `process.env.SERVER_PORT` yang diberikan oleh Pterodactyl di host `0.0.0.0`.
-3. **Session Stability**: Menggunakan konfigurasi `app.set('trust proxy', 1)` agar cookie sesi login tetap valid dan tidak mudah logout saat diakses melalui reverse proxy.
-
----
-
-## 💻 9. Panduan Operasional Lokal (Development)
-
-Untuk menjalankan atau mengembangkan aplikasi di komputer lokal:
-
-```bash
-# Instalasi dependensi
-npm install
-
-# Menjalankan server produksi
-npm start
-
-# Menjalankan mode pengembangan (auto-reload saat file diedit)
-npm run dev
+### B. Variabel Lingkungan (`.env`) pada Pterodactyl Files
+Di File Manager Pterodactyl, buat/edit file `.env`:
+```env
+PORT=2974
+SERVER_PORT=2974
+SERVER_IP=203.175.125.151
+SESSION_SECRET=netora_cyberpunk_secret_key_2026
+SUPABASE_URL=https://dkzebtyoboqxojigyjnv.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-Aplikasi lokal dapat diakses melalui:
-👉 **`http://localhost:3000`**
+### C. Mekanisme Dynamic Port Binding di `server.js`
+Kode `server.js` dikonfigurasi untuk memprioritaskan port alokasi container:
+```javascript
+const PORT = process.env.SERVER_PORT || process.env.PORT || 3000;
+const HOST = '0.0.0.0';
+```
+Hal ini memastikan saat dijalankan di Pterodactyl, Express otomatis mengikat port `2974` di `0.0.0.0` sehingga bisa diakses dari jaringan luar.
+
+### D. Fitur Auto-Update Git Bawaan FinCloud
+Egg Pterodactyl FinCloud telah dilengkapi skrip auto-pull:
+- Setiap kali Anda menekan tombol **Restart** di panel, container otomatis menjalankan:
+  ```text
+  [+] Updating from Git...
+  Already up to date / Fast-forward
+  ```
+- Dengan demikian, setiap perubahan kode yang di-push ke GitHub akan otomatis terpasang hanya dengan mengklik tombol **Restart** di Pterodactyl!
 
 ---
 
-## 🌐 10. Panduan Integrasi Custom Domain (`netora.web.id`), Cloudflare & Pembuatan Aplikasi Mobile (APK / PWA)
+## 🔒 8. Panduan Lengkap Cloudflare, Domain `netora.web.id` & SSL
 
-Dokumen ini merupakan panduan teknis langkah-demi-langkah untuk menghubungkan domain kustom **`netora.web.id`** ke server Pterodactyl melalui jaringan global **Cloudflare**, mengaktifkan sertifikat SSL/HTTPS gratis, menghilangkan nomor port alokasi pada URL, serta mengubah web menjadi aplikasi Android (.apk / PWA) siap instal untuk siswa.
+Seluruh lalu lintas domain diarahkan melalui jaringan **Cloudflare** untuk memberikan sertifikat SSL/HTTPS gratis, proteksi DDoS, dan menghilangkan nomor port alokasi Pterodactyl.
 
----
+### 8.1. Konfigurasi Nameserver di DomaiNesia
+Domain `netora.web.id` didaftarkan di DomaiNesia dan diarahkan ke Cloudflare dengan nameserver:
+- **Nameserver 1**: `fattouche.ns.cloudflare.com`
+- **Nameserver 2**: `lorna.ns.cloudflare.com`
 
-### 10.1. Langkah 1: Hubungkan Domain `netora.web.id` ke Cloudflare
-
-1. **Daftar Akun Cloudflare**:
-   - Buka [https://dash.cloudflare.com](https://dash.cloudflare.com) dan buat akun gratis.
-   - Klik tombol **Add a Site** / **Tambahkan Situs**, lalu masukkan nama domain: `netora.web.id`.
-   - Pilih paket **Free (Gratis)**.
-
-2. **Ubah Nameserver di Registrar Domain**:
-   - Cloudflare akan menampilkan 2 alamat Nameserver khusus (misal: `amy.ns.cloudflare.com` dan `bob.ns.cloudflare.com`).
-   - Masuk ke dashboard tempat Anda membeli domain `netora.web.id` (misalnya: Niagahoster, DomaiNesia, IDwebhost, Exabytes, dsb).
-   - Masuk ke menu **Domain Management** $\rightarrow$ **Nameservers** (DNS).
-   - Ubah Nameserver bawaan registrar menjadi 2 Nameserver Cloudflare tersebut, lalu simpan.
-   - *Tunggu proses propagasi DNS (biasanya 5–30 menit).*
-
----
-
-### 10.2. Langkah 2: Konfigurasi DNS Record di Cloudflare
-
-Setelah status domain di Cloudflare aktif (**Active**):
-1. Masuk ke menu **DNS** $\rightarrow$ **Records** di dashboard Cloudflare `netora.web.id`.
-2. Tambahkan DNS Record untuk mengarahkan traffic ke IP Server Pterodactyl:
-   - **Tipe**: `A`
-   - **Name**: `@` (atau `netora.web.id`)
-   - **IPv4 Address**: Masukkan IP Publik Node Pterodactyl Anda (misalnya: `203.175.125.151`).
-   - **Proxy status**: **Proxied** (Ikon awan warna Orange ☁️ aktif).
-   - **TTL**: `Auto`.
-3. Tambahkan juga subdomain `www` (opsional):
-   - **Tipe**: `CNAME`
+### 8.2. Pengaturan DNS Records di Cloudflare
+Pada menu **DNS** $\rightarrow$ **Records** di dashboard Cloudflare:
+1. **Record A (Apex Domain)**:
+   - **Type**: `A`
+   - **Name**: `@` *(netora.web.id)*
+   - **IPv4 Address**: `203.175.125.151`
+   - **Proxy status**: **Proxied** (Awan Orange ☁️)
+2. **Record CNAME (Subdomain WWW)**:
+   - **Type**: `CNAME`
    - **Name**: `www`
    - **Target**: `netora.web.id`
-   - **Proxy status**: **Proxied** (Awan Orange).
+   - **Proxy status**: **Proxied** (Awan Orange ☁️)
+
+### 8.3. Pengaturan SSL / TLS (HTTPS)
+Pada menu **SSL/TLS**:
+1. **SSL/TLS Overview**:
+   - Mode Enkripsi: **Flexible** *(Menghubungkan klien dengan HTTPS modern, lalu berkomunikasi cepat ke container Pterodactyl)*.
+2. **Edge Certificates**:
+   - **Always Use HTTPS**: **ON** *(Otomatis mengalihkan http:// ke https://)*.
+   - **Automatic HTTPS Rewrites**: **ON** *(Mencegah error mixed content)*.
+   - **Minimum TLS Version**: `TLS 1.2` / `TLS 1.3`.
+
+### 8.4. Cloudflare Origin Rules: Trik Bebas Port (Menghilangkan :2974)
+Agar siswa bisa membuka **`https://netora.web.id`** secara bersih tanpa perlu mengetik port `:2974`:
+1. Buka menu **Rules** $\rightarrow$ **Origin Rules**.
+2. Buat aturan baru (**Create rule**):
+   - **Rule name**: `port-netora`
+   - **When incoming requests match**: `All incoming requests` *(atau Hostname equals `netora.web.id`)*.
+   - **Destination Port**: Pilih **Rewrite to...** lalu masukkan **`2974`**.
+3. Klik **Deploy**.
+
+> 💡 **Cara Kerja:** Siswa mengetik `https://netora.web.id` di browser (standar port HTTPS 443). Cloudflare menerima request tersebut dan meneruskannya ke port `2974` di IP server Pterodactyl secara transparan di latar belakang. Siswa melihat alamat URL bersih dengan gembok SSL hijau!
 
 ---
 
-### 10.3. Langkah 3: Menghilangkan Nomor Port Menggunakan Cloudflare Origin Rules (Tanpa Perlu Setup Nginx Tambahan)
+## 📱 9. Pembuatan Aplikasi Mobile Android (.apk & PWA)
 
-Karena server Pterodactyl biasanya menggunakan port khusus (misalnya port alokasi `10025`, bukan port 80/443), jika langsung diakses siswa harus mengetik `netora.web.id:10025`. 
+Aplikasi Netora v2 dirancang dengan konsep **Mobile-First App Shell**. Terdapat 2 opsi distribusi untuk siswa:
 
-Agar siswa bisa membuka **`https://netora.web.id`** secara bersih **tanpa mengetik nomor port**, gunakan fitur gratis bawaan Cloudflare: **Origin Rules**.
+### Opsi A: Progressive Web App (PWA - Langsung dari Browser)
+1. Siswa membuka `https://netora.web.id` di Google Chrome pada smartphone Android.
+2. Browser otomatis menampilkan prompt: **"Tambahkan Netora ke Layar Utama" / "Install Aplikasi Netora"**.
+3. Setelah diinstal, Netora muncul di menu aplikasi HP dengan logo resmi, berjalan *full screen* tanpa address bar browser layaknya aplikasi native Play Store.
+4. Diatur melalui file `public/manifest.json` dan `public/sw.js`.
 
-1. Di dashboard Cloudflare domain `netora.web.id`, buka menu **Rules** $\rightarrow$ **Origin Rules**.
-2. Klik tombol **Create rule**.
-3. Isi parameter konfigurasi berikut:
-   - **Rule name**: `Pterodactyl Port Forwarding`
-   - **Field**: `Hostname`
-   - **Operator**: `equals`
-   - **Value**: `netora.web.id`
-   - *(Jika ingin mencakup www, klik "Or" lalu tambah Hostname equals `www.netora.web.id`)*.
-4. Di bagian bawah (**Destination Port**):
-   - Pilih opsi: **Rewrite to...**
-   - Masukkan **Port Alokasi Pterodactyl Anda** (misalnya: `10025`).
-5. Klik **Deploy**.
-
-> 💡 **Hasilnya**: Setiap kali siswa mengetik `https://netora.web.id` di browser, Cloudflare otomatis meneruskan request ke port alokasi Pterodactyl di latar belakang. Siswa melihat URL bersih `https://netora.web.id` dengan gembok SSL hijau/aman!
-
----
-
-### 10.4. Langkah 4: Konfigurasi SSL/TLS & Enkripsi Cloudflare
-
-1. Masuk ke menu **SSL/TLS** $\rightarrow$ **Overview** di Cloudflare.
-2. Pilih mode enkripsi:
-   - **Flexible**: *(Rekomendasi jika container Node.js di Pterodactyl berjalan dengan protokol HTTP biasa)*. Cloudflare mengamankan akses pengguna dengan HTTPS modern, lalu berkomunikasi ke Pterodactyl dengan cepat.
-3. Masuk ke sub-menu **SSL/TLS** $\rightarrow$ **Edge Certificates**:
-   - Aktifkan **Always Use HTTPS**: **ON** *(otomatis mengalihkan akses http:// ke https://)*.
-   - Aktifkan **Automatic HTTPS Rewrites**: **ON**.
-   - **Minimum TLS Version**: `TLS 1.2`.
-
----
-
-### 10.5. Langkah 5: Pembuatan Aplikasi Mobile Android (APK & PWA)
-
-Aplikasi Netora v2 telah didesain dengan konsep **Mobile-First Responsive Web Application** dengan navigasi bilah bawah *(Bottom Navigation Bar)* dan sentuhan *app shell*. Ada 2 metode untuk menjadikannya aplikasi di smartphone siswa:
-
-#### Metode A: Progressive Web App (PWA - Langsung dari Browser Tanpa Download File)
-Siswa cukup membuka `https://netora.web.id` di browser Google Chrome / Brave di HP Android:
-1. Browser akan otomatis memunculkan banner: **"Tambahkan Netora ke Layar Utama"** / **"Install Aplikasi Netora"**.
-2. Siswa menekan **Install**.
-3. Ikon Netora dengan logo resmi akan muncul di menu aplikasi Android siswa layaknya aplikasi Play Store, berjalan *full screen* tanpa kolom address bar browser!
-
-#### Metode B: Build File APK Siap Pasang Menggunakan PWABuilder (Gratis & Instan)
-Jika Anda ingin membagikan file installer fisik berformat **`.apk`** ke grup WhatsApp kelas atau menguploadnya ke Google Play Store:
-1. Pastikan domain `https://netora.web.id` sudah aktif dan dapat diakses dengan HTTPS.
-2. Buka situs resmi Microsoft PWA: [https://www.pwabuilder.com](https://www.pwabuilder.com).
-3. Masukkan URL: `https://netora.web.id` lalu klik **Start**.
-4. PWABuilder akan memvalidasi Manifest dan Service Worker.
-5. Klik tombol **Package for Android**.
-6. Atur konfigurasi aplikasi:
+### Opsi B: Build File APK Siap Pasang via PWABuilder (Gratis & Instan)
+Untuk membagikan installer fisik `.apk` ke grup WhatsApp kelas atau mengupload ke Google Play Store:
+1. Buka situs resmi Microsoft PWA: [https://www.pwabuilder.com](https://www.pwabuilder.com).
+2. Masukkan URL: `https://netora.web.id` $\rightarrow$ klik **Start**.
+3. PWABuilder akan memvalidasi Manifest dan Service Worker (skor 100/100 PWA Ready).
+4. Klik **Package for Android**.
+5. Konfigurasi Package:
    - **Package ID**: `id.web.netora.app`
    - **App Name**: `Netora - Belajar TKJ`
    - **Launcher Icon**: Otomatis menggunakan `logo.png` Netora.
-7. Klik **Download Package**. Anda akan mendapatkan file **`netora.apk`** siap kirim ke siswa!
-
-#### Metode C: Wrapper Native Android Studio (WebView / TWA)
-Jika menginginkan build kustom dari source code Java/Kotlin di Android Studio:
-- Buat proyek Android baru dengan template **Empty Views Activity**.
-- Pada `MainActivity.java`, inisialisasi `WebView` dengan URL awal:
-  ```java
-  WebView webView = findViewById(R.id.webview);
-  webView.getSettings().setJavaScriptEnabled(true);
-  webView.getSettings().setDomStorageEnabled(true);
-  webView.setWebViewClient(new WebViewClient());
-  webView.loadUrl("https://netora.web.id");
-  ```
-- Tambahkan izin internet di `AndroidManifest.xml`:
-  ```xml
-  <uses-permission android:name="android.permission.INTERNET" />
-  ```
-- Build $\rightarrow$ **Build APK(s)** untuk menghasilkan file instalasi.
+6. Klik **Download Package** $\rightarrow$ file `netora.apk` langsung siap diinstal di HP siswa!
 
 ---
 
-### 10.6. Checklist Lengkap Deployment Akhir
+## 🔄 10. Alur Kerja Pembaruan Kode (Git CI/CD Workflow)
 
-| No | Tahapan | Status | Keterangan |
-|---|---|:---:|---|
-| 1 | Database Supabase PostgreSQL | ✅ Siap | Seluruh tabel & API termigrasi |
-| 2 | File Server & Route API | ✅ Siap | Bebas script Windows `.bat` |
-| 3 | Upload ke Panel Pterodactyl | ⏳ Siap Dilakukan | Ekstrak ZIP & `npm install` |
-| 4 | Setting Domain `netora.web.id` di Cloudflare | ⏳ Siap Dilakukan | Ubah Nameserver & Tambah Record A |
-| 5 | Cloudflare Origin Rule (Port Rewrite) | ⏳ Siap Dilakukan | Teruskan port 443 ke port Pterodactyl |
-| 6 | Verifikasi HTTPS / SSL | ⏳ Siap Dilakukan | Mode Flexible & Always Use HTTPS |
-| 7 | Generate APK / PWA Siswa | ⏳ Siap Dilakukan | Via PWABuilder / Add to Home Screen |
+Untuk memperbarui kode di masa mendatang tanpa perlu membuka panel Pterodactyl atau upload ZIP manual:
+
+### Cara dari VS Code (GUI / Klik-Klik Saja):
+1. Lakukan perubahan kode pada file di VS Code laptop Anda.
+2. Buka tab **Source Control** di sidebar kiri (atau tekan `Ctrl + Shift + G`).
+3. Ketik pesan perubahan di kolom teks (misal: `tambah materi cisco baru`).
+4. Klik tombol centang biru **Commit**.
+5. Klik tombol **Sync Changes** (atau **Push**).
+6. Buka panel Pterodactyl $\rightarrow$ klik tombol **Restart**.
+   *(FinCloud otomatis menjalankan `[+] Updating from Git...` dan server langsung aktif dengan kode terbaru dalam hitungan detik!)*
 
 ---
-*Dokumentasi ini mencerminkan arsitektur sistem final aplikasi NETORA v2 — Tim Pengembang Netora © 2026.*
+
+## ✅ 11. Master Checklist Status Deployment
+
+| No | Komponen Sistem | Target Konfigurasi | Status | Keterangan |
+|---|---|---|:---:|---|
+| 1 | **Database Cloud** | Supabase PostgreSQL | ✅ Aktif | 6 tabel termigrasi & terverifikasi |
+| 2 | **Git Repository** | GitHub `netoraid/netora-project` | ✅ Aktif | Source code tersinkronisasi aman |
+| 3 | **Server Pterodactyl** | FinCloud Node.js (`203.175.125.151:2974`) | ✅ Aktif | Server online & database connected |
+| 4 | **Domain Registrar** | DomaiNesia (`netora.web.id`) | ✅ Aktif | Nameserver diarahkan ke Cloudflare |
+| 5 | **Cloudflare DNS** | Record A $\rightarrow$ `203.175.125.151` | ✅ Aktif | Mode Proxied ☁️ menyala |
+| 6 | **Sertifikat SSL** | Cloudflare Edge Certificate | ✅ Aktif | Mode Flexible & Always Use HTTPS |
+| 7 | **Bebas Port (Rewrite)** | Origin Rules $\rightarrow$ Port `2974` | ✅ Aktif | Siswa akses https://netora.web.id |
+| 8 | **PWA & APK Mobile** | Manifest & Service Worker | ✅ Siap | Ready Add-to-Home & PWABuilder |
+
+---
+
+*Dokumentasi ini mencerminkan konfigurasi final arsitektur sistem produksi NETORA v2 — Tim Pengembang Netora © 2026.*

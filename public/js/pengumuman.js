@@ -4,10 +4,42 @@ window.initPengumumanPage = function() {
 
   getUser().then(user => updateNavHeader(user));
 
+  function renderSkeleton() {
+    container.innerHTML = `
+      <div class="skeleton-notif-card">
+        <div class="skeleton-notif-header">
+          <div class="netora-skeleton" style="width:72px; height:18px; border-radius:6px;"></div>
+          <div class="netora-skeleton" style="width:96px; height:13px; border-radius:4px;"></div>
+        </div>
+        <div class="netora-skeleton skeleton-line h-18 w-75" style="margin-top:4px;"></div>
+        <div class="netora-skeleton skeleton-line w-100"></div>
+        <div class="netora-skeleton skeleton-line w-60"></div>
+      </div>
+      <div class="skeleton-notif-card">
+        <div class="skeleton-notif-header">
+          <div class="netora-skeleton" style="width:84px; height:18px; border-radius:6px;"></div>
+          <div class="netora-skeleton" style="width:90px; height:13px; border-radius:4px;"></div>
+        </div>
+        <div class="netora-skeleton skeleton-line h-18 w-90" style="margin-top:4px;"></div>
+        <div class="netora-skeleton skeleton-line w-100"></div>
+        <div class="netora-skeleton skeleton-line w-40"></div>
+      </div>
+      <div class="skeleton-notif-card">
+        <div class="skeleton-notif-header">
+          <div class="netora-skeleton" style="width:64px; height:18px; border-radius:6px;"></div>
+          <div class="netora-skeleton" style="width:92px; height:13px; border-radius:4px;"></div>
+        </div>
+        <div class="netora-skeleton skeleton-line h-18 w-60" style="margin-top:4px;"></div>
+        <div class="netora-skeleton skeleton-line w-100"></div>
+        <div class="netora-skeleton skeleton-line w-50"></div>
+      </div>
+    `;
+  }
+
   function renderPengumuman(list) {
     if (!list || list.length === 0) {
       container.innerHTML = `
-        <div style="background:#FFFFFF; border-radius:20px; padding:36px 20px; text-align:center; margin:16px; border:1px solid #E2E8F0; box-shadow:0 4px 16px rgba(0,0,0,0.03);">
+        <div class="netora-fade-in" style="background:#FFFFFF; border-radius:20px; padding:36px 20px; text-align:center; margin:16px; border:1px solid #E2E8F0; box-shadow:0 4px 16px rgba(0,0,0,0.03);">
           <div style="width:56px; height:56px; border-radius:18px; background:#F1F5F9; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px; color:#94A3B8;">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
           </div>
@@ -18,7 +50,7 @@ window.initPengumumanPage = function() {
       return;
     }
 
-    container.innerHTML = '<div class="desktop-grid-2col">' + list.map(item => `
+    container.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + list.map(item => `
       <div style="background:#FFFFFF; border-radius:18px; padding:18px 16px; margin:0 16px 14px; box-shadow:0 3px 16px rgba(13,91,255,0.05); border:1px solid ${item.penting ? 'rgba(239,68,68,0.35)' : 'rgba(0,0,0,0.06)'}; position:relative; overflow:hidden;">
         ${item.penting ? `<div style="position:absolute; top:0; left:0; width:4px; height:100%; background:#EF4444;"></div>` : ''}
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -40,16 +72,12 @@ window.initPengumumanPage = function() {
     `).join('') + '</div>';
   }
 
-  // 1. Coba baca cache lokal (0ms render)
-  try {
-    const cached = sessionStorage.getItem('netora_pengumuman_cache');
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      if (Array.isArray(parsed) && parsed.length > 0) renderPengumuman(parsed);
-    }
-  } catch(e) {}
+  // Jika container belum memiliki konten skeleton, isi dengan skeleton shimmer
+  if (!container.innerHTML.trim()) {
+    renderSkeleton();
+  }
 
-  // 2. Fetch data mutakhir
+  // Fetch data mutakhir
   async function loadPengumumanData() {
     try {
       const res = await fetch('/api/pengumuman');
@@ -70,9 +98,17 @@ window.initPengumumanPage = function() {
         renderPengumuman(data.pengumuman);
       }
     } catch (err) {
-      if (!sessionStorage.getItem('netora_pengumuman_cache')) {
-        container.innerHTML = '<p style="color:#EF4444; text-align:center; padding:40px 0; font-size:13px;">Gagal memuat notifikasi.</p>';
-      }
+      try {
+        const cached = sessionStorage.getItem('netora_pengumuman_cache');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            renderPengumuman(parsed);
+            return;
+          }
+        }
+      } catch(e) {}
+      container.innerHTML = '<p style="color:#EF4444; text-align:center; padding:40px 0; font-size:13px;">Gagal memuat notifikasi.</p>';
     }
   }
 

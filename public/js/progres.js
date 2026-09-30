@@ -90,7 +90,7 @@ window.initProgresPage = function() {
       updateSkillBar('linux', linuxScore);
 
       if (historyContainer) {
-        historyContainer.innerHTML = riwayat.map(item => {
+        historyContainer.innerHTML = '<div class="netora-fade-in">' + riwayat.map(item => {
           const score = Number(item.skor) || 0;
           const isPass = score >= 70;
           const badgeBg = isPass ? '#22C55E' : '#EF4444';
@@ -123,7 +123,7 @@ window.initProgresPage = function() {
               </div>
             </div>
           `;
-        }).join('');
+        }).join('') + '</div>';
       }
     } else {
       // Default / Siswa Baru Belum Mengerjakan Kuis (0% data murni)
@@ -138,7 +138,7 @@ window.initProgresPage = function() {
 
       if (historyContainer) {
         historyContainer.innerHTML = `
-          <div style="background:#FFFFFF; border-radius:18px; padding:28px 20px; text-align:center; box-shadow:0 4px 18px rgba(13,91,255,0.05); border:1px solid rgba(0,0,0,0.04);">
+          <div class="netora-fade-in" style="background:#FFFFFF; border-radius:18px; padding:28px 20px; text-align:center; box-shadow:0 4px 18px rgba(13,91,255,0.05); border:1px solid rgba(0,0,0,0.04);">
             <div style="width:48px; height:48px; border-radius:12px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="20" x2="18" y2="10"/>

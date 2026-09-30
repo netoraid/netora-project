@@ -64,12 +64,14 @@ window.initVideoPage = function() {
   }
 
   async function loadVideos() {
+    renderVideoSkeleton();
+
     // Baca cache video jika ada
     try {
       const cached = sessionStorage.getItem('netora_video_cache');
       if (cached) {
         allVideos = JSON.parse(cached);
-        renderVideoCards();
+        if (allVideos.length > 0) renderVideoCards();
       }
     } catch (e) {}
 
@@ -134,7 +136,7 @@ window.initVideoPage = function() {
       return;
     }
 
-    videoContainer.innerHTML = '<div class="desktop-grid-2col">' + list.map(v => {
+    videoContainer.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + list.map(v => {
       const isPlaying = playingVideoId === v.id;
       const directUrl = v.direct_url || (extractYouTubeInfo(v.url_youtube).directUrl) || v.url_youtube;
       return `

@@ -520,38 +520,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 1. Top Glowing Progress Bar
-  let topBar = document.getElementById('netora-top-progress-bar');
-  if (!topBar) {
-    topBar = document.createElement('div');
-    topBar.id = 'netora-top-progress-bar';
-    document.documentElement.appendChild(topBar);
-  }
-
-  function startTopBar() {
-    if (!topBar) return;
-    topBar.style.transition = 'none';
-    topBar.style.width = '0%';
-    topBar.classList.add('active');
-    void topBar.offsetWidth;
-    topBar.style.transition = 'width 0.22s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.15s ease';
-    topBar.style.width = '80%';
-  }
-
-  function finishTopBar() {
-    if (!topBar) return;
-    topBar.style.width = '100%';
-    setTimeout(() => {
-      topBar.classList.remove('active');
-      setTimeout(() => {
-        if (topBar) topBar.style.width = '0%';
-      }, 100);
-    }, 80);
-  }
-
-  // 2. Eksekusi Animasi Masuk (Glide In) saat Halaman Selesai Dimuat
+  // 1. Eksekusi Animasi Masuk (Glide In) saat Halaman Selesai Dimuat di Halaman Tujuan
   function handleEnterAnimation() {
-    finishTopBar();
     const savedDir = sessionStorage.getItem('netora_nav_dir');
     sessionStorage.removeItem('netora_nav_dir');
 
@@ -571,29 +541,19 @@ document.addEventListener('DOMContentLoaded', () => {
     handleEnterAnimation();
   }
 
-  // 3. Navigasi Halus dengan Micro-Glide Keluar & Masuk
+  // 2. Navigasi Langsung Instan: Tanpa loading bar di halaman asal, loading ditangani oleh skeleton di halaman tujuan
   let _isNavigating = false;
   function navigateTo(targetUrl, direction = 'right') {
     if (_isNavigating) return;
     _isNavigating = true;
-    startTopBar();
 
     sessionStorage.setItem('netora_nav_dir', direction);
 
-    const appContainer = document.querySelector('.netora-mobile-app');
-    if (appContainer) {
-      const exitClass = (direction === 'left') ? 'netora-slide-out-to-right' : 'netora-slide-out-to-left';
-      appContainer.classList.remove('netora-glide-in-left', 'netora-glide-in-right');
-      appContainer.classList.add(exitClass);
-      setTimeout(() => {
-        window.location.href = targetUrl;
-      }, 70);
-    } else {
-      window.location.href = targetUrl;
-    }
+    // Langsung berpindah ke URL tujuan seketika (0ms jeda)
+    window.location.href = targetUrl;
   }
 
-  // 4. Expose Global Functions
+  // 3. Expose Global Functions
   window.netoraNavigate = function(targetUrl, direction = 'right') {
     navigateTo(targetUrl, direction);
   };
@@ -607,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // 5. Global Link Click Interceptor
+  // 4. Global Link Click Interceptor
   document.addEventListener('click', (e) => {
     // Tombol Back
     const backBtn = e.target.closest('.subpage-back-btn, .btn-back, .back-btn, [data-netora-back]');
@@ -675,6 +635,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (curIndex !== -1 && targetIndex !== -1) {
         direction = (targetIndex < curIndex) ? 'left' : 'right';
       }
+    }
+
+    // Berikan respons visual instan pada Tab Navbar saat diklik (Optimistic UI)
+    const activeNavGroup = link.closest('.app-bottom-nav-white, .app-bottom-nav, .desktop-top-nav-links, .desktop-nav-tabs');
+    if (activeNavGroup) {
+      activeNavGroup.querySelectorAll('.nav-tab-item, .desktop-nav-link').forEach(item => item.classList.remove('active'));
+      link.classList.add('active');
     }
 
     // Hanya intersep navigasi internal yang menuju halaman .html

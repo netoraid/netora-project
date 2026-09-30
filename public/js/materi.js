@@ -45,12 +45,15 @@ window.initMateriPage = async function() {
   // 1. Halaman List Materi
   if (materiContainer) {
     async function loadMateri() {
-      // Baca data materi dari cache jika ada
+      // Tampilkan skeleton shimmer terlebih dahulu di halaman tujuan
+      renderMateriSkeleton();
+
+      // Cek apakah ada cache
       try {
         const cached = sessionStorage.getItem('netora_materi_cache');
         if (cached) {
           allMateri = JSON.parse(cached);
-          renderMateriCards();
+          if (allMateri.length > 0) renderMateriCards();
         }
       } catch (e) {}
 
@@ -86,11 +89,11 @@ window.initMateriPage = async function() {
       });
 
       if (list.length === 0) {
-        materiContainer.innerHTML = '<div style="text-align:center; padding:30px; color:#64748B; font-size:13px;">Tidak ada modul yang sesuai filter.</div>';
+        materiContainer.innerHTML = '<div class="netora-fade-in" style="text-align:center; padding:30px; color:#64748B; font-size:13px;">Tidak ada modul yang sesuai filter.</div>';
         return;
       }
 
-      materiContainer.innerHTML = '<div class="desktop-grid-2col">' + list.map((item, idx) => {
+      materiContainer.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + list.map((item, idx) => {
         const icon = getMateriIcon(item.kategori || '', item.judul || '');
         const pagesText = item.pages || `${Math.max(6, (item.isi ? Math.round(item.isi.length / 250) : 8))} halaman`;
 

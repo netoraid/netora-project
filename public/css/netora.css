@@ -4191,22 +4191,25 @@ body.admin-page {
 /* NETORA iOS-GRADE SLIDE & GLIDE TRANSITIONS (SEPERTI APLIKASI iPHONE)       */
 /* ========================================================================== */
 
-/* Top Glowing Page Loading Bar */
+/* Top Glowing Page Loading Bar dinonaktifkan agar tidak ada loading saat pindah halaman */
 #netora-top-progress-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  width: 0%;
-  background: linear-gradient(90deg, #0D5BFF 0%, #00D2FF 50%, #FF7A00 100%);
-  box-shadow: 0 0 10px rgba(13, 91, 255, 0.8), 0 0 4px rgba(0, 210, 255, 0.6);
-  z-index: 999999;
-  pointer-events: none;
-  transition: width 0.24s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.2s ease;
-  opacity: 0;
+  display: none !important;
 }
-#netora-top-progress-bar.active {
-  opacity: 1;
+
+/* Smooth fade-in saat data menggantikan skeleton loading di halaman tujuan */
+.netora-fade-in {
+  animation: netoraContentFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes netoraContentFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* 1. Navigasi ke KANAN: Halaman baru meluncur masuk halus dari KANAN */
