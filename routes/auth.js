@@ -139,6 +139,7 @@ router.post('/login', async (req, res) => {
     }
 
     req.session.userId = user.id;
+    req.session.role = user.role || 'siswa';
     return res.json({
       success: true,
       message: 'Login berhasil!',

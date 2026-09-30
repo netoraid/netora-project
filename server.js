@@ -74,6 +74,48 @@ app.use(
   })
 );
 
+// Middleware Proteksi Khusus Akses Halaman & Script Admin (Anti-Bypass / Anti-Hacker)
+// Setiap akses langsung ke /admin.html atau /admin tanpa login admin yang sah
+// akan langsung menghasilkan status HTTP 404 (Not Found) dan menyajikan halaman 404.html
+app.use(async (req, res, next) => {
+  const reqPath = (req.path || '').toLowerCase();
+  const isAdminTarget =
+    reqPath === '/admin.html' ||
+    reqPath === '/admin' ||
+    reqPath === '/admin/' ||
+    reqPath === '/js/admin.js' ||
+    reqPath.endsWith('/admin.html');
+
+  if (isAdminTarget) {
+    if (!req.session || !req.session.userId) {
+      return res.status(404).sendFile(path.join(publicDir, '404.html'));
+    }
+
+    try {
+      if (req.session.role === 'admin') {
+        return next();
+      }
+
+      const { data: user, error } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', req.session.userId)
+        .maybeSingle();
+
+      if (error || !user || user.role !== 'admin') {
+        return res.status(404).sendFile(path.join(publicDir, '404.html'));
+      }
+
+      req.session.role = 'admin';
+      return next();
+    } catch (err) {
+      return res.status(404).sendFile(path.join(publicDir, '404.html'));
+    }
+  }
+
+  next();
+});
+
 // Serve Static Files (HTML, CSS, JS, Aset)
 app.use(express.static(publicDir));
 app.use('/assets', express.static(assetsDir));
@@ -104,6 +146,14 @@ app.get('/', async (req, res) => {
     return res.redirect('/beranda.html');
   }
   res.redirect('/login.html');
+});
+
+// Catch-all 404 Handler untuk rute yang tidak ditemukan
+app.use((req, res) => {
+  if (req.accepts('html')) {
+    return res.status(404).sendFile(path.join(publicDir, '404.html'));
+  }
+  res.status(404).json({ error: 'Endpoint tidak ditemukan (404)' });
 });
 
 // Jalankan Server
