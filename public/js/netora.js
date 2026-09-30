@@ -617,12 +617,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Prefetch halaman siswa di latar belakang agar navigasi tidak perlu reload jaringan
-  setTimeout(() => {
-    ['beranda.html', 'pengumuman.html', 'materi.html', 'video.html', 'quiz.html', 'progres.html', 'profil.html', 'kalkulator.html'].forEach(p => {
-      fetchPageHtml(p);
-    });
-  }, 600);
+  // Prefetch halaman siswa langsung tanpa jeda (0ms network delay)
+  ['beranda.html', 'pengumuman.html', 'materi.html', 'video.html', 'quiz.html', 'progres.html', 'profil.html', 'kalkulator.html'].forEach(p => {
+    fetchPageHtml(p);
+  });
 
   // 4. Update Tab Aktif Secara Visual
   function updateActiveTabs(cleanPath) {
@@ -638,7 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 5. Seamless Native-Grade Navigation (Bebas Patah-Patah, Tanpa Layar Putih)
+  // 5. Seamless Native-Grade Navigation (Bebas Patah-Patah, Native 60fps Transition)
   let _isNavigating = false;
 
   async function seamlessNavigateTo(targetUrl, isPopState = false) {
@@ -659,7 +657,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (_isNavigating) return;
     _isNavigating = true;
 
-    // Optimistic UI pada tab navigasi
+    // Optimistic UI pada tab navigasi (Respons instan)
     updateActiveTabs(targetPath);
 
     // Ambil HTML halaman tujuan (0ms dari cache atau instan fetch)
@@ -682,26 +680,41 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Ubah URL dan Title tanpa reload halaman
-    if (!isPopState) {
-      window.history.pushState({ path: targetUrl }, '', targetUrl);
+    const performDomSwap = () => {
+      // Ubah URL dan Title tanpa reload browser
+      if (!isPopState) {
+        window.history.pushState({ path: targetUrl }, '', targetUrl);
+      }
+      if (doc.title) {
+        document.title = doc.title;
+      }
+
+      // Ganti konten DOM halaman tujuan (berisi Shimmer Skeleton)
+      curApp.innerHTML = newApp.innerHTML;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      updateActiveTabs(targetPath);
+
+      // Jalankan siklus hidup halaman tujuan (Skeleton aktif memuat data di halaman tujuan)
+      triggerPageLifecycle(targetPath);
+    };
+
+    // Gunakan W3C Native View Transition API untuk kehalusan maksimal seperti aplikasi native
+    if (document.startViewTransition) {
+      try {
+        const transition = document.startViewTransition(() => {
+          performDomSwap();
+        });
+        await transition.finished;
+      } catch (e) {
+        performDomSwap();
+      }
+    } else {
+      // Fallback: Silky-smooth CSS entrance crossfade
+      curApp.classList.remove('netora-page-fade-enter');
+      performDomSwap();
+      void curApp.offsetWidth;
+      curApp.classList.add('netora-page-fade-enter');
     }
-    if (doc.title) {
-      document.title = doc.title;
-    }
-
-    // Ganti konten dengan sangat halus bebas kedip
-    curApp.innerHTML = newApp.innerHTML;
-    curApp.classList.remove('netora-page-fade-enter');
-    void curApp.offsetWidth;
-    curApp.classList.add('netora-page-fade-enter');
-
-    window.scrollTo({ top: 0, behavior: 'instant' });
-
-    updateActiveTabs(targetPath);
-
-    // Jalankan siklus hidup halaman tujuan (Skeleton aktif memuat data di halaman tujuan)
-    triggerPageLifecycle(targetPath);
 
     _isNavigating = false;
   }

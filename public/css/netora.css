@@ -4213,28 +4213,90 @@ body.admin-page {
 }
 
 /* ========================================================================== */
-/* NETORA ULTRA-SMOOTH SEAMLESS TRANSITIONS (BEBAS PATAH-PATAH & FLICKER)     */
+/* NETORA ULTRA-SMOOTH NATIVE APP VIEW TRANSITIONS (FLUID 60FPS)              */
 /* ========================================================================== */
 
+@keyframes netoraViewFadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.988) translateY(-4px);
+  }
+}
+
+@keyframes netoraViewFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+::view-transition-old(root) {
+  animation: 0.16s cubic-bezier(0.4, 0, 1, 1) both netoraViewFadeOut;
+}
+
+::view-transition-new(root) {
+  animation: 0.22s cubic-bezier(0, 0, 0.2, 1) both netoraViewFadeIn;
+}
+
+/* Pertahankan navbar bawah dan header atas tetap tenang, stabil, dan tidak berkedip */
+.app-bottom-nav-white,
+.app-bottom-nav {
+  view-transition-name: app-bottom-navbar;
+}
+
+.app-top-header-royal {
+  view-transition-name: app-top-header;
+}
+
+::view-transition-old(app-bottom-navbar),
+::view-transition-new(app-bottom-navbar),
+::view-transition-old(app-top-header),
+::view-transition-new(app-top-header) {
+  animation: none !important;
+  mix-blend-mode: normal;
+}
+
+/* Fallback Animasi Halaman Halus (Jika Browser Tidak Mendukung View Transition) */
 .netora-page-fade-enter,
 .netora-glide-in-right,
 .netora-glide-in-left {
-  animation: netoraPageFadeEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-  will-change: opacity;
+  animation: netoraPageFadeEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  will-change: opacity, transform;
 }
 
 @keyframes netoraPageFadeEnter {
   0% {
-    opacity: 0.88;
+    opacity: 0;
+    transform: translateY(8px);
   }
   100% {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
 .netora-slide-out-to-left,
 .netora-slide-out-to-right {
   display: none !important;
+}
+
+/* Micro-interaction sentuhan tab navbar bawah seperti aplikasi iOS */
+.nav-tab-item {
+  transition: color 0.18s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-tab-item:active {
+  transform: scale(0.92);
+}
+.nav-tab-item.active {
+  transform: translateY(-2px);
 }
 
 /* Tab crossfade di dalam dashboard */
