@@ -3,6 +3,62 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { supabase } = require('../database/supabase');
 
+// Auto-seed akun default Admin & Guru di Supabase
+async function seedDefaultRoles() {
+  try {
+    // 1. Cek Admin
+    const { data: adminExists } = await supabase
+      .from('users')
+      .select('id')
+      .or('email.eq.admin123,email.eq.admin@netora.id,role.eq.admin')
+      .limit(1)
+      .maybeSingle();
+
+    if (!adminExists) {
+      const hashAdmin = bcrypt.hashSync('admin123', 10);
+      await supabase.from('users').insert([
+        {
+          nama: 'Administrator Netora',
+          email: 'admin123',
+          password: hashAdmin,
+          password_plain: 'admin123',
+          role: 'admin',
+          foto: 'uploads/default.png',
+          bio: 'Pengelola Utama Platform Netora'
+        }
+      ]);
+      console.log('✅ [AUTO-SEED] Akun demo admin123 siap digunakan.');
+    }
+
+    // 2. Cek Guru
+    const { data: guruExists } = await supabase
+      .from('users')
+      .select('id')
+      .or('email.eq.guru123,email.eq.guru@netora.id,role.eq.guru')
+      .limit(1)
+      .maybeSingle();
+
+    if (!guruExists) {
+      const hashGuru = bcrypt.hashSync('guru123', 10);
+      await supabase.from('users').insert([
+        {
+          nama: 'Bapak / Ibu Guru Pembimbing TKJ',
+          email: 'guru123',
+          password: hashGuru,
+          password_plain: 'guru123',
+          role: 'guru',
+          foto: 'uploads/default.png',
+          bio: 'Guru Pengampu Kejuruan Teknik Komputer & Jaringan'
+        }
+      ]);
+      console.log('✅ [AUTO-SEED] Akun demo guru123 siap digunakan.');
+    }
+  } catch (err) {
+    console.warn('⚠️ [AUTO-SEED NOTE]', err.message || err);
+  }
+}
+seedDefaultRoles();
+
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   const { nama, email, password } = req.body;

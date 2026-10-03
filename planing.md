@@ -83,16 +83,17 @@ Netora/
 │   └── supabase_schema.sql    # DDL skema 6 tabel PostgreSQL Supabase + initial data seed
 │
 ├── middleware/
-│   └── auth.js                # Middleware proteksi route session (requireAuth & admin check)
+│   └── auth.js                # Middleware proteksi route session (requireAuth, requireGuru, admin check)
 │
 ├── routes/
-│   ├── auth.js                # Endpoint Login, Register, Logout, & Session Me
+│   ├── auth.js                # Endpoint Login, Register, Logout, & Session Me (Multi-Role: Siswa/Guru/Admin)
 │   ├── materi.js              # Endpoint Katalog & Detail Modul Materi
 │   ├── video.js               # Endpoint Galeri Video Praktikum Mikrotik
 │   ├── quiz.js                # Endpoint Soal Quiz & Perhitungan Skor
 │   ├── pengumuman.js          # Endpoint Pengumuman & Notifikasi
 │   ├── profil.js              # Endpoint Profil, Password, Avatar, & Hapus Akun Siswa
-│   └── admin.js               # Endpoint CRUD Lengkap Khusus Admin
+│   ├── admin.js               # Endpoint CRUD Lengkap Khusus Admin
+│   └── guru.js                # Endpoint Khusus Dashboard Guru (Nilai Quiz, Progress %, CRUD Soal)
 │
 └── public/                    # Seluruh Halaman & Aset Web (Static Web Root)
     ├── manifest.json          # Manifest PWA (Nama aplikasi, warna tema, logo)
@@ -104,19 +105,20 @@ Netora/
     ├── uploads/
     │   └── default.png        # Avatar default pengguna & folder unggahan foto
     ├── css/
-    │   └── netora.css         # Master Stylesheet (Desktop, Mobile, Animasi SPA, Layout)
+    │   └── netora.css         # Master Stylesheet (Desktop, Mobile, Animasi SPA, Layout, Profil, Progres)
     ├── js/
-    │   ├── netora.js          # Engine SPA Router, PWA Auto-register, Toast, Header Sync
-    │   ├── auth.js            # Logika Login, Register, & Validasi Input
-    │   ├── beranda.js         # Inisialisasi Beranda & Carousel
+    │   ├── netora.js          # Engine SPA Router (Anti-freeze, Sync <style>, Bypass Guru/Admin)
+    │   ├── auth.js            # Logika Login, Register, Multi-Role Redirect (Siswa/Guru/Admin)
+    │   ├── beranda.js         # Inisialisasi Beranda, Quick Menu & Carousel Banner
     │   ├── materi.js          # Inisialisasi & Filter Katalog Materi
     │   ├── video.js           # Inisialisasi Galeri & Video Player Modal
     │   ├── quiz.js            # State Machine Kuis Interaktif (Bebas ghost card saat kosong)
     │   ├── kalkulator.js      # Algoritma Subnetting RFC 791/4632 & Riwayat Lokal
-    │   ├── progres.js         # Statistik Pembelajaran & Riwayat Nilai
+    │   ├── progres.js         # Statistik Pembelajaran, Capaian Radar, & Riwayat Nilai
     │   ├── pengumuman.js      # Daftar Notifikasi & Pengumuman
     │   ├── profil.js          # Tab Edit Profil, Keamanan, Ganti Avatar, & Hapus Akun
-    │   └── admin.js           # Single Page Application Dashboard Admin
+    │   ├── admin.js           # Single Page Application Dashboard Admin
+    │   └── guru.js            # Single Page Application Dashboard Guru (Nilai, Progres %, CRUD Quiz)
     │
     ├── beranda.html           # Dashboard Utama Siswa (4 Modul Inti & Lab Tugas)
     ├── materi.html            # Katalog Modul Pembelajaran (Grid 2 Kolom)
@@ -127,9 +129,10 @@ Netora/
     ├── progres.html           # Laporan Capaian Belajar Siswa
     ├── pengumuman.html        # Pusat Pengumuman & Informasi
     ├── profil.html            # Profil Pengguna & Pengaturan Akun
-    ├── login.html             # Halaman Masuk Multi-Role
+    ├── login.html             # Halaman Masuk Multi-Role (Siswa, Guru, Admin)
     ├── register.html          # Halaman Pendaftaran Siswa
     ├── admin.html             # Panel Kontrol Manajemen Admin
+    ├── guru.html              # Panel Kontrol Manajemen Guru (EdTech Modern UI)
     └── tentang.html           # Informasi Versi Aplikasi & Pengembang
 ```
 
@@ -143,7 +146,7 @@ Telah termigrasi 100% dari SQLite lokal ke **Supabase PostgreSQL** dengan DDL pa
    - `id` (SERIAL PRIMARY KEY)
    - `nama` (VARCHAR 255), `email` (VARCHAR 255 UNIQUE), `password` (VARCHAR 255 HASH BCRYPT)
    - `foto` (TEXT, default: `uploads/default.png`), `bio` (TEXT)
-   - `role` (VARCHAR 50, default: `'siswa'`, opsi: `'admin'`)
+   - `role` (VARCHAR 50, default: `'siswa'`, opsi: `'siswa'`, `'guru'`, `'admin'`)
    - `created_at` (TIMESTAMP WITH TIME ZONE DEFAULT NOW())
 2. **`materi`**:
    - `id` (SERIAL PRIMARY KEY), `judul` (VARCHAR 255), `kategori` (VARCHAR 100), `isi` (TEXT), `created_at` (TIMESTAMPTZ)
@@ -208,6 +211,15 @@ Telah termigrasi 100% dari SQLite lokal ke **Supabase PostgreSQL** dengan DDL pa
 - CRUD Quiz: `GET`, `POST`, `PUT`, `DELETE` ke `/api/admin/quiz`.
 - CRUD Pengumuman: `GET`, `POST`, `DELETE` ke `/api/admin/pengumuman`.
 
+### 👨‍🏫 Panel Kontrol Guru (`/api/guru`)
+- `GET /api/guru/stats` : Ringkasan statistik guru (total soal kuis dibuat, total siswa terdaftar, total kuis yang telah dikerjakan, dan rata-rata skor kelas).
+- `GET /api/guru/nilai-quiz` : Log seluruh riwayat pengerjaan nilai quiz siswa (nama, email, tanggal, skor, status kelulusan KKM $\ge$ 70).
+- `GET /api/guru/siswa-progres` : Kalkulasi persentase progres belajar siswa (%) berdasarkan riwayat penyelesaian quiz terhadap total materi kuis aktif, dilengkapi status badge (*Selesai*, *Sedang Belajar*, *Belum Mulai*).
+- `GET /api/guru/quiz` : Mengambil daftar seluruh bank soal quiz yang dibuat guru / admin beserta kunci jawabannya.
+- `POST /api/guru/quiz` : Membuat materi/soal quiz baru dengan 4 pilihan ganda (A/B/C/D) dan kunci jawaban.
+- `PUT /api/guru/quiz/:id` : Memperbarui pertanyaan, opsi pilihan, kunci jawaban, atau kategori materi kuis.
+- `DELETE /api/guru/quiz/:id` : Menghapus soal kuis dari sistem.
+
 ---
 
 ## 🧭 6. Alur Pengguna & Sistem Hak Akses (User Flow)
@@ -217,18 +229,35 @@ graph TD
     A["Pengunjung Mengakses URL ('https://netora.web.id')"] --> B{"Punya Sesi Login?"}
     B -->|Tidak| C["Halaman Login (login.html)"]
     B -->|Ya & Role Siswa| D["Dashboard Siswa (beranda.html)"]
-    B -->|Ya & Role Admin| E["Panel Admin (admin.html)"]
+    B -->|Ya & Role Guru| E["Dashboard Guru (guru.html)"]
+    B -->|Ya & Role Admin| F["Panel Admin (admin.html)"]
     
-    C -->|Klik Daftar| F["Halaman Register (register.html)"]
+    C -->|Klik Daftar| G["Halaman Register (register.html)"]
     C -->|Login Sukses| B
     
-    D --> G["Materi Pembelajaran (materi.html)"]
-    D --> H["Video Praktik (video.html)"]
-    D --> I["Quiz Interaktif (quiz.html)"]
-    D --> J["Kalkulator IP (kalkulator.html)"]
-    D --> K["Laporan Progress (progres.html)"]
-    D --> L["Pusat Notifikasi (pengumuman.html)"]
-    D --> M["Pengaturan Akun (profil.html)"]
+    subgraph Fitur_Siswa ["Portal Siswa"]
+        D --> S1["Materi Pembelajaran (materi.html)"]
+        D --> S2["Video Praktik (video.html)"]
+        D --> S3["Quiz Interaktif (quiz.html)"]
+        D --> S4["Kalkulator IP (kalkulator.html)"]
+        D --> S5["Laporan Progress (progres.html)"]
+        D --> S6["Pusat Notifikasi (pengumuman.html)"]
+        D --> S7["Pengaturan Akun (profil.html)"]
+    end
+
+    subgraph Fitur_Guru ["Portal Guru (Akses Khusus & Terbatas)"]
+        E --> G1["Nilai Hasil Quiz Siswa & Export CSV"]
+        E --> G2["Persentase Progress Siswa (%)"]
+        E --> G3["Pembuatan & Manajemen Materi Quizz (CRUD)"]
+    end
+
+    subgraph Fitur_Admin ["Portal Admin (Akses Penuh Master)"]
+        F --> A1["Manajemen Akun Siswa (Tambah/Reset/Hapus)"]
+        F --> A2["CRUD Seluruh Materi & Modul"]
+        F --> A3["CRUD Video Praktikum"]
+        F --> A4["CRUD Bank Soal Quiz"]
+        F --> A5["Broadcast Pengumuman & Log Sistem"]
+    end
 ```
 
 ---
@@ -369,6 +398,95 @@ Untuk memperbarui kode di masa mendatang tanpa perlu membuka panel Pterodactyl a
 | 6 | **Sertifikat SSL** | Cloudflare Edge Certificate | ✅ Aktif | Mode Flexible & Always Use HTTPS |
 | 7 | **Bebas Port (Rewrite)** | Origin Rules $\rightarrow$ Port `2974` | ✅ Aktif | Siswa akses https://netora.web.id |
 | 8 | **PWA & APK Mobile** | Manifest & Service Worker | ✅ Siap | Ready Add-to-Home & PWABuilder |
+| 9 | **Stabilitas Navigasi SPA** | Anti-Freeze, Dynamic CSS, Idempotent Hooks | ✅ Tuntas | Bebas crash saat klik Beranda, Progres, Profil tanpa reload |
+| 10 | **Dashboard Guru** | EdTech Light Modern Console (`guru.html`) | ✅ Tuntas | Khusus Nilai Quiz, Progres %, CRUD Bank Soal & Export CSV |
+| 11 | **Role-Based Access Control (RBAC)** | Siswa, Guru (`guru123`), Admin (`admin123`) | ✅ Tuntas | Middleware `requireGuru`, `admin` check, route isolation |
+
+---
+
+## 🛠️ 12. Rekapitulasi Pembaruan Teknis & Solusi Masalah Sistem
+
+### 12.1. Penanganan Stabilitas Navigasi SPA & Perbaikan Layout (Beranda, Progres, Profil)
+Sebelum pembaruan, sistem transisi halaman klien (*Single Page Application*) kerap mengalami freeze atau tampilan halaman menjadi rusak dan berantakan saat berpindah bolak-balik antara Beranda, Progres, dan Profil. Masalah ini berhasil dieliminasi 100% tanpa perlu me-refresh halaman melalui perbaikan berikut:
+
+1. **Eliminasi Deadlock Router SPA (`public/js/netora.js`)**:
+   - Router lama menggunakan flag `_isNavigating = true` yang dapat macet permanen jika terjadi kegagalan jaringan atau eksepsi script pada halaman target.
+   - Diperbaiki dengan membungkus seluruh siklus router dalam blok `try { ... } finally { _isNavigating = false; }` sehingga router selalu kembali ke status siap dan tidak pernah membeku (*freeze*).
+   - Menambahkan mekanisme bypass navigasi otomatis untuk halaman non-SPA seperti `admin.html` dan `guru.html`.
+2. **Sinkronisasi Tag `<style>` dan Konsolidasi CSS Terpadu (`public/css/netora.css`)**:
+   - Sebelumnya, style inline di dalam file HTML target terbuang saat pertukaran DOM (`app.innerHTML = targetApp.innerHTML`), menyebabkan *Flash of Unstyled Content (FOUC)* atau tampilan berantakan.
+   - `netora.js` kini secara otomatis menyalin tag `<style>` dari halaman tujuan ke `<head>` browser secara reaktif.
+   - Seluruh aturan CSS vital untuk:
+     - **Banner Carousel & Quick Menus Beranda**
+     - **Stat Card, Progress Bar, Skill Radar Progres Belajar**
+     - **Tab Switcher, Avatar Upload, Form Keamanan Profil**
+     telah dipindahkan dan distandarisasi permanen ke dalam `public/css/netora.css`.
+3. **Hardening Runtime Script Halaman (`beranda.js`, `progres.js`, `profil.js`)**:
+   - **`progres.js`**: Menambahkan *null-safety* pada pembacaan properti tanggal dan parsing string nilai/skor untuk mencegah uncaught error `undefined.split()`.
+   - **`profil.js`**: Mengganti listener ganda menjadi *idempotent delegation*, menjamin tab switching responsif instan dan form password tidak ter-submit dobel.
+   - **`beranda.js`**: Mengisolasi inisialisasi banner dan indikator carousel dengan validasi elemen DOM aktif untuk menghindari race condition saat transisi cepat.
+
+---
+
+### 12.2. Spesifikasi, Fitur & Arsitektur Dashboard Guru (`public/guru.html` & `public/js/guru.js`)
+Dashboard Guru dirancang khusus untuk memfasilitasi kebutuhan tenaga pengajar dengan antarmuka **Light Modern EdTech Console** (senada dengan Admin namun dengan pembatasan hak akses yang tegas):
+
+1. **Fitur 1: Melihat Nilai Hasil Quiz Siswa & Ekspor Data**:
+   - Feed riwayat penilaian realtime seluruh siswa di tabel responsif.
+   - Filter pencarian cepat berdasarkan nama siswa, email, atau kategori kuis.
+   - Indikator visual badge kelulusan otomatis (badge hijau: *Lulus* $\ge 70$, badge merah: *Remedial* $< 70$).
+   - Fitur **Export CSV**: Mengunduh seluruh rekap nilai siswa dalam format `.csv` kompatibel Microsoft Excel hanya dengan 1 klik.
+2. **Fitur 2: Melihat Persentase Progres Belajar Siswa (%)**:
+   - Menampilkan daftar seluruh siswa beserta persentase capaian belajar terhitung.
+   - Visualisasi *progress bar* dinamis dan badge status (*Selesai* 100%, *Sedang Belajar* > 0%, *Belum Mulai* 0%).
+   - Ringkasan total kuis yang telah diselesaikan per siswa.
+3. **Fitur 3: Pembuatan & Manajemen Materi Quizz (Bank Soal)**:
+   - Form modal interaktif untuk menambah soal kuis baru dengan 4 pilihan ganda (A, B, C, D) dan pemilihan kunci jawaban benar.
+   - Edit / Perbarui soal dan kategori materi kuis kapan saja.
+   - Hapus soal kuis lama dengan konfirmasi aman.
+4. **Ringkasan Metrik Cepat (Header Stat Cards)**:
+   - Total Soal Kuis Aktif
+   - Total Siswa Terdaftar
+   - Total Kuis Dikerjakan
+   - Rata-rata Nilai Kelas
+
+---
+
+### 12.3. Matriks Hak Akses & Matriks Kredensial Uji Coba
+
+| Role | Ruang Lingkup Hak Akses | Halaman Utama | Kredensial Demo |
+|---|---|---|---|
+| **Siswa** | Belajar materi, menonton video praktikum, mengerjakan quiz, kalkulator IP subnetting, melihat progres mandiri, edit profil. | `/beranda.html` | Akun baru via `/register.html` |
+| **Guru** | Melihat rekap nilai quiz siswa, ekspor nilai CSV, melihat progres % siswa, membuat & mengelola bank soal kuis. *(Dilarang mengakses manajemen user siswa, materi umum, video, dan pengumuman)* | `/guru.html` | Username: **`guru123`**<br>Password: **`guru123`** |
+| **Admin** | Penguasaan penuh master sistem: Manajemen akun siswa (tambah manual, reset password, hapus, reset massal), CRUD materi modul, CRUD video, CRUD quiz, broadcast pengumuman. | `/admin.html` | Username: **`admin123`**<br>Password: **`admin123`** |
+
+---
+
+### 12.4. Formula Kalkulasi Progres Belajar Siswa (%)
+Persentase kemajuan siswa dihitung di sisi backend (`routes/guru.js`) menggunakan relasi pengerjaan kuis unik terhadap total bank kuis yang tersedia:
+
+$$\text{Persentase Progres} = \min\left(100, \text{round}\left(\frac{\text{Jumlah Quiz Unik Selesai}}{\max(1, \text{Total Soal Quiz})} \times 100\right)\right)$$
+
+- Siswa dengan persentase $100\%$ mendapat badge **Selesai**.
+- Siswa dengan persentase antara $1\% - 99\%$ mendapat badge **Sedang Belajar**.
+- Siswa dengan persentase $0\%$ mendapat badge **Belum Mulai**.
+
+---
+
+## 🎯 13. Hasil Akhir Sistem & Verifikasi Fungsional (Final State Verification)
+
+Semua komponen sistem telah diuji coba secara komprehensif dan dinyatakan **100% Berfungsi Normal & Stabil**:
+
+| Modul / Komponen | Skenario Pengujian | Hasil Pengujian | Status |
+|---|---|---|:---:|
+| **Transisi SPA Siswa** | Berpindah berulang kali antara Beranda $\leftrightarrow$ Progres $\leftrightarrow$ Profil | Tata letak rapi, style tidak pecah, tanpa reload halaman, tanpa freeze | ✅ LULUS |
+| **Profil Siswa** | Ganti tab profil, edit bio, perbarui password | Data tersimpan ke Supabase, UI sinkron realtime | ✅ LULUS |
+| **Autentikasi Multi-Role** | Login dengan role `admin`, `guru`, dan `siswa` | Diarahkan otomatis ke dashboard yang tepat (`admin.html`, `guru.html`, `beranda.html`) | ✅ LULUS |
+| **Dashboard Guru - Nilai** | Membaca feed nilai kuis siswa & klik tombol Export CSV | Data nilai tertampil akurat, file `.csv` berhasil diunduh | ✅ LULUS |
+| **Dashboard Guru - Progres** | Membaca persentase progres belajar seluruh siswa | Progress bar dan badge status sesuai rasio pengerjaan kuis | ✅ LULUS |
+| **Dashboard Guru - Quiz CRUD** | Menambah, mengedit, dan menghapus soal kuis | Operasi CRUD berhasil dan bank soal langsung terbarui di database | ✅ LULUS |
+| **Proteksi Keamanan Role** | Siswa mencoba membuka langsung `/guru.html` atau `/api/guru/*` | Ditolak oleh middleware `requireGuru` & dialihkan ke login/beranda | ✅ LULUS |
+| **Server & Database Cloud** | Node.js Express aktif & terkoneksi ke Supabase PostgreSQL | Koneksi pool lancar, response time < 50ms, zero errors | ✅ LULUS |
 
 ---
 

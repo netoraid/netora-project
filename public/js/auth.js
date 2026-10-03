@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (res.ok && data.success && data.user) {
       if (data.user.role === 'admin' || data.user.email === 'admin123') {
         window.location.href = '/admin.html';
+      } else if (data.user.role === 'guru' || data.user.email === 'guru123') {
+        window.location.href = '/guru.html';
       } else {
         window.location.href = '/beranda.html';
       }
@@ -100,11 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (autoReg.ok) {
               if (typeof toast === 'function') toast('Login Admin Berhasil! Mengalihkan...', 'success');
               setTimeout(() => {
-                if (typeof window.netoraNavigate === 'function') {
-                  window.netoraNavigate('/admin.html');
-                } else {
-                  window.location.href = '/admin.html';
-                }
+                window.location.href = '/admin.html';
               }, 350);
               return;
             }
@@ -118,15 +116,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (retryRes.ok && retryData.success) {
               if (typeof toast === 'function') toast('Login Admin Berhasil! Mengalihkan...', 'success');
               setTimeout(() => {
-                if (typeof window.netoraNavigate === 'function') {
-                  window.netoraNavigate('/admin.html');
-                } else {
-                  window.location.href = '/admin.html';
-                }
+                window.location.href = '/admin.html';
               }, 350);
               return;
             }
           } catch (autoErr) {}
+        }
+
+        // Khusus fallback akun guru123 jika database belum memiliki record guru
+        if (!res.ok && (emailVal.toLowerCase() === 'guru123' || emailVal.toLowerCase() === 'guru@netora.id')) {
+          try {
+            const retryRes = await fetch('/api/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: 'guru123', password: passwordVal || 'guru123' })
+            });
+            const retryData = await retryRes.json();
+            if (retryRes.ok && retryData.success) {
+              if (typeof toast === 'function') toast('Login Guru Berhasil! Mengalihkan...', 'success');
+              setTimeout(() => {
+                window.location.href = '/guru.html';
+              }, 250);
+              return;
+            }
+          } catch (autoGuruErr) {}
         }
 
         if (res.ok && data.success) {
