@@ -80,13 +80,13 @@ window.initBerandaPage = async function() {
       if (greetingSub) {
         greetingSub.textContent = u.role === 'admin'
           ? 'Portal Administrator Netora'
-          : 'Portal Pembelajaran Teknik Komputer & Jaringan';
+          : (u.role === 'guru' ? 'Portal Guru Pembimbing TKJ' : 'Portal Pembelajaran Teknik Komputer & Jaringan');
       }
 
       if (userStatus) {
         userStatus.textContent = u.role === 'admin'
           ? 'Administrator'
-          : `Siswa: ${namaAwal}`;
+          : (u.role === 'guru' ? 'Guru Pembimbing' : `Siswa: ${namaAwal}`);
       }
 
       const headerRight = document.querySelector('.beranda-header-right');
@@ -96,6 +96,13 @@ window.initBerandaPage = async function() {
             <a href="admin.html" class="btn-primary" style="display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:12px; font-size:12px; font-weight:800; text-decoration:none; background:linear-gradient(135deg,#7C3AED,#6D28D9); color:#FFFFFF; box-shadow:0 4px 12px rgba(124,58,237,0.35);">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
               <span>Panel Admin</span>
+            </a>
+          `;
+        } else if (u.role === 'guru') {
+          headerRight.innerHTML = `
+            <a href="guru.html" class="btn-primary" style="display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:12px; font-size:12px; font-weight:800; text-decoration:none; background:linear-gradient(135deg,#D97706,#B45309); color:#FFFFFF; box-shadow:0 4px 12px rgba(217,119,6,0.35);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              <span>Panel Guru</span>
             </a>
           `;
         } else {

@@ -133,7 +133,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           try {
             sessionStorage.setItem('netora_user_cache', JSON.stringify(data.user));
           } catch (e) {}
-          const targetUrl = (data.user && (data.user.role === 'admin' || data.user.email === 'admin123')) ? '/admin.html' : '/beranda.html';
+          let targetUrl = '/beranda.html';
+          if (data.user && (data.user.role === 'admin' || data.user.email === 'admin123')) {
+            targetUrl = '/admin.html';
+          } else if (data.user && (data.user.role === 'guru' || data.user.email === 'guru123')) {
+            targetUrl = '/guru.html';
+          }
           if (typeof toast === 'function') toast('Login berhasil! Mengalihkan...', 'success');
           setTimeout(() => {
             if (typeof window.netoraNavigate === 'function') {

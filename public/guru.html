@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard Guru Netora - Monitoring Nilai Kuis Siswa, Progress Belajar, dan Pembuatan Materi Kuis TKJ.">
+  <title>Netora — Dashboard Guru Pembimbing TKJ</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="css/netora.css">
+  <style>
+    /* ===================================================
+       NETORA GURU CONSOLE — LIGHT EDTECH THEME
+       Selaras dengan Standar Desain Dashboard Netora
+    =================================================== */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body.guru-page {
+      background: #F8FAFC !important;
+      color: #0F172A !important;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      min-height: 100vh;
+      width: 100% !important;
+      overflow-x: hidden;
+    }
+
+    .guru-container {
+      max-width: 100% !important;
+      width: 100% !important;
+      margin: 0 !important;
+      background: #FFFFFF;
+      border-radius: 0 !important;
+      padding: 0 0 60px !important;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Guru Top Header */
+    .guru-header {
+      background: #0D5BFF;
+      color: #FFFFFF;
+      padding: 16px 36px !important;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      width: 100% !important;
+    }
+
+    .guru-header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .guru-header-left .logo-mark {
+      background: #FFFFFF;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 46px;
+      height: 46px;
+    }
+    .guru-header-left .logo-mark img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+    }
+
+    .guru-header-left h1 {
+      color: #FFFFFF !important;
+      font-size: 20px;
+      margin: 0;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .guru-header-left h1 span {
+      color: #38BDF8 !important;
+    }
+    .guru-header-left p {
+      color: rgba(255, 255, 255, 0.85) !important;
+      margin: 2px 0 0;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-guru-tag {
+      background: rgba(245, 158, 11, 0.25) !important;
+      color: #FEF3C7 !important;
+      border: 1px solid rgba(245, 158, 11, 0.5) !important;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    .guru-clock-pill {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      color: #FFFFFF !important;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+    }
+
+    .btn-web-siswa {
+      background: #FFFFFF !important;
+      color: #0D5BFF !important;
+      font-weight: 800 !important;
+      padding: 8px 16px !important;
+      border-radius: 12px !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      font-size: 13px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s;
+    }
+    .btn-web-siswa:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .guru-profile-pill {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      color: #FFFFFF !important;
+      padding: 5px 12px 5px 8px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .guru-avatar-mini {
+      border: 2px solid #FFFFFF !important;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .guru-profile-text strong {
+      color: #FFFFFF !important;
+      font-size: 13px;
+      display: block;
+      line-height: 1.2;
+    }
+    .guru-profile-text span {
+      color: #93C5FD !important;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .btn-logout-mini {
+      background: rgba(239, 68, 68, 0.3) !important;
+      border: 1px solid rgba(255, 255, 255, 0.35) !important;
+      color: #FFFFFF !important;
+      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-left: 4px;
+    }
+    .btn-logout-mini:hover {
+      background: #EF4444 !important;
+    }
+
+    /* Sub-Nav Bar Tabs */
+    .guru-nav-bar {
+      background: #F8FAFC !important;
+      padding: 12px 36px !important;
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid #E2E8F0 !important;
+      overflow-x: auto;
+      margin-bottom: 24px;
+      width: 100% !important;
+    }
+    .guru-tab-btn {
+      background: #FFFFFF !important;
+      color: #64748B !important;
+      border: 1.5px solid #E2E8F0 !important;
+      border-radius: 12px !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      padding: 10px 18px !important;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .guru-tab-btn:hover {
+      color: #0D5BFF !important;
+      border-color: #BFDBFE !important;
+      background: #EFF6FF !important;
+    }
+    .guru-tab-btn.active {
+      background: #0D5BFF !important;
+      color: #FFFFFF !important;
+      border-color: #0D5BFF !important;
+      box-shadow: 0 4px 14px rgba(13, 91, 255, 0.25) !important;
+    }
+
+    /* Mobile Sub-Nav Dropdown */
+    .guru-mobile-nav-wrapper {
+      display: none;
+      padding: 12px 16px;
+      background: #F8FAFC;
+      border-bottom: 1px solid #E2E8F0;
+      margin-bottom: 16px;
+    }
+    .guru-mobile-dropdown-card {
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .guru-mobile-nav-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: #1E293B;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .guru-select-wrapper {
+      position: relative;
+    }
+    .guru-mobile-select {
+      width: 100%;
+      padding: 10px 38px 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0D5BFF;
+      background: #EFF6FF;
+      border: 1.5px solid #BFDBFE;
+      border-radius: 10px;
+      outline: none;
+      appearance: none;
+    }
+    .guru-select-chevron {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #0D5BFF;
+    }
+
+    @media (max-width: 768px) {
+      .guru-header { padding: 14px 16px !important; }
+      .guru-nav-bar.desktop-only-nav { display: none !important; }
+      .guru-mobile-nav-wrapper { display: block !important; }
+    }
+
+    /* KPI Grid & Cards */
+    .guru-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+      margin: 0 36px 24px !important;
+    }
+    @media (max-width: 1400px) { .guru-kpi-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px) {
+      .guru-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        margin: 0 16px 20px !important;
+        gap: 10px;
+      }
+    }
+    @media (max-width: 480px) { .guru-kpi-grid { grid-template-columns: 1fr; } }
+
+    .kpi-card {
+      background: #FFFFFF !important;
+      border: 1.5px solid #E2E8F0 !important;
+      border-radius: 18px !important;
+      padding: 16px !important;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03) !important;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(13, 91, 255, 0.08) !important;
+      border-color: #CBD5E1 !important;
+    }
+    .kpi-title {
+      font-size: 11px !important;
+      color: #64748B !important;
+      font-weight: 700 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .kpi-value {
+      font-size: 26px !important;
+      font-weight: 900 !important;
+      color: #0F172A !important;
+      margin: 2px 0 1px;
+    }
+    .kpi-sub {
+      font-size: 11.5px !important;
+      font-weight: 600;
+    }
+
+    .kpi-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .kpi-blue   { background: #EFF6FF !important; border: 1px solid #BFDBFE !important; color: #0D5BFF !important; }
+    .kpi-amber  { background: #FFFBEB !important; border: 1px solid #FDE68A !important; color: #D97706 !important; }
+    .kpi-purple { background: #F5F3FF !important; border: 1px solid #DDD6FE !important; color: #7C3AED !important; }
+    .kpi-green  { background: #F0FDF4 !important; border: 1px solid #BBF7D0 !important; color: #16A34A !important; }
+    .kpi-orange { background: #FFF7ED !important; border: 1px solid #FFEDD5 !important; color: #EA580C !important; }
+    .kpi-cyan   { background: #ECFEFF !important; border: 1px solid #A5F3FC !important; color: #0284C7 !important; }
+
+    /* Tab Content */
+    .guru-tab-content {
+      display: none !important;
+      padding: 0 36px !important;
+      width: 100% !important;
+    }
+    .guru-tab-content.active {
+      display: block !important;
+    }
+    @media (max-width: 768px) {
+      .guru-tab-content { padding: 0 16px !important; }
+    }
+
+    /* Card Panels */
+    .card-panel {
+      background: #FFFFFF !important;
+      border: 1.5px solid #E2E8F0 !important;
+      border-radius: 20px !important;
+      padding: 22px !important;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03) !important;
+      margin-bottom: 20px;
+    }
+
+    /* Tables */
+    .admin-table-wrapper {
+      border: 1.5px solid #E2E8F0 !important;
+      border-radius: 16px !important;
+      background: #FFFFFF !important;
+      overflow-x: auto;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .admin-table th {
+      background: #F8FAFC !important;
+      color: #475569 !important;
+      font-size: 11.5px !important;
+      font-weight: 700 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 13px 16px !important;
+      border-bottom: 1.5px solid #E2E8F0 !important;
+    }
+    .admin-table td {
+      padding: 13px 16px !important;
+      border-bottom: 1px solid #F1F5F9 !important;
+      color: #334155 !important;
+      font-size: 13px !important;
+      background: #FFFFFF;
+    }
+    .admin-table tr:hover td {
+      background: #F8FAFC !important;
+    }
+
+    /* Inputs, Forms, Buttons */
+    .input-field, .form-group input, .form-group select, .form-group textarea {
+      background: #FFFFFF !important;
+      border: 1.5px solid #CBD5E1 !important;
+      border-radius: 12px !important;
+      color: #0F172A !important;
+      padding: 10px 14px !important;
+      font-size: 13.5px !important;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-field:focus, .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: #0D5BFF !important;
+      box-shadow: 0 0 0 3px rgba(13, 91, 255, 0.08) !important;
+    }
+    .form-group label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #FF7A00 0%, #FF9A00 100%) !important;
+      color: #FFFFFF !important;
+      border: none !important;
+      border-radius: 14px !important;
+      padding: 11px 22px !important;
+      font-size: 13.5px !important;
+      font-weight: 800 !important;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(255, 122, 0, 0.3) !important;
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(255, 122, 0, 0.4) !important;
+    }
+
+    .btn-secondary {
+      background: #F1F5F9 !important;
+      color: #334155 !important;
+      border: 1.5px solid #CBD5E1 !important;
+      border-radius: 12px !important;
+      font-weight: 700 !important;
+      padding: 9px 16px !important;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+    }
+    .btn-secondary:hover {
+      background: #E2E8F0 !important;
+      color: #0F172A !important;
+    }
+
+    /* Badges */
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .badge-pass {
+      background: #DCFCE7;
+      color: #15803D;
+      border: 1px solid #BBF7D0;
+    }
+    .badge-fail {
+      background: #FEE2E2;
+      color: #B91C1C;
+      border: 1px solid #FECACA;
+    }
+    .badge-blue {
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1px solid #BFDBFE;
+    }
+    .badge-amber {
+      background: #FEF3C7;
+      color: #B45309;
+      border: 1px solid #FDE68A;
+    }
+    .badge-gray {
+      background: #F1F5F9;
+      color: #64748B;
+      border: 1px solid #E2E8F0;
+    }
+
+    /* Modal Overlay & Card */
+    .guru-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(8px);
+      z-index: 100000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .guru-modal-overlay.active {
+      display: flex !important;
+    }
+    .guru-modal-card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding: 28px;
+      max-width: 640px;
+      width: 100%;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      position: relative;
+    }
+
+    /* Progress Bar Component */
+    .progress-bar-container {
+      width: 100%;
+      background: #E2E8F0;
+      border-radius: 10px;
+      height: 9px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body class="guru-page">
+
+  <div class="guru-container">
+
+    <!-- Top Guru Header (Royal Blue) -->
+    <header class="guru-header">
+      <div class="guru-header-left">
+        <div class="logo-mark">
+          <img src="assets/logo.png" alt="Netora Logo">
+        </div>
+        <div>
+          <h1>
+            Netora <span>Guru</span>
+            <span class="badge-guru-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              <span>Pendidik / Pengampu TKJ</span>
+            </span>
+          </h1>
+          <p>Monitoring Nilai, Ketuntasan Progress Siswa & Manajemen Kuis Kejuruan</p>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <div class="guru-clock-pill">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="live-time-text">Memuat Waktu...</span>
+        </div>
+
+        <a href="beranda.html" class="btn-web-siswa" title="Lihat Tampilan Web Siswa">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <span>Web Siswa</span>
+        </a>
+
+        <div class="guru-profile-pill">
+          <img src="uploads/default.png" id="guru-avatar" alt="Avatar Guru" class="guru-avatar-mini">
+          <div class="guru-profile-text">
+            <strong id="guru-nama">Guru Pembimbing</strong>
+            <span>Pendidik TKJ</span>
+          </div>
+          <button id="btn-guru-logout" class="btn-logout-mini" title="Keluar dari Akun Guru">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- DESKTOP GURU SUB-NAV TABS (3 Fitur Utama Sesuai Hak Akses Guru) -->
+    <div class="guru-nav-bar desktop-only-nav">
+      <button class="guru-tab-btn active" data-tab="tab-nilai">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span>Nilai Hasil Kuis Siswa</span>
+      </button>
+
+      <button class="guru-tab-btn" data-tab="tab-progress">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span>Progress Siswa (%)</span>
+      </button>
+
+      <button class="guru-tab-btn" data-tab="tab-quiz">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        <span>Bank Soal & Materi Kuis</span>
+      </button>
+    </div>
+
+    <!-- MOBILE SUB-NAV DROPDOWN -->
+    <div class="guru-mobile-nav-wrapper">
+      <div class="guru-mobile-dropdown-card">
+        <div class="guru-mobile-nav-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.4"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Pilih Menu Guru:</span>
+        </div>
+        <div class="guru-select-wrapper">
+          <select id="guru-tab-select-mobile" class="guru-mobile-select" onchange="window.switchGuruTab && window.switchGuruTab(this.value)" aria-label="Pilih Halaman Guru">
+            <option value="tab-nilai">Nilai Hasil Kuis Siswa</option>
+            <option value="tab-progress">Progress Siswa (%)</option>
+            <option value="tab-quiz">Bank Soal & Materi Kuis</option>
+          </select>
+          <div class="guru-select-chevron">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI STATS CARDS ROW (6 METRICS GURU) -->
+    <section class="guru-kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-blue">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-title">Siswa Dibimbing</span>
+          <h2 class="kpi-value" id="stat-total-siswa">0</h2>
+          <span class="kpi-sub" style="color:#0D5BFF;">Siswa Kelas TKJ</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-amber">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-title">Rata-rata Progress</span>
+          <h2 class="kpi-value" id="stat-avg-progress">0%</h2>
+          <span class="kpi-sub" style="color:#D97706;">Ketuntasan Belajar</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-purple">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-title">Rata-rata Skor</span>
+          <h2 class="kpi-value" id="stat-avg-skor">0</h2>
+          <span class="kpi-sub" style="color:#7C3AED;">Skala 100</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-green">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-title">Tingkat Kelulusan</span>
+          <h2 class="kpi-value" id="stat-persen-lulus">0%</h2>
+          <span class="kpi-sub" style="color:#16A34A;" id="stat-lulus-sub">0 Lulus / 0 Remidi</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-orange">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-title">Bank Soal Kuis</span>
+          <h2 class="kpi-value" id="stat-total-soal">0</h2>
+          <span class="kpi-sub" style="color:#EA580C;">Butir Soal Aktif</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-cyan">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-title">Sesi Kuis Selesai</span>
+          <h2 class="kpi-value" id="stat-total-sesi">0</h2>
+          <span class="kpi-sub" style="color:#0284C7;">Total Riwayat Kuis</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 1: NILAI HASIL KUIS SISWA
+         ====================================================================== -->
+    <div id="tab-nilai" class="guru-tab-content active">
+      <div class="card-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:18px;">
+          <div>
+            <h3 style="margin:0; font-size:17px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <span>Rekap Nilai Kuis Siswa TKJ</span>
+            </h3>
+            <p style="margin:4px 0 0; font-size:12.5px; color:#64748B;">Laporan pengerjaan latihan kuis dan evaluasi pemahaman siswa secara real-time.</p>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button id="btn-export-nilai" class="btn-secondary" title="Unduh data nilai dalam format CSV">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Ekspor CSV</span>
+            </button>
+            <button id="btn-refresh-nilai" class="btn-secondary" title="Muat ulang tabel nilai">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              <span>Segarkan</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:12px; margin-bottom:16px;">
+          <input type="text" id="search-nilai-input" class="input-field" placeholder="Cari nama atau email siswa...">
+          <select id="filter-nilai-status" class="input-field">
+            <option value="all">Semua Status Kelulusan</option>
+            <option value="lulus">Hanya Lulus (Skor &ge; 70)</option>
+            <option value="remidi">Hanya Remidi (Skor &lt; 70)</option>
+          </select>
+          <select id="sort-nilai-order" class="input-field">
+            <option value="terbaru">Urutkan: Sesi Terbaru</option>
+            <option value="skor_desc">Nilai Tertinggi ke Terendah</option>
+            <option value="skor_asc">Nilai Terendah ke Tertinggi</option>
+          </select>
+        </div>
+
+        <!-- Tabel Nilai -->
+        <div class="admin-table-wrapper">
+          <table class="admin-table" id="table-nilai-guru">
+            <thead>
+              <tr>
+                <th style="width:50px;">No</th>
+                <th>Siswa</th>
+                <th>Waktu Pengerjaan</th>
+                <th>Skor Diperoleh</th>
+                <th>Status</th>
+                <th>Kategori Kuis</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-nilai-guru">
+              <tr>
+                <td colspan="6" style="text-align:center; padding:32px; color:#94A3B8;">Memuat data nilai siswa...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; font-size:12px; color:#64748B;">
+          <span id="label-count-nilai">Menampilkan 0 hasil kuis</span>
+          <span>Standar KKM: 70/100</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         TAB 2: PROGRESS BELAJAR SISWA (%)
+         ====================================================================== -->
+    <div id="tab-progress" class="guru-tab-content">
+      <div class="card-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:18px;">
+          <div>
+            <h3 style="margin:0; font-size:17px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              <span>Monitoring Progress Siswa Sudah Berapa Persen (%)</span>
+            </h3>
+            <p style="margin:4px 0 0; font-size:12.5px; color:#64748B;">Visualisasi persentase capaian belajar setiap siswa berdasarkan keaktifan pengerjaan dan penguasaan materi kuis.</p>
+          </div>
+
+          <button id="btn-refresh-progress" class="btn-secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            <span>Segarkan Progress</span>
+          </button>
+        </div>
+
+        <!-- Filter & Search Progress -->
+        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:12px; margin-bottom:16px;">
+          <input type="text" id="search-progress-input" class="input-field" placeholder="Cari nama atau email siswa...">
+          <select id="filter-progress-level" class="input-field">
+            <option value="all">Semua Level Ketuntasan</option>
+            <option value="tuntas">Tuntas (&ge; 80%)</option>
+            <option value="sedang">Sedang Berprogres (40% - 79%)</option>
+            <option value="pemula">Perlu Peningkatan (&lt; 40%)</option>
+            <option value="belum">Belum Mulai (0%)</option>
+          </select>
+          <select id="sort-progress-order" class="input-field">
+            <option value="progress_desc">Progress Tertinggi ke Terendah</option>
+            <option value="progress_asc">Progress Terendah ke Tertinggi</option>
+            <option value="nama_asc">Nama Siswa (A - Z)</option>
+            <option value="ujian_desc">Ujian Terbanyak</option>
+          </select>
+        </div>
+
+        <!-- Tabel Progress Siswa -->
+        <div class="admin-table-wrapper">
+          <table class="admin-table" id="table-progress-guru">
+            <thead>
+              <tr>
+                <th style="width:50px;">No</th>
+                <th>Profil Siswa</th>
+                <th>Sesi Kuis Selesai</th>
+                <th>Skor Tertinggi</th>
+                <th>Rata-rata Nilai</th>
+                <th style="width:280px;">Persentase Progress Belajar</th>
+                <th>Status Kompetensi</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-progress-guru">
+              <tr>
+                <td colspan="7" style="text-align:center; padding:32px; color:#94A3B8;">Memuat data progress siswa...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; font-size:12px; color:#64748B;">
+          <span id="label-count-progress">Menampilkan 0 siswa</span>
+          <span>Target Ketuntasan Kompetensi: Minimal 80%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         TAB 3: BANK SOAL & PEMBUATAN MATERI KUIS
+         ====================================================================== -->
+    <div id="tab-quiz" class="guru-tab-content">
+      <!-- 1. Formulir Buat Soal Kuis Baru -->
+      <div class="card-panel" style="border-left: 4px solid #0D5BFF !important;">
+        <h3 style="margin:0 0 6px; font-size:17px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <span>Buat Soal Kuis Baru</span>
+        </h3>
+        <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Guru dapat menambahkan butir soal latihan baru beserta opsi jawaban A-D dan kunci jawaban yang benar.</p>
+
+        <form id="form-tambah-quiz-guru">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom:14px;">
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label for="input-kategori-quiz">Topik / Kategori Kuis Kejuruan TKJ</label>
+              <select id="input-kategori-quiz" class="input-field" required>
+                <option value="Cisco Packet Tracer">Cisco Packet Tracer & Routing</option>
+                <option value="Dasar Mikrotik RouterOS">Dasar Mikrotik RouterOS</option>
+                <option value="Subnetting IP & CIDR">Subnetting IP & CIDR</option>
+                <option value="Firewall & Keamanan Jaringan">Firewall & Keamanan Jaringan</option>
+                <option value="Administrasi Server Linux">Administrasi Server Linux</option>
+                <option value="Topologi & Kabel Jaringan">Topologi & Kabel Jaringan</option>
+                <option value="Teknik Komputer & Jaringan Umum">Teknik Komputer & Jaringan Umum</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label for="input-pertanyaan-quiz">Pertanyaan Soal</label>
+              <textarea id="input-pertanyaan-quiz" rows="3" class="input-field" placeholder="Tuliskan pertanyaan soal kuis di sini dengan jelas..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="input-opsi-a">Pilihan Jawaban A</label>
+              <input type="text" id="input-opsi-a" class="input-field" placeholder="Opsi A..." required>
+            </div>
+
+            <div class="form-group">
+              <label for="input-opsi-b">Pilihan Jawaban B</label>
+              <input type="text" id="input-opsi-b" class="input-field" placeholder="Opsi B..." required>
+            </div>
+
+            <div class="form-group">
+              <label for="input-opsi-c">Pilihan Jawaban C</label>
+              <input type="text" id="input-opsi-c" class="input-field" placeholder="Opsi C..." required>
+            </div>
+
+            <div class="form-group">
+              <label for="input-opsi-d">Pilihan Jawaban D</label>
+              <input type="text" id="input-opsi-d" class="input-field" placeholder="Opsi D..." required>
+            </div>
+
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label for="input-kunci-quiz">Kunci Jawaban Benar</label>
+              <select id="input-kunci-quiz" class="input-field" style="max-width:240px; font-weight:800; color:#0D5BFF;" required>
+                <option value="A">Pilihan A</option>
+                <option value="B">Pilihan B</option>
+                <option value="C">Pilihan C</option>
+                <option value="D">Pilihan D</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="submit" id="btn-submit-quiz" class="btn-primary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Simpan Soal Kuis Baru</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- 2. Tabel Bank Soal Kuis yang Sudah Ada -->
+      <div class="card-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:16px;">
+          <div>
+            <h3 style="margin:0; font-size:17px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+              <span>Daftar Bank Soal Kuis</span>
+            </h3>
+            <p style="margin:4px 0 0; font-size:12.5px; color:#64748B;">Kelola, edit, atau hapus butir soal kuis yang dikerjakan siswa.</p>
+          </div>
+
+          <button id="btn-refresh-quiz" class="btn-secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            <span>Segarkan Bank Soal</span>
+          </button>
+        </div>
+
+        <!-- Filter & Search Bank Soal -->
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:12px; margin-bottom:16px;">
+          <input type="text" id="search-quiz-input" class="input-field" placeholder="Cari pertanyaan soal kuis...">
+          <select id="filter-quiz-kategori" class="input-field">
+            <option value="all">Semua Kategori</option>
+            <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
+            <option value="Dasar Mikrotik RouterOS">Dasar Mikrotik RouterOS</option>
+            <option value="Subnetting IP & CIDR">Subnetting IP & CIDR</option>
+            <option value="Firewall & Keamanan Jaringan">Firewall & Keamanan Jaringan</option>
+            <option value="Administrasi Server Linux">Administrasi Server Linux</option>
+            <option value="Topologi & Kabel Jaringan">Topologi & Kabel Jaringan</option>
+          </select>
+        </div>
+
+        <!-- Tabel Bank Soal -->
+        <div class="admin-table-wrapper">
+          <table class="admin-table" id="table-quiz-guru">
+            <thead>
+              <tr>
+                <th style="width:50px;">No</th>
+                <th style="width:140px;">Kategori</th>
+                <th>Pertanyaan</th>
+                <th style="width:200px;">Pilihan & Kunci</th>
+                <th style="width:130px; text-align:center;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-quiz-guru">
+              <tr>
+                <td colspan="5" style="text-align:center; padding:32px; color:#94A3B8;">Memuat data bank soal...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; font-size:12px; color:#64748B;">
+          <span id="label-count-quiz">Menampilkan 0 butir soal</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ======================================================================
+       MODAL EDIT SOAL KUIS (KHUSUS GURU)
+       ====================================================================== -->
+  <div id="modal-edit-quiz-guru" class="guru-modal-overlay">
+    <div class="guru-modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="margin:0; font-size:17px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span>Edit Soal Kuis</span>
+        </h3>
+        <button type="button" id="btn-close-modal-quiz" style="background:none; border:none; cursor:pointer; color:#64748B; padding:4px;" title="Tutup">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <form id="form-edit-quiz-guru">
+        <input type="hidden" id="edit-quiz-id">
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label for="edit-quiz-kategori">Kategori</label>
+          <select id="edit-quiz-kategori" class="input-field" required>
+            <option value="Cisco Packet Tracer">Cisco Packet Tracer & Routing</option>
+            <option value="Dasar Mikrotik RouterOS">Dasar Mikrotik RouterOS</option>
+            <option value="Subnetting IP & CIDR">Subnetting IP & CIDR</option>
+            <option value="Firewall & Keamanan Jaringan">Firewall & Keamanan Jaringan</option>
+            <option value="Administrasi Server Linux">Administrasi Server Linux</option>
+            <option value="Topologi & Kabel Jaringan">Topologi & Kabel Jaringan</option>
+            <option value="Teknik Komputer & Jaringan Umum">Teknik Komputer & Jaringan Umum</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label for="edit-quiz-pertanyaan">Pertanyaan Soal</label>
+          <textarea id="edit-quiz-pertanyaan" rows="3" class="input-field" required></textarea>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div class="form-group">
+            <label for="edit-quiz-a">Opsi A</label>
+            <input type="text" id="edit-quiz-a" class="input-field" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-quiz-b">Opsi B</label>
+            <input type="text" id="edit-quiz-b" class="input-field" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-quiz-c">Opsi C</label>
+            <input type="text" id="edit-quiz-c" class="input-field" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-quiz-d">Opsi D</label>
+            <input type="text" id="edit-quiz-d" class="input-field" required>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px;">
+          <label for="edit-quiz-kunci">Kunci Jawaban Benar</label>
+          <select id="edit-quiz-kunci" class="input-field" style="max-width:200px; font-weight:800; color:#0D5BFF;" required>
+            <option value="A">Pilihan A</option>
+            <option value="B">Pilihan B</option>
+            <option value="C">Pilihan C</option>
+            <option value="D">Pilihan D</option>
+          </select>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" id="btn-cancel-edit-quiz" class="btn-secondary">Batal</button>
+          <button type="submit" class="btn-primary">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/netora.js"></script>
+  <script src="js/guru.js"></script>
+</body>
+</html>

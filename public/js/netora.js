@@ -678,8 +678,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const curPath = getCleanPath(window.location.href);
     const targetPath = getCleanPath(targetUrl);
 
-    // Halaman panel admin atau autentikasi menggunakan navigasi browser penuh
-    if (targetPath.includes('admin') || targetPath.includes('login') || targetPath.includes('register')) {
+    // Halaman panel admin, guru, atau autentikasi menggunakan navigasi browser penuh
+    if (targetPath.includes('admin') || targetPath.includes('guru') || targetPath.includes('login') || targetPath.includes('register')) {
       window.location.href = targetUrl;
       return;
     }
@@ -870,8 +870,8 @@ document.addEventListener('DOMContentLoaded', () => {
     'tentang.html'
   ];
 
-  // Jangan aktifkan di panel admin atau halaman autentikasi
-  if (currentPath.includes('admin') || currentPath.includes('login') || currentPath.includes('register')) {
+  // Jangan aktifkan di panel admin, guru, atau halaman autentikasi
+  if (currentPath.includes('admin') || currentPath.includes('guru') || currentPath.includes('login') || currentPath.includes('register')) {
     return;
   }
 

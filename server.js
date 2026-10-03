@@ -74,9 +74,7 @@ app.use(
   })
 );
 
-// Middleware Proteksi Khusus Akses Halaman & Script Admin (Anti-Bypass / Anti-Hacker)
-// Setiap akses langsung ke /admin.html atau /admin tanpa login admin yang sah
-// akan langsung menghasilkan status HTTP 404 (Not Found) dan menyajikan halaman 404.html
+// Middleware Proteksi Khusus Akses Halaman & Script Admin & Guru (Anti-Bypass / Anti-Hacker)
 app.use(async (req, res, next) => {
   const reqPath = (req.path || '').toLowerCase();
   const isAdminTarget =
@@ -113,6 +111,40 @@ app.use(async (req, res, next) => {
     }
   }
 
+  const isGuruTarget =
+    reqPath === '/guru.html' ||
+    reqPath === '/guru' ||
+    reqPath === '/guru/' ||
+    reqPath === '/js/guru.js' ||
+    reqPath.endsWith('/guru.html');
+
+  if (isGuruTarget) {
+    if (!req.session || !req.session.userId) {
+      return res.status(404).sendFile(path.join(publicDir, '404.html'));
+    }
+
+    try {
+      if (req.session.role === 'guru' || req.session.role === 'admin') {
+        return next();
+      }
+
+      const { data: user, error } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', req.session.userId)
+        .maybeSingle();
+
+      if (error || !user || (user.role !== 'guru' && user.role !== 'admin')) {
+        return res.status(404).sendFile(path.join(publicDir, '404.html'));
+      }
+
+      req.session.role = user.role;
+      return next();
+    } catch (err) {
+      return res.status(404).sendFile(path.join(publicDir, '404.html'));
+    }
+  }
+
   next();
 });
 
@@ -128,6 +160,7 @@ app.use('/api/quiz', require('./routes/quiz'));
 app.use('/api/pengumuman', require('./routes/pengumuman'));
 app.use('/api/profil', require('./routes/profil'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/guru', require('./routes/guru'));
 
 // Route Utama: Masuk ke Halaman Login terlebih dahulu (atau langsung ke Dashboard sesuai role)
 app.get('/', async (req, res) => {
@@ -141,6 +174,9 @@ app.get('/', async (req, res) => {
 
       if (user && user.role === 'admin') {
         return res.redirect('/admin.html');
+      }
+      if (user && user.role === 'guru') {
+        return res.redirect('/guru.html');
       }
     } catch (e) {}
     return res.redirect('/beranda.html');

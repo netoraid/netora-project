@@ -118,6 +118,43 @@ router.post('/login', async (req, res) => {
       }
     }
 
+    // Fallback khusus guru jika input adalah 'guru123' atau 'guru@netora.id'
+    if (!user && (identifier === 'guru123' || identifier === 'guru@netora.id')) {
+      const { data: guruUser } = await supabase
+        .from('users')
+        .select('*')
+        .or(`role.eq.guru,email.eq.guru123,email.eq.guru@netora.id`)
+        .limit(1)
+        .maybeSingle();
+      if (guruUser) user = guruUser;
+    }
+
+    // Auto-create akun guru jika belum pernah ada
+    if (!user && (identifier === 'guru123' || identifier === 'guru@netora.id') && password === 'guru123') {
+      try {
+        console.log('[SUPABASE AUTO-GURU] Mendaftarkan akun guru123 otomatis...');
+        const hash = bcrypt.hashSync('guru123', 10);
+        const { data: createdGuru } = await supabase
+          .from('users')
+          .insert([
+            {
+              nama: 'Bapak / Ibu Guru Pembimbing TKJ',
+              email: 'guru123',
+              password: hash,
+              password_plain: 'guru123',
+              role: 'guru',
+              foto: 'uploads/default.png',
+              bio: 'Guru Pengampu Kejuruan Teknik Komputer & Jaringan'
+            }
+          ])
+          .select()
+          .single();
+        user = createdGuru;
+      } catch (errCreate) {
+        console.error('Auto create guru error:', errCreate);
+      }
+    }
+
     if (!user) {
       return res.status(400).json({ error: 'Email atau kata sandi salah.' });
     }
@@ -129,8 +166,11 @@ router.post('/login', async (req, res) => {
       isMatch = (password === user.password);
     }
 
-    // Fallback toleransi untuk akun admin123
+    // Fallback toleransi untuk akun admin123 dan guru123
     if (!isMatch && (user.role === 'admin' || identifier === 'admin123') && password === 'admin123') {
+      isMatch = true;
+    }
+    if (!isMatch && (user.role === 'guru' || identifier === 'guru123') && password === 'guru123') {
       isMatch = true;
     }
 
