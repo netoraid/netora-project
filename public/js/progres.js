@@ -7,15 +7,18 @@ window.initProgresPage = function() {
   const historyContainer = document.getElementById('quiz-history-container');
   if (!greetingEl && !historyContainer && !statHighestEl) return;
 
-  getUser().then(user => {
-    updateNavHeader(user);
-    if (greetingEl) {
-      greetingEl.textContent = user ? `Halo, ${user.nama}` : 'Halo, Siswa TKJ';
-    }
-    if (userRoleBadge && user) {
-      userRoleBadge.textContent = user.role === 'admin' ? 'Administrator' : `Siswa: ${user.nama.split(' ')[0]}`;
-    }
-  });
+  if (typeof getUser === 'function') {
+    getUser().then(user => {
+      if (typeof updateNavHeader === 'function') updateNavHeader(user);
+      if (greetingEl) {
+        greetingEl.textContent = user ? `Halo, ${user.nama || 'Siswa'}` : 'Halo, Siswa TKJ';
+      }
+      if (userRoleBadge && user) {
+        const namaAwal = (user.nama || 'Siswa').trim().split(' ')[0] || 'Siswa';
+        userRoleBadge.textContent = user.role === 'admin' ? 'Administrator' : `Siswa: ${namaAwal}`;
+      }
+    }).catch(() => {});
+  }
 
   // 1. Pre-render dari cache jika tersedia
   try {
@@ -35,7 +38,7 @@ window.initProgresPage = function() {
     try {
       const res = await fetch('/api/profil');
       const data = await res.json();
-      if (res.ok && data.success && data.riwayat) {
+      if (res.ok && data && data.success && Array.isArray(data.riwayat)) {
         riwayatList = data.riwayat;
       }
     } catch (err) {
@@ -46,7 +49,7 @@ window.initProgresPage = function() {
       try {
         const resQuiz = await fetch('/api/quiz/riwayat');
         const dataQuiz = await resQuiz.json();
-        if (resQuiz.ok && dataQuiz.success && dataQuiz.riwayat) {
+        if (resQuiz.ok && dataQuiz && dataQuiz.success && Array.isArray(dataQuiz.riwayat)) {
           riwayatList = dataQuiz.riwayat;
         }
       } catch (e) {
@@ -62,19 +65,20 @@ window.initProgresPage = function() {
   }
 
   function updateSkillBar(key, pct) {
+    const safePct = Math.max(0, Math.min(100, Math.round(Number(pct) || 0)));
     const textEl = document.getElementById(`skill-pct-${key}`);
     const barEl = document.getElementById(`skill-bar-${key}`);
-    if (textEl) textEl.textContent = `${pct}%`;
-    if (barEl) barEl.style.width = `${pct}%`;
+    if (textEl) textEl.textContent = `${safePct}%`;
+    if (barEl) barEl.style.width = `${safePct}%`;
   }
 
   function renderStatsAndHistory(riwayat) {
-    if (riwayat && riwayat.length > 0) {
+    if (Array.isArray(riwayat) && riwayat.length > 0) {
       const scores = riwayat.map(r => Number(r.skor) || 0);
-      const maxScore = Math.max(...scores);
-      const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+      const maxScore = scores.length > 0 ? Math.max(...scores) : 0;
+      const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
 
-      if (statHighestEl) statHighestEl.textContent = maxScore;
+      if (statHighestEl) statHighestEl.textContent = String(maxScore);
       if (statAverageEl) statAverageEl.textContent = `${avgScore}%`;
       if (statCompletedEl) statCompletedEl.textContent = `${riwayat.length} Sesi`;
 
@@ -95,9 +99,14 @@ window.initProgresPage = function() {
           const isPass = score >= 70;
           const badgeBg = isPass ? '#22C55E' : '#EF4444';
           const badgeText = isPass ? 'Lulus' : 'Remidi';
-          const tanggal = item.tanggal ? new Date(item.tanggal).toLocaleDateString('id-ID', {
-            day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-          }) : 'Sesi Latihan';
+          let tanggal = 'Sesi Latihan';
+          if (item.tanggal) {
+            try {
+              tanggal = new Date(item.tanggal).toLocaleDateString('id-ID', {
+                day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+              });
+            } catch(e) {}
+          }
 
           const iconSvg = isPass
             ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>`
@@ -162,7 +171,13 @@ window.initProgresPage = function() {
 };
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', window.initProgresPage);
+  document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('stat-highest-score') || document.getElementById('quiz-history-container')) {
+      window.initProgresPage();
+    }
+  });
 } else {
-  window.initProgresPage();
+  if (document.getElementById('stat-highest-score') || document.getElementById('quiz-history-container')) {
+    window.initProgresPage();
+  }
 }

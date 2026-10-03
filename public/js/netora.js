@@ -525,76 +525,111 @@ document.addEventListener('DOMContentLoaded', () => {
     const cleanSrc = src.split('?')[0];
     const existing = Array.from(document.querySelectorAll('script')).find(s => s.src && s.src.includes(cleanSrc));
     if (existing) {
-      if (cb) cb();
+      if (cb) {
+        try { cb(); } catch(e) { console.warn('Script cb error:', e); }
+      }
       return;
     }
     const s = document.createElement('script');
     s.src = src;
-    s.onload = () => { if (cb) cb(); };
-    s.onerror = () => { if (cb) cb(); };
+    s.onload = () => {
+      if (cb) {
+        try { cb(); } catch(e) { console.warn('Script onload cb error:', e); }
+      }
+    };
+    s.onerror = (e) => {
+      console.warn('Gagal memuat script:', src, e);
+      if (cb) {
+        try { cb(); } catch(err) {}
+      }
+    };
     document.body.appendChild(s);
   }
 
   // 2. Dispatcher Inisialisasi Halaman Baru
   function triggerPageLifecycle(cleanPath) {
-    getUser().then(u => updateNavHeader(u));
+    try {
+      getUser().then(u => updateNavHeader(u)).catch(() => {});
+    } catch(e) {}
 
     const path = cleanPath.toLowerCase();
 
-    if (path === 'beranda.html' || path === '') {
-      if (window.initBerandaPage) {
-        window.initBerandaPage();
-      } else {
-        loadScriptOnce('js/beranda.js', () => window.initBerandaPage && window.initBerandaPage());
+    try {
+      if (path === 'beranda.html' || path === '') {
+        if (window.initBerandaPage) {
+          try { window.initBerandaPage(); } catch(e) { console.warn('initBerandaPage err:', e); }
+        } else {
+          loadScriptOnce('js/beranda.js', () => {
+            try { window.initBerandaPage && window.initBerandaPage(); } catch(e) { console.warn('initBerandaPage err:', e); }
+          });
+        }
+      } else if (path === 'pengumuman.html') {
+        if (window.initPengumumanPage) {
+          try { window.initPengumumanPage(); } catch(e) { console.warn('initPengumumanPage err:', e); }
+        } else {
+          loadScriptOnce('js/pengumuman.js', () => {
+            try { window.initPengumumanPage && window.initPengumumanPage(); } catch(e) { console.warn('initPengumumanPage err:', e); }
+          });
+        }
+      } else if (path === 'materi.html') {
+        if (window.initMateriPage) {
+          try { window.initMateriPage(); } catch(e) { console.warn('initMateriPage err:', e); }
+        } else {
+          loadScriptOnce('js/materi.js', () => {
+            try { window.initMateriPage && window.initMateriPage(); } catch(e) { console.warn('initMateriPage err:', e); }
+          });
+        }
+      } else if (path === 'materi-detail.html') {
+        if (window.initMateriPage) {
+          try { window.initMateriPage(); } catch(e) { console.warn('initMateriPage err:', e); }
+        } else {
+          loadScriptOnce('js/materi.js', () => {
+            try { window.initMateriPage && window.initMateriPage(); } catch(e) { console.warn('initMateriPage err:', e); }
+          });
+        }
+      } else if (path === 'video.html') {
+        if (window.initVideoPage) {
+          try { window.initVideoPage(); } catch(e) { console.warn('initVideoPage err:', e); }
+        } else {
+          loadScriptOnce('js/video.js', () => {
+            try { window.initVideoPage && window.initVideoPage(); } catch(e) { console.warn('initVideoPage err:', e); }
+          });
+        }
+      } else if (path === 'quiz.html') {
+        if (window.initQuizPage) {
+          try { window.initQuizPage(); } catch(e) { console.warn('initQuizPage err:', e); }
+        } else {
+          loadScriptOnce('js/quiz.js', () => {
+            try { window.initQuizPage && window.initQuizPage(); } catch(e) { console.warn('initQuizPage err:', e); }
+          });
+        }
+      } else if (path === 'progres.html') {
+        if (window.initProgresPage) {
+          try { window.initProgresPage(); } catch(e) { console.warn('initProgresPage err:', e); }
+        } else {
+          loadScriptOnce('js/progres.js', () => {
+            try { window.initProgresPage && window.initProgresPage(); } catch(e) { console.warn('initProgresPage err:', e); }
+          });
+        }
+      } else if (path === 'profil.html') {
+        if (window.initProfilPage) {
+          try { window.initProfilPage(); } catch(e) { console.warn('initProfilPage err:', e); }
+        } else {
+          loadScriptOnce('js/profil.js', () => {
+            try { window.initProfilPage && window.initProfilPage(); } catch(e) { console.warn('initProfilPage err:', e); }
+          });
+        }
+      } else if (path === 'kalkulator.html') {
+        if (window.initKalkulatorPage) {
+          try { window.initKalkulatorPage(); } catch(e) { console.warn('initKalkulatorPage err:', e); }
+        } else {
+          loadScriptOnce('js/kalkulator.js', () => {
+            try { window.initKalkulatorPage && window.initKalkulatorPage(); } catch(e) { console.warn('initKalkulatorPage err:', e); }
+          });
+        }
       }
-    } else if (path === 'pengumuman.html') {
-      if (window.initPengumumanPage) {
-        window.initPengumumanPage();
-      } else {
-        loadScriptOnce('js/pengumuman.js', () => window.initPengumumanPage && window.initPengumumanPage());
-      }
-    } else if (path === 'materi.html') {
-      if (window.initMateriPage) {
-        window.initMateriPage();
-      } else {
-        loadScriptOnce('js/materi.js', () => window.initMateriPage && window.initMateriPage());
-      }
-    } else if (path === 'materi-detail.html') {
-      if (window.initMateriPage) {
-        window.initMateriPage();
-      } else {
-        loadScriptOnce('js/materi.js', () => window.initMateriPage && window.initMateriPage());
-      }
-    } else if (path === 'video.html') {
-      if (window.initVideoPage) {
-        window.initVideoPage();
-      } else {
-        loadScriptOnce('js/video.js', () => window.initVideoPage && window.initVideoPage());
-      }
-    } else if (path === 'quiz.html') {
-      if (window.initQuizPage) {
-        window.initQuizPage();
-      } else {
-        loadScriptOnce('js/quiz.js', () => window.initQuizPage && window.initQuizPage());
-      }
-    } else if (path === 'progres.html') {
-      if (window.initProgresPage) {
-        window.initProgresPage();
-      } else {
-        loadScriptOnce('js/progres.js', () => window.initProgresPage && window.initProgresPage());
-      }
-    } else if (path === 'profil.html') {
-      if (window.initProfilPage) {
-        window.initProfilPage();
-      } else {
-        loadScriptOnce('js/profil.js', () => window.initProfilPage && window.initProfilPage());
-      }
-    } else if (path === 'kalkulator.html') {
-      if (window.initKalkulatorPage) {
-        window.initKalkulatorPage();
-      } else {
-        loadScriptOnce('js/kalkulator.js', () => window.initKalkulatorPage && window.initKalkulatorPage());
-      }
+    } catch (lifecycleErr) {
+      console.error('Lifecycle dispatch error:', lifecycleErr);
     }
   }
 
@@ -650,73 +685,90 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (curPath === targetPath && !isPopState) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo(0, 0);
       return;
     }
 
     if (_isNavigating) return;
     _isNavigating = true;
 
-    // Optimistic UI pada tab navigasi (Respons instan)
-    updateActiveTabs(targetPath);
-
-    // Ambil HTML halaman tujuan (0ms dari cache atau instan fetch)
-    const html = await fetchPageHtml(targetUrl);
-    if (!html) {
-      _isNavigating = false;
-      window.location.href = targetUrl;
-      return;
-    }
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-
-    const newApp = doc.querySelector('.netora-mobile-app') || doc.querySelector('.device');
-    const curApp = document.querySelector('.netora-mobile-app') || document.querySelector('.device');
-
-    if (!newApp || !curApp) {
-      _isNavigating = false;
-      window.location.href = targetUrl;
-      return;
-    }
-
-    const performDomSwap = () => {
-      // Ubah URL dan Title tanpa reload browser
-      if (!isPopState) {
-        window.history.pushState({ path: targetUrl }, '', targetUrl);
-      }
-      if (doc.title) {
-        document.title = doc.title;
-      }
-
-      // Ganti konten DOM halaman tujuan (berisi Shimmer Skeleton)
-      curApp.innerHTML = newApp.innerHTML;
-      window.scrollTo({ top: 0, behavior: 'instant' });
+    try {
+      // Optimistic UI pada tab navigasi (Respons instan)
       updateActiveTabs(targetPath);
 
-      // Jalankan siklus hidup halaman tujuan (Skeleton aktif memuat data di halaman tujuan)
-      triggerPageLifecycle(targetPath);
-    };
-
-    // Gunakan W3C Native View Transition API untuk kehalusan maksimal seperti aplikasi native
-    if (document.startViewTransition) {
-      try {
-        const transition = document.startViewTransition(() => {
-          performDomSwap();
-        });
-        await transition.finished;
-      } catch (e) {
-        performDomSwap();
+      // Ambil HTML halaman tujuan (0ms dari cache atau instan fetch)
+      const html = await fetchPageHtml(targetUrl);
+      if (!html) {
+        window.location.href = targetUrl;
+        return;
       }
-    } else {
-      // Fallback: Silky-smooth CSS entrance crossfade
-      curApp.classList.remove('netora-page-fade-enter');
-      performDomSwap();
-      void curApp.offsetWidth;
-      curApp.classList.add('netora-page-fade-enter');
-    }
 
-    _isNavigating = false;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+
+      const newApp = doc.querySelector('.netora-mobile-app') || doc.querySelector('.device');
+      const curApp = document.querySelector('.netora-mobile-app') || document.querySelector('.device');
+
+      if (!newApp || !curApp) {
+        window.location.href = targetUrl;
+        return;
+      }
+
+      const performDomSwap = () => {
+        try {
+          // Ubah URL dan Title tanpa reload browser
+          if (!isPopState) {
+            window.history.pushState({ path: targetUrl }, '', targetUrl);
+          }
+          if (doc.title) {
+            document.title = doc.title;
+          }
+
+          // Sinkronisasi tag <style> halaman baru agar styling (profil, progres, beranda) tidak hilang
+          const newStyles = doc.querySelectorAll('head style, body style');
+          document.querySelectorAll('style[data-netora-page-style]').forEach(s => s.remove());
+          newStyles.forEach(s => {
+            const styleEl = document.createElement('style');
+            styleEl.setAttribute('data-netora-page-style', 'true');
+            styleEl.textContent = s.textContent;
+            document.head.appendChild(styleEl);
+          });
+
+          // Ganti konten DOM halaman tujuan (berisi Shimmer Skeleton)
+          curApp.innerHTML = newApp.innerHTML;
+          window.scrollTo(0, 0);
+          updateActiveTabs(targetPath);
+
+          // Jalankan siklus hidup halaman tujuan (Skeleton aktif memuat data di halaman tujuan)
+          triggerPageLifecycle(targetPath);
+        } catch (err) {
+          console.error('DOM Swap error:', err);
+        }
+      };
+
+      // Gunakan W3C Native View Transition API untuk kehalusan maksimal seperti aplikasi native
+      if (document.startViewTransition) {
+        try {
+          const transition = document.startViewTransition(() => {
+            performDomSwap();
+          });
+          await transition.finished;
+        } catch (e) {
+          performDomSwap();
+        }
+      } else {
+        // Fallback: Silky-smooth CSS entrance crossfade
+        curApp.classList.remove('netora-page-fade-enter');
+        performDomSwap();
+        void curApp.offsetWidth;
+        curApp.classList.add('netora-page-fade-enter');
+      }
+    } catch (globalNavErr) {
+      console.error('Seamless navigation error:', globalNavErr);
+      window.location.href = targetUrl;
+    } finally {
+      _isNavigating = false;
+    }
   }
 
   // 6. Handle Tombol Back / Forward Browser

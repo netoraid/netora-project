@@ -4502,3 +4502,327 @@ body.admin-page {
 .skeleton-line.w-90 { width: 90%; }
 .skeleton-line.w-100 { width: 100%; }
 
+/* ==========================================================================
+   BERANDA, PROGRES & PROFIL CONSOLIDATED STYLES (SPA NAVIGATION SAFE)
+   ========================================================================== */
+
+/* ===== Beranda Banner Carousel ===== */
+.banner-carousel-wrap {
+  position: relative;
+  margin: 10px 14px 8px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+}
+.banner-carousel-track {
+  display: flex;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+.banner-slide {
+  min-width: 100%;
+  flex-shrink: 0;
+  height: 150px;
+  overflow: hidden;
+}
+.banner-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center center;
+}
+.banner-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+}
+.banner-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.banner-dot.active {
+  width: 22px;
+  border-radius: 4px;
+  background: #FFFFFF;
+}
+@media (min-width: 768px) {
+  .banner-slide {
+    height: 200px;
+  }
+}
+
+/* ===== Progres Belajar ===== */
+.stat-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 14px 16px;
+  box-sizing: border-box;
+  width: 100%;
+}
+@media (min-width: 480px) {
+  .stat-summary-grid {
+    gap: 12px;
+    padding: 16px;
+  }
+}
+.stat-card-progress {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 12px 6px 10px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+  border: 1px solid #E2E8F0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.stat-card-progress:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
+}
+.stat-icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.stat-card-progress:hover .stat-icon-badge {
+  transform: scale(1.08);
+}
+.stat-icon-badge.badge-amber {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: #D97706;
+}
+.stat-icon-badge.badge-blue {
+  background: rgba(13, 91, 255, 0.09);
+  border: 1px solid rgba(13, 91, 255, 0.22);
+  color: #0D5BFF;
+}
+.stat-icon-badge.badge-green {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #10B981;
+}
+.stat-card-val {
+  font-size: clamp(17px, 4.4vw, 22px);
+  font-weight: 900;
+  color: #0F172A;
+  line-height: 1.15;
+  margin: 0 0 3px;
+  letter-spacing: -0.4px;
+}
+.stat-card-lbl {
+  font-size: clamp(9px, 2.3vw, 10.5px);
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.skill-progress-card {
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 12px rgba(13, 91, 255, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+.skill-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.skill-name {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #1E293B;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.skill-pct {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0D5BFF;
+}
+.skill-bar-track {
+  width: 100%;
+  height: 8px;
+  background: #E2E8F0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===== Profil Siswa ===== */
+.profil-tab-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  background: #F1F5F9;
+  border-radius: 14px;
+  padding: 4px;
+  margin: 0 16px 14px;
+}
+.profil-tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #64748B;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  line-height: 1.2;
+}
+.profil-tab-btn svg {
+  flex-shrink: 0;
+}
+.profil-tab-btn.active {
+  background: #FFFFFF;
+  color: #0D5BFF;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.profil-tab-btn:not(.active):hover {
+  background: rgba(255,255,255,0.6);
+  color: #1E293B;
+}
+
+.avatar-wrap {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 12px;
+  flex-shrink: 0;
+}
+.avatar-wrap img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3.5px solid #0D5BFF;
+  box-shadow: 0 6px 20px rgba(13,91,255,0.2);
+  display: block;
+}
+
+.profil-tab-content {
+  display: none !important;
+  padding: 0 16px 4px;
+}
+.profil-tab-content.active {
+  display: block !important;
+}
+
+.profil-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 18px rgba(13,91,255,0.05);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+.profil-card h4 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1E293B;
+}
+.form-label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.form-input {
+  width: 100%;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-size: 13px;
+  color: #1E293B;
+  background: #FFFFFF;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+.form-input:focus {
+  border-color: #0D5BFF;
+  box-shadow: 0 0 0 3px rgba(13,91,255,0.08);
+}
+.form-input:disabled {
+  background: #F8FAFC;
+  color: #94A3B8;
+  border-color: #E2E8F0;
+  cursor: not-allowed;
+}
+textarea.form-input {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.community-link {
+  padding: 13px 16px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.community-link:hover {
+  opacity: 0.85;
+  transform: translateX(2px);
+}
+.community-link-wa {
+  background: #F0FDF4;
+  border: 1.5px solid #BBF7D0;
+  color: #166534;
+}
+.community-link-tg {
+  background: #EFF6FF;
+  border: 1.5px solid #BFDBFE;
+  color: #1E40AF;
+}
+
+
