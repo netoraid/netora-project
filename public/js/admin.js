@@ -1,7 +1,7 @@
 // Admin Dashboard Logic Netora v2
 // Monitoring Aktivitas Siswa, Kuis, Statistik, & Konten
 
-document.addEventListener('DOMContentLoaded', async () => {
+window.initAdminDashboard = async function() {
   // 1. Verifikasi Akses Administrator
   const user = await getUser();
   if (!user) {
@@ -1755,5 +1755,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       isPolling = false;
     }
   }, 15000);
-});
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', window.initAdminDashboard);
+} else {
+  window.initAdminDashboard();
+}
 

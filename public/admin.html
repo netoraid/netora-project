@@ -712,32 +712,32 @@
 
     <!-- DESKTOP ADMIN SUB-NAV TABS (Tampil di Desktop/Tablet) -->
     <div class="admin-nav-bar desktop-only-nav">
-      <button class="admin-tab-btn active" data-tab="tab-overview">
+      <button class="admin-tab-btn active" data-tab="tab-overview" onclick="switchAdminTab('tab-overview')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         <span>Overview & Aktivitas Siswa</span>
       </button>
 
-      <button class="admin-tab-btn" data-tab="tab-siswa">
+      <button class="admin-tab-btn" data-tab="tab-siswa" onclick="switchAdminTab('tab-siswa')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <span>Manajemen Siswa</span>
       </button>
 
-      <button class="admin-tab-btn" data-tab="tab-pengumuman">
+      <button class="admin-tab-btn" data-tab="tab-pengumuman" onclick="switchAdminTab('tab-pengumuman')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <span>Kelola Notifikasi</span>
       </button>
 
-      <button class="admin-tab-btn" data-tab="tab-materi">
+      <button class="admin-tab-btn" data-tab="tab-materi" onclick="switchAdminTab('tab-materi')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
         <span>Kelola Modul Materi</span>
       </button>
 
-      <button class="admin-tab-btn" data-tab="tab-video">
+      <button class="admin-tab-btn" data-tab="tab-video" onclick="switchAdminTab('tab-video')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
         <span>Kelola Vidio Praktik</span>
       </button>
 
-      <button class="admin-tab-btn" data-tab="tab-quiz">
+      <button class="admin-tab-btn" data-tab="tab-quiz" onclick="switchAdminTab('tab-quiz')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
         <span>Setting & Bank Soal Kuis</span>
       </button>
@@ -1420,8 +1420,34 @@
       </div>
     </div>
 
-    <!-- Inline Script Manager Modul Materi (Bypass Cache & Error-Proof) -->
+    <!-- Inline Script Manager Modul Materi & Tab Switching (Bypass Cache & Error-Proof) -->
     <script>
+      window.switchAdminTab = function(targetId) {
+        if (!targetId) return;
+        const tabBtns = document.querySelectorAll('.admin-tab-btn');
+        const tabContents = document.querySelectorAll('.admin-tab-content');
+        const mobileTabSelect = document.getElementById('admin-tab-select-mobile');
+
+        tabBtns.forEach(b => {
+          if (b.dataset.tab === targetId) b.classList.add('active');
+          else b.classList.remove('active');
+        });
+
+        tabContents.forEach(c => {
+          if (c.id === targetId) {
+            c.classList.add('active');
+            c.style.display = 'block';
+          } else {
+            c.classList.remove('active');
+            c.style.display = 'none';
+          }
+        });
+
+        if (mobileTabSelect && mobileTabSelect.value !== targetId) {
+          mobileTabSelect.value = targetId;
+        }
+      };
+
       window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
 
       window.syncModalPageData = function(index) {
@@ -1957,12 +1983,7 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.3"></script>
-  <script>
-    // Injeksi admin.js dengan query parameter timestamp agar browser selalu mengeksekusi versi terkini
-    const scriptAdmin = document.createElement('script');
-    scriptAdmin.src = 'js/admin.js?t=' + Date.now();
-    document.body.appendChild(scriptAdmin);
-  </script>
+  <script src="js/netora.js?v=2026.5"></script>
+  <script src="js/admin.js?v=2026.5"></script>
 </body>
 </html>
