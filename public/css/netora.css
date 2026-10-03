@@ -3059,6 +3059,7 @@ body.admin-page {
   min-height: 100vh;
   min-height: 100dvh;
   background: #F4F7FC;
+  color: #0F172A !important;
   box-shadow: 0 0 50px rgba(13, 91, 255, 0.08);
   position: relative;
   padding-bottom: 68px !important;

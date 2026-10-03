@@ -133,6 +133,24 @@
 <body style="background:#E2E8F0; margin:0; padding:0;">
 
   <div class="netora-mobile-app">
+    <style>
+      .profil-tab-bar { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 0 !important; background: #F1F5F9 !important; border-radius: 14px !important; padding: 4px !important; margin: 0 16px 14px !important; }
+      .profil-tab-btn { display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 3px !important; padding: 8px 4px !important; border: none !important; background: transparent !important; border-radius: 10px !important; cursor: pointer !important; font-size: 10.5px !important; font-weight: 700 !important; color: #64748B !important; text-decoration: none !important; }
+      .profil-tab-btn.active { background: #FFFFFF !important; color: #0D5BFF !important; box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important; }
+      .profil-tab-content { display: none; padding: 0 16px 4px; }
+      .profil-tab-content.active { display: block !important; }
+      .profil-card { background: #FFFFFF !important; border-radius: 20px !important; padding: 20px !important; box-shadow: 0 4px 18px rgba(13,91,255,0.05) !important; border: 1px solid #E2E8F0 !important; }
+      .profil-card h4 { margin: 0 0 12px !important; font-size: 15px !important; font-weight: 800 !important; color: #1E293B !important; }
+      .form-label { display: block !important; font-size: 11.5px !important; font-weight: 700 !important; color: #475569 !important; margin-bottom: 6px !important; letter-spacing: 0.3px !important; text-transform: uppercase !important; }
+      .form-input { width: 100% !important; border: 1.5px solid #CBD5E1 !important; border-radius: 12px !important; padding: 11px 14px !important; font-size: 13px !important; color: #1E293B !important; background: #FFFFFF !important; box-sizing: border-box !important; outline: none !important; font-family: inherit !important; }
+      .form-input:focus { border-color: #0D5BFF !important; box-shadow: 0 0 0 3px rgba(13,91,255,0.08) !important; }
+      .form-input:disabled { background: #F8FAFC !important; color: #94A3B8 !important; border-color: #E2E8F0 !important; cursor: not-allowed !important; }
+      .avatar-wrap { position: relative !important; width: 90px !important; height: 90px !important; margin: 0 auto 12px !important; flex-shrink: 0 !important; }
+      .avatar-wrap img { width: 100% !important; height: 100% !important; border-radius: 50% !important; object-fit: cover !important; border: 3.5px solid #0D5BFF !important; box-shadow: 0 6px 20px rgba(13,91,255,0.2) !important; display: block !important; }
+      .community-link { padding: 13px 16px !important; border-radius: 14px !important; font-size: 13px !important; font-weight: 700 !important; text-decoration: none !important; display: flex !important; align-items: center !important; gap: 12px !important; }
+      .community-link-wa { background: #F0FDF4 !important; border: 1.5px solid #BBF7D0 !important; color: #166534 !important; }
+      .community-link-tg { background: #EFF6FF !important; border: 1.5px solid #BFDBFE !important; color: #1E40AF !important; }
+    </style>
 
     <!-- Header -->
     <header class="app-top-header-royal">
@@ -141,7 +159,7 @@
           <a href="beranda.html" class="subpage-back-btn" title="Kembali ke Beranda">
             <svg style="width:18px; height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </a>
-          <h2 class="subpage-title" style="text-align:left;">Profil Siswa</h2>
+          <h2 class="subpage-title" id="profil-header-title" style="text-align:left;">Profil Pengguna</h2>
         </div>
 
         <!-- Desktop Nav -->
@@ -190,12 +208,13 @@
       box-shadow:0 8px 24px rgba(13,91,255,0.07); border:1px solid rgba(0,0,0,0.04); position:relative; z-index:11;">
 
       <!-- Avatar Foto Profil Bersih Tanpa Icon Bulat Overlay -->
-      <div class="avatar-wrap">
-        <img id="profile-img" src="uploads/default.png" alt="Foto Profil">
+      <div class="avatar-wrap" style="position:relative; width:90px; height:90px; margin:0 auto 12px; flex-shrink:0;">
+        <img id="profile-img" src="uploads/default.png" alt="Foto Profil" onerror="this.onerror=null; this.src='assets/logo.png';"
+          style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:3.5px solid #0D5BFF; box-shadow:0 6px 20px rgba(13,91,255,0.2); display:block; background:#EFF6FF;">
         <input type="file" id="input-foto" accept="image/*" style="display:none;">
       </div>
 
-      <!-- Tombol Teks Aksi: Ganti Foto & Hapus Foto (Di Bawah Foto Profil) -->
+      <!-- Tombol Teks Aksi: Ganti Foto & Hapus Foto -->
       <div style="display:flex; justify-content:center; gap:8px; margin: 2px 0 12px;">
         <label for="input-foto" style="cursor:pointer; font-size:11.5px; font-weight:700; color:#0D5BFF; background:#EFF6FF; border:1.5px solid #BFDBFE; border-radius:20px; padding:5px 14px; display:inline-flex; align-items:center; gap:5px; transition:0.2s; box-shadow:0 2px 6px rgba(13,91,255,0.08);">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -207,34 +226,37 @@
         </button>
       </div>
 
-      <h3 id="profile-nama" style="margin:0 0 3px; font-size:17px; font-weight:800; color:#1E293B;">Siswa</h3>
-      <p id="profile-email" style="margin:0 0 8px; font-size:12.5px; color:#64748B;">siswa@netora.id</p>
+      <h3 id="profile-nama" style="margin:0 0 3px; font-size:17px; font-weight:800; color:#1E293B;">Pengguna Netora</h3>
+      <p id="profile-email" style="margin:0 0 8px; font-size:12.5px; color:#64748B;">pengguna@netora.id</p>
       <span id="profile-joined" style="font-size:11px; font-weight:600; color:#94A3B8; display:inline-flex; align-items:center; gap:4px;">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line>
           <line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
         </svg>
-        <span>Akun Siswa Netora</span>
+        <span id="profile-role-badge">Akun Netora</span>
       </span>
     </div>
 
     <!-- Tab Bar: 4 kolom rata berjejer -->
-    <div class="profil-tab-bar" role="tablist">
-      <button class="profil-tab-btn active" data-tab="tab-edit" role="tab" aria-selected="true">
+    <div class="profil-tab-bar" role="tablist" style="display:grid; grid-template-columns:repeat(4,1fr); gap:0; background:#F1F5F9; border-radius:14px; padding:4px; margin:0 16px 14px; border:none;">
+      <button class="profil-tab-btn active" data-tab="tab-edit" role="tab" aria-selected="true"
+        style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:8px 4px; border:none; background:#FFFFFF; border-radius:10px; cursor:pointer; font-size:10.5px; font-weight:700; color:#0D5BFF; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
         </svg>
         <span>Profil</span>
       </button>
-      <button class="profil-tab-btn" data-tab="tab-pass" role="tab">
+      <button class="profil-tab-btn" data-tab="tab-pass" role="tab"
+        style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:8px 4px; border:none; background:transparent; border-radius:10px; cursor:pointer; font-size:10.5px; font-weight:700; color:#64748B;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
           <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
         <span>Sandi</span>
       </button>
-      <button class="profil-tab-btn" data-tab="tab-tentang" role="tab">
+      <button class="profil-tab-btn" data-tab="tab-tentang" role="tab"
+        style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:8px 4px; border:none; background:transparent; border-radius:10px; cursor:pointer; font-size:10.5px; font-weight:700; color:#64748B;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -242,7 +264,8 @@
         </svg>
         <span>Tentang</span>
       </button>
-      <button class="profil-tab-btn" data-tab="tab-komunitas" role="tab">
+      <button class="profil-tab-btn" data-tab="tab-komunitas" role="tab"
+        style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:8px 4px; border:none; background:transparent; border-radius:10px; cursor:pointer; font-size:10.5px; font-weight:700; color:#64748B;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
           <circle cx="9" cy="7" r="4"></circle>
@@ -254,26 +277,26 @@
     </div>
 
     <!-- TAB 1: UBAH PROFIL -->
-    <div id="tab-edit" class="profil-tab-content active">
-      <div class="profil-card">
-        <h4>
+    <div id="tab-edit" class="profil-tab-content active" style="display:block; padding:0 16px 4px;">
+      <div class="profil-card" style="background:#FFFFFF; border-radius:20px; padding:20px; box-shadow:0 4px 18px rgba(13,91,255,0.05); border:1px solid #E2E8F0;">
+        <h4 style="margin:0 0 14px; font-size:15px; font-weight:800; color:#1E293B;">
           <svg style="width:15px;height:15px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
           Edit Profil
         </h4>
         <form id="form-update-profil">
           <div style="margin-bottom:14px;">
-            <label for="edit-nama" class="form-label">Nama Lengkap</label>
-            <input type="text" id="edit-nama" class="form-input" required placeholder="Nama lengkap kamu">
+            <label for="edit-nama" class="form-label" style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px; letter-spacing:0.3px; text-transform:uppercase;">Nama Lengkap</label>
+            <input type="text" id="edit-nama" class="form-input" required placeholder="Nama lengkap kamu" style="width:100%; border:1.5px solid #CBD5E1; border-radius:12px; padding:11px 14px; font-size:13px; color:#1E293B; background:#FFFFFF; box-sizing:border-box; outline:none;">
           </div>
           <div style="margin-bottom:14px;">
-            <label for="edit-email" class="form-label">Alamat Email</label>
-            <input type="email" id="edit-email" class="form-input" disabled placeholder="email@sekolah.sch.id">
+            <label for="edit-email" class="form-label" style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px; letter-spacing:0.3px; text-transform:uppercase;">Alamat Email</label>
+            <input type="email" id="edit-email" class="form-input" disabled placeholder="email@sekolah.sch.id" style="width:100%; border:1.5px solid #E2E8F0; border-radius:12px; padding:11px 14px; font-size:13px; color:#94A3B8; background:#F8FAFC; box-sizing:border-box; outline:none; cursor:not-allowed;">
           </div>
           <div style="margin-bottom:18px;">
-            <label for="edit-bio" class="form-label">Bio / Ringkasan Diri</label>
-            <textarea id="edit-bio" class="form-input" rows="3" placeholder="Tuliskan bio singkatmu..."></textarea>
+            <label for="edit-bio" class="form-label" style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px; letter-spacing:0.3px; text-transform:uppercase;">Bio / Ringkasan Diri</label>
+            <textarea id="edit-bio" class="form-input" rows="3" placeholder="Tuliskan bio singkatmu..." style="width:100%; border:1.5px solid #CBD5E1; border-radius:12px; padding:11px 14px; font-size:13px; color:#1E293B; background:#FFFFFF; box-sizing:border-box; outline:none; font-family:inherit;"></textarea>
           </div>
-          <button type="submit" class="btn-hero-orange" style="width:100%; justify-content:center; padding:13px; border-radius:26px; font-size:14px; font-weight:700;">
+          <button type="submit" class="btn-hero-orange" style="width:100%; justify-content:center; padding:13px; border-radius:26px; font-size:14px; font-weight:700; cursor:pointer;">
             Simpan Perubahan
           </button>
         </form>
@@ -281,33 +304,33 @@
         <div style="margin-top:20px; padding-top:16px; border-top:1px dashed #E2E8F0;">
           <button type="button" id="btn-hapus-akun" style="width:100%; justify-content:center; padding:11px; border-radius:14px; font-size:12.5px; font-weight:700; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-            <span>Hapus Akun Siswa</span>
+            <span id="profile-delete-label">Hapus Akun</span>
           </button>
         </div>
       </div>
     </div>
 
     <!-- TAB 2: UBAH SANDI -->
-    <div id="tab-pass" class="profil-tab-content">
-      <div class="profil-card">
-        <h4>
+    <div id="tab-pass" class="profil-tab-content" style="display:none; padding:0 16px 4px;">
+      <div class="profil-card" style="background:#FFFFFF; border-radius:20px; padding:20px; box-shadow:0 4px 18px rgba(13,91,255,0.05); border:1px solid #E2E8F0;">
+        <h4 style="margin:0 0 14px; font-size:15px; font-weight:800; color:#1E293B;">
           <svg style="width:15px;height:15px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           Ubah Kata Sandi
         </h4>
         <form id="form-ganti-pass">
           <div style="margin-bottom:14px;">
-            <label for="pass-lama" class="form-label">Kata Sandi Saat Ini</label>
-            <input type="password" id="pass-lama" class="form-input" required placeholder="••••••••">
+            <label for="pass-lama" class="form-label" style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px; letter-spacing:0.3px; text-transform:uppercase;">Kata Sandi Saat Ini</label>
+            <input type="password" id="pass-lama" class="form-input" required placeholder="••••••••" style="width:100%; border:1.5px solid #CBD5E1; border-radius:12px; padding:11px 14px; font-size:13px; color:#1E293B; background:#FFFFFF; box-sizing:border-box; outline:none;">
           </div>
           <div style="margin-bottom:14px;">
-            <label for="pass-baru" class="form-label">Kata Sandi Baru (Min. 6 Karakter)</label>
-            <input type="password" id="pass-baru" class="form-input" required placeholder="••••••••">
+            <label for="pass-baru" class="form-label" style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px; letter-spacing:0.3px; text-transform:uppercase;">Kata Sandi Baru (Min. 6 Karakter)</label>
+            <input type="password" id="pass-baru" class="form-input" required placeholder="••••••••" style="width:100%; border:1.5px solid #CBD5E1; border-radius:12px; padding:11px 14px; font-size:13px; color:#1E293B; background:#FFFFFF; box-sizing:border-box; outline:none;">
           </div>
           <div style="margin-bottom:18px;">
-            <label for="pass-konfirm" class="form-label">Konfirmasi Kata Sandi Baru</label>
-            <input type="password" id="pass-konfirm" class="form-input" required placeholder="••••••••">
+            <label for="pass-konfirm" class="form-label" style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px; letter-spacing:0.3px; text-transform:uppercase;">Konfirmasi Kata Sandi Baru</label>
+            <input type="password" id="pass-konfirm" class="form-input" required placeholder="••••••••" style="width:100%; border:1.5px solid #CBD5E1; border-radius:12px; padding:11px 14px; font-size:13px; color:#1E293B; background:#FFFFFF; box-sizing:border-box; outline:none;">
           </div>
-          <button type="submit" class="btn-hero-orange" style="width:100%; justify-content:center; padding:13px; border-radius:26px; font-size:14px; font-weight:700;">
+          <button type="submit" class="btn-hero-orange" style="width:100%; justify-content:center; padding:13px; border-radius:26px; font-size:14px; font-weight:700; cursor:pointer;">
             Perbarui Kata Sandi
           </button>
         </form>
@@ -315,9 +338,9 @@
     </div>
 
     <!-- TAB 3: TENTANG -->
-    <div id="tab-tentang" class="profil-tab-content">
-      <div class="profil-card">
-        <h4>
+    <div id="tab-tentang" class="profil-tab-content" style="display:none; padding:0 16px 4px;">
+      <div class="profil-card" style="background:#FFFFFF; border-radius:20px; padding:20px; box-shadow:0 4px 18px rgba(13,91,255,0.05); border:1px solid #E2E8F0;">
+        <h4 style="margin:0 0 14px; font-size:15px; font-weight:800; color:#1E293B;">
           <svg style="width:15px;height:15px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
           Tentang Netora
         </h4>
@@ -346,9 +369,9 @@
     </div>
 
     <!-- TAB 4: KOMUNITAS (SALURAN WHATSAPP) -->
-    <div id="tab-komunitas" class="profil-tab-content">
-      <div class="profil-card">
-        <h4>
+    <div id="tab-komunitas" class="profil-tab-content" style="display:none; padding:0 16px 4px;">
+      <div class="profil-card" style="background:#FFFFFF; border-radius:20px; padding:20px; box-shadow:0 4px 18px rgba(13,91,255,0.05); border:1px solid #E2E8F0;">
+        <h4 style="margin:0 0 14px; font-size:15px; font-weight:800; color:#16A34A;">
           <svg style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
           Saluran WhatsApp Resmi
         </h4>

@@ -8,16 +8,40 @@ window.initProfilPage = async function() {
     const tabBtns = document.querySelectorAll('.profil-tab-btn');
     const tabPanels = document.querySelectorAll('.profil-tab-content');
 
+    // Sembunyikan panel non-aktif secara default seketika
+    tabPanels.forEach(p => {
+      if (!p.classList.contains('active')) {
+        p.style.display = 'none';
+      } else {
+        p.style.display = 'block';
+      }
+    });
+
     tabBtns.forEach(btn => {
       btn.onclick = (e) => {
         e.preventDefault();
         const targetId = btn.dataset.tab;
-        tabBtns.forEach(b => b.classList.remove('active'));
-        tabPanels.forEach(p => p.classList.remove('active'));
+        tabBtns.forEach(b => {
+          b.classList.remove('active');
+          b.style.background = 'transparent';
+          b.style.color = '#64748B';
+          b.style.boxShadow = 'none';
+        });
+        tabPanels.forEach(p => {
+          p.classList.remove('active');
+          p.style.display = 'none';
+        });
 
         btn.classList.add('active');
+        btn.style.background = '#FFFFFF';
+        btn.style.color = '#0D5BFF';
+        btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+
         const targetEl = document.getElementById(targetId);
-        if (targetEl) targetEl.classList.add('active');
+        if (targetEl) {
+          targetEl.classList.add('active');
+          targetEl.style.display = 'block';
+        }
       };
     });
   }
@@ -37,16 +61,37 @@ window.initProfilPage = async function() {
     const profileImg = document.getElementById('profile-img');
     const profileEmail = document.getElementById('profile-email');
     const profileJoined = document.getElementById('profile-joined');
+    const profilRoleBadge = document.getElementById('profile-role-badge');
+    const profilHeaderTitle = document.getElementById('profil-header-title');
+    const profileDeleteLabel = document.getElementById('profile-delete-label');
+    const btnHapusAkun = document.getElementById('btn-hapus-akun');
     const editEmail = document.getElementById('edit-email');
     const editBio = document.getElementById('edit-bio');
 
-    if (profileNama) profileNama.textContent = u.nama || 'Siswa TKJ';
+    if (profileNama) profileNama.textContent = u.nama || 'Pengguna Netora';
     if (profileEmail) profileEmail.textContent = u.email || '';
     if (profileImg && u.foto) profileImg.src = u.foto;
     if (profileJoined && u.created_at) {
       const tgl = typeof formatTanggal === 'function' ? formatTanggal(u.created_at) : u.created_at;
       profileJoined.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><span>Bergabung sejak ${tgl}</span>`;
     }
+
+    // Role-adaptive text
+    if (u.role === 'guru') {
+      if (profilHeaderTitle) profilHeaderTitle.textContent = 'Profil Guru';
+      if (profilRoleBadge) profilRoleBadge.textContent = 'Guru Pembimbing TKJ';
+      if (profileDeleteLabel) profileDeleteLabel.textContent = 'Hapus Akun Guru';
+    } else if (u.role === 'admin') {
+      if (profilHeaderTitle) profilHeaderTitle.textContent = 'Profil Administrator';
+      if (profilRoleBadge) profilRoleBadge.textContent = 'Administrator Netora';
+      if (profileDeleteLabel) profileDeleteLabel.textContent = 'Hapus Akun Admin';
+      if (btnHapusAkun) btnHapusAkun.style.display = 'none';
+    } else {
+      if (profilHeaderTitle) profilHeaderTitle.textContent = 'Profil Siswa';
+      if (profilRoleBadge) profilRoleBadge.textContent = 'Akun Siswa Netora';
+      if (profileDeleteLabel) profileDeleteLabel.textContent = 'Hapus Akun Siswa';
+    }
+
     if (editNama) editNama.value = u.nama || '';
     if (editEmail) editEmail.value = u.email || '';
     if (editBio) editBio.value = u.bio || '';

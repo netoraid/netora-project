@@ -42,12 +42,15 @@ router.get('/', requireAuth, async (req, res) => {
   try {
     const { data: user, error: uErr } = await supabase
       .from('users')
-      .select('id, nama, email, foto, bio, created_at')
+      .select('id, nama, email, role, foto, bio, created_at')
       .eq('id', req.session.userId)
       .maybeSingle();
 
     if (uErr || !user) {
       return res.status(404).json({ error: 'User tidak ditemukan.' });
+    }
+    if (!user.foto) {
+      user.foto = 'uploads/default.png';
     }
 
     const { data: riwayat, error: rErr } = await supabase

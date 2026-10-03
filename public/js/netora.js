@@ -725,7 +725,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           // Sinkronisasi tag <style> halaman baru agar styling (profil, progres, beranda) tidak hilang
-          const newStyles = doc.querySelectorAll('head style, body style');
+          const newStyles = doc.querySelectorAll('style');
           document.querySelectorAll('style[data-netora-page-style]').forEach(s => s.remove());
           newStyles.forEach(s => {
             const styleEl = document.createElement('style');
@@ -739,7 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
           window.scrollTo(0, 0);
           updateActiveTabs(targetPath);
 
-          // Jalankan siklus hidup halaman tujuan (Skeleton aktif memuat data di halaman tujuan)
+          // Jalankan siklus hidup halaman tujuan
           triggerPageLifecycle(targetPath);
         } catch (err) {
           console.error('DOM Swap error:', err);

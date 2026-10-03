@@ -20,50 +20,6 @@ window.initProgresPage = function() {
     }).catch(() => {});
   }
 
-  // 1. Pre-render dari cache jika tersedia
-  try {
-    const cachedRiwayat = sessionStorage.getItem('netora_riwayat_cache');
-    if (cachedRiwayat) {
-      const parsed = JSON.parse(cachedRiwayat);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        renderStatsAndHistory(parsed);
-      }
-    }
-  } catch(e) {}
-
-  // Load progress and history from backend
-  async function loadProgressData() {
-    let riwayatList = [];
-
-    try {
-      const res = await fetch('/api/profil');
-      const data = await res.json();
-      if (res.ok && data && data.success && Array.isArray(data.riwayat)) {
-        riwayatList = data.riwayat;
-      }
-    } catch (err) {
-      console.warn('Gagal memuat profil/riwayat:', err);
-    }
-
-    if (riwayatList.length === 0) {
-      try {
-        const resQuiz = await fetch('/api/quiz/riwayat');
-        const dataQuiz = await resQuiz.json();
-        if (resQuiz.ok && dataQuiz && dataQuiz.success && Array.isArray(dataQuiz.riwayat)) {
-          riwayatList = dataQuiz.riwayat;
-        }
-      } catch (e) {
-        console.warn('Gagal memuat quiz/riwayat:', e);
-      }
-    }
-
-    try {
-      sessionStorage.setItem('netora_riwayat_cache', JSON.stringify(riwayatList));
-    } catch(e) {}
-
-    renderStatsAndHistory(riwayatList);
-  }
-
   function updateSkillBar(key, pct) {
     const safePct = Math.max(0, Math.min(100, Math.round(Number(pct) || 0)));
     const textEl = document.getElementById(`skill-pct-${key}`);
@@ -165,6 +121,56 @@ window.initProgresPage = function() {
         `;
       }
     }
+  }
+
+  // 1. Render awal instan 0ms (Mencegah skeleton stuck)
+  let initialRendered = false;
+  try {
+    const cachedRiwayat = sessionStorage.getItem('netora_riwayat_cache');
+    if (cachedRiwayat) {
+      const parsed = JSON.parse(cachedRiwayat);
+      if (Array.isArray(parsed)) {
+        renderStatsAndHistory(parsed);
+        initialRendered = true;
+      }
+    }
+  } catch(e) {}
+
+  if (!initialRendered) {
+    renderStatsAndHistory([]);
+  }
+
+  // Load progress and history from backend
+  async function loadProgressData() {
+    let riwayatList = [];
+
+    try {
+      const res = await fetch('/api/profil');
+      const data = await res.json();
+      if (res.ok && data && data.success && Array.isArray(data.riwayat)) {
+        riwayatList = data.riwayat;
+      }
+    } catch (err) {
+      console.warn('Gagal memuat profil/riwayat:', err);
+    }
+
+    if (riwayatList.length === 0) {
+      try {
+        const resQuiz = await fetch('/api/quiz/riwayat');
+        const dataQuiz = await resQuiz.json();
+        if (resQuiz.ok && dataQuiz && dataQuiz.success && Array.isArray(dataQuiz.riwayat)) {
+          riwayatList = dataQuiz.riwayat;
+        }
+      } catch (e) {
+        console.warn('Gagal memuat quiz/riwayat:', e);
+      }
+    }
+
+    try {
+      sessionStorage.setItem('netora_riwayat_cache', JSON.stringify(riwayatList));
+    } catch(e) {}
+
+    renderStatsAndHistory(riwayatList);
   }
 
   loadProgressData();

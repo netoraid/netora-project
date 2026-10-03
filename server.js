@@ -43,6 +43,15 @@ if (fs.existsSync(rootLogo) && !fs.existsSync(publicLogo)) {
   } catch (e) {}
 }
 
+const defaultAvatar = path.join(uploadsDir, 'default.png');
+if (!fs.existsSync(defaultAvatar)) {
+  if (fs.existsSync(publicLogo)) {
+    try { fs.copyFileSync(publicLogo, defaultAvatar); } catch (e) {}
+  } else if (fs.existsSync(rootLogo)) {
+    try { fs.copyFileSync(rootLogo, defaultAvatar); } catch (e) {}
+  }
+}
+
 const app = express();
 app.set('trust proxy', 1); // Mengizinkan cookie session bekerja normal saat diakses lewat Dev Tunnels / Reverse Proxy / Pterodactyl
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000;
@@ -146,6 +155,19 @@ app.use(async (req, res, next) => {
   }
 
   next();
+});
+
+// Fallback default avatar jika uploads/default.png diakses
+app.get('/uploads/default.png', (req, res) => {
+  const customDefault = path.join(uploadsDir, 'default.png');
+  if (fs.existsSync(customDefault)) {
+    return res.sendFile(customDefault);
+  }
+  const assetLogo = path.join(assetsDir, 'logo.png');
+  if (fs.existsSync(assetLogo)) {
+    return res.sendFile(assetLogo);
+  }
+  return res.sendFile(path.join(__dirname, 'logo.png'));
 });
 
 // Serve Static Files (HTML, CSS, JS, Aset)
