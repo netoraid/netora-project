@@ -789,8 +789,56 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  window.switchProfilTab = function(targetId, btnEl) {
+    if (!targetId) return;
+
+    // 1. Sembunyikan semua tab dan munculkan target
+    const allPanels = document.querySelectorAll('.profil-tab-content');
+    allPanels.forEach(panel => {
+      panel.classList.remove('active');
+      panel.style.display = 'none';
+    });
+
+    const targetPanel = document.getElementById(targetId);
+    if (targetPanel) {
+      targetPanel.classList.add('active');
+      targetPanel.style.display = 'block';
+    }
+
+    // 2. Reset style semua tombol tab
+    const allBtns = document.querySelectorAll('.profil-tab-btn');
+    allBtns.forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+      b.style.background = 'transparent';
+      b.style.color = '#64748B';
+      b.style.boxShadow = 'none';
+    });
+
+    // 3. Sorot tombol tab aktif
+    const activeBtn = btnEl || document.querySelector(`.profil-tab-btn[data-tab="${targetId}"]`);
+    if (activeBtn) {
+      activeBtn.classList.add('active');
+      activeBtn.setAttribute('aria-selected', 'true');
+      activeBtn.style.background = '#FFFFFF';
+      activeBtn.style.color = '#0D5BFF';
+      activeBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+    }
+  };
+
   // 8. Global Click Interceptor (Mulus Tanpa Delay)
   document.addEventListener('click', (e) => {
+    // Tab Button Profil (Profil, Sandi, Tentang, Komunitas) - Respons Instan
+    const tabBtn = e.target.closest('.profil-tab-btn');
+    if (tabBtn) {
+      e.preventDefault();
+      const targetId = tabBtn.dataset.tab;
+      if (targetId && typeof window.switchProfilTab === 'function') {
+        window.switchProfilTab(targetId, tabBtn);
+      }
+      return;
+    }
+
     // Tombol Back
     const backBtn = e.target.closest('.subpage-back-btn, .btn-back, .back-btn, [data-netora-back]');
     if (backBtn && !backBtn.hasAttribute('href')) {

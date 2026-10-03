@@ -4,44 +4,43 @@ window.initProfilPage = async function() {
   if (!profileNama && !editNama) return;
 
   // 1. Controller Tab Switching Sinkron & Instan (0ms delay)
+  window.switchProfilTab = window.switchProfilTab || function(targetId, btnEl) {
+    if (!targetId) return;
+    const allPanels = document.querySelectorAll('.profil-tab-content');
+    allPanels.forEach(panel => {
+      panel.classList.remove('active');
+      panel.style.display = 'none';
+    });
+    const targetPanel = document.getElementById(targetId);
+    if (targetPanel) {
+      targetPanel.classList.add('active');
+      targetPanel.style.display = 'block';
+    }
+    const allBtns = document.querySelectorAll('.profil-tab-btn');
+    allBtns.forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+      b.style.background = 'transparent';
+      b.style.color = '#64748B';
+      b.style.boxShadow = 'none';
+    });
+    const activeBtn = btnEl || document.querySelector(`.profil-tab-btn[data-tab="${targetId}"]`);
+    if (activeBtn) {
+      activeBtn.classList.add('active');
+      activeBtn.setAttribute('aria-selected', 'true');
+      activeBtn.style.background = '#FFFFFF';
+      activeBtn.style.color = '#0D5BFF';
+      activeBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+    }
+  };
+
   function setupProfilTabs() {
     const tabBtns = document.querySelectorAll('.profil-tab-btn');
-    const tabPanels = document.querySelectorAll('.profil-tab-content');
-
-    // Sembunyikan panel non-aktif secara default seketika
-    tabPanels.forEach(p => {
-      if (!p.classList.contains('active')) {
-        p.style.display = 'none';
-      } else {
-        p.style.display = 'block';
-      }
-    });
-
     tabBtns.forEach(btn => {
       btn.onclick = (e) => {
         e.preventDefault();
         const targetId = btn.dataset.tab;
-        tabBtns.forEach(b => {
-          b.classList.remove('active');
-          b.style.background = 'transparent';
-          b.style.color = '#64748B';
-          b.style.boxShadow = 'none';
-        });
-        tabPanels.forEach(p => {
-          p.classList.remove('active');
-          p.style.display = 'none';
-        });
-
-        btn.classList.add('active');
-        btn.style.background = '#FFFFFF';
-        btn.style.color = '#0D5BFF';
-        btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-
-        const targetEl = document.getElementById(targetId);
-        if (targetEl) {
-          targetEl.classList.add('active');
-          targetEl.style.display = 'block';
-        }
+        window.switchProfilTab(targetId, btn);
       };
     });
   }

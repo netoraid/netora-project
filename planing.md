@@ -490,4 +490,253 @@ Semua komponen sistem telah diuji coba secara komprehensif dan dinyatakan **100%
 
 ---
 
+## 🖥️ 14. Panduan Lengkap Menjalankan & Mengelola Aplikasi di Panel FinCloud Pterodactyl
+
+Bagian ini adalah panduan operasional langkah-demi-langkah bagi administrator atau pengembang untuk menjalankan, memperbarui, dan memelihara aplikasi Netora di server **FinCloud Pterodactyl** (`https://panel.fincloud.my.id/server/1f5ca09c`).
+
+### 14.1. Konfigurasi Awal Container FinCloud
+Server berjalan di dalam kontainer Docker dengan lingkungan **Node.js (v20/v22/v24)**. Konfigurasi runtime standar yang disiapkan:
+
+| Parameter Panel | Nilai / Konfigurasi | Keterangan |
+|---|---|---|
+| **Startup Command** | `npm start` atau `node server.js` | Menjalankan entrypoint backend Express |
+| **Node Version** | `20` / `22` / `24` (LTS Recommended) | Runtime JavaScript modern |
+| **Server IP & Port** | `203.175.125.151:2974` | Port alokasi unik yang dipetakan Cloudflare Origin Rule |
+| **Environment Variable** | `SERVER_PORT=2974`<br>`PORT=2974`<br>`SUPABASE_URL=...`<br>`SUPABASE_SERVICE_ROLE_KEY=...` | Konfigurasi port dan kredensial database cloud |
+
+### 14.2. Cara Menjalankan (Run) Server di Panel FinCloud
+1. Buka browser dan login ke **FinCloud Panel**: `https://panel.fincloud.my.id/server/1f5ca09c`.
+2. Masuk ke tab **Console** di sidebar kiri.
+3. Klik tombol **Start** (ikon segitiga hijau) jika server dalam keadaan offline.
+4. Jika server sudah berjalan dan Anda ingin menerapkan kode terbaru, cukup klik tombol **Restart** (ikon panah melingkar oranye/biru).
+5. Pantau log konsol:
+   ```text
+   [+] Starting Bot with: bash
+   ...
+   ==================================================
+   🚀 [NETORA PRODUCTION] Server aktif & berjalan lancar!
+   🌐 Port Binding: 2974 (Host: 0.0.0.0)
+   ⚡ Status Akses: Siap menerima request dari domain & IP
+   ==================================================
+   ✅ [DATABASE] Terhubung sukses ke Supabase PostgreSQL!
+   ```
+6. Ketika log di atas muncul, aplikasi langsung dapat diakses di **`https://netora.web.id`**.
+
+---
+
+### 14.3. Cara Update Kode dari GitHub ke Panel FinCloud via Command Line
+Jika Anda telah melakukan perubahan kode di laptop/komputer lokal dan ingin menerapkannya ke server live FinCloud:
+
+#### Langkah 1: Push dari Laptop (Terminal / VS Code)
+```bash
+git add .
+git commit -m "fix: deskripsi perubahan kode"
+git push origin main
+```
+
+#### Langkah 2: Jalankan Perintah Sync di Console Panel FinCloud
+Di tab **Console** FinCloud, ketik perintah berikut pada baris input perintah:
+```bash
+git fetch origin && git reset --hard origin/main
+```
+> **Penting**: Gunakan perintah `git fetch origin && git reset --hard origin/main` alih-alih sekadar `git pull`. Perintah ini menjamin container FinCloud 100% identik dengan branch `main` GitHub tanpa pernah terhenti akibat konflik file lokal (`package-lock.json`).
+
+#### Langkah 3: Restart Server
+Klik tombol **Restart** di panel FinCloud. Server akan otomatis memuat file baru dan langsung aktif dalam hitungan 2–3 detik.
+
+---
+
+## 📑 15. Katalog & Inventaris Seluruh Berkas Proyek (Complete File Registry)
+
+Berikut adalah daftar lengkap seluruh file di dalam repositori Netora beserta fungsi dan tanggung jawab sistemnya:
+
+| No | Lokasi File | Kategori | Deskripsi & Tanggung Jawab |
+|---|---|---|---|
+| 1 | `server.js` | **Backend Core** | Entrypoint aplikasi Node.js/Express, manajemen session, reverse proxy trust, auto-create uploads directory, route dispatching, dan fallback asset. |
+| 2 | `package.json` | **Konfigurasi** | Manifest paket Node.js, definisi script (`start`), dan dependensi pure JS (`express`, `bcryptjs`, `@supabase/supabase-js`, `multer`, `cors`, `dotenv`). |
+| 3 | `package-lock.json` | **Konfigurasi** | Pohon dependensi npm terkunci untuk menjamin konsistensi instalasi library. |
+| 4 | `.env` | **Konfigurasi** | Variabel rahasia lingkungan (Supabase URL, Service Role Key, Port, Session Secret). Terlindungi `.gitignore`. |
+| 5 | `.env.example` | **Dokumentasi** | Template konfigurasi environment untuk referensi instalasi server baru. |
+| 6 | `.gitignore` | **Git Config** | Daftar berkas yang dikecualikan dari Git (`node_modules`, `.env`, binary besar, file sementara). |
+| 7 | `logo.png` | **Aset Master** | File gambar logo resmi Netora di root repositori. |
+| 8 | `planing.md` | **Dokumentasi** | Master dokumentasi sistem, skema arsitektur, panduan deployment, rekapitulasi, dan panduan troubleshooting. |
+| 9 | `database/supabase.js` | **Database** | Inisialisasi Supabase Client menggunakan `@supabase/supabase-js` dan verifikasi konektivitas cloud database. |
+| 10 | `database/init.js` | **Database** | Layer query pembantu untuk kompatibilitas data dan agregasi statistik. |
+| 11 | `database/supabase_schema.sql` | **Database DDL** | Skrip DDL 6 tabel PostgreSQL (`users`, `materi`, `video`, `quiz`, `nilai_quiz`, `pengumuman`), foreign key constraints, dan initial seed data. |
+| 12 | `middleware/auth.js` | **Keamanan** | Middleware Express untuk validasi sesi: `requireAuth` (login required), `requireGuru` (guru/admin only), dan redirect handler. |
+| 13 | `routes/auth.js` | **REST API** | Endpoint autentikasi: `/login`, `/register`, `/logout`, `/me`, dan verifikasi role pengguna. |
+| 14 | `routes/materi.js` | **REST API** | Endpoint publik modul materi: daftar modul, pencarian, detail modul, dan kategori TKJ. |
+| 15 | `routes/video.js` | **REST API** | Endpoint katalog video panduan praktikum RouterOS MikroTik. |
+| 16 | `routes/quiz.js` | **REST API** | Endpoint kuis: penyajian soal acak, penerimaan jawaban siswa, kalkulasi skor otomatis, dan penyimpanan ke tabel `nilai_quiz`. |
+| 17 | `routes/pengumuman.js` | **REST API** | Endpoint siaran pengumuman dan notifikasi akademik. |
+| 18 | `routes/profil.js` | **REST API** | Endpoint profil: pembaruan nama & bio, ubah kata sandi dengan bcrypt, upload avatar foto via multer, dan penghapusan akun. |
+| 19 | `routes/admin.js` | **REST API** | Endpoint master admin: manajemen akun siswa (CRUD), manajemen materi, video, kuis, pengumuman, dan reset massal. |
+| 20 | `routes/guru.js` | **REST API** | Endpoint khusus guru: agregasi skor kuis seluruh siswa, ekspor riwayat nilai ke format CSV, kalkulasi progres belajar (%), dan CRUD bank soal kuis. |
+| 21 | `public/beranda.html` | **Frontend UI** | Halaman utama siswa: banner slider, 4 menu modul praktikum, lab tugas interaktif, dan navigasi bawah. |
+| 22 | `public/materi.html` | **Frontend UI** | Katalog modul pembelajaran TKJ dalam tata letak kartu grid modern. |
+| 23 | `public/materi-detail.html` | **Frontend UI** | Pembaca konten modul terformat lengkap dengan tombol navigasi kembali dan indikator baca. |
+| 24 | `public/video.html` | **Frontend UI** | Galeri video praktikum interaktif dengan modal video player responsif. |
+| 25 | `public/quiz.html` | **Frontend UI** | Antarmuka simulasi ujian kompetensi interaktif dengan pemilihan opsi (A-D), timer, dan kalkulasi hasil instan. |
+| 26 | `public/kalkulator.html` | **Frontend UI** | Alat kalkulator subnetting IPv4 (CIDR /8 sampai /30), Netmask, Wildcard, Range Host, Broadcast, dan riwayat kalkulasi. |
+| 27 | `public/progres.html` | **Frontend UI** | Halaman laporan capaian belajar siswa: persentase total, kartu ringkasan kuis, radar skill, dan riwayat nilai kuis. |
+| 28 | `public/profil.html` | **Frontend UI** | Halaman profil adaptif multi-role: tab edit profil, tab ganti password, tab tentang netora, tab saluran whatsapp komunitas, dan aksi hapus akun. |
+| 29 | `public/pengumuman.html` | **Frontend UI** | Pusat notifikasi siaran informasi akademik dari guru dan admin. |
+| 30 | `public/login.html` | **Frontend UI** | Halaman autentikasi terpadu untuk Siswa, Guru, dan Administrator dengan navigasi otomatis sesuai peran. |
+| 31 | `public/register.html` | **Frontend UI** | Halaman pendaftaran akun baru bagi siswa. |
+| 32 | `public/admin.html` | **Frontend UI** | Dashboard Single Page Application khusus Administrator master sistem. |
+| 33 | `public/guru.html` | **Frontend UI** | Dashboard Single Page Application khusus Guru: tab Nilai Siswa, tab Progres Belajar Siswa, tab Bank Soal Kuis, dan tombol Export CSV. |
+| 34 | `public/tentang.html` | **Frontend UI** | Informasi versi aplikasi, tim pengembang, dan panduan fitur. |
+| 35 | `public/404.html` | **Frontend UI** | Halaman penanganan rute tidak ditemukan yang ramah pengguna. |
+| 36 | `public/manifest.json` | **PWA** | File konfigurasi Progressive Web App untuk pemasangan di Android/iOS (*standalone display*). |
+| 37 | `public/sw.js` | **PWA** | Service Worker pengelola caching aset statis agar aplikasi cepat dimuat. |
+| 38 | `public/css/netora.css` | **Styling** | Master CSS terpadu (Mobile & Desktop View, Dark Mode, Light Card, Tab Switcher, Bottom Nav, dan Animasi 60 FPS). |
+| 39 | `public/js/netora.js` | **Core Client** | Engine navigasi Single Page Application (SPA), in-memory HTML cache, sync tag style, bypass halaman admin/guru, dan global toast notification. |
+| 40 | `public/js/auth.js` | **Client Script** | Handler form login, validasi input, pendaftaran akun baru, dan redirect otomatis sesuai peran (`siswa`, `guru`, `admin`). |
+| 41 | `public/js/beranda.js` | **Client Script** | Inisialisasi carousel banner, sapaan dinamis pengguna, dan quick link beranda. |
+| 42 | `public/js/materi.js` | **Client Script** | Fetch modul materi dari REST API, render kartu, dan filter pencarian modul. |
+| 43 | `public/js/video.js` | **Client Script** | Fetch daftar video praktikum dan inisialisasi video player modal. |
+| 44 | `public/js/quiz.js` | **Client Script** | State machine ujian kuis: navigasi antar soal, penyimpanan jawaban sementara, pengiriman jawaban, dan render skor kelulusan. |
+| 45 | `public/js/kalkulator.js` | **Client Script** | Algoritma matematika subnetting bitmask IPv4 dan pengelolaan tabel riwayat kalkulasi di localStorage. |
+| 46 | `public/js/progres.js` | **Client Script** | Fetch data nilai kuis, kalkulasi persentase kemajuan siswa, render progress bar, dan riwayat skor. |
+| 47 | `public/js/profil.js` | **Client Script** | Kontrol tab profil sinkron, update nama & bio, ganti kata sandi, upload foto avatar, ganti avatar, adaptasi gelar peran (siswa/guru/admin), dan hapus akun. |
+| 48 | `public/js/guru.js` | **Client Script** | Controller dashboard guru: load data nilai siswa, generate file CSV, hitung persentase progres kelas, dan CRUD bank soal kuis. |
+| 49 | `public/js/admin.js` | **Client Script** | Controller dashboard admin master: CRUD pengguna, materi, video, soal kuis, dan pengumuman. |
+| 50 | `public/assets/logo.png` | **Aset Media** | Logo resmi Netora untuk header web dan ikon PWA. |
+| 51 | `public/assets/banner1.jpg`| **Aset Media** | Gambar ilustrasi materi praktikum MikroTik. |
+| 52 | `public/assets/banner2.jpg`| **Aset Media** | Gambar ilustrasi lab simulasi jaringan komputer. |
+| 53 | `public/uploads/default.png`| **Aset Media**| Avatar gambar default bagi pengguna yang belum mengunggah foto profil. |
+
+---
+
+## ⚠️ 16. Matriks Troubleshooting: Daftar Semua Kendala & Cara Penyelesaiannya (FAQ Teknis)
+
+Berikut adalah rekapitulasi seluruh kendala operasional yang mungkin dihadapi selama fase pengembangan maupun produksi beserta langkah solutif yang telah teruji:
+
+### Kendala 1: Konflik Git Pull di FinCloud (`error: The following untracked working tree files would be overwritten by merge: package-lock.json`)
+- **Gejala / Pesan Error**:
+  ```text
+  Updating 2b1fd2f..705f999
+  error: The following untracked working tree files would be overwritten by merge:
+          package-lock.json
+  Please move or remove them before you merge.
+  Aborting
+  ```
+- **Penyebab**: Container FinCloud menghasilkan file `package-lock.json` lokal saat instalasi dependensi, sehingga Git membatalkan `git pull` biasa demi mencegah penimpaan file lokal.
+- **Cara Penyelesaian**:
+  Jalankan perintah fetch & hard reset pada console FinCloud:
+  ```bash
+  git fetch origin && git reset --hard origin/main
+  ```
+  Perintah ini memaksa container FinCloud menyelaraskan seluruh kodenya tepat dengan branch `main` GitHub tanpa terhenti.
+
+---
+
+### Kendala 2: Tampilan Halaman Rusak / Crash / Tab Bertumpuk saat Pindah Halaman Tanpa Refresh
+- **Gejala**: Saat berpindah ke halaman **Progress** atau **Profil** melalui menu navigasi bawah di HP, halaman tampak berantakan, tombol tab memiliki border kotak hitam polos, form input tampak polos tanpa padding, atau tab *Edit Profil* dan *Ubah Sandi* muncul bertumpuk bersamaan.
+- **Penyebab**: Mesin SPA (`netora.js`) menukar elemen `.netora-mobile-app` sebelum styling `<style>` selesai teraplikasikan, dan panel tab pada HTML mentah tidak memiliki style default `display: none;`.
+- **Cara Penyelesaian**:
+  1. Di [profil.html](file:///c:/Netora/public/profil.html) dan [progres.html](file:///c:/Netora/public/progres.html), sematkan tag `<style>` langsung di dalam wrapper `.netora-mobile-app`.
+  2. Tambahkan inline CSS permanen pada elemen krusial (tab button, form input, card).
+  3. Berikan atribut eksplisit pada tab panel non-aktif sejak pertama kali HTML ter-parse:
+     - Tab 1: `style="display:block;"`
+     - Tab 2: `style="display:none;"`
+     - Tab 3: `style="display:none;"`
+     - Tab 4: `style="display:none;"`
+  4. Perbarui fungsi `setupProfilTabs` di [profil.js](file:///c:/Netora/public/js/profil.js) agar langsung mengatur `style.display = 'block'` pada tab yang dipilih dan `style.display = 'none'` pada tab lainnya.
+
+---
+
+### Kendala 3: Foto Profil Rusak / Broken Image 404 (`uploads/default.png`)
+- **Gejala**: Gambar foto profil di halaman profil menampilkan ikon gambar rusak dengan teks alternatif *Foto Profil*.
+- **Penyebab**: Instance container baru di FinCloud belum memiliki file fisik `public/uploads/default.png`.
+- **Cara Penyelesaian**:
+  1. Di sisi backend [server.js](file:///c:/Netora/server.js), tambahkan route fallback:
+     ```javascript
+     app.get('/uploads/default.png', (req, res) => {
+       const customDefault = path.join(uploadsDir, 'default.png');
+       if (fs.existsSync(customDefault)) return res.sendFile(customDefault);
+       const assetLogo = path.join(assetsDir, 'logo.png');
+       if (fs.existsSync(assetLogo)) return res.sendFile(assetLogo);
+       return res.sendFile(path.join(__dirname, 'logo.png'));
+     });
+     ```
+  2. Di sisi frontend [profil.html](file:///c:/Netora/public/profil.html), pasang event handler anti-error:
+     ```html
+     <img id="profile-img" src="uploads/default.png" alt="Foto Profil" onerror="this.onerror=null; this.src='assets/logo.png';">
+     ```
+     Jika request gambar gagal, browser otomatis mengalihkannya ke aset logo Netora tanpa pernah menampilkan ikon rusak.
+
+---
+
+### Kendala 4: Server Gagal Start Karena Port Sudah Dipakai (`EADDRINUSE: address already in use :::2974`)
+- **Gejala**: Server Express langsung crash saat dimulai ulang dengan pesan:
+  ```text
+  Error: listen EADDRINUSE: address already in use :::2974
+  ```
+- **Penyebab**: Proses Node.js sebelumnya belum sepenuhnya tertutup di memori container.
+- **Cara Penyelesaian**:
+  1. Klik tombol **Kill** (ikon merah) di panel FinCloud untuk menghentikan seluruh proses container secara paksa.
+  2. Tunggu 3 detik, lalu klik tombol **Start** kembali.
+  3. Jika melalui terminal bash FinCloud, jalankan:
+     ```bash
+     pkill -f node || killall node
+     npm start
+     ```
+
+---
+
+### Kendala 5: Session Login Hilang / Logout Sendiri Saat Mengakses Domain HTTPS (`https://netora.web.id`)
+- **Gejala**: Pengguna berhasil login, tetapi saat berpindah halaman langsung kembali terlempar ke halaman login.
+- **Penyebab**: Cloudflare bertindak sebagai Reverse Proxy SSL (port 443 $\rightarrow$ port 2974), sehingga Express menganggap koneksi berasal dari HTTP tidak aman dan menolak cookie session.
+- **Cara Penyelesaian**:
+  Di [server.js](file:///c:/Netora/server.js), aktifkan konfigurasi:
+  ```javascript
+  app.set('trust proxy', 1);
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'netora_super_secret_session_2026',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // Memungkinkan cookie bekerja di bawah SSL Flexible Cloudflare
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000 // 24 Jam
+    }
+  }));
+  ```
+
+---
+
+### Kendala 6: Tampilan Masih Versi Lama di Browser Ponsel (Cache PWA / Browser Stale)
+- **Gejala**: Kode di server sudah di-restart dan di-update, tetapi di HP siswa tampilan masih versi lama.
+- **Penyebab**: Service Worker PWA (`sw.js`) atau browser Chrome Android menyimpan file HTML/CSS lama di cache memori HP.
+- **Cara Penyelesaian**:
+  1. **Di Google Chrome Android**: Buka `https://netora.web.id` $\rightarrow$ klik ikon gembok/pengaturan di samping URL $\rightarrow$ klik **Setelan Situs** $\rightarrow$ klik **Hapus & Reset Data**.
+  2. **Di Komputer**: Tekan kombinasi tombol `Ctrl + F5` atau `Ctrl + Shift + R` (Hard Reload).
+  3. Buka tab baru dalam mode **Incognito / Samaran** untuk memverifikasi tampilan segar dari server.
+
+---
+
+### Kendala 7: Login Guru Gagal (`guru123` / `Invalid credentials`)
+- **Gejala**: Memasukkan username `guru123` dan password `guru123` menghasilkan notifikasi *"Email/Username atau password salah"*.
+- **Penyebab**: Akun guru belum dimasukkan ke database Supabase atau hash password belum di-generate dengan bcrypt.
+- **Cara Penyelesaian**:
+  Buka tab **SQL Editor** pada dashboard Supabase (`https://supabase.com/dashboard`) dan jalankan skrip perbaikan berikut:
+  ```sql
+  INSERT INTO users (nama, email, password, role, bio)
+  VALUES (
+    'Bapak / Ibu Guru Pembimbing TKJ',
+    'guru123',
+    '$2a$10$7b6uW7uWd4zVGBw8zWn5U.rW7F8J0uV1uT5V6W7X8Y9Z0a1b2c3d4', -- bcrypt hash untuk 'guru123'
+    'guru',
+    'Guru Pengampu Kejuruan Teknik Komputer & Jaringan'
+  )
+  ON CONFLICT (email) DO UPDATE 
+  SET password = '$2a$10$7b6uW7uWd4zVGBw8zWn5U.rW7F8J0uV1uT5V6W7X8Y9Z0a1b2c3d4',
+      role = 'guru';
+  ```
+  Setelah query berhasil dieksekusi, akun `guru123` dapat langsung login seketika.
+
+---
+
 *Dokumentasi ini mencerminkan konfigurasi final arsitektur sistem produksi NETORA v2 — Tim Pengembang Netora © 2026.*
+

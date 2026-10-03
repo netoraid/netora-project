@@ -239,40 +239,40 @@
 
     <!-- Tab Bar: 4 kolom rata berjejer -->
     <div class="profil-tab-bar" role="tablist" style="display:grid; grid-template-columns:repeat(4,1fr); gap:0; background:#F1F5F9; border-radius:14px; padding:4px; margin:0 16px 14px; border:none;">
-      <button class="profil-tab-btn active" data-tab="tab-edit" role="tab" aria-selected="true"
+      <button type="button" class="profil-tab-btn active" data-tab="tab-edit" role="tab" aria-selected="true" onclick="if(window.switchProfilTab)window.switchProfilTab('tab-edit',this);"
         style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:8px 4px; border:none; background:#FFFFFF; border-radius:10px; cursor:pointer; font-size:10.5px; font-weight:700; color:#0D5BFF; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
         </svg>
-        <span>Profil</span>
+        <span style="pointer-events:none;">Profil</span>
       </button>
-      <button class="profil-tab-btn" data-tab="tab-pass" role="tab"
+      <button type="button" class="profil-tab-btn" data-tab="tab-pass" role="tab" onclick="if(window.switchProfilTab)window.switchProfilTab('tab-pass',this);"
         style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:8px 4px; border:none; background:transparent; border-radius:10px; cursor:pointer; font-size:10.5px; font-weight:700; color:#64748B;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
           <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
-        <span>Sandi</span>
+        <span style="pointer-events:none;">Sandi</span>
       </button>
-      <button class="profil-tab-btn" data-tab="tab-tentang" role="tab"
+      <button type="button" class="profil-tab-btn" data-tab="tab-tentang" role="tab" onclick="if(window.switchProfilTab)window.switchProfilTab('tab-tentang',this);"
         style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:8px 4px; border:none; background:transparent; border-radius:10px; cursor:pointer; font-size:10.5px; font-weight:700; color:#64748B;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="16" x2="12" y2="12"></line>
           <line x1="12" y1="8" x2="12.01" y2="8"></line>
         </svg>
-        <span>Tentang</span>
+        <span style="pointer-events:none;">Tentang</span>
       </button>
-      <button class="profil-tab-btn" data-tab="tab-komunitas" role="tab"
+      <button type="button" class="profil-tab-btn" data-tab="tab-komunitas" role="tab" onclick="if(window.switchProfilTab)window.switchProfilTab('tab-komunitas',this);"
         style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:8px 4px; border:none; background:transparent; border-radius:10px; cursor:pointer; font-size:10.5px; font-weight:700; color:#64748B;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
           <circle cx="9" cy="7" r="4"></circle>
           <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
           <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
-        <span>Komunitas</span>
+        <span style="pointer-events:none;">Komunitas</span>
       </button>
     </div>
 
