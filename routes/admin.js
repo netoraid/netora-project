@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { supabase } = require('../database/supabase');
 const { requireAdmin } = require('../middleware/auth');
-const { broadcastPengumuman, broadcastHapusPengumuman } = require('../services/socket');
+const { broadcastPengumuman, broadcastHapusPengumuman, broadcastQuizDataChanged } = require('../services/socket');
 const pengumumanRouter = require('./pengumuman');
 
 // Seluruh endpoint admin diwajibkan melewati proteksi requireAdmin
@@ -744,6 +744,10 @@ router.post('/quiz', async (req, res) => {
       return res.status(500).json({ error: 'Gagal menambahkan soal kuis baru.' });
     }
 
+    try {
+      broadcastQuizDataChanged();
+    } catch (e) {}
+
     return res.json({
       success: true,
       message: 'Soal kuis baru berhasil ditambahkan!',
@@ -791,6 +795,10 @@ router.put('/quiz/:id', async (req, res) => {
       return res.status(404).json({ error: 'Soal kuis tidak ditemukan.' });
     }
 
+    try {
+      broadcastQuizDataChanged();
+    } catch (e) {}
+
     return res.json({ success: true, message: 'Soal kuis berhasil diperbarui!' });
   } catch (err) {
     console.error('Update Soal Quiz Error:', err);
@@ -810,6 +818,10 @@ router.delete('/quiz/:id', async (req, res) => {
     if (error) {
       return res.status(500).json({ error: 'Gagal menghapus soal kuis.' });
     }
+
+    try {
+      broadcastQuizDataChanged();
+    } catch (e) {}
 
     return res.json({ success: true, message: 'Soal kuis berhasil dihapus.' });
   } catch (err) {

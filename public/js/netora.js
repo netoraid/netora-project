@@ -1221,6 +1221,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
 
+      // 6. Sinkronisasi Bank Soal Kuis Real-time saat Admin/Guru Menambah/Mengubah Soal
+      socket.on('quiz:data_changed', () => {
+        try { sessionStorage.removeItem('netora_quiz_cache'); } catch (e) {}
+        if (typeof window.loadQuizData === 'function') {
+          window.loadQuizData();
+        }
+        if (typeof window.loadGuruData === 'function') {
+          window.loadGuruData();
+        }
+      });
+
     } catch (e) {
       console.warn('Real-time connection note:', e);
     }

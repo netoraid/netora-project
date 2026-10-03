@@ -4,17 +4,7 @@ const { supabase } = require('../database/supabase');
 const { requireAuth } = require('../middleware/auth');
 const { broadcastQuizSubmitted } = require('../services/socket');
 
-// Helper shuffle array
-function shuffleArray(array) {
-  const arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-// GET /api/quiz (Ambil daftar soal kuis dari database)
+// GET /api/quiz (Ambil daftar soal kuis dari database terurut sesuai urutan input)
 router.get('/', async (req, res) => {
   try {
     const kat = req.query.kategori;
@@ -24,9 +14,10 @@ router.get('/', async (req, res) => {
 
     if (kat && kat !== 'all') {
       query = query.ilike('kategori', kat);
-    } else {
-      query = query.order('id', { ascending: true });
     }
+
+    // Pastikan urutan selalu teratur dari soal pertama (ID terkecil) ke soal terakhir
+    query = query.order('id', { ascending: true });
 
     const { data: list, error } = await query;
 
@@ -35,13 +26,7 @@ router.get('/', async (req, res) => {
       return res.status(500).json({ error: 'Gagal memuat kuis.' });
     }
 
-    // Jika filter kategori spesifik, acak soal dan ambil maksimal 10 butir
-    let result = list || [];
-    if (kat && kat !== 'all') {
-      result = shuffleArray(result).slice(0, 10);
-    }
-
-    return res.json({ success: true, quiz: result });
+    return res.json({ success: true, quiz: list || [] });
   } catch (err) {
     console.error('Fetch Quiz Error:', err);
     return res.status(500).json({ error: 'Gagal memuat kuis.' });

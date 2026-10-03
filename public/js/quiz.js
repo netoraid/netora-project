@@ -34,10 +34,10 @@ window.initQuizPage = function() {
 
   function getAvailableSoalCount(category) {
     if (category === 'all') {
-      return Math.min(allQuestions.length, 10);
+      return allQuestions.length;
     }
-    const filtered = allQuestions.filter(q => q.kategori && q.kategori.toLowerCase() === category.toLowerCase());
-    return Math.min(filtered.length, 10);
+    const filtered = allQuestions.filter(q => q.kategori && (q.kategori.toLowerCase() === category.toLowerCase() || q.kategori.toLowerCase().includes(category.toLowerCase())));
+    return filtered.length;
   }
 
   function renderQuizSkeleton() {
@@ -74,8 +74,8 @@ window.initQuizPage = function() {
       const res = await fetch('/api/quiz');
       const data = await res.json();
       if (res.ok && data.success && Array.isArray(data.quiz)) {
-        allQuestions = data.quiz;
-        try { sessionStorage.setItem('netora_quiz_cache', JSON.stringify(data.quiz)); } catch (e) {}
+        allQuestions = data.quiz.sort((a, b) => Number(a.id) - Number(b.id));
+        try { sessionStorage.setItem('netora_quiz_cache', JSON.stringify(allQuestions)); } catch (e) {}
       } else {
         allQuestions = [];
         try { sessionStorage.setItem('netora_quiz_cache', '[]'); } catch (e) {}
@@ -85,6 +85,7 @@ window.initQuizPage = function() {
     }
     renderTopicList();
   }
+  window.loadQuizData = loadQuizData;
 
   // 1. Render Tampilan Pemilihan Topik Kuis
   function renderTopicList(cat) {
@@ -196,11 +197,15 @@ window.initQuizPage = function() {
     } else {
       currentQuestions = allQuestions.filter(q => q.kategori && q.kategori.toLowerCase() === category.toLowerCase());
       if (currentQuestions.length === 0) {
+        currentQuestions = allQuestions.filter(q => q.kategori && q.kategori.toLowerCase().includes(category.toLowerCase()));
+      }
+      if (currentQuestions.length === 0) {
         currentQuestions = allQuestions.slice();
       }
     }
-    // Tepat maksimal 10 butir soal untuk sesi kuis
-    currentQuestions = currentQuestions.slice(0, 10);
+
+    // Pastikan urutan selalu teratur dari soal pertama yang diinput (ID terkecil) ke soal terakhir
+    currentQuestions.sort((a, b) => Number(a.id) - Number(b.id));
 
     if (currentQuestions.length === 0) {
       quizContainer.innerHTML = `

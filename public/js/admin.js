@@ -828,6 +828,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (form) form.reset();
     document.getElementById('input-materi-id').value = '';
+    document.getElementById('input-materi-kategori').value = '';
     if (title) title.textContent = 'Tambah Modul Materi Baru';
     modal.style.display = 'flex';
   };
@@ -849,7 +850,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('input-materi-id').value = m.id;
     document.getElementById('input-materi-judul').value = m.judul || '';
-    document.getElementById('input-materi-kategori').value = m.kategori || 'Mikrotik';
+    document.getElementById('input-materi-kategori').value = m.kategori || '';
     document.getElementById('input-materi-isi').value = m.isi || '';
 
     if (title) title.textContent = `Edit Modul Materi #${m.id}`;
@@ -876,7 +877,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       e.preventDefault();
       const id = document.getElementById('input-materi-id').value;
       const judul = document.getElementById('input-materi-judul').value.trim();
-      const kategori = document.getElementById('input-materi-kategori').value;
+      const kategori = document.getElementById('input-materi-kategori').value.trim();
       const isi = document.getElementById('input-materi-isi').value.trim();
 
       const btnSubmit = document.getElementById('btn-simpan-materi');

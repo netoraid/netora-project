@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { supabase } = require('../database/supabase');
 const { requireGuru } = require('../middleware/auth');
+const { broadcastQuizDataChanged } = require('../services/socket');
 
 // Seluruh endpoint guru wajib melewati proteksi requireGuru
 router.use(requireGuru);
@@ -226,7 +227,7 @@ router.get('/quiz', async (req, res) => {
     const { data: list, error } = await supabase
       .from('quiz')
       .select('*')
-      .order('id', { ascending: false });
+      .order('id', { ascending: true });
 
     if (error) {
       console.error('Supabase Guru Quiz Error:', error);
@@ -298,6 +299,10 @@ router.post('/quiz', async (req, res) => {
       return res.status(500).json({ error: 'Gagal menambahkan soal kuis baru.' });
     }
 
+    try {
+      broadcastQuizDataChanged();
+    } catch (e) {}
+
     return res.json({
       success: true,
       message: 'Soal kuis baru berhasil dibuat oleh Guru!',
@@ -345,6 +350,10 @@ router.put('/quiz/:id', async (req, res) => {
       return res.status(404).json({ error: 'Soal kuis tidak ditemukan.' });
     }
 
+    try {
+      broadcastQuizDataChanged();
+    } catch (e) {}
+
     return res.json({ success: true, message: 'Soal kuis berhasil diperbarui!' });
   } catch (err) {
     console.error('Guru Update Soal Quiz Error:', err);
@@ -364,6 +373,10 @@ router.delete('/quiz/:id', async (req, res) => {
     if (error) {
       return res.status(500).json({ error: 'Gagal menghapus soal kuis.' });
     }
+
+    try {
+      broadcastQuizDataChanged();
+    } catch (e) {}
 
     return res.json({ success: true, message: 'Soal kuis berhasil dihapus.' });
   } catch (err) {

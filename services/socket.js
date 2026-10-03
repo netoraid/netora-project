@@ -123,6 +123,13 @@ function broadcastMateriBaru(materi) {
   }
 }
 
+// Helper: Broadcast Perubahan Bank Soal Kuis (Tambah, Edit, Hapus)
+function broadcastQuizDataChanged() {
+  if (ioInstance) {
+    ioInstance.emit('quiz:data_changed', { timestamp: new Date() });
+  }
+}
+
 function getIO() {
   return ioInstance;
 }
@@ -134,5 +141,6 @@ module.exports = {
   broadcastHapusPengumuman,
   broadcastQuizSubmitted,
   broadcastMateriBaru,
-  broadcastOnlineStats
+  broadcastOnlineStats,
+  broadcastQuizDataChanged
 };
