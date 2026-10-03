@@ -794,7 +794,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <span class="badge badge-purple" style="font-size:11.5px;">${escapeHtml(m.kategori)}</span>
           </td>
           <td style="color:#475569; font-size:12.5px; font-weight:600;">
-            ${m.panjang_konten || (m.isi ? m.isi.length : 0)} Karakter
+            ${m.total_halaman || 1} Halaman
           </td>
           <td style="color:#64748B; font-size:12px;">
             ${formatTanggal(m.created_at)}
@@ -820,6 +820,125 @@ document.addEventListener('DOMContentLoaded', async () => {
     }).join('');
   }
 
+  // Multi-page state & handlers for admin modal
+  let currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+
+  function renderModalPages() {
+    const container = document.getElementById('materi-pages-container');
+    const badge = document.getElementById('badge-page-count');
+    if (!container) return;
+
+    if (badge) {
+      badge.textContent = `${currentModalPages.length} Halaman`;
+    }
+
+    container.innerHTML = currentModalPages.map((page, index) => `
+      <div class="materi-page-card" data-index="${index}" style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:14px; padding:14px; position:relative; transition:all 0.2s;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="background:#0D5BFF; color:#fff; font-size:11px; font-weight:800; padding:3px 9px; border-radius:8px;">
+              Halaman ${index + 1}
+            </span>
+            <span style="font-size:12.5px; font-weight:700; color:#334155;">Bagian Halaman ${index + 1}</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            ${index > 0 ? `
+              <button type="button" onclick="geserHalamanMateri(${index}, -1)" title="Geser ke Atas" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:6px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:11px;">
+                ▲
+              </button>
+            ` : ''}
+            ${index < currentModalPages.length - 1 ? `
+              <button type="button" onclick="geserHalamanMateri(${index}, 1)" title="Geser ke Bawah" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:6px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:11px;">
+                ▼
+              </button>
+            ` : ''}
+            ${currentModalPages.length > 1 ? `
+              <button type="button" onclick="hapusHalamanMateri(${index})" title="Hapus Halaman Ini" style="background:#FEE2E2; border:1px solid #FECACA; color:#EF4444; border-radius:6px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; font-weight:bold;">
+                &times;
+              </button>
+            ` : ''}
+          </div>
+        </div>
+
+        <div style="margin-bottom:8px;">
+          <label style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:4px;">Judul Halaman / Sub-Topik (Opsional)</label>
+          <input type="text" class="input-field page-judul-input" placeholder="Contoh: Pengenalan Packet Tracer & Workspace" value="${escapeHtml(page.judul || '')}" oninput="syncModalPageData(${index})" style="background:#FFFFFF; padding:8px 12px; font-size:12.5px;">
+        </div>
+
+        <div>
+          <label style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:4px;">Konten / Isi Materi Halaman Ini *</label>
+          <textarea class="input-field page-konten-input" rows="5" placeholder="Tuliskan penjelasan materi, panduan praktikum, diagram konsep..." oninput="syncModalPageData(${index})" style="background:#FFFFFF; font-size:12.5px; line-height:1.6; resize:vertical;" required>${escapeHtml(page.konten || '')}</textarea>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window.syncModalPageData = function(index) {
+    const container = document.getElementById('materi-pages-container');
+    if (!container) return;
+    const cards = container.querySelectorAll('.materi-page-card');
+    if (cards[index]) {
+      const judul = cards[index].querySelector('.page-judul-input')?.value || '';
+      const konten = cards[index].querySelector('.page-konten-input')?.value || '';
+      if (currentModalPages[index]) {
+        currentModalPages[index].judul = judul;
+        currentModalPages[index].konten = konten;
+      }
+    }
+  };
+
+  function syncAllModalPages() {
+    const container = document.getElementById('materi-pages-container');
+    if (!container) return;
+    const cards = container.querySelectorAll('.materi-page-card');
+    cards.forEach((card, idx) => {
+      if (currentModalPages[idx]) {
+        currentModalPages[idx].judul = card.querySelector('.page-judul-input')?.value || '';
+        currentModalPages[idx].konten = card.querySelector('.page-konten-input')?.value || '';
+      }
+    });
+  }
+
+  window.geserHalamanMateri = function(index, direction) {
+    syncAllModalPages();
+    const targetIndex = index + direction;
+    if (targetIndex >= 0 && targetIndex < currentModalPages.length) {
+      const temp = currentModalPages[index];
+      currentModalPages[index] = currentModalPages[targetIndex];
+      currentModalPages[targetIndex] = temp;
+      currentModalPages.forEach((p, idx) => { p.halaman = idx + 1; });
+      renderModalPages();
+    }
+  };
+
+  window.hapusHalamanMateri = function(index) {
+    syncAllModalPages();
+    if (currentModalPages.length <= 1) {
+      toast('Modul materi minimal harus memiliki 1 halaman.', 'warning');
+      return;
+    }
+    currentModalPages.splice(index, 1);
+    currentModalPages.forEach((p, idx) => { p.halaman = idx + 1; });
+    renderModalPages();
+  };
+
+  const btnAddMateriPage = document.getElementById('btn-add-materi-page');
+  if (btnAddMateriPage) {
+    btnAddMateriPage.addEventListener('click', () => {
+      syncAllModalPages();
+      currentModalPages.push({
+        halaman: currentModalPages.length + 1,
+        judul: '',
+        konten: ''
+      });
+      renderModalPages();
+      const container = document.getElementById('materi-pages-container');
+      if (container) {
+        setTimeout(() => { container.scrollTop = container.scrollHeight; }, 60);
+      }
+    });
+  }
+
   window.bukaModalTambahMateri = function() {
     const modal = document.getElementById('modal-materi');
     const title = document.getElementById('modal-materi-title');
@@ -828,14 +947,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (form) form.reset();
     document.getElementById('input-materi-id').value = '';
+    document.getElementById('input-materi-judul').value = '';
     document.getElementById('input-materi-kategori').value = '';
+    
+    currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+    renderModalPages();
+
     if (title) title.textContent = 'Tambah Modul Materi Baru';
     modal.style.display = 'flex';
   };
 
   window.bukaModalEditMateri = async function(id) {
     let m = globalMateri.find(item => item.id === id);
-    if (!m || !m.isi) {
+    if (!m || !m.pages || m.pages.length === 0) {
       try {
         const res = await fetch(`/api/admin/materi/${id}`);
         const data = await res.json();
@@ -851,7 +975,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('input-materi-id').value = m.id;
     document.getElementById('input-materi-judul').value = m.judul || '';
     document.getElementById('input-materi-kategori').value = m.kategori || '';
-    document.getElementById('input-materi-isi').value = m.isi || '';
+
+    if (m.pages && Array.isArray(m.pages) && m.pages.length > 0) {
+      currentModalPages = JSON.parse(JSON.stringify(m.pages));
+    } else {
+      currentModalPages = [{ halaman: 1, judul: '', konten: m.isi || '' }];
+    }
+    renderModalPages();
 
     if (title) title.textContent = `Edit Modul Materi #${m.id}`;
     modal.style.display = 'flex';
@@ -878,7 +1008,27 @@ document.addEventListener('DOMContentLoaded', async () => {
       const id = document.getElementById('input-materi-id').value;
       const judul = document.getElementById('input-materi-judul').value.trim();
       const kategori = document.getElementById('input-materi-kategori').value.trim();
-      const isi = document.getElementById('input-materi-isi').value.trim();
+
+      syncAllModalPages();
+
+      if (!judul) {
+        toast('Judul modul materi wajib diisi.', 'warning');
+        return;
+      }
+      if (!kategori) {
+        toast('Kategori modul materi wajib diisi.', 'warning');
+        return;
+      }
+      if (currentModalPages.length === 0) {
+        toast('Modul materi harus memiliki minimal 1 halaman.', 'warning');
+        return;
+      }
+
+      const hasContent = currentModalPages.some(p => p.konten && p.konten.trim().length > 0);
+      if (!hasContent) {
+        toast('Harap isi konten untuk halaman materi.', 'warning');
+        return;
+      }
 
       const btnSubmit = document.getElementById('btn-simpan-materi');
       if (btnSubmit) {
@@ -893,7 +1043,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const res = await fetch(endpoint, {
           method,
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ judul, kategori, isi })
+          body: JSON.stringify({ judul, kategori, pages: currentModalPages })
         });
         const data = await res.json();
 

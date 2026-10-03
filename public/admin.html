@@ -1126,7 +1126,7 @@
                 <th style="width:45px;">No</th>
                 <th>Judul Modul Materi & Ringkasan</th>
                 <th style="width:160px;">Kategori</th>
-                <th style="width:120px;">Panjang Konten</th>
+                <th style="width:130px;">Jumlah Halaman</th>
                 <th style="width:120px;">Tanggal Rilis</th>
                 <th style="width:120px; text-align:center;">Aksi</th>
               </tr>
@@ -1365,19 +1365,37 @@
         <form id="form-modal-materi">
           <input type="hidden" id="input-materi-id" value="">
 
-          <div style="margin-bottom:14px;">
-            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Judul Modul Pembelajaran *</label>
-            <input type="text" id="input-materi-judul" class="input-field" placeholder="Contoh: Konfigurasi VLAN & Trunking pada Switch Cisco" required style="background:#FFFFFF;">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
+            <div>
+              <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Judul Modul Pembelajaran *</label>
+              <input type="text" id="input-materi-judul" class="input-field" placeholder="Contoh: Cisco" required style="background:#FFFFFF;">
+            </div>
+            <div>
+              <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kategori Modul *</label>
+              <input type="text" id="input-materi-kategori" class="input-field" placeholder="Contoh: Cisco Packet Tracer" required style="background:#FFFFFF;">
+            </div>
           </div>
 
-          <div style="margin-bottom:14px;">
-            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kategori Modul *</label>
-            <input type="text" id="input-materi-kategori" class="input-field" placeholder="Contoh: Cisco Packet Tracer / Mikrotik / Server & Linux" required style="background:#FFFFFF;">
-          </div>
-
+          <!-- Section Atur Halaman di Dalam Materi -->
           <div style="margin-bottom:18px;">
-            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Isi Konten Materi Lengkap *</label>
-            <textarea id="input-materi-isi" class="input-field" rows="10" placeholder="Tuliskan materi kurikulum TKJ, langkah konfigurasi, perintah CLI, penjelasan konsep..." required style="background:#FFFFFF; resize:vertical; font-family:inherit; line-height:1.6;"></textarea>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+              <div>
+                <label style="font-size:13px; font-weight:800; color:#0F172A; display:block;">Isi Halaman di Dalam Modul *</label>
+                <span style="font-size:11.5px; color:#64748B;">Atur isi bab / halaman materi (misal Halaman 1 sampai 8)</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="badge badge-blue" id="badge-page-count" style="font-size:11.5px; padding:4px 10px;">1 Halaman</span>
+                <button type="button" id="btn-add-materi-page" class="btn-secondary" style="font-size:12px; font-weight:700; padding:6px 12px; border-radius:10px; display:inline-flex; align-items:center; gap:5px; background:#EFF6FF; border-color:#BFDBFE; color:#0D5BFF; cursor:pointer;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  <span>+ Tambah Halaman</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- List Halaman Dinamis -->
+            <div id="materi-pages-container" style="display:flex; flex-direction:column; gap:12px; max-height:48vh; overflow-y:auto; padding-right:4px;">
+              <!-- Cards halaman diinjeksi via admin.js -->
+            </div>
           </div>
 
           <div style="display:flex; justify-content:flex-end; gap:10px;">

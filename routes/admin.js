@@ -535,7 +535,43 @@ router.delete('/pengumuman/:id', async (req, res) => {
   }
 });
 
-// 8. GET /api/admin/materi - Daftar Modul Materi
+function parseMateriPagesAdmin(m) {
+  let pages = [];
+  if (m && m.isi) {
+    try {
+      const parsed = JSON.parse(m.isi);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        pages = parsed.map((p, idx) => ({
+          halaman: p.halaman || (idx + 1),
+          judul: p.judul || `Halaman ${idx + 1}`,
+          konten: p.konten || ''
+        }));
+      }
+    } catch (e) {}
+  }
+
+  if (pages.length === 0) {
+    pages = [{
+      halaman: 1,
+      judul: m.judul || 'Materi Utama',
+      konten: m.isi || ''
+    }];
+  }
+
+  return {
+    id: m.id,
+    judul: m.judul,
+    kategori: m.kategori,
+    created_at: m.created_at,
+    total_halaman: pages.length,
+    pages_text: `${pages.length} halaman`,
+    pages: pages,
+    panjang_konten: (m.isi || '').length,
+    isi: m.isi
+  };
+}
+
+// 8. GET /api/admin/materi - Ambil daftar modul materi
 router.get('/materi', async (req, res) => {
   try {
     const { data: list, error } = await supabase
@@ -547,14 +583,7 @@ router.get('/materi', async (req, res) => {
       return res.status(500).json({ error: 'Gagal memuat materi.' });
     }
 
-    const mapped = (list || []).map(m => ({
-      id: m.id,
-      judul: m.judul,
-      kategori: m.kategori,
-      created_at: m.created_at,
-      panjang_konten: (m.isi || '').length,
-      isi: m.isi
-    }));
+    const mapped = (list || []).map(parseMateriPagesAdmin);
 
     return res.json({ success: true, materi: mapped });
   } catch (err) {
@@ -575,7 +604,7 @@ router.get('/materi/:id', async (req, res) => {
     if (error || !m) {
       return res.status(404).json({ error: 'Modul materi tidak ditemukan.' });
     }
-    return res.json({ success: true, materi: m });
+    return res.json({ success: true, materi: parseMateriPagesAdmin(m) });
   } catch (err) {
     return res.status(500).json({ error: 'Gagal mengambil detail materi.' });
   }
@@ -583,9 +612,18 @@ router.get('/materi/:id', async (req, res) => {
 
 // 8c. POST /api/admin/materi - Tambah Modul Materi Baru
 router.post('/materi', async (req, res) => {
-  const { judul, kategori, isi } = req.body;
-  if (!judul || !isi) {
-    return res.status(400).json({ error: 'Judul dan isi materi wajib diisi.' });
+  const { judul, kategori, isi, pages } = req.body;
+  if (!judul) {
+    return res.status(400).json({ error: 'Judul materi wajib diisi.' });
+  }
+
+  let finalIsi = '';
+  if (Array.isArray(pages) && pages.length > 0) {
+    finalIsi = JSON.stringify(pages);
+  } else if (isi && String(isi).trim()) {
+    finalIsi = String(isi).trim();
+  } else {
+    return res.status(400).json({ error: 'Konten atau halaman materi wajib diisi.' });
   }
 
   const kat = (kategori && kategori.trim()) ? kategori.trim() : 'Mikrotik';
@@ -597,7 +635,7 @@ router.post('/materi', async (req, res) => {
         {
           judul: judul.trim(),
           kategori: kat,
-          isi: isi.trim()
+          isi: finalIsi
         }
       ])
       .select()
@@ -621,10 +659,19 @@ router.post('/materi', async (req, res) => {
 // 8d. PUT /api/admin/materi/:id - Update Modul Materi
 router.put('/materi/:id', async (req, res) => {
   const { id } = req.params;
-  const { judul, kategori, isi } = req.body;
+  const { judul, kategori, isi, pages } = req.body;
 
-  if (!judul || !isi) {
-    return res.status(400).json({ error: 'Judul dan isi materi wajib diisi.' });
+  if (!judul) {
+    return res.status(400).json({ error: 'Judul materi wajib diisi.' });
+  }
+
+  let finalIsi = '';
+  if (Array.isArray(pages) && pages.length > 0) {
+    finalIsi = JSON.stringify(pages);
+  } else if (isi && String(isi).trim()) {
+    finalIsi = String(isi).trim();
+  } else {
+    return res.status(400).json({ error: 'Konten atau halaman materi wajib diisi.' });
   }
 
   const kat = (kategori && kategori.trim()) ? kategori.trim() : 'Mikrotik';
@@ -635,7 +682,7 @@ router.put('/materi/:id', async (req, res) => {
       .update({
         judul: judul.trim(),
         kategori: kat,
-        isi: isi.trim()
+        isi: finalIsi
       })
       .eq('id', id)
       .select()
