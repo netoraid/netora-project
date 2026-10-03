@@ -805,11 +805,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                 <span>Lihat</span>
               </a>
-              <button type="button" class="btn-secondary" onclick="bukaModalEditMateri(${m.id})" style="padding:5px 9px; font-size:11.5px; border-radius:8px;" title="Edit Modul">
+              <button type="button" class="btn-secondary" onclick="bukaModalEditMateri('${m.id}')" style="padding:5px 9px; font-size:11.5px; border-radius:8px;" title="Edit Modul">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                 <span>Edit</span>
               </button>
-              <button type="button" class="btn-action-delete" onclick="hapusMateriAdmin(${m.id})" style="padding:5px 9px; font-size:11.5px;" title="Hapus Modul">
+              <button type="button" class="btn-action-delete" onclick="hapusMateriAdmin('${m.id}')" style="padding:5px 9px; font-size:11.5px;" title="Hapus Modul">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 <span>Hapus</span>
               </button>
@@ -867,7 +867,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         <div>
           <label style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:4px;">Konten / Isi Materi Halaman Ini *</label>
-          <textarea class="input-field page-konten-input" rows="5" placeholder="Tuliskan penjelasan materi, panduan praktikum, diagram konsep..." oninput="syncModalPageData(${index})" style="background:#FFFFFF; font-size:12.5px; line-height:1.6; resize:vertical;" required>${escapeHtml(page.konten || '')}</textarea>
+          <textarea class="input-field page-konten-input" rows="5" placeholder="Tuliskan penjelasan materi, panduan praktikum, diagram konsep..." oninput="syncModalPageData(${index})" style="background:#FFFFFF; font-size:12.5px; line-height:1.6; resize:vertical;">${escapeHtml(page.konten || '')}</textarea>
         </div>
       </div>
     `).join('');
@@ -922,21 +922,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderModalPages();
   };
 
+  window.tambahHalamanMateriBaru = function() {
+    syncAllModalPages();
+    currentModalPages.push({
+      halaman: currentModalPages.length + 1,
+      judul: '',
+      konten: ''
+    });
+    renderModalPages();
+    const container = document.getElementById('materi-pages-container');
+    if (container) {
+      setTimeout(() => { container.scrollTop = container.scrollHeight; }, 60);
+    }
+  };
+
   const btnAddMateriPage = document.getElementById('btn-add-materi-page');
   if (btnAddMateriPage) {
-    btnAddMateriPage.addEventListener('click', () => {
-      syncAllModalPages();
-      currentModalPages.push({
-        halaman: currentModalPages.length + 1,
-        judul: '',
-        konten: ''
-      });
-      renderModalPages();
-      const container = document.getElementById('materi-pages-container');
-      if (container) {
-        setTimeout(() => { container.scrollTop = container.scrollHeight; }, 60);
-      }
-    });
+    btnAddMateriPage.addEventListener('click', window.tambahHalamanMateriBaru);
   }
 
   window.bukaModalTambahMateri = function() {
@@ -958,15 +960,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   window.bukaModalEditMateri = async function(id) {
-    let m = globalMateri.find(item => item.id === id);
+    let m = globalMateri.find(item => String(item.id) === String(id));
     if (!m || !m.pages || m.pages.length === 0) {
       try {
         const res = await fetch(`/api/admin/materi/${id}`);
         const data = await res.json();
-        if (res.ok && data.success) m = data.materi;
-      } catch (err) {}
+        if (res.ok && data.success && data.materi) {
+          m = data.materi;
+        }
+      } catch (err) {
+        console.error('Gagal mengambil data materi:', err);
+      }
     }
-    if (!m) return;
+    if (!m) {
+      toast('Data modul materi tidak ditemukan.', 'error');
+      return;
+    }
 
     const modal = document.getElementById('modal-materi');
     const title = document.getElementById('modal-materi-title');
@@ -978,8 +987,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (m.pages && Array.isArray(m.pages) && m.pages.length > 0) {
       currentModalPages = JSON.parse(JSON.stringify(m.pages));
+    } else if (m.isi) {
+      currentModalPages = [{ halaman: 1, judul: '', konten: m.isi }];
     } else {
-      currentModalPages = [{ halaman: 1, judul: '', konten: m.isi || '' }];
+      currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
     }
     renderModalPages();
 
@@ -1024,9 +1035,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      const hasContent = currentModalPages.some(p => p.konten && p.konten.trim().length > 0);
-      if (!hasContent) {
-        toast('Harap isi konten untuk halaman materi.', 'warning');
+      const emptyPageIdx = currentModalPages.findIndex(p => !p.konten || !p.konten.trim());
+      if (emptyPageIdx !== -1) {
+        toast(`Harap isi konten untuk Halaman ${emptyPageIdx + 1}.`, 'warning');
         return;
       }
 

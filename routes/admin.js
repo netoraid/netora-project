@@ -613,7 +613,7 @@ router.get('/materi/:id', async (req, res) => {
 // 8c. POST /api/admin/materi - Tambah Modul Materi Baru
 router.post('/materi', async (req, res) => {
   const { judul, kategori, isi, pages } = req.body;
-  if (!judul) {
+  if (!judul || !judul.trim()) {
     return res.status(400).json({ error: 'Judul materi wajib diisi.' });
   }
 
@@ -638,17 +638,18 @@ router.post('/materi', async (req, res) => {
           isi: finalIsi
         }
       ])
-      .select()
-      .single();
+      .select('id')
+      .maybeSingle();
 
     if (error) {
-      return res.status(500).json({ error: 'Gagal menambahkan materi baru.' });
+      console.error('Tambah Materi Supabase Error:', error);
+      return res.status(500).json({ error: error.message || 'Gagal menambahkan materi baru.' });
     }
 
     return res.json({
       success: true,
       message: 'Modul materi berhasil ditambahkan!',
-      id: created.id
+      id: created ? created.id : null
     });
   } catch (err) {
     console.error('Tambah Materi Error:', err);
@@ -661,7 +662,7 @@ router.put('/materi/:id', async (req, res) => {
   const { id } = req.params;
   const { judul, kategori, isi, pages } = req.body;
 
-  if (!judul) {
+  if (!judul || !judul.trim()) {
     return res.status(400).json({ error: 'Judul materi wajib diisi.' });
   }
 
@@ -677,19 +678,19 @@ router.put('/materi/:id', async (req, res) => {
   const kat = (kategori && kategori.trim()) ? kategori.trim() : 'Mikrotik';
 
   try {
-    const { data: updated, error } = await supabase
+    const filterId = isNaN(Number(id)) ? id : Number(id);
+    const { error } = await supabase
       .from('materi')
       .update({
         judul: judul.trim(),
         kategori: kat,
         isi: finalIsi
       })
-      .eq('id', id)
-      .select()
-      .maybeSingle();
+      .eq('id', filterId);
 
-    if (error || !updated) {
-      return res.status(404).json({ error: 'Modul materi tidak ditemukan.' });
+    if (error) {
+      console.error('Update Materi Supabase Error:', error);
+      return res.status(500).json({ error: error.message || 'Gagal memperbarui modul materi.' });
     }
 
     return res.json({ success: true, message: 'Modul materi berhasil diperbarui!' });
@@ -703,13 +704,15 @@ router.put('/materi/:id', async (req, res) => {
 router.delete('/materi/:id', async (req, res) => {
   const { id } = req.params;
   try {
+    const filterId = isNaN(Number(id)) ? id : Number(id);
     const { error } = await supabase
       .from('materi')
       .delete()
-      .eq('id', id);
+      .eq('id', filterId);
 
     if (error) {
-      return res.status(500).json({ error: 'Gagal menghapus modul materi.' });
+      console.error('Hapus Materi Supabase Error:', error);
+      return res.status(500).json({ error: error.message || 'Gagal menghapus modul materi.' });
     }
 
     return res.json({ success: true, message: 'Modul materi berhasil dihapus.' });

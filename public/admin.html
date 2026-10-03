@@ -1108,7 +1108,7 @@
               <option value="Mikrotik">Mikrotik</option>
               <option value="Server & Linux">Server & Linux</option>
             </select>
-            <button id="btn-tambah-materi" type="button" class="btn-primary" style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
+            <button id="btn-tambah-materi" onclick="bukaModalTambahMateri()" type="button" class="btn-primary" style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
               <span>Tambah Modul Baru</span>
             </button>
@@ -1358,7 +1358,7 @@
               <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Lengkapi detail judul, kategori materi, dan teks panduan pembelajaran</p>
             </div>
           </div>
-          <button id="btn-close-modal-materi" type="button" style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" title="Tutup Modal">&times;</button>
+          <button id="btn-close-modal-materi" onclick="tutupModalMateri()" type="button" style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" title="Tutup Modal">&times;</button>
         </div>
 
         <!-- Form Tambah / Edit Materi -->
@@ -1385,7 +1385,7 @@
               </div>
               <div style="display:flex; align-items:center; gap:8px;">
                 <span class="badge badge-blue" id="badge-page-count" style="font-size:11.5px; padding:4px 10px;">1 Halaman</span>
-                <button type="button" id="btn-add-materi-page" class="btn-secondary" style="font-size:12px; font-weight:700; padding:6px 12px; border-radius:10px; display:inline-flex; align-items:center; gap:5px; background:#EFF6FF; border-color:#BFDBFE; color:#0D5BFF; cursor:pointer;">
+                <button type="button" id="btn-add-materi-page" onclick="tambahHalamanMateriBaru()" class="btn-secondary" style="font-size:12px; font-weight:700; padding:6px 12px; border-radius:10px; display:inline-flex; align-items:center; gap:5px; background:#EFF6FF; border-color:#BFDBFE; color:#0D5BFF; cursor:pointer;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                   <span>+ Tambah Halaman</span>
                 </button>
@@ -1399,7 +1399,7 @@
           </div>
 
           <div style="display:flex; justify-content:flex-end; gap:10px;">
-            <button type="button" id="btn-batal-modal-materi" class="btn-secondary" style="padding:10px 18px; font-size:13px;">Batal</button>
+            <button type="button" id="btn-batal-modal-materi" onclick="tutupModalMateri()" class="btn-secondary" style="padding:10px 18px; font-size:13px;">Batal</button>
             <button type="submit" id="btn-simpan-materi" class="btn-primary" style="padding:10px 22px; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
               <span>Simpan Modul</span>
