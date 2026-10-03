@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { supabase } = require('../database/supabase');
 const { requireAdmin } = require('../middleware/auth');
-const { broadcastPengumuman, broadcastHapusPengumuman, broadcastQuizDataChanged } = require('../services/socket');
+const { broadcastPengumuman, broadcastHapusPengumuman, broadcastQuizDataChanged, broadcastMateriBaru } = require('../services/socket');
 const pengumumanRouter = require('./pengumuman');
 
 // Seluruh endpoint admin diwajibkan melewati proteksi requireAdmin
@@ -646,6 +646,10 @@ router.post('/materi', async (req, res) => {
       return res.status(500).json({ error: error.message || 'Gagal menambahkan materi baru.' });
     }
 
+    try {
+      broadcastMateriBaru({ id: created ? created.id : null, judul: judul.trim(), kategori: kat });
+    } catch(e) {}
+
     return res.json({
       success: true,
       message: 'Modul materi berhasil ditambahkan!',
@@ -693,6 +697,10 @@ router.put('/materi/:id', async (req, res) => {
       return res.status(500).json({ error: error.message || 'Gagal memperbarui modul materi.' });
     }
 
+    try {
+      broadcastMateriBaru({ id: filterId, judul: judul.trim(), kategori: kat, updated: true });
+    } catch(e) {}
+
     return res.json({ success: true, message: 'Modul materi berhasil diperbarui!' });
   } catch (err) {
     console.error('Update Materi Error:', err);
@@ -714,6 +722,10 @@ router.delete('/materi/:id', async (req, res) => {
       console.error('Hapus Materi Supabase Error:', error);
       return res.status(500).json({ error: error.message || 'Gagal menghapus modul materi.' });
     }
+
+    try {
+      broadcastMateriBaru({ id: filterId, deleted: true });
+    } catch(e) {}
 
     return res.json({ success: true, message: 'Modul materi berhasil dihapus.' });
   } catch (err) {

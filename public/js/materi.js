@@ -44,32 +44,69 @@ window.initMateriPage = async function() {
 
   // 1. Halaman List Materi
   if (materiContainer) {
-    async function loadMateri() {
-      // Tampilkan skeleton shimmer terlebih dahulu di halaman tujuan
-      renderMateriSkeleton();
+    function renderFilterPills() {
+      if (!filterRow) return;
+      const categories = ['all'];
+      allMateri.forEach(m => {
+        const k = (m.kategori || '').trim();
+        if (k && !categories.some(c => c.toLowerCase() === k.toLowerCase())) {
+          categories.push(k);
+        }
+      });
 
-      // Cek apakah ada cache
+      filterRow.innerHTML = categories.map(cat => {
+        const label = cat === 'all' ? 'Semua' : escapeHtml(cat);
+        const isActive = (currentFilter.toLowerCase() === cat.toLowerCase()) ? 'active' : '';
+        return `<button type="button" class="filter-pill ${isActive}" data-cat="${escapeHtml(cat)}">${label}</button>`;
+      }).join('');
+
+      filterRow.querySelectorAll('.filter-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterRow.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.dataset.cat || 'all';
+          renderMateriCards();
+        });
+      });
+    }
+
+    async function loadMateri(isSilent = false) {
+      if (!isSilent && (!allMateri || allMateri.length === 0)) {
+        renderMateriSkeleton();
+      }
+
+      // 1. Cek apakah ada cache di sessionStorage untuk render instan
       try {
         const cached = sessionStorage.getItem('netora_materi_cache');
         if (cached) {
-          allMateri = JSON.parse(cached);
-          if (allMateri.length > 0) renderMateriCards();
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            allMateri = parsed;
+            renderFilterPills();
+            renderMateriCards();
+          }
         }
       } catch (e) {}
 
+      // 2. Selalu fetch data terkini dari server (Stale-While-Revalidate)
       try {
-        const res = await fetch('/api/materi');
+        const res = await fetch('/api/materi?t=' + Date.now());
         const data = await res.json();
 
-        if (res.ok && data.success && data.materi && data.materi.length > 0) {
+        if (res.ok && data.success && Array.isArray(data.materi)) {
           allMateri = data.materi;
           try { sessionStorage.setItem('netora_materi_cache', JSON.stringify(data.materi)); } catch (e) {}
+          renderFilterPills();
           renderMateriCards();
         }
       } catch (err) {
         console.warn('Gagal memuat materi dari API:', err);
       }
     }
+
+    // Expose fungsi refresh untuk dipanggil saat ada update Socket.IO
+    window.refreshMateriData = () => loadMateri(true);
+    window.loadMateri = loadMateri;
 
     function renderMateriCards() {
       const q = (inputSearch ? inputSearch.value : '').toLowerCase().trim();
@@ -89,7 +126,13 @@ window.initMateriPage = async function() {
       });
 
       if (list.length === 0) {
-        materiContainer.innerHTML = '<div class="netora-fade-in" style="text-align:center; padding:30px; color:#64748B; font-size:13px;">Tidak ada modul yang sesuai filter.</div>';
+        materiContainer.innerHTML = `
+          <div class="netora-fade-in" style="text-align:center; padding:36px 20px; color:#64748B; font-size:13.5px;">
+            <div style="font-size:32px; margin-bottom:8px;">📚</div>
+            <strong style="color:#1E293B;">Belum ada modul materi</strong><br>
+            <span style="font-size:12px; color:#94A3B8; margin-top:4px; display:inline-block;">Modul pembelajaran yang dibuat Guru / Admin akan otomatis muncul di sini.</span>
+          </div>
+        `;
         return;
       }
 
@@ -119,18 +162,6 @@ window.initMateriPage = async function() {
           </a>
         `;
       }).join('') + '</div>';
-    }
-
-    // Filter Buttons
-    if (filterRow) {
-      filterRow.querySelectorAll('.filter-pill').forEach(btn => {
-        btn.addEventListener('click', () => {
-          filterRow.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentFilter = btn.dataset.cat || 'all';
-          renderMateriCards();
-        });
-      });
     }
 
     // Search Toggle

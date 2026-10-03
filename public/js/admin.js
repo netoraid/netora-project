@@ -748,6 +748,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!res.ok || !data.success) return;
 
       globalMateri = data.materi || [];
+      window.globalMateri = globalMateri;
+      window.loadMateri = loadMateri;
       const badge = document.getElementById('badge-total-materi-admin');
       if (badge) badge.textContent = `${globalMateri.length} Modul Terdaftar`;
 
@@ -942,15 +944,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   window.bukaModalTambahMateri = function() {
+    console.log('[Netora Admin] Membuka modal tambah materi baru');
     const modal = document.getElementById('modal-materi');
     const title = document.getElementById('modal-materi-title');
     const form = document.getElementById('form-modal-materi');
     if (!modal) return;
 
     if (form) form.reset();
-    document.getElementById('input-materi-id').value = '';
-    document.getElementById('input-materi-judul').value = '';
-    document.getElementById('input-materi-kategori').value = '';
+    const idEl = document.getElementById('input-materi-id');
+    const judulEl = document.getElementById('input-materi-judul');
+    const katEl = document.getElementById('input-materi-kategori');
+    const isiEl = document.getElementById('input-materi-isi');
+
+    if (idEl) idEl.value = '';
+    if (judulEl) judulEl.value = '';
+    if (katEl) katEl.value = '';
+    const selKatEl = document.getElementById('select-materi-kategori');
+    if (selKatEl) selKatEl.value = '';
+    if (isiEl) isiEl.value = '';
     
     currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
     renderModalPages();
@@ -960,6 +971,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   window.bukaModalEditMateri = async function(id) {
+    console.log('[Netora Admin] Membuka modal edit materi ID:', id);
     let m = globalMateri.find(item => String(item.id) === String(id));
     if (!m || !m.pages || m.pages.length === 0) {
       try {
@@ -981,9 +993,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const title = document.getElementById('modal-materi-title');
     if (!modal) return;
 
-    document.getElementById('input-materi-id').value = m.id;
-    document.getElementById('input-materi-judul').value = m.judul || '';
-    document.getElementById('input-materi-kategori').value = m.kategori || '';
+    const idEl = document.getElementById('input-materi-id');
+    const judulEl = document.getElementById('input-materi-judul');
+    const katEl = document.getElementById('input-materi-kategori');
+    const selKatEl = document.getElementById('select-materi-kategori');
+    const isiEl = document.getElementById('input-materi-isi');
+
+    if (idEl) idEl.value = m.id;
+    if (judulEl) judulEl.value = m.judul || '';
+    if (katEl) katEl.value = m.kategori || '';
+    if (selKatEl) selKatEl.value = m.kategori || '';
+    if (isiEl) isiEl.value = m.isi || '';
 
     if (m.pages && Array.isArray(m.pages) && m.pages.length > 0) {
       currentModalPages = JSON.parse(JSON.stringify(m.pages));

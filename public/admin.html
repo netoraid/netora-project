@@ -1364,6 +1364,17 @@
         <!-- Form Tambah / Edit Materi -->
         <form id="form-modal-materi">
           <input type="hidden" id="input-materi-id" value="">
+          <input type="hidden" id="input-materi-isi" value="">
+          
+          <!-- Fallback dummy select untuk backward-compatibility jika ada script browser yang ter-cache -->
+          <select id="select-materi-kategori" style="display:none;" onchange="const inp = document.getElementById('input-materi-kategori'); if(inp) inp.value = this.value;">
+            <option value=""></option>
+            <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
+            <option value="MikroTik RouterOS">MikroTik RouterOS</option>
+            <option value="Debian Server">Debian Server</option>
+            <option value="Jaringan Komputer">Jaringan Komputer</option>
+            <option value="Troubleshooting">Troubleshooting</option>
+          </select>
 
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
             <div>
@@ -1372,7 +1383,7 @@
             </div>
             <div>
               <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kategori Modul *</label>
-              <input type="text" id="input-materi-kategori" class="input-field" placeholder="Contoh: Cisco Packet Tracer" required style="background:#FFFFFF;">
+              <input type="text" id="input-materi-kategori" class="input-field" placeholder="Contoh: Cisco Packet Tracer" required style="background:#FFFFFF;" oninput="const sel = document.getElementById('select-materi-kategori'); if(sel) sel.value = this.value;">
             </div>
           </div>
 
@@ -1408,6 +1419,298 @@
         </form>
       </div>
     </div>
+
+    <!-- Inline Script Manager Modul Materi (Bypass Cache & Error-Proof) -->
+    <script>
+      window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+
+      window.syncModalPageData = function(index) {
+        const container = document.getElementById('materi-pages-container');
+        if (!container) return;
+        const cards = container.querySelectorAll('.materi-page-card');
+        if (cards[index]) {
+          const judul = cards[index].querySelector('.page-judul-input')?.value || '';
+          const konten = cards[index].querySelector('.page-konten-input')?.value || '';
+          if (window.currentModalPages && window.currentModalPages[index]) {
+            window.currentModalPages[index].judul = judul;
+            window.currentModalPages[index].konten = konten;
+          }
+        }
+      };
+
+      window.syncAllModalPages = function() {
+        const container = document.getElementById('materi-pages-container');
+        if (!container) return;
+        const cards = container.querySelectorAll('.materi-page-card');
+        cards.forEach((card, idx) => {
+          if (window.currentModalPages && window.currentModalPages[idx]) {
+            window.currentModalPages[idx].judul = card.querySelector('.page-judul-input')?.value || '';
+            window.currentModalPages[idx].konten = card.querySelector('.page-konten-input')?.value || '';
+          }
+        });
+      };
+
+      window.renderModalPages = function() {
+        const container = document.getElementById('materi-pages-container');
+        const badge = document.getElementById('badge-page-count');
+        if (!container) return;
+
+        if (!Array.isArray(window.currentModalPages) || window.currentModalPages.length === 0) {
+          window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+        }
+
+        if (badge) {
+          badge.textContent = `${window.currentModalPages.length} Halaman`;
+        }
+
+        container.innerHTML = window.currentModalPages.map((page, index) => {
+          const safeJudul = (page.judul || '').replace(/"/g, '&quot;');
+          const safeKonten = (page.konten || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          return `
+            <div class="materi-page-card" data-index="${index}" style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:14px; padding:14px; position:relative; transition:all 0.2s;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="background:#0D5BFF; color:#fff; font-size:11px; font-weight:800; padding:3px 9px; border-radius:8px;">
+                    Halaman ${index + 1}
+                  </span>
+                  <span style="font-size:12.5px; font-weight:700; color:#334155;">Bagian Halaman ${index + 1}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  ${index > 0 ? `
+                    <button type="button" onclick="geserHalamanMateri(${index}, -1)" title="Geser ke Atas" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:6px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:11px;">
+                      ▲
+                    </button>
+                  ` : ''}
+                  ${index < window.currentModalPages.length - 1 ? `
+                    <button type="button" onclick="geserHalamanMateri(${index}, 1)" title="Geser ke Bawah" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:6px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:11px;">
+                      ▼
+                    </button>
+                  ` : ''}
+                  ${window.currentModalPages.length > 1 ? `
+                    <button type="button" onclick="hapusHalamanMateri(${index})" title="Hapus Halaman Ini" style="background:#FEE2E2; border:1px solid #FECACA; color:#EF4444; border-radius:6px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; font-weight:bold;">
+                      &times;
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+
+              <div style="margin-bottom:8px;">
+                <label style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:4px;">Judul Halaman / Sub-Topik (Opsional)</label>
+                <input type="text" class="input-field page-judul-input" placeholder="Contoh: Pengenalan Packet Tracer & Workspace" value="${safeJudul}" oninput="syncModalPageData(${index})" style="background:#FFFFFF; padding:8px 12px; font-size:12.5px;">
+              </div>
+
+              <div>
+                <label style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:4px;">Konten / Isi Materi Halaman Ini *</label>
+                <textarea class="input-field page-konten-input" rows="5" placeholder="Tuliskan penjelasan materi, panduan praktikum, diagram konsep..." oninput="syncModalPageData(${index})" style="background:#FFFFFF; font-size:12.5px; line-height:1.6; resize:vertical;">${safeKonten}</textarea>
+              </div>
+            </div>
+          `;
+        }).join('');
+      };
+
+      window.geserHalamanMateri = function(index, direction) {
+        window.syncAllModalPages();
+        const targetIndex = index + direction;
+        if (targetIndex >= 0 && targetIndex < window.currentModalPages.length) {
+          const temp = window.currentModalPages[index];
+          window.currentModalPages[index] = window.currentModalPages[targetIndex];
+          window.currentModalPages[targetIndex] = temp;
+          window.currentModalPages.forEach((p, idx) => { p.halaman = idx + 1; });
+          window.renderModalPages();
+        }
+      };
+
+      window.hapusHalamanMateri = function(index) {
+        window.syncAllModalPages();
+        if (window.currentModalPages.length <= 1) {
+          if (typeof toast === 'function') toast('Modul materi minimal harus memiliki 1 halaman.', 'warning');
+          else alert('Modul materi minimal harus memiliki 1 halaman.');
+          return;
+        }
+        window.currentModalPages.splice(index, 1);
+        window.currentModalPages.forEach((p, idx) => { p.halaman = idx + 1; });
+        window.renderModalPages();
+      };
+
+      window.tambahHalamanMateriBaru = function() {
+        window.syncAllModalPages();
+        if (!Array.isArray(window.currentModalPages)) {
+          window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+        }
+        window.currentModalPages.push({
+          halaman: window.currentModalPages.length + 1,
+          judul: '',
+          konten: ''
+        });
+        window.renderModalPages();
+        const container = document.getElementById('materi-pages-container');
+        if (container) {
+          setTimeout(() => { container.scrollTop = container.scrollHeight; }, 60);
+        }
+      };
+
+      window.bukaModalTambahMateri = function() {
+        const modal = document.getElementById('modal-materi');
+        const title = document.getElementById('modal-materi-title');
+        const form = document.getElementById('form-modal-materi');
+        if (!modal) return;
+
+        if (form) form.reset();
+        const idEl = document.getElementById('input-materi-id');
+        const judulEl = document.getElementById('input-materi-judul');
+        const katEl = document.getElementById('input-materi-kategori');
+        const isiEl = document.getElementById('input-materi-isi');
+
+        if (idEl) idEl.value = '';
+        if (judulEl) judulEl.value = '';
+        if (katEl) katEl.value = '';
+        const selKatEl = document.getElementById('select-materi-kategori');
+        if (selKatEl) selKatEl.value = '';
+        if (isiEl) isiEl.value = '';
+
+        window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+        window.renderModalPages();
+
+        if (title) title.textContent = 'Tambah Modul Materi Baru';
+        modal.style.display = 'flex';
+      };
+
+      window.bukaModalEditMateri = async function(id) {
+        let list = window.globalMateri || [];
+        let m = list.find(item => String(item.id) === String(id));
+        if (!m || !m.pages || m.pages.length === 0) {
+          try {
+            const res = await fetch(`/api/admin/materi/${id}`);
+            const data = await res.json();
+            if (res.ok && data.success && data.materi) {
+              m = data.materi;
+            }
+          } catch (err) {
+            console.error('Fetch materi detail error:', err);
+          }
+        }
+
+        if (!m) {
+          if (typeof toast === 'function') toast('Data modul materi tidak ditemukan.', 'error');
+          else alert('Data modul materi tidak ditemukan.');
+          return;
+        }
+
+        const modal = document.getElementById('modal-materi');
+        const title = document.getElementById('modal-materi-title');
+        if (!modal) return;
+
+        const idEl = document.getElementById('input-materi-id');
+        const judulEl = document.getElementById('input-materi-judul');
+        const katEl = document.getElementById('input-materi-kategori');
+        const selKatEl = document.getElementById('select-materi-kategori');
+        const isiEl = document.getElementById('input-materi-isi');
+
+        if (idEl) idEl.value = m.id;
+        if (judulEl) judulEl.value = m.judul || '';
+        if (katEl) katEl.value = m.kategori || '';
+        if (selKatEl) selKatEl.value = m.kategori || '';
+        if (isiEl) isiEl.value = m.isi || '';
+
+        if (m.pages && Array.isArray(m.pages) && m.pages.length > 0) {
+          window.currentModalPages = JSON.parse(JSON.stringify(m.pages));
+        } else if (m.isi) {
+          window.currentModalPages = [{ halaman: 1, judul: '', konten: m.isi }];
+        } else {
+          window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+        }
+        window.renderModalPages();
+
+        if (title) title.textContent = `Edit Modul Materi #${m.id}`;
+        modal.style.display = 'flex';
+      };
+
+      window.tutupModalMateri = function() {
+        const modal = document.getElementById('modal-materi');
+        if (modal) modal.style.display = 'none';
+      };
+
+      // Form Submit Interceptor yang kebal cache
+      document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('form-modal-materi');
+        if (form) {
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            const id = document.getElementById('input-materi-id')?.value;
+            const judul = document.getElementById('input-materi-judul')?.value?.trim();
+            const kategori = document.getElementById('input-materi-kategori')?.value?.trim();
+
+            window.syncAllModalPages();
+
+            if (!judul) {
+              if (typeof toast === 'function') toast('Judul modul materi wajib diisi.', 'warning');
+              else alert('Judul modul materi wajib diisi.');
+              return;
+            }
+            if (!kategori) {
+              if (typeof toast === 'function') toast('Kategori modul materi wajib diisi.', 'warning');
+              else alert('Kategori modul materi wajib diisi.');
+              return;
+            }
+
+            const pages = window.currentModalPages || [];
+            if (pages.length === 0) {
+              if (typeof toast === 'function') toast('Modul materi harus memiliki minimal 1 halaman.', 'warning');
+              else alert('Modul materi harus memiliki minimal 1 halaman.');
+              return;
+            }
+
+            const emptyIdx = pages.findIndex(p => !p.konten || !p.konten.trim());
+            if (emptyIdx !== -1) {
+              const msg = `Harap isi konten untuk Halaman ${emptyIdx + 1}.`;
+              if (typeof toast === 'function') toast(msg, 'warning');
+              else alert(msg);
+              return;
+            }
+
+            const btnSubmit = document.getElementById('btn-simpan-materi');
+            if (btnSubmit) {
+              btnSubmit.disabled = true;
+              btnSubmit.textContent = 'Menyimpan...';
+            }
+
+            try {
+              const endpoint = id ? `/api/admin/materi/${id}` : '/api/admin/materi';
+              const method = id ? 'PUT' : 'POST';
+
+              const res = await fetch(endpoint, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ judul, kategori, pages })
+              });
+              const data = await res.json();
+
+              if (res.ok && data.success) {
+                window.tutupModalMateri();
+                if (typeof window.loadMateri === 'function') await window.loadMateri();
+                else window.location.reload();
+                if (typeof window.loadStats === 'function') window.loadStats();
+                if (typeof toast === 'function') toast(data.message || 'Modul materi berhasil disimpan!', 'success');
+              } else {
+                const err = data.error || 'Gagal menyimpan modul materi.';
+                if (typeof toast === 'function') toast(err, 'error');
+                else alert(err);
+              }
+            } catch (err) {
+              if (typeof toast === 'function') toast('Terjadi kesalahan jaringan.', 'error');
+              else alert('Terjadi kesalahan jaringan.');
+            } finally {
+              if (btnSubmit) {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Simpan Modul</span>';
+              }
+            }
+          }, true);
+        }
+      });
+    </script>
 
     <!-- ========================================== -->
     <!-- MODAL TAMBAH & EDIT VIDIO PRAKTIK          -->
@@ -1654,7 +1957,12 @@
 
   </div>
 
-  <script src="js/netora.js"></script>
-  <script src="js/admin.js"></script>
+  <script src="js/netora.js?v=2026.3"></script>
+  <script>
+    // Injeksi admin.js dengan query parameter timestamp agar browser selalu mengeksekusi versi terkini
+    const scriptAdmin = document.createElement('script');
+    scriptAdmin.src = 'js/admin.js?t=' + Date.now();
+    document.body.appendChild(scriptAdmin);
+  </script>
 </body>
 </html>

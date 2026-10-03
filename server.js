@@ -182,6 +182,17 @@ app.get('/uploads/default.png', (req, res) => {
   return res.sendFile(path.join(__dirname, 'logo.png'));
 });
 
+// Header anti-cache untuk file JS dan HTML agar perubahan script selalu termuat segar
+app.use((req, res, next) => {
+  const p = (req.path || '').toLowerCase();
+  if (p.endsWith('.js') || p.endsWith('.html')) {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+  next();
+});
+
 // Serve Static Files (HTML, CSS, JS, Aset)
 app.use(express.static(publicDir));
 app.use('/assets', express.static(assetsDir));

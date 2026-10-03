@@ -116,10 +116,11 @@ function broadcastQuizSubmitted(data) {
   }
 }
 
-// Helper: Broadcast Materi Baru
+// Helper: Broadcast Materi Baru & Perubahan Data Modul
 function broadcastMateriBaru(materi) {
   if (ioInstance) {
-    ioInstance.emit('materi:baru', materi);
+    if (materi) ioInstance.emit('materi:baru', materi);
+    ioInstance.emit('materi:changed', { materi, timestamp: new Date() });
   }
 }
 

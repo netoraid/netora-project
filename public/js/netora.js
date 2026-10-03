@@ -1105,11 +1105,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(metaTheme);
   }
 
-  // Daftarkan Service Worker
+  // Daftarkan Service Worker (Non-aktifkan di Admin/Guru agar kode & script selalu realtime fresh)
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
-    });
+    if (window.location.pathname.includes('admin') || window.location.pathname.includes('guru')) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        registrations.forEach(reg => reg.unregister());
+      }).catch(() => {});
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => caches.delete(name));
+        }).catch(() => {});
+      }
+    } else {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
   }
 })();
 
@@ -1229,6 +1240,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (typeof window.loadGuruData === 'function') {
           window.loadGuruData();
+        }
+      });
+
+      // 7. Sinkronisasi Modul Pembelajaran Materi Real-time
+      socket.on('materi:changed', () => {
+        try { sessionStorage.removeItem('netora_materi_cache'); } catch (e) {}
+        if (typeof window.refreshMateriData === 'function') {
+          window.refreshMateriData();
+        }
+        if (typeof window.loadMateriBeranda === 'function') {
+          window.loadMateriBeranda();
+        }
+      });
+
+      socket.on('materi:baru', (data) => {
+        try { sessionStorage.removeItem('netora_materi_cache'); } catch (e) {}
+        if (data && data.judul && typeof toast === 'function') {
+          toast(`📚 Modul Pembelajaran Baru: ${data.judul}`, 'info');
+        }
+        if (typeof window.refreshMateriData === 'function') {
+          window.refreshMateriData();
+        }
+        if (typeof window.loadMateriBeranda === 'function') {
+          window.loadMateriBeranda();
         }
       });
 

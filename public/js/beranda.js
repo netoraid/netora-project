@@ -129,12 +129,76 @@ window.initBerandaPage = async function() {
 
   try {
     const user = typeof getUser === 'function' ? await getUser() : null;
-    if (!user) {
-      return;
+    if (user) {
+      applyUserToDom(user);
     }
-    applyUserToDom(user);
   } catch(e) {
     console.warn('getUser beranda err:', e);
+  }
+
+  // Muat modul materi terbaru secara dinamis di Beranda
+  window.loadMateriBeranda();
+};
+
+window.loadMateriBeranda = async function() {
+  const container = document.getElementById('beranda-materi-list');
+  if (!container) return;
+
+  function getIcon(kat, jud) {
+    const text = (kat + ' ' + jud).toLowerCase();
+    if (text.includes('cisco') || text.includes('packet tracer') || text.includes('switch') || text.includes('vlan')) {
+      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+    }
+    if (text.includes('mikrotik') || text.includes('router') || text.includes('queue') || text.includes('bandwidth')) {
+      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
+    }
+    if (text.includes('linux') || text.includes('server') || text.includes('nginx') || text.includes('ssh')) {
+      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`;
+    }
+    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`;
+  }
+
+  try {
+    const res = await fetch('/api/materi?t=' + Date.now());
+    const data = await res.json();
+    if (res.ok && data.success && Array.isArray(data.materi) && data.materi.length > 0) {
+      const topList = data.materi.slice(0, 4);
+      container.innerHTML = topList.map(item => {
+        const icon = getIcon(item.kategori || '', item.judul || '');
+        const pagesCount = item.total_halaman || (item.pages && Array.isArray(item.pages) ? item.pages.length : 1);
+        const pagesText = item.pages_text || `${pagesCount} halaman`;
+        return `
+          <a href="materi-detail.html?id=${item.id}" class="white-item-card" style="margin-bottom:0; text-decoration:none;">
+            <div class="item-left-flex">
+              <div class="item-square-thumb" style="background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:12px;">
+                ${icon}
+              </div>
+              <div class="item-meta-col">
+                <h4 class="item-title-text" style="font-size:13.5px; font-weight:700; color:#0F172A; margin:0 0 3px;">${typeof escapeHtml === 'function' ? escapeHtml(item.judul) : item.judul}</h4>
+                <div class="item-sub-text" style="font-size:11.5px;">
+                  <span style="color:#0D5BFF; font-weight:700;">${typeof escapeHtml === 'function' ? escapeHtml(item.kategori || 'TKJ') : (item.kategori || 'TKJ')}</span>
+                  <span>•</span>
+                  <span>${pagesText}</span>
+                </div>
+              </div>
+            </div>
+            <div class="item-chevron-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+          </a>
+        `;
+      }).join('');
+    } else {
+      container.innerHTML = `
+        <div style="text-align:center; padding:24px 16px; background:#FFFFFF; border-radius:16px; border:1px dashed #CBD5E1; color:#64748B;">
+          <div style="font-size:24px; margin-bottom:4px;">📚</div>
+          <div style="font-size:12.5px; font-weight:700; color:#334155;">Belum ada modul materi</div>
+          <div style="font-size:11.5px; color:#94A3B8; margin-top:2px;">Modul yang dibuat Admin/Guru akan otomatis muncul di sini.</div>
+        </div>
+      `;
+    }
+  } catch (err) {
+    console.warn('Gagal memuat materi beranda:', err);
   }
 };
 
