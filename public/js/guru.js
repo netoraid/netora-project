@@ -708,9 +708,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadProgress();
   loadQuiz();
 
-  // Auto-sync polling setiap 20 detik jika tab aktif
+  // Ekspor fungsi sinkronisasi real-time Socket.io
+  window.loadGuruData = function() {
+    loadStats();
+    loadNilai();
+    loadProgress();
+  };
+
+  // Auto-sync polling cadangan setiap 30 detik jika tab aktif
   setInterval(() => {
     if (document.hidden) return;
     loadStats();
-  }, 20000);
+  }, 30000);
 });

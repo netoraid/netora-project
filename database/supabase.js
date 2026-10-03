@@ -2,6 +2,11 @@
 // Pastikan package '@supabase/supabase-js' dan 'dotenv' terinstall:
 // npm install @supabase/supabase-js dotenv
 
+const dns = require('dns');
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder('ipv4first');
+}
+
 require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
 

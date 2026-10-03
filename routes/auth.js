@@ -132,26 +132,23 @@ router.post('/login', async (req, res) => {
   try {
     const identifier = (email || '').toLowerCase().trim();
 
-    // Cari user berdasarkan email
-    let { data: user, error: findErr } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', identifier)
-      .maybeSingle();
+    const isAdminLogin = identifier === 'admin123' || identifier === 'admin@netora.id';
+    const isGuruLogin = identifier === 'guru123' || identifier === 'guru@netora.id';
 
-    // Fallback khusus admin jika input adalah 'admin123' atau 'admin@netora.id'
-    if (!user && (identifier === 'admin123' || identifier === 'admin@netora.id')) {
-      const { data: adminUser } = await supabase
-        .from('users')
-        .select('*')
-        .or(`role.eq.admin,email.eq.admin123,email.eq.admin@netora.id`)
-        .limit(1)
-        .maybeSingle();
-      if (adminUser) user = adminUser;
+    // 1 single query langsung tepat sasaran
+    let query = supabase.from('users').select('*');
+    if (isAdminLogin) {
+      query = query.or('email.eq.admin123,email.eq.admin@netora.id,role.eq.admin');
+    } else if (isGuruLogin) {
+      query = query.or('email.eq.guru123,email.eq.guru@netora.id,role.eq.guru');
+    } else {
+      query = query.eq('email', identifier);
     }
 
+    let { data: user, error: findErr } = await query.limit(1).maybeSingle();
+
     // Auto-create akun admin jika belum pernah ada
-    if (!user && (identifier === 'admin123' || identifier === 'admin@netora.id') && password === 'admin123') {
+    if (!user && isAdminLogin && password === 'admin123') {
       try {
         console.log('[SUPABASE AUTO-ADMIN] Mendaftarkan akun admin123 otomatis...');
         const hash = bcrypt.hashSync('admin123', 10);
@@ -174,19 +171,8 @@ router.post('/login', async (req, res) => {
       }
     }
 
-    // Fallback khusus guru jika input adalah 'guru123' atau 'guru@netora.id'
-    if (!user && (identifier === 'guru123' || identifier === 'guru@netora.id')) {
-      const { data: guruUser } = await supabase
-        .from('users')
-        .select('*')
-        .or(`role.eq.guru,email.eq.guru123,email.eq.guru@netora.id`)
-        .limit(1)
-        .maybeSingle();
-      if (guruUser) user = guruUser;
-    }
-
     // Auto-create akun guru jika belum pernah ada
-    if (!user && (identifier === 'guru123' || identifier === 'guru@netora.id') && password === 'guru123') {
+    if (!user && isGuruLogin && password === 'guru123') {
       try {
         console.log('[SUPABASE AUTO-GURU] Mendaftarkan akun guru123 otomatis...');
         const hash = bcrypt.hashSync('guru123', 10);
@@ -235,6 +221,7 @@ router.post('/login', async (req, res) => {
     }
 
     req.session.userId = user.id;
+    req.session.userName = user.nama || 'Pengguna';
     req.session.role = user.role || 'siswa';
     return res.json({
       success: true,

@@ -79,68 +79,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       try {
-        let res = await fetch('/api/auth/login', {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+        const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: emailVal, password: passwordVal })
+          body: JSON.stringify({ email: emailVal, password: passwordVal }),
+          signal: controller.signal
         });
-        let data = await res.json();
+        clearTimeout(timeoutId);
 
-        // Khusus fallback akun admin123 jika database direset
-        if (!res.ok && emailVal.toLowerCase() === 'admin123') {
-          try {
-            const autoReg = await fetch('/api/auth/register', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                nama: 'Administrator Netora',
-                email: 'admin123',
-                password: passwordVal || 'admin123'
-              })
-            });
-
-            if (autoReg.ok) {
-              if (typeof toast === 'function') toast('Login Admin Berhasil! Mengalihkan...', 'success');
-              setTimeout(() => {
-                window.location.href = '/admin.html';
-              }, 350);
-              return;
-            }
-
-            const retryRes = await fetch('/api/auth/login', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: 'admin123', password: passwordVal })
-            });
-            const retryData = await retryRes.json();
-            if (retryRes.ok && retryData.success) {
-              if (typeof toast === 'function') toast('Login Admin Berhasil! Mengalihkan...', 'success');
-              setTimeout(() => {
-                window.location.href = '/admin.html';
-              }, 350);
-              return;
-            }
-          } catch (autoErr) {}
-        }
-
-        // Khusus fallback akun guru123 jika database belum memiliki record guru
-        if (!res.ok && (emailVal.toLowerCase() === 'guru123' || emailVal.toLowerCase() === 'guru@netora.id')) {
-          try {
-            const retryRes = await fetch('/api/auth/login', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: 'guru123', password: passwordVal || 'guru123' })
-            });
-            const retryData = await retryRes.json();
-            if (retryRes.ok && retryData.success) {
-              if (typeof toast === 'function') toast('Login Guru Berhasil! Mengalihkan...', 'success');
-              setTimeout(() => {
-                window.location.href = '/guru.html';
-              }, 250);
-              return;
-            }
-          } catch (autoGuruErr) {}
-        }
+        const data = await res.json();
 
         if (res.ok && data.success) {
           try {
@@ -159,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
               window.location.href = targetUrl;
             }
-          }, 100);
+          }, 80);
         } else {
           showError(data.error || 'Email atau kata sandi tidak sesuai.');
           if (btnSubmit) {
@@ -169,7 +119,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         }
       } catch (err) {
-        showError('Gagal terhubung ke server Netora. Pastikan koneksi aktif.');
+        if (err && err.name === 'AbortError') {
+          showError('Koneksi timeout. Server lambat merespons, silakan coba lagi.');
+        } else {
+          showError('Gagal terhubung ke server Netora. Pastikan koneksi aktif.');
+        }
         if (btnSubmit) {
           btnSubmit.disabled = false;
           btnSubmit.style.opacity = '1';

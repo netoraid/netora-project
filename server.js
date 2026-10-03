@@ -1,10 +1,18 @@
+// Memaksa resolusi DNS mendahulukan IPv4 untuk mencegah timeout di lingkungan Docker / VPS / Pterodactyl
+const dns = require('dns');
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder('ipv4first');
+}
+
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
 const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 const os = require('os');
+const { initSocket } = require('./services/socket');
 
 // Inisialisasi Supabase Database
 const { supabase } = require('./database/supabase');
@@ -53,6 +61,10 @@ if (!fs.existsSync(defaultAvatar)) {
 }
 
 const app = express();
+const server = http.createServer(app);
+const io = initSocket(server);
+app.set('io', io);
+
 app.set('trust proxy', 1); // Mengizinkan cookie session bekerja normal saat diakses lewat Dev Tunnels / Reverse Proxy / Pterodactyl
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000;
 const HOST = '0.0.0.0'; // Mengizinkan akses dari semua interface jaringan (Wi-Fi / LAN / Pterodactyl Container)
@@ -214,8 +226,8 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Endpoint tidak ditemukan (404)' });
 });
 
-// Jalankan Server
-app.listen(PORT, HOST, () => {
+// Jalankan Server (HTTP + Socket.io)
+server.listen(PORT, HOST, () => {
   const interfaces = os.networkInterfaces();
   const detectedIps = [];
 

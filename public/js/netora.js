@@ -1113,4 +1113,124 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 })();
 
+// ==========================================================================
+// NETORA REAL-TIME WEBSOCKET (SOCKET.IO) CLIENT
+// ==========================================================================
+(function initNetoraRealTime() {
+  if (typeof window === 'undefined') return;
+
+  function loadSocketIoScript(cb) {
+    if (typeof io !== 'undefined') {
+      return cb();
+    }
+    const script = document.createElement('script');
+    script.src = '/socket.io/socket.io.js';
+    script.async = true;
+    script.onload = cb;
+    script.onerror = () => {
+      // Server websocket belum aktif atau offline
+    };
+    document.head.appendChild(script);
+  }
+
+  function startSocket() {
+    try {
+      if (typeof io === 'undefined') return;
+      const socket = io({
+        transports: ['websocket', 'polling'],
+        reconnectionAttempts: 10,
+        reconnectionDelay: 2000
+      });
+      window.netoraSocket = socket;
+
+      async function syncUserData() {
+        if (typeof getUser === 'function') {
+          try {
+            const u = await getUser();
+            if (u && u.id) {
+              socket.emit('join_user', {
+                userId: u.id,
+                nama: u.nama,
+                role: u.role,
+                foto: u.foto,
+                page: document.title || 'Netora Portal'
+              });
+            }
+          } catch (e) {}
+        }
+      }
+
+      socket.on('connect', () => {
+        syncUserData();
+      });
+
+      // 1. Notifikasi Real-time Pengumuman Baru
+      socket.on('pengumuman:baru', (data) => {
+        if (!data) return;
+        const judul = data.judul || 'Ada pengumuman baru';
+        if (typeof toast === 'function') {
+          toast(`📢 Pengumuman Baru: ${judul}`, 'info');
+        }
+        if (typeof showAllNotifDots === 'function') {
+          showAllNotifDots();
+          sessionStorage.setItem('netora_notif_has_unread', '1');
+        }
+        if (typeof loadPengumumanList === 'function') {
+          loadPengumumanList();
+        }
+      });
+
+      // 2. Pengumuman Dihapus
+      socket.on('pengumuman:hapus', () => {
+        if (typeof loadPengumumanList === 'function') {
+          loadPengumumanList();
+        }
+      });
+
+      // 3. Notifikasi Siswa Menyelesaikan Kuis (Khusus Guru & Admin)
+      socket.on('quiz:submitted', (data) => {
+        if (!data) return;
+        if (typeof getUser === 'function') {
+          getUser().then(u => {
+            if (u && (u.role === 'guru' || u.role === 'admin')) {
+              if (typeof toast === 'function') {
+                const sName = data.nama || 'Siswa';
+                const status = data.lulus ? '✅ Lulus' : '⚠️ Remidi';
+                toast(`📝 ${sName} selesai kuis: Skor ${data.skor} (${status})`, 'info');
+              }
+              if (typeof window.loadGuruData === 'function') {
+                window.loadGuruData();
+              }
+            }
+          });
+        }
+      });
+
+      // 4. Update Leaderboard Real-time
+      socket.on('leaderboard:update', () => {
+        if (typeof loadLeaderboard === 'function') {
+          loadLeaderboard();
+        }
+      });
+
+      // 5. Update Status User Online
+      socket.on('online_count', (count) => {
+        const badges = document.querySelectorAll('.live-online-badge, #live-online-count, #guru-live-online-count');
+        badges.forEach(el => {
+          el.textContent = `${count} Online`;
+        });
+      });
+
+    } catch (e) {
+      console.warn('Real-time connection note:', e);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => loadSocketIoScript(startSocket));
+  } else {
+    loadSocketIoScript(startSocket);
+  }
+})();
+
 

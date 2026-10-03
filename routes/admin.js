@@ -3,6 +3,8 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { supabase } = require('../database/supabase');
 const { requireAdmin } = require('../middleware/auth');
+const { broadcastPengumuman, broadcastHapusPengumuman } = require('../services/socket');
+const pengumumanRouter = require('./pengumuman');
 
 // Seluruh endpoint admin diwajibkan melewati proteksi requireAdmin
 router.use(requireAdmin);
@@ -493,6 +495,11 @@ router.post('/pengumuman', async (req, res) => {
       return res.status(500).json({ error: 'Gagal menerbitkan notifikasi.' });
     }
 
+    try {
+      if (pengumumanRouter.invalidateCache) pengumumanRouter.invalidateCache();
+      broadcastPengumuman(created);
+    } catch (e) {}
+
     return res.json({
       success: true,
       message: 'Notifikasi berhasil diterbitkan!',
@@ -516,6 +523,11 @@ router.delete('/pengumuman/:id', async (req, res) => {
     if (error) {
       return res.status(500).json({ error: 'Gagal menghapus pengumuman.' });
     }
+
+    try {
+      if (pengumumanRouter.invalidateCache) pengumumanRouter.invalidateCache();
+      broadcastHapusPengumuman(id);
+    } catch (e) {}
 
     return res.json({ success: true, message: 'Pengumuman berhasil dihapus.' });
   } catch (err) {

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { supabase } = require('../database/supabase');
 const { requireAuth } = require('../middleware/auth');
+const { broadcastQuizSubmitted } = require('../services/socket');
 
 // Helper shuffle array
 function shuffleArray(array) {
@@ -97,6 +98,17 @@ router.post('/submit', async (req, res) => {
 
       if (!saveErr) {
         saved = true;
+        try {
+          broadcastQuizSubmitted({
+            userId: req.session.userId,
+            nama: req.session.userName || 'Siswa',
+            skor,
+            benar,
+            total,
+            lulus: skor >= 70,
+            timestamp: new Date()
+          });
+        } catch (e) {}
       } else {
         console.error('Save Nilai Quiz Error:', saveErr);
       }
