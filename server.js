@@ -37,6 +37,10 @@ const uploadsDir = path.join(publicDir, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
+const materiUploadsDir = path.join(uploadsDir, 'materi');
+if (!fs.existsSync(materiUploadsDir)) {
+  fs.mkdirSync(materiUploadsDir, { recursive: true });
+}
 
 const assetsDir = path.join(publicDir, 'assets');
 if (!fs.existsSync(assetsDir)) {

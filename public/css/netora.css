@@ -4826,4 +4826,340 @@ textarea.form-input {
   color: #1E40AF;
 }
 
+/* =========================================================
+   NETORA RICH TEXT MATERI & RESPONSIVE IMAGE ENGINE (WORD-LIKE)
+   100% Responsif di Mobile (PWA/APK) & Desktop
+   ========================================================= */
+
+/* Kontainer Baca Materi Siswa */
+.materi-rich-content {
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: #334155;
+  word-break: break-word;
+}
+
+.materi-rich-content h1,
+.materi-rich-content h2,
+.materi-rich-content h3,
+.materi-rich-content h4 {
+  color: #0F172A;
+  font-weight: 800;
+  margin: 20px 0 10px;
+  line-height: 1.35;
+}
+
+.materi-rich-content h2 { font-size: 18px; border-bottom: 2px solid #F1F5F9; padding-bottom: 8px; }
+.materi-rich-content h3 { font-size: 16px; }
+
+.materi-rich-content p {
+  margin: 0 0 14px;
+}
+
+.materi-rich-content ul,
+.materi-rich-content ol {
+  margin: 0 0 14px;
+  padding-left: 24px;
+}
+
+.materi-rich-content li {
+  margin-bottom: 6px;
+}
+
+/* Gambar Responsif dalam Materi */
+.materi-rich-content img {
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 14px;
+  display: block;
+  margin: 16px auto;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  cursor: zoom-in;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.materi-rich-content img:hover {
+  transform: scale(1.015);
+  box-shadow: 0 10px 28px rgba(13, 91, 255, 0.15);
+}
+
+.materi-rich-content img.align-left {
+  float: left;
+  margin: 6px 16px 14px 0;
+  max-width: 50% !important;
+}
+
+.materi-rich-content img.align-right {
+  float: right;
+  margin: 6px 0 14px 16px;
+  max-width: 50% !important;
+}
+
+.materi-rich-content figure {
+  margin: 18px auto;
+  text-align: center;
+  max-width: 100%;
+}
+
+.materi-rich-content figcaption {
+  font-size: 12px;
+  color: #64748B;
+  font-weight: 600;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* Blok Kode CLI Terminal & Syntax (TKJ MikroTik / Linux) */
+.materi-rich-content pre {
+  background: #0F172A;
+  color: #38BDF8;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 14px 0;
+  border: 1px solid #1E293B;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.materi-rich-content code {
+  font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+  background: #F1F5F9;
+  color: #0D5BFF;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.materi-rich-content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: 13px;
+}
+
+/* Tabel Responsif */
+.materi-rich-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #E2E8F0;
+}
+
+.materi-rich-content th {
+  background: #F8FAFC;
+  color: #1E293B;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-bottom: 1.5px solid #E2E8F0;
+}
+
+.materi-rich-content td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+/* Responsive Mobile Breakpoint */
+@media (max-width: 640px) {
+  .materi-rich-content img.align-left,
+  .materi-rich-content img.align-right {
+    float: none !important;
+    max-width: 100% !important;
+    margin: 14px auto !important;
+  }
+}
+
+/* =========================================================
+   LIGHTBOX FULLSCREEN ZOOM GAMBAR (TAP TO ENLARGE SISWA)
+   ========================================================= */
+.materi-lightbox-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(10px);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  cursor: zoom-out;
+  animation: netoraFadeIn 0.2s ease;
+}
+
+.materi-lightbox-modal img {
+  max-width: 95vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  animation: netoraScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.materi-lightbox-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.materi-lightbox-close:hover {
+  background: #EF4444;
+  border-color: #EF4444;
+}
+
+.materi-lightbox-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: #FFFFFF;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  pointer-events: none;
+  letter-spacing: 0.3px;
+}
+
+/* =========================================================
+   WYSIWYG RICH TEXT EDITOR STYLES DI MODAL ADMIN
+   ========================================================= */
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  background: #F1F5F9;
+  border: 1.5px solid #CBD5E1;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  padding: 6px 8px;
+  align-items: center;
+}
+
+.editor-btn {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  color: #334155;
+  border-radius: 7px;
+  padding: 5px 9px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.editor-btn:hover {
+  background: #EFF6FF;
+  color: #0D5BFF;
+  border-color: #BFDBFE;
+}
+
+.editor-btn:active {
+  transform: scale(0.96);
+}
+
+.editor-btn-primary {
+  background: #0D5BFF !important;
+  color: #FFFFFF !important;
+  border-color: #0D5BFF !important;
+}
+
+.editor-btn-primary:hover {
+  background: #0B4ED9 !important;
+}
+
+.editor-canvas {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  border-radius: 0 0 12px 12px !important;
+  color: #0F172A !important;
+  padding: 14px 16px !important;
+  font-size: 13.5px !important;
+  line-height: 1.7;
+  min-height: 180px;
+  max-height: 400px;
+  overflow-y: auto;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.editor-canvas:focus {
+  border-color: #0D5BFF !important;
+  box-shadow: 0 0 0 3px rgba(13, 91, 255, 0.08) !important;
+}
+
+.editor-canvas:empty:before {
+  content: attr(data-placeholder);
+  color: #94A3B8;
+  pointer-events: none;
+  display: block;
+}
+
+.editor-canvas img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
+  margin: 12px auto;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  border: 2px solid #E2E8F0;
+  cursor: pointer;
+}
+
+.editor-canvas img:hover {
+  border-color: #0D5BFF;
+}
+
+.editor-canvas img.align-left {
+  float: left;
+  margin: 6px 14px 10px 0;
+  max-width: 45%;
+}
+
+.editor-canvas img.align-right {
+  float: right;
+  margin: 6px 0 10px 14px;
+  max-width: 45%;
+}
+
+.editor-canvas pre {
+  background: #0F172A;
+  color: #38BDF8;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-family: monospace;
+  font-size: 12.5px;
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
 

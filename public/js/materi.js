@@ -202,6 +202,57 @@ window.initMateriPage = async function() {
         const totalPages = item.total_halaman || pages.length;
         const icon = getMateriIcon(item.kategori || '', item.judul || '');
 
+        // Helper render konten terstruktur / rich text aman & responsif
+        function formatMateriContent(raw) {
+          if (!raw) return '<p style="color:#94A3B8; font-style:italic;">Belum ada konten pada halaman ini.</p>';
+          const str = String(raw).trim();
+          // Jika teks mengandung tag HTML terstruktur
+          if (/<(p|img|h2|h3|h4|ul|ol|li|pre|code|figure|div|table|strong|em|b|i|u)/i.test(str)) {
+            return str;
+          }
+          // Fallback jika berupa teks biasa (konversi baris baru menjadi paragraf rapi)
+          return str.split('\n').filter(l => l.trim()).map(l => `<p>${escapeHtml(l)}</p>`).join('');
+        }
+
+        // Helper Lightbox Fullscreen Zoom Gambar untuk Siswa di HP & Desktop
+        function openMateriLightbox(src, alt) {
+          let modal = document.getElementById('materi-lightbox-modal');
+          if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'materi-lightbox-modal';
+            modal.className = 'materi-lightbox-modal';
+            modal.innerHTML = `
+              <button type="button" class="materi-lightbox-close" title="Tutup (Esc)">&times;</button>
+              <img id="materi-lightbox-img" src="" alt="Zoom Materi">
+              <div class="materi-lightbox-hint">Ketuk di mana saja untuk menutup</div>
+            `;
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', () => {
+              modal.style.display = 'none';
+            });
+            const closeBtn = modal.querySelector('.materi-lightbox-close');
+            if (closeBtn) {
+              closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                modal.style.display = 'none';
+              });
+            }
+            document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape' && modal.style.display !== 'none') {
+                modal.style.display = 'none';
+              }
+            });
+          }
+
+          const imgEl = modal.querySelector('#materi-lightbox-img');
+          if (imgEl) {
+            imgEl.src = src;
+            imgEl.alt = alt || 'Preview Pembesaran Gambar Materi';
+          }
+          modal.style.display = 'flex';
+        }
+
         function renderDetailView(pageNumber) {
           if (pageNumber === null && totalPages > 1) {
             renderChapterListView();
@@ -338,8 +389,9 @@ window.initMateriPage = async function() {
 
                 <div style="height:3px; width:45px; background:#FF7A00; border-radius:3px; margin-bottom:18px;"></div>
 
-                <div style="font-size:14.5px; line-height:1.8; color:#334155; white-space:pre-line;">
-                  ${escapeHtml(currentPageData.konten || '')}
+                <!-- Konten Materi Kaya Format & Responsif Mobile -->
+                <div class="materi-rich-content">
+                  ${formatMateriContent(currentPageData.konten || '')}
                 </div>
 
                 <!-- Navigasi Bawah Antar Halaman -->
@@ -390,6 +442,40 @@ window.initMateriPage = async function() {
               </div>
             </div>
           `;
+
+          // Event Listener: Lightbox Zoom saat siswa mengetuk/klik gambar di HP / Desktop
+          detailContainer.querySelectorAll('.materi-rich-content img').forEach(img => {
+            img.addEventListener('click', (e) => {
+              e.stopPropagation();
+              openMateriLightbox(img.src, img.alt);
+            });
+          });
+
+          // Event Listener: Tambahkan tombol "📋 Salin Script" pada blok kode CLI TKJ
+          detailContainer.querySelectorAll('.materi-rich-content pre').forEach(pre => {
+            if (!pre.querySelector('.btn-copy-code')) {
+              const copyBtn = document.createElement('button');
+              copyBtn.type = 'button';
+              copyBtn.className = 'btn-copy-code';
+              copyBtn.innerHTML = '📋 Salin Script';
+              copyBtn.style.cssText = 'position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28); color:#FFFFFF; font-size:11px; font-weight:700; padding:4px 9px; border-radius:6px; cursor:pointer; transition:all 0.2s;';
+              copyBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const codeNode = pre.querySelector('code') || pre;
+                const codeText = codeNode.innerText.replace('📋 Salin Script', '').replace('✓ Tersalin!', '').trim();
+                try {
+                  await navigator.clipboard.writeText(codeText);
+                  copyBtn.innerHTML = '✓ Tersalin!';
+                  copyBtn.style.background = '#16A34A';
+                  setTimeout(() => {
+                    copyBtn.innerHTML = '📋 Salin Script';
+                    copyBtn.style.background = 'rgba(255,255,255,0.18)';
+                  }, 2000);
+                } catch (err) {}
+              });
+              pre.appendChild(copyBtn);
+            }
+          });
 
           const btnBackChapters = document.getElementById('btn-back-to-chapters');
           if (btnBackChapters) {

@@ -1,10 +1,47 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const { supabase } = require('../database/supabase');
 const { requireAdmin } = require('../middleware/auth');
 const { broadcastPengumuman, broadcastHapusPengumuman, broadcastQuizDataChanged, broadcastMateriBaru } = require('../services/socket');
 const pengumumanRouter = require('./pengumuman');
+
+// Direktori upload gambar materi
+const materiUploadDir = path.join(__dirname, '..', 'public', 'uploads', 'materi');
+if (!fs.existsSync(materiUploadDir)) {
+  try { fs.mkdirSync(materiUploadDir, { recursive: true }); } catch (e) {}
+}
+
+const materiStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    if (!fs.existsSync(materiUploadDir)) {
+      try { fs.mkdirSync(materiUploadDir, { recursive: true }); } catch (e) {}
+    }
+    cb(null, materiUploadDir);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname).toLowerCase() || '.png';
+    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, 'img-' + unique + ext);
+  }
+});
+
+const uploadMateri = multer({
+  storage: materiStorage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // Max 10MB
+  fileFilter: function (req, file, cb) {
+    const allowed = /jpeg|jpg|png|webp|gif|svg/;
+    const ext = allowed.test(path.extname(file.originalname).toLowerCase());
+    const mime = allowed.test(file.mimetype);
+    if (ext && mime) {
+      return cb(null, true);
+    }
+    cb(new Error('Hanya file gambar (jpg, png, webp, gif, svg) yang diperbolehkan!'));
+  }
+});
 
 // Seluruh endpoint admin diwajibkan melewati proteksi requireAdmin
 router.use(requireAdmin);
@@ -732,6 +769,29 @@ router.delete('/materi/:id', async (req, res) => {
     console.error('Hapus Materi Error:', err);
     return res.status(500).json({ error: 'Gagal menghapus modul materi.' });
   }
+});
+
+// 8f. POST /api/admin/materi/upload-gambar - Upload Gambar untuk Editor Materi (Mendukung paste Ctrl+V & file picker)
+router.post('/materi/upload-gambar', (req, res) => {
+  uploadMateri.single('gambar')(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ error: `Ukuran file terlalu besar: ${err.message}` });
+    } else if (err) {
+      return res.status(400).json({ error: err.message });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: 'Silakan pilih berkas gambar.' });
+    }
+
+    const relativePath = 'uploads/materi/' + req.file.filename;
+    return res.json({
+      success: true,
+      url: relativePath,
+      filename: req.file.filename,
+      message: 'Gambar berhasil diunggah!'
+    });
+  });
 });
 
 // 9. GET /api/admin/quiz - Ambil seluruh bank soal kuis

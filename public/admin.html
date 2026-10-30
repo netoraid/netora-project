@@ -1450,13 +1450,122 @@
 
       window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
 
+      window.execEditorCmd = function(index, command, value = null) {
+        const container = document.getElementById('materi-pages-container');
+        if (!container) return;
+        const cards = container.querySelectorAll('.materi-page-card');
+        const canvas = cards[index]?.querySelector('.editor-canvas');
+        if (canvas) {
+          canvas.focus();
+          if (command === 'formatCode') {
+            const selection = window.getSelection();
+            const selectedText = selection.toString() || 'Perintah Terminal / CLI MikroTik';
+            document.execCommand('insertHTML', false, `<pre><code>${selectedText}</code></pre><p><br></p>`);
+          } else {
+            document.execCommand(command, false, value);
+          }
+          window.syncModalPageData(index);
+        }
+      };
+
+      window.triggerUploadImageMateri = function(index) {
+        const container = document.getElementById('materi-pages-container');
+        if (!container) return;
+        const cards = container.querySelectorAll('.materi-page-card');
+        const fileInput = cards[index]?.querySelector('.editor-file-input');
+        if (fileInput) fileInput.click();
+      };
+
+      window.handleImageUploadMateri = async function(index, input) {
+        const file = input.files && input.files[0];
+        if (!file) return;
+
+        const container = document.getElementById('materi-pages-container');
+        const cards = container?.querySelectorAll('.materi-page-card');
+        const canvas = cards[index]?.querySelector('.editor-canvas');
+
+        const formData = new FormData();
+        formData.append('gambar', file);
+
+        if (typeof toast === 'function') toast('Sedang mengunggah foto materi...', 'info');
+
+        try {
+          const res = await fetch('/api/admin/materi/upload-gambar', {
+            method: 'POST',
+            body: formData
+          });
+          const data = await res.json();
+          if (res.ok && data.success && data.url) {
+            if (canvas) {
+              canvas.focus();
+              const imgHtml = `<figure style="margin:16px 0; text-align:center;"><img src="${data.url}" alt="Screenshot Materi" style="max-width:100%; height:auto; border-radius:12px; display:block; margin:8px auto; box-shadow:0 4px 16px rgba(0,0,0,0.08);"><figcaption style="font-size:12px; color:#64748B; margin-top:6px; font-style:italic;">Keterangan foto (klik untuk edit teks)</figcaption></figure><p><br></p>`;
+              document.execCommand('insertHTML', false, imgHtml);
+              window.syncModalPageData(index);
+            }
+            if (typeof toast === 'function') toast('Foto berhasil disisipkan tepat di atas teks!', 'success');
+          } else {
+            if (typeof toast === 'function') toast(data.error || 'Gagal mengunggah foto.', 'error');
+            else alert(data.error || 'Gagal mengunggah foto.');
+          }
+        } catch (err) {
+          if (typeof toast === 'function') toast('Gagal menghubungi server upload.', 'error');
+        } finally {
+          input.value = '';
+        }
+      };
+
+      window.handleCanvasPaste = async function(index, e) {
+        const items = (e.clipboardData || e.originalEvent?.clipboardData)?.items;
+        if (!items) return;
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type && items[i].type.indexOf('image') !== -1) {
+            e.preventDefault();
+            const blob = items[i].getAsFile();
+            if (!blob) continue;
+
+            const container = document.getElementById('materi-pages-container');
+            const cards = container?.querySelectorAll('.materi-page-card');
+            const canvas = cards[index]?.querySelector('.editor-canvas');
+
+            const formData = new FormData();
+            formData.append('gambar', blob, 'clipboard-' + Date.now() + '.png');
+
+            if (typeof toast === 'function') toast('Menempelkan screenshot dari clipboard (Ctrl+V)...', 'info');
+
+            try {
+              const res = await fetch('/api/admin/materi/upload-gambar', {
+                method: 'POST',
+                body: formData
+              });
+              const data = await res.json();
+              if (res.ok && data.success && data.url) {
+                if (canvas) {
+                  canvas.focus();
+                  const imgHtml = `<figure style="margin:16px 0; text-align:center;"><img src="${data.url}" alt="Screenshot Praktikum" style="max-width:100%; height:auto; border-radius:12px; display:block; margin:8px auto; box-shadow:0 4px 16px rgba(0,0,0,0.08);"><figcaption style="font-size:12px; color:#64748B; margin-top:6px; font-style:italic;">Keterangan gambar praktikum</figcaption></figure><p><br></p>`;
+                  document.execCommand('insertHTML', false, imgHtml);
+                  window.syncModalPageData(index);
+                }
+                if (typeof toast === 'function') toast('Screenshot berhasil ditempel!', 'success');
+              } else {
+                if (typeof toast === 'function') toast(data.error || 'Gagal menempelkan screenshot.', 'error');
+              }
+            } catch (err) {
+              if (typeof toast === 'function') toast('Gagal memproses gambar clipboard.', 'error');
+            }
+            return;
+          }
+        }
+      };
+
       window.syncModalPageData = function(index) {
         const container = document.getElementById('materi-pages-container');
         if (!container) return;
         const cards = container.querySelectorAll('.materi-page-card');
         if (cards[index]) {
           const judul = cards[index].querySelector('.page-judul-input')?.value || '';
-          const konten = cards[index].querySelector('.page-konten-input')?.value || '';
+          const canvas = cards[index].querySelector('.editor-canvas');
+          const konten = canvas ? canvas.innerHTML : '';
           if (window.currentModalPages && window.currentModalPages[index]) {
             window.currentModalPages[index].judul = judul;
             window.currentModalPages[index].konten = konten;
@@ -1471,7 +1580,8 @@
         cards.forEach((card, idx) => {
           if (window.currentModalPages && window.currentModalPages[idx]) {
             window.currentModalPages[idx].judul = card.querySelector('.page-judul-input')?.value || '';
-            window.currentModalPages[idx].konten = card.querySelector('.page-konten-input')?.value || '';
+            const canvas = card.querySelector('.editor-canvas');
+            window.currentModalPages[idx].konten = canvas ? canvas.innerHTML : '';
           }
         });
       };
@@ -1491,43 +1601,80 @@
 
         container.innerHTML = window.currentModalPages.map((page, index) => {
           const safeJudul = (page.judul || '').replace(/"/g, '&quot;');
-          const safeKonten = (page.konten || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          let initialHtml = page.konten || '';
+          // Jika konten sebelumnya berupa teks biasa tanpa HTML tag, konversi baris baru menjadi paragraf
+          if (initialHtml && !initialHtml.includes('<') && !initialHtml.includes('>')) {
+            initialHtml = initialHtml.split('\n').filter(line => line.trim()).map(line => `<p>${line}</p>`).join('');
+          }
+          if (!initialHtml) {
+            initialHtml = '<p><br></p>';
+          }
+
           return `
-            <div class="materi-page-card" data-index="${index}" style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:14px; padding:14px; position:relative; transition:all 0.2s;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div class="materi-page-card" data-index="${index}" style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:16px; position:relative; margin-bottom:16px; transition:all 0.2s;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                 <div style="display:flex; align-items:center; gap:8px;">
-                  <span style="background:#0D5BFF; color:#fff; font-size:11px; font-weight:800; padding:3px 9px; border-radius:8px;">
+                  <span style="background:#0D5BFF; color:#fff; font-size:11px; font-weight:800; padding:3px 10px; border-radius:8px;">
                     Halaman ${index + 1}
                   </span>
-                  <span style="font-size:12.5px; font-weight:700; color:#334155;">Bagian Halaman ${index + 1}</span>
+                  <span style="font-size:13px; font-weight:700; color:#1E293B;">Bagian Modul ${index + 1}</span>
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
                   ${index > 0 ? `
-                    <button type="button" onclick="geserHalamanMateri(${index}, -1)" title="Geser ke Atas" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:6px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:11px;">
+                    <button type="button" onclick="geserHalamanMateri(${index}, -1)" title="Geser ke Atas" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:11px;">
                       ▲
                     </button>
                   ` : ''}
                   ${index < window.currentModalPages.length - 1 ? `
-                    <button type="button" onclick="geserHalamanMateri(${index}, 1)" title="Geser ke Bawah" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:6px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:11px;">
+                    <button type="button" onclick="geserHalamanMateri(${index}, 1)" title="Geser ke Bawah" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:11px;">
                       ▼
                     </button>
                   ` : ''}
                   ${window.currentModalPages.length > 1 ? `
-                    <button type="button" onclick="hapusHalamanMateri(${index})" title="Hapus Halaman Ini" style="background:#FEE2E2; border:1px solid #FECACA; color:#EF4444; border-radius:6px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; font-weight:bold;">
+                    <button type="button" onclick="hapusHalamanMateri(${index})" title="Hapus Halaman Ini" style="background:#FEE2E2; border:1px solid #FECACA; color:#EF4444; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; font-weight:bold;">
                       &times;
                     </button>
                   ` : ''}
                 </div>
               </div>
 
-              <div style="margin-bottom:8px;">
-                <label style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:4px;">Judul Halaman / Sub-Topik (Opsional)</label>
-                <input type="text" class="input-field page-judul-input" placeholder="Contoh: Pengenalan Packet Tracer & Workspace" value="${safeJudul}" oninput="syncModalPageData(${index})" style="background:#FFFFFF; padding:8px 12px; font-size:12.5px;">
+              <div style="margin-bottom:12px;">
+                <label style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:5px;">Judul Halaman / Sub-Topik (Opsional)</label>
+                <input type="text" class="input-field page-judul-input" placeholder="Contoh: Konfigurasi DHCP Server MikroTik di Winbox" value="${safeJudul}" oninput="syncModalPageData(${index})" style="background:#FFFFFF; padding:9px 12px; font-size:13px;">
               </div>
 
               <div>
-                <label style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:4px;">Konten / Isi Materi Halaman Ini *</label>
-                <textarea class="input-field page-konten-input" rows="5" placeholder="Tuliskan penjelasan materi, panduan praktikum, diagram konsep..." oninput="syncModalPageData(${index})" style="background:#FFFFFF; font-size:12.5px; line-height:1.6; resize:vertical;">${safeKonten}</textarea>
+                <label style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px;">
+                  <span>Konten / Isi Materi Halaman Ini (Word-Like Rich Editor) *</span>
+                  <span style="color:#0D5BFF; font-weight:600; font-size:11px;">💡 Mendukung Paste Foto Langsung (Ctrl+V)</span>
+                </label>
+
+                <!-- Toolbar Ala Word -->
+                <div class="editor-toolbar">
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'bold')" title="Tebal (Ctrl+B)"><b>B</b></button>
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'italic')" title="Miring (Ctrl+I)"><i>I</i></button>
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'underline')" title="Garis Bawah (Ctrl+U)"><u>U</u></button>
+                  <span style="width:1px; height:18px; background:#CBD5E1; margin:0 3px;"></span>
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'formatBlock', '<h2>')" title="Sub-Judul Besar">H2</button>
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'formatBlock', '<h3>')" title="Sub-Judul Sedang">H3</button>
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'formatBlock', '<p>')" title="Paragraf Biasa">Teks</button>
+                  <span style="width:1px; height:18px; background:#CBD5E1; margin:0 3px;"></span>
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'insertOrderedList')" title="Daftar Angka 1, 2, 3">1. List</button>
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'insertUnorderedList')" title="Daftar Poin Bulat">• List</button>
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'formatCode')" title="Blok Kode Terminal CLI TKJ">&lt;/&gt; Script CLI</button>
+                  <span style="width:1px; height:18px; background:#CBD5E1; margin:0 3px;"></span>
+                  
+                  <!-- Tombol Upload Foto -->
+                  <button type="button" class="editor-btn editor-btn-primary" onclick="triggerUploadImageMateri(${index})" title="Sisipkan Foto / Screenshot Praktikum">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    <span>Sisipkan Foto</span>
+                  </button>
+
+                  <input type="file" class="editor-file-input" accept="image/*" style="display:none;" onchange="handleImageUploadMateri(${index}, this)">
+                </div>
+
+                <!-- Canvas Editor Seperti Lembar Kerja Word -->
+                <div class="editor-canvas" contenteditable="true" data-placeholder="Ketik materi di sini... Anda bisa langsung tekan Enter untuk paragraf baru atau paste screenshot (Ctrl+V) langsung menempel rapi!" oninput="syncModalPageData(${index})" onpaste="handleCanvasPaste(${index}, event)">${initialHtml}</div>
               </div>
             </div>
           `;
@@ -1688,9 +1835,14 @@
               return;
             }
 
-            const emptyIdx = pages.findIndex(p => !p.konten || !p.konten.trim());
+            const emptyIdx = pages.findIndex(p => {
+              if (!p.konten || !p.konten.trim()) return true;
+              if (p.konten.includes('<img')) return false;
+              const textOnly = p.konten.replace(/<[^>]*>/g, '').trim();
+              return textOnly.length === 0;
+            });
             if (emptyIdx !== -1) {
-              const msg = `Harap isi konten untuk Halaman ${emptyIdx + 1}.`;
+              const msg = `Harap isi teks atau sisipkan foto untuk Halaman ${emptyIdx + 1}.`;
               if (typeof toast === 'function') toast(msg, 'warning');
               else alert(msg);
               return;

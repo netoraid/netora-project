@@ -54,6 +54,7 @@ Aplikasi dibangun dengan teknologi yang ringan, cepat, tanpa overhead framework 
 - **Session Management (`express-session`)**: Pengelolaan autentikasi berbasis cookie `httpOnly` dengan masa aktif 24 jam dan dukungan reverse proxy (`app.set('trust proxy', 1)`).
 - **Keamanan Sandi (`bcryptjs`)**: Password hashing dengan algoritma salt 10 rounds (100% Pure JavaScript, tanpa kompilasi native C++).
 - **File Upload Engine (`multer`)**: Pengunggahan foto profil avatar ke direktori `public/uploads/` dengan filter ekstensi gambar dan batasan ukuran berkas (maks 5MB).
+- **Komunikasi Real-Time (`Socket.IO` v4.8+)**: Engine WebSocket dua arah (bidirectional) untuk sinkronisasi aktivitas real-time: live online counter, notifikasi kuis instan, pembaruan leaderboard, broadcast materi & pengumuman tanpa reload.
 - **CORS & Body Parser**: Terintegrasi untuk mendukung integrasi API lintas perangkat.
 
 ### C. Basis Data (Database)
@@ -94,6 +95,9 @@ Netora/
 │   ├── profil.js              # Endpoint Profil, Password, Avatar, & Hapus Akun Siswa
 │   ├── admin.js               # Endpoint CRUD Lengkap Khusus Admin
 │   └── guru.js                # Endpoint Khusus Dashboard Guru (Nilai Quiz, Progress %, CRUD Soal)
+│
+├── services/
+│   └── socket.js              # Service WebSocket Socket.IO (Live Online, Quiz/Materi/Pengumuman Broadcast)
 │
 └── public/                    # Seluruh Halaman & Aset Web (Static Web Root)
     ├── manifest.json          # Manifest PWA (Nama aplikasi, warna tema, logo)
@@ -572,7 +576,8 @@ Berikut adalah daftar lengkap seluruh file di dalam repositori Netora beserta fu
 | 18 | `routes/profil.js` | **REST API** | Endpoint profil: pembaruan nama & bio, ubah kata sandi dengan bcrypt, upload avatar foto via multer, dan penghapusan akun. |
 | 19 | `routes/admin.js` | **REST API** | Endpoint master admin: manajemen akun siswa (CRUD), manajemen materi, video, kuis, pengumuman, dan reset massal. |
 | 20 | `routes/guru.js` | **REST API** | Endpoint khusus guru: agregasi skor kuis seluruh siswa, ekspor riwayat nilai ke format CSV, kalkulasi progres belajar (%), dan CRUD bank soal kuis. |
-| 21 | `public/beranda.html` | **Frontend UI** | Halaman utama siswa: banner slider, 4 menu modul praktikum, lab tugas interaktif, dan navigasi bawah. |
+| 21 | `services/socket.js` | **Realtime Service** | Service engine Socket.IO: tracking live online user, broadcast aktivitas kuis, perubahan bank soal kuis, notifikasi materi baru, dan pengumuman instan. |
+| 22 | `public/beranda.html` | **Frontend UI** | Halaman utama siswa: banner slider, 4 menu modul praktikum, section Modul Pembelajaran Terbaru realtime, dan navigasi bawah. |
 | 22 | `public/materi.html` | **Frontend UI** | Katalog modul pembelajaran TKJ dalam tata letak kartu grid modern. |
 | 23 | `public/materi-detail.html` | **Frontend UI** | Pembaca konten modul terformat lengkap dengan tombol navigasi kembali dan indikator baca. |
 | 24 | `public/video.html` | **Frontend UI** | Galeri video praktikum interaktif dengan modal video player responsif. |
@@ -735,6 +740,193 @@ Berikut adalah rekapitulasi seluruh kendala operasional yang mungkin dihadapi se
       role = 'guru';
   ```
   Setelah query berhasil dieksekusi, akun `guru123` dapat langsung login seketika.
+
+### Kendala 8: Urutan Soal Kuis Siswa Acak / Tidak Sesuai Input Guru/Admin
+- **Gejala**: Ketika guru atau admin menambahkan bank soal kuis (misal Soal 1, 2, 3), tampilan di sisi siswa muncul acak (misal kuis 2 muncul sebelum kuis 1).
+- **Penyebab**: Query pengambilan data dari tabel `quiz` di Supabase sebelumnya tidak mendefinisikan klausa pengurutan eksplisit atau mengandalkan urutan insert alami database yang tidak stabil.
+- **Cara Penyelesaian**:
+  1. Pada backend [routes/quiz.js](file:///c:/Netora/routes/quiz.js) dan [routes/guru.js](file:///c:/Netora/routes/guru.js), tambahkan pengurutan strictly ascending berdasarkan primary key `id`:
+     ```javascript
+     const { data: soalList, error } = await supabase
+       .from('quiz')
+       .select('id, pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, kategori')
+       .order('id', { ascending: true });
+     ```
+  2. Pada frontend [public/js/quiz.js](file:///c:/Netora/public/js/quiz.js), pastikan array soal diproses berurutan secara sekuensial (nomor 1 s/d selesai) sesuai urutan input database.
+
+---
+
+### Kendala 9: Error Klik Edit Modul Materi di Admin (`TypeError: Cannot set properties of null (setting 'value') at admin.js:854`)
+- **Gejala**: Admin mengklik tombol "Edit" pada tabel modul materi TKJ, namun modal edit tidak terbuka dan console browser memunculkan error:
+  ```text
+  TypeError: Cannot set properties of null (setting 'value') at window.bukaModalEditMateri (admin.js:854:55)
+  ```
+- **Penyebab**: Browser klien menjalankan file `admin.js` versi lama dari Cache/Service Worker. Script lama tersebut mencoba mengisi elemen `#select-materi-kategori` dan `#input-materi-isi` yang sudah diubah menjadi input teks biasa dan container multi-halaman.
+- **Cara Penyelesaian**:
+  1. Di [public/admin.html](file:///c:/Netora/public/admin.html), sematkan elemen fallback tersembunyi dengan sinkronisasi dua arah:
+     ```html
+     <input type="hidden" id="input-materi-isi" value="">
+     <select id="select-materi-kategori" style="display:none;" onchange="..."></select>
+     ```
+  2. Di [public/js/admin.js](file:///c:/Netora/public/js/admin.js) dan inline script [admin.html](file:///c:/Netora/public/admin.html), pasang pengaman null-checking aman pada seluruh pemanggilan form element:
+     ```javascript
+     const idEl = document.getElementById('input-materi-id');
+     const judulEl = document.getElementById('input-materi-judul');
+     const katEl = document.getElementById('input-materi-kategori');
+     const selKatEl = document.getElementById('select-materi-kategori');
+     if (idEl) idEl.value = m.id;
+     if (judulEl) judulEl.value = m.judul || '';
+     if (katEl) katEl.value = m.kategori || '';
+     if (selKatEl) selKatEl.value = m.kategori || '';
+     ```
+  3. Matikan registrasi Service Worker dan bersihkan CacheStorage secara otomatis pada halaman Admin dan Guru melalui [public/js/netora.js](file:///c:/Netora/public/js/netora.js).
+
+---
+
+### Kendala 10: Modul Materi yang Dibuat Admin Belum Muncul di Dashboard Siswa
+- **Gejala**: Admin sudah membuat modul materi di dashboard admin, tetapi saat siswa login ke dashboard atau membuka modul, materi belum muncul.
+- **Penyebab**:
+  1. Form submit admin sebelumnya crash di sisi klien akibat error cache script lama sehingga data materi baru belum sempat terkirim (`POST /api/admin/materi`) ke Supabase.
+  2. Halaman Dashboard Utama Siswa ([public/beranda.html](file:///c:/Netora/public/beranda.html)) sebelumnya hanya berisi menu 2x2 dan belum memiliki section penampil daftar modul materi terbaru.
+  3. Halaman katalog [public/materi.html](file:///c:/Netora/public/materi.html) menggunakan `sessionStorage` statis dan berisi 6 kartu dummy bawaan template.
+- **Cara Penyelesaian**:
+  1. Tambahkan section **"Modul Pembelajaran Terbaru"** di Dashboard Siswa [public/beranda.html](file:///c:/Netora/public/beranda.html) dan [public/js/beranda.js](file:///c:/Netora/public/js/beranda.js) yang memuat modul aktif langsung dari REST API `/api/materi`.
+  2. Hapus kartu dummy statis di [public/materi.html](file:///c:/Netora/public/materi.html) dan ganti dengan *skeleton loader* yang memuat data murni dari database Supabase.
+  3. Buat tombol filter kategori di [public/js/materi.js](file:///c:/Netora/public/js/materi.js) dibuat dinamis (*auto-generated pills*) dari kategori database agar kategori teks bebas yang diinputkan admin tidak terfilter keluar.
+  4. Pasang listener realtime Socket.IO `materi:baru` dan `materi:changed` di [public/js/netora.js](file:///c:/Netora/public/js/netora.js) sehingga saat admin menambah/mengubah materi, data di sisi siswa otomatis ter-refresh seketika tanpa reload manual.
+
+---
+
+### Kendala 11: Tampilan Dashboard Admin Macet / Tab Navigasi Tidak Bisa Diklik
+- **Gejala**: Pada dashboard admin (`netora.web.id/admin.html`), jam di header tertahan di *"Memuat waktu..."*, seluruh angka statistik menunjukkan `0`, dan tab menu navigasi (*Overview*, *Manajemen Siswa*, *Kelola Modul Materi*, dll.) tidak merespons klik.
+- **Penyebab**: Seluruh isi [public/js/admin.js](file:///c:/Netora/public/js/admin.js) dibungkus di dalam `document.addEventListener('DOMContentLoaded', ...)`. Jika script dimuat setelah dokumen selesai diparsing oleh browser (`document.readyState === 'complete'`), event `DOMContentLoaded` sudah lewat dan tidak akan pernah terpicu lagi oleh browser.
+- **Cara Penyelesaian**:
+  1. Di [public/js/admin.js](file:///c:/Netora/public/js/admin.js), ubah pembungkus menjadi fungsi `window.initAdminDashboard` dengan pengecekan aman:
+     ```javascript
+     if (document.readyState === 'loading') {
+       document.addEventListener('DOMContentLoaded', window.initAdminDashboard);
+     } else {
+       window.initAdminDashboard();
+     }
+     ```
+  2. Di [public/admin.html](file:///c:/Netora/public/admin.html), tambahkan atribut `onclick="switchAdminTab('...')"` langsung pada setiap tombol tab dan definisikan fungsinya sejak awal di inline script agar tab 100% responsif dalam kondisi apapun.
+  3. Perbarui tag script pemanggilan ke versi terbaru (`js/admin.js?v=2026.5`).
+
+---
+
+## 🚀 17. Rekapitulasi Rinci Seluruh Pekerjaan yang Telah Diselesaikan (Changelog & Command Reference)
+
+Berikut adalah rangkuman komprehensif seluruh fitur, perbaikan sistem, dan daftar perintah operasional yang telah diselesaikan:
+
+### 17.1. Rekapitulasi Fitur & Modul yang Diselesaikan
+
+| No | Modul / Fitur | Status | Deskripsi Pekerjaan yang Diselesaikan | File Terkait |
+|---|---|---|---|---|
+| 1 | **Real-Time WebSocket (Socket.IO)** | ✅ Selesai | Mengintegrasikan Socket.IO dua arah untuk counter siswa online realtime, notifikasi kuis live, pembaruan leaderboard, broadcast materi & pengumuman seketika. | `server.js`, `services/socket.js`, `public/js/netora.js` |
+| 2 | **Modul Multi-Halaman Dinamis** | ✅ Selesai | Admin/Guru dapat menambahkan sub-halaman di dalam materi (Halaman 1 sampai 8+), lengkap dengan judul sub-topik, konten panduan, tombol naik/turun urutan (▲/▼), dan hapus halaman. | `public/admin.html`, `public/js/admin.js`, `routes/admin.js`, `routes/materi.js` |
+| 3 | **Kategori Materi Input Teks Bebas** | ✅ Selesai | Mengubah pilihan kategori modul materi dari dropdown statis menjadi input teks bebas fleksibel tanpa merusak fitur lainnya. | `public/admin.html`, `public/js/admin.js`, `routes/admin.js` |
+| 4 | **Perbaikan Urutan Soal Kuis Siswa** | ✅ Selesai | Mengunci urutan soal kuis strictly ascending (`order('id', { ascending: true })`) agar soal tampil berurutan dari nomor 1 s/d selesai sesuai input guru/admin. | `routes/quiz.js`, `routes/guru.js`, `public/js/quiz.js` |
+| 5 | **Perbaikan Error Modal Edit Modul** | ✅ Selesai | Mengatasi crash `TypeError: Cannot set properties of null` dengan elemen fallback tersembunyi, sinkronisasi dua arah, dan null-check aman. | `public/admin.html`, `public/js/admin.js` |
+| 6 | **Section Modul Baru di Dashboard Siswa** | ✅ Selesai | Menambahkan section *"Modul Pembelajaran Terbaru"* di `beranda.html` agar siswa langsung melihat materi yang baru dibuat admin secara realtime. | `public/beranda.html`, `public/js/beranda.js` |
+| 7 | **Pembersihan Dummy & Filter Dinamis** | ✅ Selesai | Mengganti 6 kartu dummy statis di `materi.html` dengan data dinamis Supabase dan auto-generating category pills dari database. | `public/materi.html`, `public/js/materi.js` |
+| 8 | **Anti-Freeze Tab Dashboard Admin** | ✅ Selesai | Memperbaiki event `DOMContentLoaded` hang pada `admin.js` dengan `document.readyState` guard dan inline `switchAdminTab`. | `public/admin.html`, `public/js/admin.js` |
+| 9 | **Cache Invalidation & Anti-Stale PWA** | ✅ Selesai | Bypass Service Worker dan auto-delete cache pada halaman Admin & Guru agar kode dan data selalu mutakhir. | `public/sw.js`, `public/js/netora.js`, `server.js` |
+
+---
+
+### 17.2. Peta Event Real-Time Socket.IO (Event Map)
+
+| Nama Event | Arah | Pengirim | Penerima | Fungsi & Efek di Klien |
+|---|---|---|---|---|
+| `join_user` | Klien $\rightarrow$ Server | `netora.js` | `services/socket.js` | Mendaftarkan sesi user aktif dan role (`siswa`/`guru`/`admin`) ke room Socket.IO. |
+| `online_count` | Server $\rightarrow$ Klien | `services/socket.js` | Semua Klien | Memperbarui angka live counter user online di header dashboard. |
+| `online_users_updated`| Server $\rightarrow$ Klien | `services/socket.js` | Guru & Admin | Mengirimkan daftar detail siswa yang sedang aktif online. |
+| `quiz:submitted` | Server $\rightarrow$ Klien | `routes/quiz.js` | Guru & Admin | Menampilkan toast notifikasi realtime saat siswa menyelesaikan kuis beserta skor & status kelulusan. |
+| `leaderboard:update` | Server $\rightarrow$ Klien | `services/socket.js` | Semua Klien | Memperbarui leaderboard nilai siswa secara live tanpa reload. |
+| `quiz:data_changed` | Server $\rightarrow$ Klien | `routes/guru.js`, `routes/admin.js` | Semua Klien | Menghapus cache kuis lokal dan me-refresh daftar bank soal kuis. |
+| `materi:baru` | Server $\rightarrow$ Klien | `routes/admin.js` | Siswa & Guru | Menampilkan toast modul materi baru dan memuat kartu modul seketika. |
+| `materi:changed` | Server $\rightarrow$ Klien | `routes/admin.js` | Siswa & Guru | Menghapus cache `sessionStorage` materi dan memperbarui tampilan beranda & katalog modul. |
+| `pengumuman:baru` | Server $\rightarrow$ Klien | `routes/admin.js` | Semua Klien | Menampilkan toast notifikasi dan menyalakan badge titik merah pada lonceng notifikasi. |
+| `pengumuman:hapus` | Server $\rightarrow$ Klien | `routes/admin.js` | Semua Klien | Menghapus kartu pengumuman secara realtime dari daftar. |
+
+---
+
+### 17.3. Daftar Perintah Operasional Lengkap (Command Line Reference)
+
+Berikut adalah seluruh daftar perintah (command) penting untuk pengelolaan aplikasi Netora:
+
+#### A. Instalasi Dependensi & Setup Awal
+```bash
+# 1. Masuk ke direktori proyek
+cd c:\Netora
+
+# 2. Menginstal seluruh dependensi inti dan library socket.io
+npm install
+
+# 3. Verifikasi dependensi socket.io sudah terpasang
+npm list socket.io socket.io-client
+```
+
+#### B. Menjalankan & Memantau Server Lokal
+```bash
+# 1. Menjalankan server dalam mode produksi (Node.js)
+npm start
+
+# 2. Menjalankan server dengan nodemon (Auto-restart saat ada perubahan kode - jika nodemon terinstall)
+npx nodemon server.js
+
+# 3. Memeriksa apakah port server (3000 atau 2974) sedang aktif di Windows
+netstat -ano | findstr :3000
+netstat -ano | findstr :2974
+
+# 4. Mematikan proses yang menggantung di port tertentu pada Windows (Ganti <PID> dengan ID proses)
+taskkill /PID <PID> /F
+```
+
+#### C. Alur Kerja Git (Git Workflow untuk Deployment)
+```bash
+# 1. Memeriksa status file yang baru dimodifikasi
+git status
+
+# 2. Menambahkan seluruh perubahan ke staging area
+git add .
+
+# 3. Membuat commit dengan pesan deskriptif
+git commit -m "feat: real-time socket.io, multi-page materi, fixed admin tab click, and sync student dashboard"
+
+# 4. Mengirimkan pembaruan kode ke repositori GitHub utama
+git push origin main
+
+# 5. Memeriksa 5 riwayat commit terakhir
+git log -n 5 --oneline
+```
+
+#### D. Perintah di Server Produksi FinCloud Pterodactyl (Jika Membuka Terminal Bash)
+```bash
+# 1. Memaksa container menyelaraskan kode tepat dengan GitHub (Hard Reset anti-konflik)
+git fetch origin && git reset --hard origin/main
+
+# 2. Menginstal dependensi baru jika ada penambahan package.json
+npm install --production
+
+# 3. Menghentikan proses Node.js yang tertahan sebelum restart
+pkill -f node || killall node
+
+# 4. Memulai ulang server
+npm start
+```
+
+#### E. Perintah Pengujian Endpoint API (Curl)
+```bash
+# 1. Menguji endpoint katalog materi
+curl http://localhost:3000/api/materi
+
+# 2. Menguji endpoint session user
+curl http://localhost:3000/api/auth/me
+
+# 3. Menguji detail modul materi ID 2
+curl http://localhost:3000/api/materi/2
+```
 
 ---
 
