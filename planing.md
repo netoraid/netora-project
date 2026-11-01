@@ -1000,5 +1000,53 @@ curl http://localhost:3000/api/materi/2
 
 ---
 
+## 🚀 14. Catatan Pembaruan Sesi Terkini (1 November 2026)
+
+### A. Rekapitulasi Perubahan & Peningkatan Utama
+
+1. **Pembersihan 100% Data Dummy / Mock Data ke Real Supabase**:
+   - Menghapus seluruh array hardcoded dummy/fallback pada:
+     - `public/video.html` & `public/js/video.js`: 2 kartu statis dihapus, data video dan filter kategori murni diambil dari tabel `video` Supabase.
+     - `public/quiz.html` & `public/js/quiz.js`: Topik kuis dan durasi dihitung dinamis dari tabel `quiz` Supabase.
+     - `public/progres.html` & `public/js/progres.js`: Pengali dummy dihapus, grafik dan metrik murni dari riwayat `nilai_quiz`.
+     - `routes/profil.js`: Limit riwayat nilai siswa dinaikkan dari 5 menjadi 100.
+     - `public/materi.html`: Kategori modul materi digenerate murni dari database.
+
+2. **Pemisahan Modul Materi dari Kuis (Decoupling Modul Materi & Quiz)**:
+   - Modul materi difokuskan murni untuk proses belajar siswa tanpa paksaan mengarah ke kuis:
+     - Di akhir bab/modul ([`public/js/materi.js`](file:///c:/Netora/public/js/materi.js)), tombol diarahkan kembali ke katalog materi dengan label *"🎉 Selesai Membaca Modul"*.
+     - Ikon di header kanan atas ([`public/materi-detail.html`](file:///c:/Netora/public/materi-detail.html)) diubah dari ikon kuis menjadi ikon buku katalog materi.
+
+3. **Editor Materi Word-Like Diperlebar di Mode Desktop**:
+   - Memperluas modal editor materi di [public/admin.html](file:///c:/Netora/public/admin.html) dan [public/css/netora.css](file:///c:/Netora/public/css/netora.css) dari yang semula sempit (`max-width: 640px`) menjadi mode dokumen desktop lebar (`width: 94%`, `max-width: 1160px` – `1220px`).
+   - Kanvas pengetikan materi ([`.editor-canvas`](file:///c:/Netora/public/css/netora.css)) dipertinggi (`min-height: 280px` hingga `520px`) dengan jarak baris longgar `line-height: 1.8` menyerupai lembar kerja Microsoft Word asli.
+
+4. **Penghapusan Keterangan Nama File & Caption di Bawah Gambar**:
+   - Menghapus tag `<figcaption>` dan teks nama file (misal *`qris noxarianet.jpeg (klik gambar...)`*) dari proses unggah maupun tempel (*Ctrl+V*).
+   - Menambahkan filter pembersihan otomatis di `formatMateriContent` ([`public/js/materi.js`](file:///c:/Netora/public/js/materi.js)) serta aturan CSS [`.materi-rich-content figcaption { display: none !important; }`](file:///c:/Netora/public/css/netora.css) sehingga dijamin 100% tidak tampak pada tampilan siswa.
+
+5. **Pengaturan Gambar Manual dengan Kursor & Slider Ukuran Presisi (5% - 100%)**:
+   - Menghapus tombol-tombol posisi statis (Kiri, Tengah, Kanan, Atas, Bawah) dan tombol preset ukuran (25%, 50%, 75%, 100%).
+   - Menyederhanakan Floating Toolbar menjadi slider perbesar/perkecil yang halus dan bisa diatur dari **ukuran paling kecil (5%)** hingga **100%**.
+   - Setiap gambar diatur dengan `draggable="true"` dan `cursor: grab`, memungkinkan user langsung **menarik (*drag & drop*) gambar menggunakan kursor mouse/trackpad laptop** ke posisi mana pun di antara baris teks layaknya di Word.
+   - Posisi dan ukuran baru gambar otomatis tersimpan ke database Supabase.
+
+### B. Ringkasan File yang Dimodifikasi pada Sesi Ini
+| File | Detail Perubahan |
+|---|---|
+| `public/admin.html` | Desain modal materi luas desktop (`modal-materi-dialog`), pembaruan floating resizer slider (5%-100%), listener drag & drop gambar dengan kursor laptop, dan pembersihan caption nama file |
+| `public/js/admin.js` | Penyelarasan `insertImageIntoEditor` gambar draggable tanpa wrapper kaku, penambahan listener drag & drop di `renderModalPages`, dan perbaikan sintaks template literal |
+| `public/css/netora.css` | Styling `.modal-materi-dialog` desktop (1160px-1220px), `.editor-canvas img` dengan `cursor: grab/grabbing`, pelebaran slider range, dan `figcaption` hidden |
+| `public/js/materi.js` | Pembersihan caption nama file pada parser `formatMateriContent`, dan penggantian CTA akhir modul materi ke katalog materi |
+| `public/materi-detail.html` | Penggantian ikon aksi header atas ke katalog materi |
+| `public/video.html` & `public/js/video.js` | Pembersihan total dummy card dan array default video |
+| `public/quiz.html` & `public/js/quiz.js` | Pembersihan total dummy topics kuis |
+| `public/progres.html` & `public/js/progres.js` | Penghitungan metrik riwayat kuis murni dari database |
+| `routes/profil.js` | Peningkatan limit riwayat kuis profil menjadi 100 data |
+| `planing.md` | Pencatatan rekapitulasi checkpoint sesi 1 November 2026 |
+
+---
+
 *Dokumentasi ini mencerminkan konfigurasi final arsitektur sistem produksi NETORA v2 — Tim Pengembang Netora © 2026.*
+
 
