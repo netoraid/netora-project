@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Dashboard Administrator Netora - Monitoring Aktivitas Siswa, Kuis, Modul, dan Nilai Ujian TKJ.">
+  <meta name="description"
+    content="Dashboard Administrator Netora - Monitoring Aktivitas Siswa, Kuis, Modul, dan Nilai Ujian TKJ.">
   <title>Netora — Dashboard Admin Monitoring Siswa</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css">
+  <link rel="stylesheet" href="css/netora.css?v=2026.7">
   <style>
     /* ===================================================
        NETORA ADMIN CONSOLE — LIGHT EDTECH THEME
        100% Selaras dengan Tampilan Siswa / User
     =================================================== */
-    *, *::before, *::after { box-sizing: border-box; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 
     body.admin-page {
       background: #F8FAFC !important;
@@ -26,7 +32,10 @@
     }
 
     /* Hilangkan background glow gelap */
-    .auth-bg-grid, .auth-bg-glow { display: none !important; }
+    .auth-bg-grid,
+    .auth-bg-glow {
+      display: none !important;
+    }
 
     /* Admin Container / Full Desktop Dashboard Canvas */
     .admin-container {
@@ -74,6 +83,7 @@
       width: 46px;
       height: 46px;
     }
+
     .admin-header-left .logo-mark img {
       width: 34px;
       height: 34px;
@@ -83,11 +93,13 @@
     .admin-header-left h1 {
       color: #FFFFFF !important;
     }
+
     .admin-header-left h1 span {
       color: #38BDF8 !important;
       background: none !important;
       -webkit-text-fill-color: #38BDF8 !important;
     }
+
     .admin-header-left p {
       color: rgba(255, 255, 255, 0.85) !important;
     }
@@ -133,6 +145,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       transition: all 0.2s;
     }
+
     .btn-web-siswa:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
@@ -148,6 +161,7 @@
       align-items: center;
       gap: 10px;
     }
+
     .admin-avatar-mini {
       border: 2px solid #FFFFFF !important;
       width: 34px;
@@ -155,17 +169,20 @@
       border-radius: 50%;
       object-fit: cover;
     }
+
     .admin-profile-text strong {
       color: #FFFFFF !important;
       font-size: 13px;
       display: block;
       line-height: 1.2;
     }
+
     .admin-profile-text span {
       color: #93C5FD !important;
       font-size: 11px;
       font-weight: 700;
     }
+
     .btn-logout-mini {
       background: rgba(239, 68, 68, 0.3) !important;
       border: 1px solid rgba(255, 255, 255, 0.35) !important;
@@ -180,6 +197,7 @@
       transition: background 0.2s;
       margin-left: 4px;
     }
+
     .btn-logout-mini:hover {
       background: #EF4444 !important;
     }
@@ -195,6 +213,7 @@
       margin-bottom: 24px;
       width: 100% !important;
     }
+
     .admin-tab-btn {
       background: #FFFFFF !important;
       color: #64748B !important;
@@ -210,11 +229,13 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
+
     .admin-tab-btn:hover {
       color: #0D5BFF !important;
       border-color: #BFDBFE !important;
       background: #EFF6FF !important;
     }
+
     .admin-tab-btn.active {
       background: #0D5BFF !important;
       color: #FFFFFF !important;
@@ -229,9 +250,24 @@
       gap: 16px;
       margin: 0 36px 24px !important;
     }
-    @media (max-width: 1400px) { .admin-kpi-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 768px) { .admin-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 480px) { .admin-kpi-grid { grid-template-columns: 1fr; } }
+
+    @media (max-width: 1400px) {
+      .admin-kpi-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .admin-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .admin-kpi-grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
     .kpi-card {
       background: #FFFFFF !important;
@@ -244,11 +280,13 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03) !important;
       transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     }
+
     .kpi-card:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(13, 91, 255, 0.08) !important;
       border-color: #CBD5E1 !important;
     }
+
     .kpi-title {
       font-size: 11px !important;
       color: #64748B !important;
@@ -256,12 +294,14 @@
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
+
     .kpi-value {
       font-size: 26px !important;
       font-weight: 900 !important;
       color: #0F172A !important;
       margin: 2px 0 1px;
     }
+
     .kpi-sub {
       font-size: 11.5px !important;
       font-weight: 600;
@@ -277,12 +317,42 @@
       justify-content: center;
       flex-shrink: 0;
     }
-    .kpi-blue   { background: #EFF6FF !important; border: 1px solid #BFDBFE !important; color: #0D5BFF !important; }
-    .kpi-purple { background: #F5F3FF !important; border: 1px solid #DDD6FE !important; color: #7C3AED !important; }
-    .kpi-cyan   { background: #ECFEFF !important; border: 1px solid #A5F3FC !important; color: #0284C7 !important; }
-    .kpi-green  { background: #F0FDF4 !important; border: 1px solid #BBF7D0 !important; color: #16A34A !important; }
-    .kpi-orange { background: #FFF7ED !important; border: 1px solid #FFEDD5 !important; color: #EA580C !important; }
-    .kpi-red    { background: #FEF2F2 !important; border: 1px solid #FECACA !important; color: #DC2626 !important; }
+
+    .kpi-blue {
+      background: #EFF6FF !important;
+      border: 1px solid #BFDBFE !important;
+      color: #0D5BFF !important;
+    }
+
+    .kpi-purple {
+      background: #F5F3FF !important;
+      border: 1px solid #DDD6FE !important;
+      color: #7C3AED !important;
+    }
+
+    .kpi-cyan {
+      background: #ECFEFF !important;
+      border: 1px solid #A5F3FC !important;
+      color: #0284C7 !important;
+    }
+
+    .kpi-green {
+      background: #F0FDF4 !important;
+      border: 1px solid #BBF7D0 !important;
+      color: #16A34A !important;
+    }
+
+    .kpi-orange {
+      background: #FFF7ED !important;
+      border: 1px solid #FFEDD5 !important;
+      color: #EA580C !important;
+    }
+
+    .kpi-red {
+      background: #FEF2F2 !important;
+      border: 1px solid #FECACA !important;
+      color: #DC2626 !important;
+    }
 
     /* Admin Tab Content Container - Full Width */
     .admin-tab-content {
@@ -290,6 +360,7 @@
       padding: 0 36px !important;
       width: 100% !important;
     }
+
     .admin-tab-content.active {
       display: block !important;
     }
@@ -311,11 +382,13 @@
       background: #FFFFFF !important;
       overflow-x: auto;
     }
+
     .admin-table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
     }
+
     .admin-table th {
       background: #F8FAFC !important;
       color: #475569 !important;
@@ -326,6 +399,7 @@
       padding: 13px 16px !important;
       border-bottom: 1.5px solid #E2E8F0 !important;
     }
+
     .admin-table td {
       padding: 13px 16px !important;
       border-bottom: 1px solid #F1F5F9 !important;
@@ -333,12 +407,16 @@
       font-size: 13px !important;
       background: #FFFFFF;
     }
+
     .admin-table tr:hover td {
       background: #F8FAFC !important;
     }
 
     /* Forms, Inputs & Filters */
-    .input-field, .form-group input, .form-group select, .form-group textarea {
+    .input-field,
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
       background: #FFFFFF !important;
       border: 1.5px solid #CBD5E1 !important;
       border-radius: 12px !important;
@@ -351,10 +429,15 @@
       font-family: inherit;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .input-field:focus, .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+
+    .input-field:focus,
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
       border-color: #0D5BFF !important;
       box-shadow: 0 0 0 3px rgba(13, 91, 255, 0.08) !important;
     }
+
     .form-group label {
       display: block;
       font-size: 11.5px;
@@ -378,10 +461,12 @@
       box-shadow: 0 6px 20px rgba(255, 122, 0, 0.35) !important;
       transition: transform 0.15s, box-shadow 0.15s;
     }
+
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 26px rgba(255, 122, 0, 0.45) !important;
     }
+
     .btn-secondary {
       background: #F1F5F9 !important;
       color: #334155 !important;
@@ -394,6 +479,7 @@
       align-items: center;
       gap: 6px;
     }
+
     .btn-secondary:hover {
       background: #E2E8F0 !important;
       color: #0F172A !important;
@@ -409,11 +495,36 @@
       align-items: center;
       gap: 4px;
     }
-    .badge-green  { background: #DCFCE7 !important; color: #166534 !important; border: 1px solid #BBF7D0 !important; }
-    .badge-red    { background: #FEE2E2 !important; color: #991B1B !important; border: 1px solid #FECACA !important; }
-    .badge-blue   { background: #EFF6FF !important; color: #1E40AF !important; border: 1px solid #BFDBFE !important; }
-    .badge-cyan   { background: #ECFEFF !important; color: #0369A1 !important; border: 1px solid #BAE6FD !important; }
-    .badge-purple { background: #F3E8FF !important; color: #6B21A8 !important; border: 1px solid #E9D5FF !important; }
+
+    .badge-green {
+      background: #DCFCE7 !important;
+      color: #166534 !important;
+      border: 1px solid #BBF7D0 !important;
+    }
+
+    .badge-red {
+      background: #FEE2E2 !important;
+      color: #991B1B !important;
+      border: 1px solid #FECACA !important;
+    }
+
+    .badge-blue {
+      background: #EFF6FF !important;
+      color: #1E40AF !important;
+      border: 1px solid #BFDBFE !important;
+    }
+
+    .badge-cyan {
+      background: #ECFEFF !important;
+      color: #0369A1 !important;
+      border: 1px solid #BAE6FD !important;
+    }
+
+    .badge-purple {
+      background: #F3E8FF !important;
+      color: #6B21A8 !important;
+      border: 1px solid #E9D5FF !important;
+    }
 
     /* Score Pills */
     .skor-pill {
@@ -423,11 +534,13 @@
       font-size: 13.5px;
       font-weight: 800;
     }
+
     .skor-lulus {
       background: #DCFCE7 !important;
       color: #15803D !important;
       border: 1px solid #BBF7D0 !important;
     }
+
     .skor-remidi {
       background: #FEE2E2 !important;
       color: #B91C1C !important;
@@ -445,6 +558,7 @@
       font-weight: 700 !important;
       cursor: pointer;
     }
+
     .btn-action-delete:hover {
       background: #DC2626 !important;
       color: #FFFFFF !important;
@@ -457,9 +571,21 @@
       height: 9px;
       border-radius: 10px;
     }
-    .bar-cyan { background: #0D5BFF !important; box-shadow: none !important; }
-    .bar-purple { background: #7C3AED !important; box-shadow: none !important; }
-    .bar-red { background: #EF4444 !important; box-shadow: none !important; }
+
+    .bar-cyan {
+      background: #0D5BFF !important;
+      box-shadow: none !important;
+    }
+
+    .bar-purple {
+      background: #7C3AED !important;
+      box-shadow: none !important;
+    }
+
+    .bar-red {
+      background: #EF4444 !important;
+      box-shadow: none !important;
+    }
 
     /* Server status items */
     .server-status-item {
@@ -469,12 +595,16 @@
       padding: 9px 14px !important;
       color: #334155 !important;
     }
-    .status-key { color: #64748B !important; }
+
+    .status-key {
+      color: #64748B !important;
+    }
 
     /* Modal Backdrop & Card */
     #modal-detail-siswa {
       background: rgba(15, 23, 42, 0.5) !important;
     }
+
     #modal-detail-siswa .card-panel {
       background: #FFFFFF !important;
       border: 1px solid #CBD5E1 !important;
@@ -492,22 +622,27 @@
       body.admin-page {
         padding: 0 !important;
       }
+
       .admin-container {
         border-radius: 0 !important;
         padding-bottom: 24px !important;
       }
+
       .admin-header {
         padding: 14px 16px !important;
         flex-direction: column !important;
         align-items: stretch !important;
         gap: 12px !important;
       }
+
       .admin-header-left {
         width: 100%;
       }
+
       .admin-header-left h1 {
         font-size: 19px !important;
       }
+
       .admin-header-right {
         width: 100% !important;
         display: flex !important;
@@ -516,17 +651,21 @@
         gap: 8px !important;
         flex-wrap: wrap !important;
       }
+
       .admin-clock-pill {
         font-size: 11px !important;
         padding: 6px 10px !important;
       }
+
       .btn-web-siswa {
         font-size: 12px !important;
         padding: 6px 12px !important;
       }
+
       .admin-profile-pill {
         padding: 4px 10px 4px 6px !important;
       }
+
       .admin-profile-text strong {
         font-size: 12px !important;
       }
@@ -541,6 +680,7 @@
         display: block !important;
         padding: 14px 18px 4px !important;
       }
+
       .admin-mobile-dropdown-card {
         background: #F8FAFC;
         border: 1.5px solid #BFDBFE;
@@ -549,6 +689,7 @@
         box-shadow: 0 4px 14px rgba(13, 91, 255, 0.08);
         margin-bottom: 16px;
       }
+
       .admin-mobile-nav-label {
         display: flex;
         align-items: center;
@@ -560,10 +701,12 @@
         letter-spacing: 0.5px;
         margin-bottom: 8px;
       }
+
       .admin-select-wrapper {
         position: relative;
         width: 100%;
       }
+
       .admin-mobile-select {
         width: 100%;
         appearance: none;
@@ -582,10 +725,12 @@
         transition: all 0.2s;
         font-family: inherit;
       }
+
       .admin-mobile-select:focus {
         border-color: #0D5BFF !important;
         box-shadow: 0 0 0 3px rgba(13, 91, 255, 0.22) !important;
       }
+
       .admin-select-chevron {
         position: absolute;
         right: 14px;
@@ -603,21 +748,26 @@
         gap: 10px !important;
         margin: 0 16px 18px !important;
       }
+
       .kpi-card {
         padding: 12px !important;
         border-radius: 14px !important;
         gap: 10px !important;
       }
+
       .kpi-icon {
         width: 40px !important;
         height: 40px !important;
       }
+
       .kpi-value {
         font-size: 20px !important;
       }
+
       .kpi-title {
         font-size: 10px !important;
       }
+
       .kpi-sub {
         font-size: 10.5px !important;
       }
@@ -626,15 +776,18 @@
       .admin-tab-content {
         padding: 0 16px !important;
       }
+
       .card-panel {
         padding: 16px !important;
         border-radius: 16px !important;
         margin-bottom: 16px !important;
       }
+
       .admin-analytics-grid {
         grid-template-columns: 1fr !important;
         gap: 14px !important;
       }
+
       .admin-announcement-grid {
         grid-template-columns: 1fr !important;
         gap: 14px !important;
@@ -646,13 +799,19 @@
         align-items: stretch !important;
         gap: 12px !important;
       }
-      .panel-header-flex > div:last-child {
+
+      .panel-header-flex>div:last-child {
         width: 100% !important;
         display: flex !important;
         flex-direction: column !important;
         gap: 8px !important;
       }
-      #search-siswa, #search-aktivitas, #filter-aktivitas-status, #btn-reset-all-siswa, #btn-refresh-aktivitas {
+
+      #search-siswa,
+      #search-aktivitas,
+      #filter-aktivitas-status,
+      #btn-reset-all-siswa,
+      #btn-refresh-aktivitas {
         width: 100% !important;
       }
     }
@@ -664,6 +823,7 @@
     }
   </style>
 </head>
+
 <body class="admin-page">
 
   <div class="admin-container">
@@ -678,11 +838,14 @@
           <div style="display:flex; align-items:center; gap:8px;">
             <h1 style="margin:0; font-size:22px; font-weight:900;">Net<span>ora</span></h1>
             <span class="badge-admin-tag">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
+              </svg>
               ADMIN CONSOLE
             </span>
           </div>
-          <p style="margin:2px 0 0; font-size:12px; opacity:0.9;">Pusat Kontrol & Monitoring Aktivitas Pembelajaran TKJ</p>
+          <p style="margin:2px 0 0; font-size:12px; opacity:0.9;">Pusat Kontrol & Monitoring Aktivitas Pembelajaran TKJ
+          </p>
         </div>
       </div>
 
@@ -693,18 +856,26 @@
         </div>
 
         <a href="beranda.html" class="btn-web-siswa">
-          <svg style="width:16px; height:16px; stroke:currentColor; fill:none;" viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <svg style="width:16px; height:16px; stroke:currentColor; fill:none;" viewBox="0 0 24 24" stroke-width="2.5">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
           <span>Lihat Web Siswa</span>
         </a>
 
         <div class="admin-profile-pill">
-          <img src="uploads/default.png" id="admin-avatar" alt="Avatar Admin" class="admin-avatar-mini">
+          <img src="uploads/default.svg" id="admin-avatar" alt="Avatar Admin" class="admin-avatar-mini">
           <div class="admin-profile-text">
             <strong id="admin-nama">Administrator</strong>
             <span>Super Admin</span>
           </div>
           <button id="btn-admin-logout" class="btn-logout-mini" title="Keluar dari Panel Admin">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
           </button>
         </div>
       </div>
@@ -713,32 +884,55 @@
     <!-- DESKTOP ADMIN SUB-NAV TABS (Tampil di Desktop/Tablet) -->
     <div class="admin-nav-bar desktop-only-nav">
       <button class="admin-tab-btn active" data-tab="tab-overview" onclick="switchAdminTab('tab-overview')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+        </svg>
         <span>Overview & Aktivitas Siswa</span>
       </button>
 
       <button class="admin-tab-btn" data-tab="tab-siswa" onclick="switchAdminTab('tab-siswa')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
         <span>Manajemen Siswa</span>
       </button>
 
       <button class="admin-tab-btn" data-tab="tab-pengumuman" onclick="switchAdminTab('tab-pengumuman')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
         <span>Kelola Notifikasi</span>
       </button>
 
       <button class="admin-tab-btn" data-tab="tab-materi" onclick="switchAdminTab('tab-materi')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        </svg>
         <span>Kelola Modul Materi</span>
       </button>
 
       <button class="admin-tab-btn" data-tab="tab-video" onclick="switchAdminTab('tab-video')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
         <span>Kelola Vidio Praktik</span>
       </button>
 
       <button class="admin-tab-btn" data-tab="tab-quiz" onclick="switchAdminTab('tab-quiz')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="12" cy="8" r="7"></circle>
+          <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+        </svg>
         <span>Setting & Bank Soal Kuis</span>
       </button>
     </div>
@@ -747,11 +941,17 @@
     <div class="admin-mobile-nav-wrapper">
       <div class="admin-mobile-dropdown-card">
         <div class="admin-mobile-nav-label">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.4"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.4">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+          </svg>
           <span>Pilih Halaman Manajemen:</span>
         </div>
         <div class="admin-select-wrapper">
-          <select id="admin-tab-select-mobile" class="admin-mobile-select" onchange="window.switchAdminTab && window.switchAdminTab(this.value)" aria-label="Pilih Halaman Admin">
+          <select id="admin-tab-select-mobile" class="admin-mobile-select"
+            onchange="window.switchAdminTab && window.switchAdminTab(this.value)" aria-label="Pilih Halaman Admin">
             <option value="tab-overview">Overview & Aktivitas Siswa</option>
             <option value="tab-siswa">Manajemen Data Siswa</option>
             <option value="tab-pengumuman">Kelola Notifikasi</option>
@@ -760,7 +960,9 @@
             <option value="tab-quiz">Setting & Bank Soal Kuis</option>
           </select>
           <div class="admin-select-chevron">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
           </div>
         </div>
       </div>
@@ -770,7 +972,10 @@
     <section class="admin-kpi-grid">
       <div class="kpi-card">
         <div class="kpi-icon kpi-blue">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+          </svg>
         </div>
         <div class="kpi-body">
           <span class="kpi-title">Total Siswa Terdaftar</span>
@@ -781,7 +986,13 @@
 
       <div class="kpi-card">
         <div class="kpi-icon kpi-purple">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+            <polyline points="10 9 9 9 8 9" />
+          </svg>
         </div>
         <div class="kpi-body">
           <span class="kpi-title">Ujian Kuis Dikerjakan</span>
@@ -792,7 +1003,10 @@
 
       <div class="kpi-card">
         <div class="kpi-icon kpi-cyan">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
         </div>
         <div class="kpi-body">
           <span class="kpi-title">Rata-Rata Nilai Kuis</span>
@@ -803,18 +1017,29 @@
 
       <div class="kpi-card">
         <div class="kpi-icon kpi-green">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34"/><path d="M18 14.66V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+            <path d="M4 22h16" />
+            <path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34" />
+            <path d="M18 14.66V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34" />
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
+          </svg>
         </div>
         <div class="kpi-body">
           <span class="kpi-title">Tingkat Kelulusan</span>
           <h2 class="kpi-value" id="stat-persen-lulus">0%</h2>
-          <span class="kpi-sub" style="color:#16A34A;"><span id="stat-lulus-count">0</span> Lulus / <span id="stat-remidi-count">0</span> Remidi</span>
+          <span class="kpi-sub" style="color:#16A34A;"><span id="stat-lulus-count">0</span> Lulus / <span
+              id="stat-remidi-count">0</span> Remidi</span>
         </div>
       </div>
 
       <div class="kpi-card">
         <div class="kpi-icon kpi-orange">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          </svg>
         </div>
         <div class="kpi-body">
           <span class="kpi-title">Modul Teori TKJ</span>
@@ -825,7 +1050,9 @@
 
       <div class="kpi-card">
         <div class="kpi-icon kpi-red">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
         </div>
         <div class="kpi-body">
           <span class="kpi-title">Vidio Praktik</span>
@@ -839,18 +1066,27 @@
     <!-- TAB 1: OVERVIEW & AKTIVITAS SISWA LIVE     -->
     <!-- ========================================== -->
     <div id="tab-overview" class="admin-tab-content active">
-      
+
       <!-- Grid Visual Analytics & Distribusi Nilai -->
-      <div class="admin-analytics-grid" style="display:grid; grid-template-columns:1.3fr 0.7fr; gap:20px; margin-bottom:20px;">
+      <div class="admin-analytics-grid"
+        style="display:grid; grid-template-columns:1.3fr 0.7fr; gap:20px; margin-bottom:20px;">
         <!-- Card 1: Distribusi Nilai Kuis Siswa -->
         <div class="card-panel">
-          <div class="panel-header-flex" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <div class="panel-header-flex"
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
             <div>
-              <h3 style="margin:0; font-size:16px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+              <h3
+                style="margin:0; font-size:16px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 20V10"></path>
+                  <path d="M12 20V4"></path>
+                  <path d="M6 20v-6"></path>
+                </svg>
                 <span>Distribusi Skor Ujian Siswa</span>
               </h3>
-              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Perbandingan siswa predikat Sangat Baik, Kompeten, dan Remidi</p>
+              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Perbandingan siswa predikat Sangat Baik,
+                Kompeten, dan Remidi</p>
             </div>
             <span class="badge badge-blue">Standar KKM: 70</span>
           </div>
@@ -890,10 +1126,15 @@
 
         <!-- Card 2: Server & Platform Status Info -->
         <div class="card-panel">
-          <div class="panel-header-flex" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <div class="panel-header-flex"
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
             <div>
-              <h3 style="margin:0; font-size:16px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              <h3
+                style="margin:0; font-size:16px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
                 <span>Status Server Netora</span>
               </h3>
               <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Layanan Backend & Database</p>
@@ -924,24 +1165,37 @@
 
       <!-- Feed Aktivitas Ujian Siswa Live -->
       <div class="card-panel">
-        <div class="panel-header-flex" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+        <div class="panel-header-flex"
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
           <div>
-            <h3 style="margin:0; font-size:17px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            <h3
+              style="margin:0; font-size:17px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
               <span>Feed Aktivitas Ujian Siswa Real-time</span>
             </h3>
-            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Pantau riwayat pengerjaan kuis siswa yang masuk ke database sistem</p>
+            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Pantau riwayat pengerjaan kuis siswa yang masuk
+              ke database sistem</p>
           </div>
 
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-            <input type="text" id="search-aktivitas" class="input-field" placeholder="Cari nama / email siswa..." style="width:220px; padding:8px 12px; font-size:12.5px;">
-            <select id="filter-aktivitas-status" class="input-field" style="width:140px; padding:8px 12px; font-size:12.5px;">
+            <input type="text" id="search-aktivitas" class="input-field" placeholder="Cari nama / email siswa..."
+              style="width:220px; padding:8px 12px; font-size:12.5px;">
+            <select id="filter-aktivitas-status" class="input-field"
+              style="width:140px; padding:8px 12px; font-size:12.5px;">
               <option value="all">Semua Status</option>
               <option value="lulus">Hanya Lulus</option>
               <option value="remidi">Hanya Remidi</option>
             </select>
-            <button id="btn-refresh-aktivitas" class="btn-secondary" style="padding:8px 14px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+            <button id="btn-refresh-aktivitas" class="btn-secondary"
+              style="padding:8px 14px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+              </svg>
               <span>Refresh Data</span>
             </button>
           </div>
@@ -961,7 +1215,8 @@
             </thead>
             <tbody id="tbody-aktivitas">
               <tr>
-                <td colspan="6" style="text-align:center; padding:30px; color:#64748B;">Memuat riwayat aktivitas siswa...</td>
+                <td colspan="6" style="text-align:center; padding:30px; color:#64748B;">Memuat riwayat aktivitas
+                  siswa...</td>
               </tr>
             </tbody>
           </table>
@@ -975,23 +1230,42 @@
     <!-- ========================================== -->
     <div id="tab-siswa" class="admin-tab-content">
       <div class="card-panel">
-        <div class="panel-header-flex" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+        <div class="panel-header-flex"
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
           <div>
-            <h3 style="margin:0; font-size:18px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <h3
+              style="margin:0; font-size:18px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
               <span>Daftar Seluruh Akun Siswa Terdaftar</span>
             </h3>
-            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola data profil siswa, pantau performa rata-rata skor, dan kelola kredensial akun</p>
+            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola data profil siswa, pantau performa
+              rata-rata skor, dan kelola kredensial akun</p>
           </div>
 
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-            <input type="text" id="search-siswa" class="input-field" placeholder="Cari nama atau email siswa..." style="width:230px; padding:9px 14px; font-size:13px;">
-            <button id="btn-tambah-siswa" type="button" class="btn-primary" style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <input type="text" id="search-siswa" class="input-field" placeholder="Cari nama atau email siswa..."
+              style="width:230px; padding:9px 14px; font-size:13px;">
+            <button id="btn-tambah-siswa" type="button" class="btn-primary"
+              style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
               <span>Tambah Siswa Baru</span>
             </button>
-            <button id="btn-reset-all-siswa" type="button" class="btn-action-delete" style="padding:9px 14px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <button id="btn-reset-all-siswa" type="button" class="btn-action-delete"
+              style="padding:9px 14px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
               <span>Reset Seluruh Akun Siswa</span>
             </button>
           </div>
@@ -1026,24 +1300,32 @@
     <!-- ========================================== -->
     <div id="tab-pengumuman" class="admin-tab-content">
       <div class="admin-announcement-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-        
+
         <!-- Form Tambah Notifikasi Baru -->
         <div class="card-panel">
-          <h3 style="margin:0 0 6px; font-size:16px; font-weight:800; color:#0D5BFF; display:flex; align-items:center; gap:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <h3
+            style="margin:0 0 6px; font-size:16px; font-weight:800; color:#0D5BFF; display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
             <span>Terbitkan Notifikasi Baru</span>
           </h3>
-          <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Notifikasi ini akan langsung tampil secara real-time di halaman Notifikasi seluruh akun siswa.</p>
+          <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Notifikasi ini akan langsung tampil secara
+            real-time di halaman Notifikasi seluruh akun siswa.</p>
 
           <form id="form-tambah-pengumuman">
             <div class="form-group" style="margin-bottom:14px;">
               <label for="pengumuman-judul">Judul Notifikasi</label>
-              <input type="text" id="pengumuman-judul" class="input-field" placeholder="Contoh: Jadwal Ujian Praktik Mikrotik" required>
+              <input type="text" id="pengumuman-judul" class="input-field"
+                placeholder="Contoh: Jadwal Ujian Praktik Mikrotik" required>
             </div>
 
             <div class="form-group" style="margin-bottom:14px;">
               <label for="pengumuman-isi">Isi Notifikasi Lengkap</label>
-              <textarea id="pengumuman-isi" class="input-field" rows="4" placeholder="Tuliskan isi detail notifikasi atau pengumuman untuk siswa..." required></textarea>
+              <textarea id="pengumuman-isi" class="input-field" rows="4"
+                placeholder="Tuliskan isi detail notifikasi atau pengumuman untuk siswa..." required></textarea>
             </div>
 
             <div class="form-group" style="margin-bottom:14px;">
@@ -1057,28 +1339,45 @@
             </div>
 
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:18px;">
-              <input type="checkbox" id="pengumuman-penting" style="width:16px; height:16px; accent-color:#EF4444; cursor:pointer;">
-              <label for="pengumuman-penting" style="font-size:13px; color:#0F172A; cursor:pointer; font-weight:600;">Tandai sebagai <strong>PENTING</strong> (Border Merah)</label>
+              <input type="checkbox" id="pengumuman-penting"
+                style="width:16px; height:16px; accent-color:#EF4444; cursor:pointer;">
+              <label for="pengumuman-penting"
+                style="font-size:13px; color:#0F172A; cursor:pointer; font-weight:600;">Tandai sebagai
+                <strong>PENTING</strong> (Border Merah)</label>
             </div>
 
-            <button type="submit" class="btn-primary" style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
+            <button type="submit" class="btn-primary"
+              style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
               <span>Terbitkan Notifikasi</span>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
             </button>
           </form>
         </div>
 
         <!-- Daftar Notifikasi Aktif -->
         <div class="card-panel">
-          <div class="panel-header-flex" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-            <h3 style="margin:0; font-size:16px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <div class="panel-header-flex"
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h3
+              style="margin:0; font-size:16px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
               <span>Daftar Notifikasi Aktif</span>
             </h3>
             <span class="badge badge-purple" id="badge-total-pengumuman">0 Notifikasi</span>
           </div>
 
-          <div id="admin-pengumuman-list" style="display:flex; flex-direction:column; gap:12px; max-height:540px; overflow-y:auto; padding-right:4px;">
+          <div id="admin-pengumuman-list"
+            style="display:flex; flex-direction:column; gap:12px; max-height:540px; overflow-y:auto; padding-right:4px;">
             <!-- Render via admin.js -->
           </div>
         </div>
@@ -1091,32 +1390,46 @@
     <!-- ========================================== -->
     <div id="tab-materi" class="admin-tab-content">
       <div class="card-panel">
-        <div class="panel-header-flex" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+        <div class="panel-header-flex"
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
           <div>
-            <h3 style="margin:0; font-size:18px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <h3
+              style="margin:0; font-size:18px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
               <span>Kelola Modul Pembelajaran TKJ</span>
             </h3>
-            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola materi teks terstruktur untuk siswa. Tambahkan modul baru, perbarui isi, atau hapus modul.</p>
+            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola materi teks terstruktur untuk siswa.
+              Tambahkan modul baru, perbarui isi, atau hapus modul.</p>
           </div>
 
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-            <input type="text" id="search-materi-admin" class="input-field" placeholder="Cari judul modul..." style="width:210px; padding:9px 14px; font-size:13px;">
-            <select id="filter-materi-kategori" class="input-field" style="width:160px; padding:9px 12px; font-size:13px;">
+            <input type="text" id="search-materi-admin" class="input-field" placeholder="Cari judul modul..."
+              style="width:210px; padding:9px 14px; font-size:13px;">
+            <select id="filter-materi-kategori" class="input-field"
+              style="width:160px; padding:9px 12px; font-size:13px;">
               <option value="all">Semua Kategori</option>
               <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
               <option value="Mikrotik">Mikrotik</option>
               <option value="Server & Linux">Server & Linux</option>
             </select>
-            <button id="btn-tambah-materi" onclick="bukaModalTambahMateri()" type="button" class="btn-primary" style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <button id="btn-tambah-materi" onclick="bukaModalTambahMateri()" type="button" class="btn-primary"
+              style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
               <span>Tambah Modul Baru</span>
             </button>
           </div>
         </div>
 
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
-          <span class="badge badge-purple" id="badge-total-materi-admin" style="font-size:12px; padding:5px 12px;">0 Modul Terdaftar</span>
+          <span class="badge badge-purple" id="badge-total-materi-admin" style="font-size:12px; padding:5px 12px;">0
+            Modul Terdaftar</span>
         </div>
 
         <div class="admin-table-wrapper">
@@ -1146,32 +1459,48 @@
     <!-- ========================================== -->
     <div id="tab-video" class="admin-tab-content">
       <div class="card-panel">
-        <div class="panel-header-flex" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+        <div class="panel-header-flex"
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
           <div>
-            <h3 style="margin:0; font-size:18px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <h3
+              style="margin:0; font-size:18px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                 <line x1="8" y1="21" x2="16" y2="21"></line>
                 <line x1="12" y1="17" x2="12" y2="21"></line>
               </svg>
               <span>Vidio Praktik & Tutorial YouTube</span>
             </h3>
-            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Cukup cantumkan link URL YouTube. Sistem otomatis mengekstrak thumbnail cover resmi dan pemutar video interaktif.</p>
+            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Cukup cantumkan link URL YouTube. Sistem
+              otomatis mengekstrak thumbnail cover resmi dan pemutar video interaktif.</p>
           </div>
 
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-            <input type="text" id="search-video-admin" class="input-field" placeholder="Cari judul vidio..." style="width:220px; padding:9px 14px; font-size:13px;">
-            <button id="btn-tambah-video" type="button" class="btn-primary" style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <input type="text" id="search-video-admin" class="input-field" placeholder="Cari judul vidio..."
+              style="width:220px; padding:9px 14px; font-size:13px;">
+            <button id="btn-tambah-video" type="button" class="btn-primary"
+              style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
               <span>Tambah Vidio Baru</span>
             </button>
           </div>
         </div>
 
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
-          <span class="badge badge-blue" id="badge-total-video-admin" style="font-size:12px; padding:5px 12px;">0 Vidio Terdaftar</span>
-          <span class="badge badge-green" style="font-size:12px; padding:5px 12px; display:inline-flex; align-items:center; gap:5px;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+          <span class="badge badge-blue" id="badge-total-video-admin" style="font-size:12px; padding:5px 12px;">0 Vidio
+            Terdaftar</span>
+          <span class="badge badge-green"
+            style="font-size:12px; padding:5px 12px; display:inline-flex; align-items:center; gap:5px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path
+                d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z">
+              </path>
+              <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+            </svg>
             <span>Auto YouTube Thumbnail & Embed</span>
           </span>
         </div>
@@ -1190,7 +1519,8 @@
             </thead>
             <tbody id="tbody-video-admin">
               <tr>
-                <td colspan="6" style="text-align:center; padding:30px; color:#64748B;">Memuat daftar vidio praktik...</td>
+                <td colspan="6" style="text-align:center; padding:30px; color:#64748B;">Memuat daftar vidio praktik...
+                </td>
               </tr>
             </tbody>
           </table>
@@ -1203,26 +1533,38 @@
     <!-- ========================================== -->
     <div id="tab-quiz" class="admin-tab-content">
       <div class="card-panel">
-        <div class="panel-header-flex" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+        <div class="panel-header-flex"
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
           <div>
-            <h3 style="margin:0; font-size:18px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+            <h3
+              style="margin:0; font-size:18px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+              </svg>
               <span>Bank Soal & Pengaturan Kuis</span>
             </h3>
-            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola butir soal kuis pilihan ganda A-D dan kunci jawaban. Setiap sesi kuis siswa dibatasi tepat 10 butir soal.</p>
+            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola butir soal kuis pilihan ganda A-D dan
+              kunci jawaban. Setiap sesi kuis siswa dibatasi tepat 10 butir soal.</p>
           </div>
 
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-            <input type="text" id="search-quiz" class="input-field" placeholder="Cari butir soal / kategori..." style="width:230px; padding:9px 14px; font-size:13px;">
-            <select id="filter-quiz-kategori" class="input-field" style="width:160px; padding:9px 12px; font-size:13px;">
+            <input type="text" id="search-quiz" class="input-field" placeholder="Cari butir soal / kategori..."
+              style="width:230px; padding:9px 14px; font-size:13px;">
+            <select id="filter-quiz-kategori" class="input-field"
+              style="width:160px; padding:9px 12px; font-size:13px;">
               <option value="all">Semua Kategori</option>
               <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
               <option value="Mikrotik">Mikrotik</option>
               <option value="Server & Linux">Server & Linux</option>
               <option value="Umum">Umum</option>
             </select>
-            <button id="btn-tambah-soal" type="button" class="btn-primary" style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <button id="btn-tambah-soal" type="button" class="btn-primary"
+              style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
               <span>Tambah Soal Kuis</span>
             </button>
           </div>
@@ -1230,9 +1572,13 @@
 
         <!-- Info Badges Bar -->
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
-          <span class="badge badge-purple" id="badge-total-soal" style="font-size:12px; padding:5px 12px;">0 Butir Soal Terdaftar</span>
-          <span class="badge badge-blue" style="font-size:12px; padding:5px 12px; display:inline-flex; align-items:center; gap:5px;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span class="badge badge-purple" id="badge-total-soal" style="font-size:12px; padding:5px 12px;">0 Butir Soal
+            Terdaftar</span>
+          <span class="badge badge-blue"
+            style="font-size:12px; padding:5px 12px; display:inline-flex; align-items:center; gap:5px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
             <span>Batas Sesi Siswa: Tepat 10 Soal Acak</span>
           </span>
         </div>
@@ -1261,21 +1607,33 @@
     <!-- ========================================== -->
     <!-- MODAL TAMBAH & EDIT SOAL KUIS              -->
     <!-- ========================================== -->
-    <div id="modal-soal-quiz" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
-      <div class="card-panel" style="width:100%; max-width:620px; background:#FFFFFF; border:1px solid #CBD5E1; box-shadow:0 25px 60px rgba(0,0,0,0.18); border-radius:24px; max-height:92vh; overflow-y:auto; position:relative; padding:24px;">
-        
+    <div id="modal-soal-quiz"
+      style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+      <div class="card-panel"
+        style="width:100%; max-width:620px; background:#FFFFFF; border:1px solid #CBD5E1; box-shadow:0 25px 60px rgba(0,0,0,0.18); border-radius:24px; max-height:92vh; overflow-y:auto; position:relative; padding:24px;">
+
         <!-- Header Modal -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #F1F5F9; padding-bottom:14px;">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #F1F5F9; padding-bottom:14px;">
           <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+            <div
+              style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+              </svg>
             </div>
             <div>
-              <h3 id="modal-soal-title" style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Tambah Soal Kuis Baru</h3>
-              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Atur pertanyaan, opsi pilihan A-D, dan tentukan kunci jawaban</p>
+              <h3 id="modal-soal-title" style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Tambah Soal
+                Kuis Baru</h3>
+              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Atur pertanyaan, opsi pilihan A-D, dan tentukan
+                kunci jawaban</p>
             </div>
           </div>
-          <button id="btn-close-modal-soal" type="button" style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" title="Tutup Modal">&times;</button>
+          <button id="btn-close-modal-soal" type="button"
+            style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;"
+            title="Tutup Modal">&times;</button>
         </div>
 
         <form id="form-soal-quiz">
@@ -1283,7 +1641,8 @@
 
           <div class="form-group" style="margin-bottom:14px;">
             <label for="input-soal-pertanyaan">Pertanyaan Soal</label>
-            <textarea id="input-soal-pertanyaan" class="input-field" rows="3" placeholder="Tuliskan butir pertanyaan kuis..." required></textarea>
+            <textarea id="input-soal-pertanyaan" class="input-field" rows="3"
+              placeholder="Tuliskan butir pertanyaan kuis..." required></textarea>
           </div>
 
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
@@ -1307,33 +1666,48 @@
             </div>
           </div>
 
-          <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:14px; margin-bottom:18px;">
-            <span style="font-size:11.5px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:10px;">Pilihan Ganda Jawaban:</span>
-            
+          <div
+            style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:14px; margin-bottom:18px;">
+            <span
+              style="font-size:11.5px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:10px;">Pilihan
+              Ganda Jawaban:</span>
+
             <div style="display:flex; flex-direction:column; gap:10px;">
               <div style="display:flex; align-items:center; gap:8px;">
-                <span style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">A</span>
-                <input type="text" id="input-soal-a" class="input-field" placeholder="Isi teks pilihan A..." required style="background:#FFFFFF;">
+                <span
+                  style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">A</span>
+                <input type="text" id="input-soal-a" class="input-field" placeholder="Isi teks pilihan A..." required
+                  style="background:#FFFFFF;">
               </div>
               <div style="display:flex; align-items:center; gap:8px;">
-                <span style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">B</span>
-                <input type="text" id="input-soal-b" class="input-field" placeholder="Isi teks pilihan B..." required style="background:#FFFFFF;">
+                <span
+                  style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">B</span>
+                <input type="text" id="input-soal-b" class="input-field" placeholder="Isi teks pilihan B..." required
+                  style="background:#FFFFFF;">
               </div>
               <div style="display:flex; align-items:center; gap:8px;">
-                <span style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">C</span>
-                <input type="text" id="input-soal-c" class="input-field" placeholder="Isi teks pilihan C..." required style="background:#FFFFFF;">
+                <span
+                  style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">C</span>
+                <input type="text" id="input-soal-c" class="input-field" placeholder="Isi teks pilihan C..." required
+                  style="background:#FFFFFF;">
               </div>
               <div style="display:flex; align-items:center; gap:8px;">
-                <span style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">D</span>
-                <input type="text" id="input-soal-d" class="input-field" placeholder="Isi teks pilihan D..." required style="background:#FFFFFF;">
+                <span
+                  style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">D</span>
+                <input type="text" id="input-soal-d" class="input-field" placeholder="Isi teks pilihan D..." required
+                  style="background:#FFFFFF;">
               </div>
             </div>
           </div>
 
           <div style="display:flex; justify-content:flex-end; gap:10px;">
-            <button type="button" id="btn-batal-modal-soal" class="btn-secondary" style="padding:10px 18px; font-size:13px;">Batal</button>
-            <button type="submit" id="btn-simpan-soal" class="btn-primary" style="padding:10px 22px; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <button type="button" id="btn-batal-modal-soal" class="btn-secondary"
+              style="padding:10px 18px; font-size:13px;">Batal</button>
+            <button type="submit" id="btn-simpan-soal" class="btn-primary"
+              style="padding:10px 22px; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
               <span>Simpan Soal</span>
             </button>
           </div>
@@ -1344,30 +1718,42 @@
     <!-- ========================================== -->
     <!-- MODAL TAMBAH & EDIT MODUL MATERI           -->
     <!-- ========================================== -->
-    <div id="modal-materi" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:16px; overflow-y:auto;">
+    <div id="modal-materi"
+      style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:16px; overflow-y:auto;">
       <div class="card-panel modal-materi-dialog">
-        
+
         <!-- Header Modal -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #F1F5F9; padding-bottom:14px;">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #F1F5F9; padding-bottom:14px;">
           <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <div
+              style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
             </div>
             <div>
-              <h3 id="modal-materi-title" style="margin:0; font-size:18px; font-weight:800; color:#0F172A;">Tambah Modul Materi Baru</h3>
-              <p style="margin:2px 0 0; font-size:12.5px; color:#64748B;">Lengkapi detail judul, kategori materi, dan lembar kerja panduan pembelajaran ala Microsoft Word</p>
+              <h3 id="modal-materi-title" style="margin:0; font-size:18px; font-weight:800; color:#0F172A;">Tambah Modul
+                Materi Baru</h3>
+              <p style="margin:2px 0 0; font-size:12.5px; color:#64748B;">Lengkapi detail judul, kategori materi, dan
+                lembar kerja panduan pembelajaran ala Microsoft Word</p>
             </div>
           </div>
-          <button id="btn-close-modal-materi" onclick="tutupModalMateri()" type="button" style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" title="Tutup Modal">&times;</button>
+          <button id="btn-close-modal-materi" onclick="tutupModalMateri()" type="button"
+            style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;"
+            title="Tutup Modal">&times;</button>
         </div>
 
         <!-- Form Tambah / Edit Materi -->
         <form id="form-modal-materi">
           <input type="hidden" id="input-materi-id" value="">
           <input type="hidden" id="input-materi-isi" value="">
-          
+
           <!-- Fallback dummy select untuk backward-compatibility jika ada script browser yang ter-cache -->
-          <select id="select-materi-kategori" style="display:none;" onchange="const inp = document.getElementById('input-materi-kategori'); if(inp) inp.value = this.value;">
+          <select id="select-materi-kategori" style="display:none;"
+            onchange="const inp = document.getElementById('input-materi-kategori'); if(inp) inp.value = this.value;">
             <option value=""></option>
             <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
             <option value="MikroTik RouterOS">MikroTik RouterOS</option>
@@ -1378,41 +1764,62 @@
 
           <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:14px; margin-bottom:16px;">
             <div>
-              <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Judul Modul Pembelajaran *</label>
-              <input type="text" id="input-materi-judul" class="input-field" placeholder="Contoh: Cisco Packet Tracer - Konfigurasi Routing Static" required style="background:#FFFFFF; font-size:13.5px;">
+              <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Judul
+                Modul Pembelajaran *</label>
+              <input type="text" id="input-materi-judul" class="input-field"
+                placeholder="Contoh: Cisco Packet Tracer - Konfigurasi Routing Static" required
+                style="background:#FFFFFF; font-size:13.5px;">
             </div>
             <div>
-              <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kategori Modul *</label>
-              <input type="text" id="input-materi-kategori" class="input-field" placeholder="Contoh: Cisco Packet Tracer" required style="background:#FFFFFF; font-size:13.5px;" oninput="const sel = document.getElementById('select-materi-kategori'); if(sel) sel.value = this.value;">
+              <label
+                style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kategori
+                Modul *</label>
+              <input type="text" id="input-materi-kategori" class="input-field"
+                placeholder="Contoh: Cisco Packet Tracer" required style="background:#FFFFFF; font-size:13.5px;"
+                oninput="const sel = document.getElementById('select-materi-kategori'); if(sel) sel.value = this.value;">
             </div>
           </div>
 
           <!-- Section Atur Halaman di Dalam Materi -->
           <div style="margin-bottom:18px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
               <div>
-                <label style="font-size:13.5px; font-weight:800; color:#0F172A; display:block;">Isi Halaman / Lembar Kerja Modul *</label>
-                <span style="font-size:12px; color:#64748B;">Atur bab dan halaman materi pembelajaran. Klik gambar di dalam editor untuk menyesuaikan ukuran (25% - 100%) dan posisinya.</span>
+                <label style="font-size:13.5px; font-weight:800; color:#0F172A; display:block;">Isi Halaman / Lembar
+                  Kerja Modul *</label>
+                <span style="font-size:12px; color:#64748B;">Atur bab dan halaman materi pembelajaran. Klik gambar di
+                  dalam editor untuk menyesuaikan ukuran (25% - 100%) dan posisinya.</span>
               </div>
               <div style="display:flex; align-items:center; gap:8px;">
-                <span class="badge badge-blue" id="badge-page-count" style="font-size:12px; padding:5px 12px; font-weight:700;">1 Halaman</span>
-                <button type="button" id="btn-add-materi-page" onclick="tambahHalamanMateriBaru()" class="btn-secondary" style="font-size:12.5px; font-weight:700; padding:6px 14px; border-radius:10px; display:inline-flex; align-items:center; gap:6px; background:#EFF6FF; border-color:#BFDBFE; color:#0D5BFF; cursor:pointer;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span class="badge badge-blue" id="badge-page-count"
+                  style="font-size:12px; padding:5px 12px; font-weight:700;">1 Halaman</span>
+                <button type="button" id="btn-add-materi-page" onclick="tambahHalamanMateriBaru()" class="btn-secondary"
+                  style="font-size:12.5px; font-weight:700; padding:6px 14px; border-radius:10px; display:inline-flex; align-items:center; gap:6px; background:#EFF6FF; border-color:#BFDBFE; color:#0D5BFF; cursor:pointer;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
                   <span>+ Tambah Halaman</span>
                 </button>
               </div>
             </div>
 
             <!-- List Halaman Dinamis -->
-            <div id="materi-pages-container" style="display:flex; flex-direction:column; gap:14px; max-height:56vh; overflow-y:auto; padding-right:4px;">
+            <div id="materi-pages-container"
+              style="display:flex; flex-direction:column; gap:14px; max-height:56vh; overflow-y:auto; padding-right:4px;">
               <!-- Cards halaman diinjeksi via admin.js -->
             </div>
           </div>
 
-          <div style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #F1F5F9; padding-top:16px;">
-            <button type="button" id="btn-batal-modal-materi" onclick="tutupModalMateri()" class="btn-secondary" style="padding:10px 18px; font-size:13px;">Batal</button>
-            <button type="submit" id="btn-simpan-materi" class="btn-primary" style="padding:10px 24px; font-size:13px; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <div
+            style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #F1F5F9; padding-top:16px;">
+            <button type="button" id="btn-batal-modal-materi" onclick="tutupModalMateri()" class="btn-secondary"
+              style="padding:10px 18px; font-size:13px;">Batal</button>
+            <button type="submit" id="btn-simpan-materi" class="btn-primary"
+              style="padding:10px 24px; font-size:13px; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
               <span>Simpan Modul</span>
             </button>
           </div>
@@ -1421,15 +1828,22 @@
         <!-- Floating Image Resizer Bar (Slider Ukuran & Geser Posisi Gambar) -->
         <div id="materi-img-resizer-bar" class="materi-img-resizer-bar" style="display:none;">
           <span class="resizer-title">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <polyline points="9 21 3 21 3 15"></polyline>
+              <line x1="21" y1="3" x2="14" y2="10"></line>
+              <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
             <span>Ukuran:</span>
           </span>
           <span class="resizer-badge" id="resizer-val-badge">50%</span>
-          
+
           <!-- Tombol Slider yang Digeser-geser (Bisa sampai ukuran paling kecil 5%) -->
           <div class="resizer-slider-wrap">
             <span style="font-size:10.5px; color:#94A3B8; font-weight:700;">5%</span>
-            <input type="range" id="resizer-slider" min="5" max="100" step="1" value="50" oninput="setMateriImageSize(this.value, false)" onchange="setMateriImageSize(this.value, true)" title="Geser ke kiri untuk mengecilkan (sampai 5%), geser ke kanan untuk memperbesar">
+            <input type="range" id="resizer-slider" min="5" max="100" step="1" value="50"
+              oninput="setMateriImageSize(this.value, false)" onchange="setMateriImageSize(this.value, true)"
+              title="Geser ke kiri untuk mengecilkan (sampai 5%), geser ke kanan untuk memperbesar">
             <span style="font-size:10.5px; color:#94A3B8; font-weight:700;">100%</span>
           </div>
 
@@ -1440,22 +1854,58 @@
             <span>Geser:</span>
           </span>
           <div class="resizer-group" title="Geser Posisi Horizontal">
-            <button type="button" id="btn-align-left" onclick="setMateriImagePosition('left')" title="Geser ke Kiri (Wrap Kiri)">⬅️ Kiri</button>
-            <button type="button" id="btn-align-center" onclick="setMateriImagePosition('center')" title="Geser ke Tengah">⏹️ Tengah</button>
-            <button type="button" id="btn-align-right" onclick="setMateriImagePosition('right')" title="Geser ke Kanan (Wrap Kanan)">➡️ Kanan</button>
+            <button type="button" id="btn-align-left" onclick="setMateriImagePosition('left')"
+              title="Geser ke Kiri (Wrap Kiri)" style="display:inline-flex; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              <span>Kiri</span>
+            </button>
+            <button type="button" id="btn-align-center" onclick="setMateriImagePosition('center')"
+              title="Geser ke Tengah" style="display:inline-flex; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+              </svg>
+              <span>Tengah</span>
+            </button>
+            <button type="button" id="btn-align-right" onclick="setMateriImagePosition('right')"
+              title="Geser ke Kanan (Wrap Kanan)" style="display:inline-flex; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+              <span>Kanan</span>
+            </button>
           </div>
 
           <div class="resizer-divider"></div>
 
           <!-- Tombol Geser Urutan Paragraf (Naik / Turun) -->
           <div class="resizer-group" title="Geser Urutan Paragraf">
-            <button type="button" onclick="geserMateriImageOrder(-1)" title="Geser Naik (Pindah ke Atas Paragraf)">⬆️ Naik</button>
-            <button type="button" onclick="geserMateriImageOrder(1)" title="Geser Turun (Pindah ke Bawah Paragraf)">⬇️ Turun</button>
+            <button type="button" onclick="geserMateriImageOrder(-1)" title="Geser Naik (Pindah ke Atas Paragraf)"
+              style="display:inline-flex; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+              <span>Atas</span>
+            </button>
+            <button type="button" onclick="geserMateriImageOrder(1)" title="Geser Turun (Pindah ke Bawah Paragraf)"
+              style="display:inline-flex; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+              <span>Bawah</span>
+            </button>
           </div>
 
           <div class="resizer-divider"></div>
-          <span style="font-size:11px; color:#94A3B8; padding:0 4px;" title="Tekan Backspace atau Delete di keyboard untuk menghapus gambar">Hapus: <kbd style="background:rgba(255,255,255,0.14); border-radius:4px; padding:1px 5px; color:#fff; font-size:10px; font-family:inherit;">Backspace</kbd> / <kbd style="background:rgba(255,255,255,0.14); border-radius:4px; padding:1px 5px; color:#fff; font-size:10px; font-family:inherit;">Delete</kbd></span>
-          <button type="button" onclick="closeMateriImageResizer()" style="font-size:16px; padding:2px 6px; color:#94A3B8; cursor:pointer;" title="Tutup Toolbar">&times;</button>
+          <span style="font-size:11px; color:#94A3B8; padding:0 4px;"
+            title="Tekan Backspace atau Delete di keyboard untuk menghapus gambar">Hapus: <kbd
+              style="background:rgba(255,255,255,0.14); border-radius:4px; padding:1px 5px; color:#fff; font-size:10px; font-family:inherit;">Backspace</kbd>
+            / <kbd
+              style="background:rgba(255,255,255,0.14); border-radius:4px; padding:1px 5px; color:#fff; font-size:10px; font-family:inherit;">Delete</kbd></span>
+          <button type="button" onclick="closeMateriImageResizer()"
+            style="font-size:16px; padding:2px 6px; color:#94A3B8; cursor:pointer;"
+            title="Tutup Toolbar">&times;</button>
         </div>
 
       </div>
@@ -1463,7 +1913,7 @@
 
     <!-- Inline Script Manager Modul Materi & Tab Switching (Bypass Cache & Error-Proof) -->
     <script>
-      window.switchAdminTab = function(targetId) {
+      wind ow.switchAdminTab = function(targetId) {
         if (!targetId) return;
         const tabBtns = document.querySelectorAll('.admin-tab-btn');
         const tabContents = document.querySelectorAll('.admin-tab-content');
@@ -1491,22 +1941,33 @@
 
       window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
 
-      window.execEditorCmd = function(index, command, value = null) {
+      win dow.execEditorCmd = function(index, command, value = null) {
         const container = document.getElementById('materi-pages-container');
         if (!container) return;
         const cards = container.querySelectorAll('.materi-page-card');
         const canvas = cards[index]?.querySelector('.editor-canvas');
-        if (canvas) {
-          canvas.focus();
-          if (command === 'formatCode') {
-            const selection = window.getSelection();
-            const selectedText = selection.toString() || 'Perintah Terminal / CLI MikroTik';
-            document.execCommand('insertHTML', false, `<pre><code>${selectedText}</code></pre><p><br></p>`);
-          } else {
-            document.execCommand(command, false, value);
-          }
-          window.syncModalPageData(index);
+        if (!canvas) return;
+
+        canvas.focus();
+
+        // Jika ada gambar aktif yang diklik dan memilih alignment
+        if (window.activeMateriImg && (command === 'justifyLeft' || command === 'justifyCenter' || command === 'justifyRight' || command === 'justifyFull')) {
+          if (command === 'justifyLeft') window.setMateriImagePosition('left');
+          else if (command === 'justifyRight') window.setMateriImagePosition('right');
+          else window.setMateriImagePosition('center');
+          wi ndow.syncModalPageData(index);
+          return;
         }
+
+        if (command === 'formatCode') {
+          const selection = window.getSelection();
+          const selectedText = selection ? selection.toString() : '';
+          const sampleCode = selectedText || `# Masukkan script / perintah CLI di sini\ninterface print\nip address print`;
+          document.execCommand('insertHTML', false, `<pre><code>${sampleCode}</code></pre><p><br></p >`);
+        } else {
+          document.execCommand(command, false, value);
+        }
+        window.syncModalPageData(index);
       };
 
       window.triggerUploadImageMateri = function(index) {
@@ -1527,7 +1988,7 @@
 
         const rect = window.activeMateriImg.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0) {
-          window.closeMateriImageResizer();
+          window.closeMateriImage Resizer();
           return;
         }
 
@@ -1561,7 +2022,6 @@
         const card = img.closest('.materi-page-card');
         window.activeMateriPageIdx = card ? parseInt(card.dataset.index) : null;
 
-        // Hitung persentase lebar saat ini (mendukung ukuran paling kecil 5%)
         let currentWidth = 50;
         const styleW = img.style.width || (img.closest('figure')?.style.width) || '';
         if (styleW.includes('%')) {
@@ -1575,7 +2035,7 @@
         const slider = document.getElementById('resizer-slider');
         if (slider) slider.value = currentWidth;
 
-        const bar = document.getElementById('materi-img-resizer-bar');
+        const bar =  document.getElementById('materi-img-resizer-bar');
         if (bar) {
           bar.style.display = 'flex';
           window.repositionMateriResizer();
@@ -1655,7 +2115,7 @@
               }
               window.repositionResizeOverlay();
               if (typeof window.repositionMateriResizer === 'function') {
-                window.repositionMateriResizer();
+                window.repositionMater iResizer();
               }
             }
           });
@@ -1676,7 +2136,7 @@
       window.updateImagePositionButtons = function(img) {
         if (!img) return;
         const isLeft = img.classList.contains('align-left') || img.style.float === 'left';
-        const isRight = img.classList.contains('align-right') || img.style.float === 'right';
+        const isRight = img.classList.contains('align-rig ht') || img.style.float === 'right';
         const isCenter = !isLeft && !isRight;
 
         const btnLeft = document.getElementById('btn-align-left');
@@ -1710,7 +2170,7 @@
           if (parentP) parentP.style.textAlign = 'right';
         } else {
           // Center
-          img.style.float = 'none';
+           img.style.float = 'none';
           img.style.margin = '10px auto';
           img.style.display = 'block';
           if (parentP) parentP.style.textAlign = 'center';
@@ -1736,14 +2196,14 @@
         const block = img.closest('p, figure') || img;
         if (direction < 0) {
           const prev = block.previousElementSibling;
-          if (prev) {
+          if (pre v) {
             canvas.insertBefore(block, prev);
           }
         } else {
           const next = block.nextElementSibling;
           if (next) {
             canvas.insertBefore(block, next.nextElementSibling);
-          }
+  }
         }
 
         if (window.activeMateriPageIdx !== null) {
@@ -1756,9 +2216,7 @@
 
       window.setMateriImageSize = function(size, isFinal = false) {
         if (!window.activeMateriImg) return;
-        // Pengaturan ukuran digeser-geser dari paling kecil 5% hingga 100%
         const pct = Math.max(5, Math.min(100, parseInt(size) || 50));
-        
         window.activeMateriImg.style.width = `${pct}%`;
         window.activeMateriImg.style.maxWidth = '100%';
         window.activeMateriImg.style.height = 'auto';
@@ -1770,7 +2228,7 @@
         }
 
         const badge = document.getElementById('resizer-val-badge');
-        if (badge) badge.textContent = `${pct}%`;
+        if (badge) badge.tex tContent = `${pct}%`;
         const slider = document.getElementById('resizer-slider');
         if (slider && slider.value != pct) slider.value = pct;
 
@@ -1785,7 +2243,7 @@
       window.deleteMateriActiveImage = function() {
         if (!window.activeMateriImg) return;
         const figure = window.activeMateriImg.closest('figure');
-        const p = window.activeMateriImg.closest('p');
+        const p = window.activeMateriImg.closest('p') ;
         if (figure) figure.remove();
         else if (p && p.innerText.trim() === '') p.remove();
         else window.activeMateriImg.remove();
@@ -1829,7 +2287,7 @@
       });
 
       window.addEventListener('resize', () => {
-        if (window.activeMateriImg) {
+        if (window.activeM ateriImg) {
           if (typeof window.repositionMateriResizer === 'function') window.repositionMateriResizer();
           if (typeof window.repositionResizeOverlay === 'function') window.repositionResizeOverlay();
         }
@@ -1877,9 +2335,8 @@
               document.execCommand('insertHTML', false, imgHtml);
               window.syncModalPageData(index);
 
-              // Auto-select gambar yang baru diunggah untuk langsung atur ukuran slider
               setTimeout(() => {
-                const insertedImg = canvas.querySelector(`img[src="${data.url}"]`);
+                const insertedImg = canvas.querySelector(`img[src="${data .url}"]`);
                 if (insertedImg) window.selectMateriImageForResize(insertedImg);
               }, 120);
             }
@@ -1927,10 +2384,9 @@
                   document.execCommand('insertHTML', false, imgHtml);
                   window.syncModalPageData(index);
 
-                  // Auto-select gambar yang baru ditempel untuk langsung atur ukuran slider
                   setTimeout(() => {
                     const insertedImg = canvas.querySelector(`img[src="${data.url}"]`);
-                    if (insertedImg) window.selectMateriImageForResize(insertedImg);
+                    if (insertedImg) window.selectMateriIm ageForResize(insertedImg);
                   }, 120);
                 }
                 if (typeof toast === 'function') toast('Screenshot berhasil ditempel! Tarik gambar dengan kursor untuk geser posisi.', 'success');
@@ -1947,16 +2403,18 @@
 
       window.syncModalPageData = function(index) {
         const container = document.getElementById('materi-pages-container');
-        if (!container) return;
+        if  (!container) return;
         const cards = container.querySelectorAll('.materi-page-card');
         if (cards[index]) {
           const judul = cards[index].querySelector('.page-judul-input')?.value || '';
           const canvas = cards[index].querySelector('.editor-canvas');
           const konten = canvas ? canvas.innerHTML : '';
-          if (window.currentModalPages && window.currentModalPages[index]) {
-            window.currentModalPages[index].judul = judul;
-            window.currentModalPages[index].konten = konten;
+          if (!window.currentModalPages) window.currentModalPages = [];
+          if (!window.currentModalPages[index]) {
+            window.currentModalPages[index] = { halaman: index + 1, judul: '', konten: '' };
           }
+          window.currentModalPages[index].judul = judul;
+           window.currentModalPages[index].konten = konten;
         }
       };
 
@@ -1964,12 +2422,14 @@
         const container = document.getElementById('materi-pages-container');
         if (!container) return;
         const cards = container.querySelectorAll('.materi-page-card');
+        if (!window.currentModalPages) window.currentModalPages = [];
         cards.forEach((card, idx) => {
-          if (window.currentModalPages && window.currentModalPages[idx]) {
-            window.currentModalPages[idx].judul = card.querySelector('.page-judul-input')?.value || '';
-            const canvas = card.querySelector('.editor-canvas');
-            window.currentModalPages[idx].konten = canvas ? canvas.innerHTML : '';
+          if (!window.currentModalPages[idx]) {
+            window.currentModalPages[idx] = { halaman: idx + 1, judul: '', konten: '' };
           }
+          window.currentModalPages[idx].judul = card.querySelector('.page-judul-input')?.value || '';
+          const canvas = card.querySelector('.editor-canvas');
+          window.currentModalPages[idx].konten = canvas ? canvas.innerHTML : '';
         });
       };
 
@@ -1988,75 +2448,87 @@
 
         container.innerHTML = window.currentModalPages.map((page, index) => {
           const safeJudul = (page.judul || '').replace(/"/g, '&quot;');
-          let initialHtml = page.konten || '';
-          // Bersihkan sisa tag figcaption nama file / petunjuk lama jika ada
-          initialHtml = initialHtml.replace(/<figcaption[^>]*>[\s\S]*?<\/figcaption>/gi, '');
-
-          // Jika konten sebelumnya berupa teks biasa tanpa HTML tag, konversi baris baru menjadi paragraf
-          if (initialHtml && !initialHtml.includes('<') && !initialHtml.includes('>')) {
-            initialHtml = initialHtml.split('\n').filter(line => line.trim()).map(line => `<p>${line}</p>`).join('');
-          }
-          if (!initialHtml) {
-            initialHtml = '<p><br></p>';
-          }
 
           return `
-            <div class="materi-page-card" data-index="${index}" style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:16px; position:relative; margin-bottom:16px; transition:all 0.2s;">
+            <div class="materi-page-card" data-index="${index}" style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:18px; padding:18px; position:relative; margin-bottom:18px; transition:all 0.2s;">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-                <div class="page-drag-handle" draggable="true" title="Tahan dan geser kartu ini untuk menukar urutan halaman" style="display:inline-flex; align-items:center; gap:8px; cursor:grab; padding:4px 8px; border-radius:8px; background:rgba(13,91,255,0.06); transition:background 0.15s;">
-                  <span style="font-size:16px; color:#0D5BFF; line-height:1; font-weight:bold;">⠿</span>
-                  <span style="background:#0D5BFF; color:#fff; font-size:11px; font-weight:800; padding:3px 10px; border-radius:8px;">
+                <div class="page-drag-handle" draggable="true" title="Tahan dan geser kartu ini untuk menukar urutan halaman" style="display:inline-flex; align-items:center; gap:8px; cursor:grab; padding:5px 10px; border-radius:8px; background:rgba(13,91,255,0.06); transition:background 0.15s;">
+                  <span style="font-size:15px; color:#0D5BFF; line-height:1; font-weight:bold;">⠿</span>
+                  <span style="background:#0D5BFF; color:#fff; font-size:11.5px; font-weight:800; padding:3px 10px; border-radius:8px;">
                     Halaman ${index + 1}
                   </span>
-                  <span style="font-size:13px; font-weight:700; color:#1E293B;">Bagian Modul ${index + 1}</span>
+                  <span style="font-size:13.5px; font-weight:700; color:#1E293B;">Bagian Modul ${index + 1}</span>
                   <span style="font-size:11px; color:#64748B; font-weight:600; margin-left:2px;">(Tarik untuk geser urutan)</span>
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
                   ${index > 0 ? `
-                    <button type="button" onclick="geserHalamanMateri(${index}, -1)" title="Geser ke Atas" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:11px;">
-                      ▲
+                    <button type="button" onclick="geserHalamanMateri(${index}, -1)" title="Geser ke Atas" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:7px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
                     </button>
                   ` : ''}
                   ${index < window.currentModalPages.length - 1 ? `
-                    <button type="button" onclick="geserHalamanMateri(${index}, 1)" title="Geser ke Bawah" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:11px;">
-                      ▼
+                    <button type="button" onclick="geserHalamanMateri(${index}, 1)" title="Geser ke Bawah" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#475569; border-radius:7px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </button>
                   ` : ''}
                   ${window.currentModalPages.length > 1 ? `
-                    <button type="button" onclick="hapusHalamanMateri(${index})" title="Hapus Halaman Ini" style="background:#FEE2E2; border:1px solid #FECACA; color:#EF4444; border-radius:6px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; font-weight:bold;">
-                      &times;
+                    <button type="button" onclick="hapusHalamanMateri(${index})" title="Hapus Halaman Ini" style="background:#FEE2E2; border:1px solid #FECACA; color:#EF4444; border-radius:7px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                   ` : ''}
                 </div>
               </div>
 
-              <div style="margin-bottom:12px;">
-                <label style="display:block; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:5px;">Judul Halaman / Sub-Topik (Opsional)</label>
-                <input type="text" class="input-field page-judul-input" placeholder="Contoh: Konfigurasi DHCP Server MikroTik di Winbox" value="${safeJudul}" oninput="syncModalPageData(${index})" style="background:#FFFFFF; padding:9px 12px; font-size:13px;">
+              <div style="margin-bottom:14px;">
+                <label style="display:block; font-size:12px; font-weight:700; color:#475569; margin-bottom:5px;">Judul Halaman / Sub-Topik (Opsional)</label>
+                <input type="text" class="input-field page-judul-input" placeholder="Contoh: Konfigurasi DHCP Server MikroTik di Winbox" value="${safeJudul}" oninput="syncModalPageData(${index})" style="background:#FFFFFF; padding:10px 14px; font-size:13.5px; border-radius:10px;">
               </div>
 
               <div>
-                <label style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px;">
-                  <span>Konten / Isi Materi Halaman Ini (Word-Like Rich Editor) *</span>
-                  <span style="color:#0D5BFF; font-weight:600; font-size:11px;">💡 Tarik gambar dengan kursor untuk geser posisi</span>
-                </label>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                  <span style="font-size:12px; font-weight:700; color:#334155;">Konten / Isi Materi Halaman Ini (Word-Like Rich Editor) *</span>
+                  <span style="color:#0D5BFF; font-weight:700; font-size:11.5px; display:inline-flex; align-items:center; gap:5px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <span>Bisa Paste Screenshot (Ctrl+V) & Tarik Gambar dengan Kursor</span>
+                  </span>
+                </div>
 
-                <!-- Toolbar Ala Word -->
+                <!-- Toolbar Lengkap Ala Microsoft Word: Format, Alignment, Lists, & Media -->
                 <div class="editor-toolbar">
+                  <!-- Text Styling: Bold, Italic, Underline -->
                   <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'bold')" title="Tebal (Ctrl+B)"><b>B</b></button>
                   <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'italic')" title="Miring (Ctrl+I)"><i>I</i></button>
                   <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'underline')" title="Garis Bawah (Ctrl+U)"><u>U</u></button>
                   <span style="width:1px; height:18px; background:#CBD5E1; margin:0 3px;"></span>
+
+                  <!-- Text & Image Alignment: Rata Kiri, Rata Tengah, Rata Kanan, Rata Justify -->
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'justifyLeft')" title="Rata Kiri">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="14" y2="12"></line><line x1="3" y1="18" x2="18" y2="18"></line></svg>
+                  </button>
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'justifyCenter')" title="Rata Tengah">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="6" y1="12" x2="18" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+                  </button>
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'justifyRight')" title="Rata Kanan">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="10" y1="12" x2="21" y2="12"></line><line x1="6" y1="18" x2="21" y2="18"></line></svg>
+                  </button>
+                  <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'justifyFull')" title="Rata Kanan-Kiri (Justify)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                  </button>
+                  <span style="width:1px; height:18px; background:#CBD5E1; margin:0 3px;"></span>
+
+                  <!-- Headings -->
                   <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'formatBlock', '<h2>')" title="Sub-Judul Besar">H2</button>
                   <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'formatBlock', '<h3>')" title="Sub-Judul Sedang">H3</button>
                   <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'formatBlock', '<p>')" title="Paragraf Biasa">Teks</button>
                   <span style="width:1px; height:18px; background:#CBD5E1; margin:0 3px;"></span>
+
+                  <!-- Lists & Code -->
                   <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'insertOrderedList')" title="Daftar Angka 1, 2, 3">1. List</button>
                   <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'insertUnorderedList')" title="Daftar Poin Bulat">• List</button>
                   <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'formatCode')" title="Blok Kode Terminal CLI TKJ">&lt;/&gt; Script CLI</button>
                   <span style="width:1px; height:18px; background:#CBD5E1; margin:0 3px;"></span>
                   
-                  <!-- Tombol Upload Foto -->
+                  <!-- Sisipkan Foto -->
                   <button type="button" class="editor-btn editor-btn-primary" onclick="triggerUploadImageMateri(${index})" title="Sisipkan Foto / Screenshot Praktikum">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                     <span>Sisipkan Foto</span>
@@ -2065,14 +2537,29 @@
                   <input type="file" class="editor-file-input" accept="image/*" style="display:none;" onchange="handleImageUploadMateri(${index}, this)">
                 </div>
 
-                <!-- Canvas Editor Seperti Lembar Kerja Word -->
-                <div class="editor-canvas" contenteditable="true" data-placeholder="Ketik materi di sini... Anda bisa langsung tekan Enter untuk paragraf baru atau paste screenshot (Ctrl+V) langsung menempel rapi!" oninput="syncModalPageData(${index})" onpaste="handleCanvasPaste(${index}, event)">${initialHtml}</div>
+                <!-- Canvas Editor Seperti Lembar Kerja Word yang Luas -->
+                <div class="editor-canvas" contenteditable="true" data-placeholder="Ketik materi pembelajaran di sini... Anda bisa langsung menekan Enter untuk paragraf baru atau paste screenshot (Ctrl+V) langsung menempel rapi!" oninput="syncModalPageData(${index})" onpaste="handleCanvasPaste(${index}, event)"></div>
               </div>
             </div>
           `;
         }).join('');
 
-        // 1. Drag & Drop Reorder Kartu Halaman Murni Pakai Kursor / Tanpa Tombol
+        // Isi konten tiap halaman secara presisi ke dalam innerHTML canvas
+        window.currentModalPages.forEach((page, index) => {
+          const card = container.querySelector(`.materi-page-card[data-index="${index}"]`);
+          if (!card) return;
+          const canvas = card.querySelector('.editor-canvas');
+          if (canvas) {
+            let h = page.konten || '';
+            h = h.replace(/<figcaption[^>]*>[\s\S]*?<\/figcaption>/gi, '');
+            if (h && !h.includes('<') && !h.includes('>')) {
+              h = h.split(/\r?\n/).filter(line => line.trim()).map(line => `<p>${line}</p>`).join('');
+            }
+            canvas.innerHTML = h || '<p><br></p>';
+          }
+        });
+
+        // 1. Drag & Drop Reorder Kartu Halaman
         let draggedCardIdx = null;
         container.querySelectorAll('.materi-page-card').forEach((card, idx) => {
           const handle = card.querySelector('.page-drag-handle');
@@ -2141,7 +2628,7 @@
           });
         });
 
-        // 2. Drag & Drop Gambar Bebas & Adaptif (Tarik & Geser Posisi Murni Kursor Tanpa Tombol)
+        // 2. Drag & Drop Gambar Bebas & Adaptif dengan Kursor
         let draggedImgEl = null;
 
         container.querySelectorAll('.materi-page-card').forEach((card, idx) => {
@@ -2176,9 +2663,8 @@
                   e.dataTransfer.dropEffect = 'move';
                 }
 
-                // Tampilkan garis indikator drop antar paragraf
                 let targetBlock = e.target.closest('p, figure, h2, h3, h4, pre, ul, ol, div');
-                if (targetBlock && targetBlock.parentNode === canvas) {
+                if (targetBlock && ta rgetBlock.parentNode === canvas) {
                   let ind = canvas.querySelector('.editor-drop-indicator');
                   if (!ind) {
                     ind = document.createElement('div');
@@ -2188,7 +2674,7 @@
                   if (e.clientY < rect.top + rect.height / 2) {
                     canvas.insertBefore(ind, targetBlock);
                   } else {
-                    canvas.insertBefore(ind, targetBlock.nextSibling);
+                    canvas.insertBefore(ind, targetBlock.nextSib ling);
                   }
                 }
               }
@@ -2203,19 +2689,18 @@
             canvas.addEventListener('drop', (e) => {
               if (!draggedImgEl) return;
               e.preventDefault();
-              canvas.querySelectorAll('.editor-drop-indicator').forEach(el => el.remove());
+              canvas.querySelectorAll('.editor-drop-indicator').forEach(el => el.remov e());
 
               const blockToMove = draggedImgEl.closest('p, figure') || draggedImgEl;
               const targetNode = e.target;
 
-              // Deteksi posisi horizontal kursor drop (Otomatis Kiri, Tengah, Kanan)
               const canvasRect = canvas.getBoundingClientRect();
               const relX = (e.clientX - canvasRect.left) / canvasRect.width;
 
               if (targetNode && targetNode !== blockToMove && targetNode !== draggedImgEl) {
                 const targetBlock = targetNode.closest('p, figure, h2, h3, h4, pre, ul, ol, div');
                 if (targetBlock && targetBlock !== blockToMove && targetBlock.parentNode === canvas) {
-                  const rect = targetBlock.getBoundingClientRect();
+                  const rect = targetBlock.get BoundingClientRect();
                   const relY = e.clientY - rect.top;
                   if (relY < rect.height / 2) {
                     canvas.insertBefore(blockToMove, targetBlock);
@@ -2232,7 +2717,6 @@
                 }
               }
 
-              // Set alignment adaptif berdasarkan lokasi drop mouse
               window.activeMateriImg = draggedImgEl;
               if (relX < 0.28) {
                 window.setMateriImagePosition('left');
@@ -2243,7 +2727,7 @@
               }
 
               setTimeout(() => {
-                canvas.querySelectorAll('p, figure').forEach(f => {
+                canvas.querySelectorAll('p, figu re').forEach(f => {
                   if (!f.querySelector('img') && !f.textContent.trim()) f.remove();
                 });
                 window.syncModalPageData(idx);
@@ -2293,7 +2777,7 @@
 
       window.tambahHalamanMateriBaru = function() {
         window.syncAllModalPages();
-        if (!Array.isArray(window.currentModalPages)) {
+        if (!Array.isArray(window.c urrentModalPages)) {
           window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
         }
         window.currentModalPages.push({
@@ -2318,12 +2802,12 @@
         const idEl = document.getElementById('input-materi-id');
         const judulEl = document.getElementById('input-materi-judul');
         const katEl = document.getElementById('input-materi-kategori');
+        const selKatEl = document.getElementById('select-materi-kategori');
         const isiEl = document.getElementById('input-materi-isi');
 
         if (idEl) idEl.value = '';
         if (judulEl) judulEl.value = '';
         if (katEl) katEl.value = '';
-        const selKatEl = document.getElementById('select-materi-kategori');
         if (selKatEl) selKatEl.value = '';
         if (isiEl) isiEl.value = '';
 
@@ -2337,16 +2821,17 @@
       window.bukaModalEditMateri = async function(id) {
         let list = window.globalMateri || [];
         let m = list.find(item => String(item.id) === String(id));
-        if (!m || !m.pages || m.pages.length === 0) {
-          try {
-            const res = await fetch(`/api/admin/materi/${id}`);
-            const data = await res.json();
-            if (res.ok && data.success && data.materi) {
-              m = data.materi;
-            }
-          } catch (err) {
-            console.error('Fetch materi detail error:', err);
+
+        // Selalu ambil detail segar dari API database agar konten 100% lengkap
+        try {
+          const filterId = isNaN(Number(id)) ? id : Number(id);
+          const res = await fetch(`/api/admin/materi/${filterId}`);
+          const data = await res.json();
+          if (res.ok && data.success && data.materi) {
+            m = data.materi;
           }
+        } catch (err) {
+          console.error('Fetch materi detail error:', err);
         }
 
         if (!m) {
@@ -2371,13 +2856,34 @@
         if (selKatEl) selKatEl.value = m.kategori || '';
         if (isiEl) isiEl.value = m.isi || '';
 
+        let loadedPages = [];
         if (m.pages && Array.isArray(m.pages) && m.pages.length > 0) {
-          window.currentModalPages = JSON.parse(JSON.stringify(m.pages));
+          loadedPages = JSON.parse(JSON.stringify(m.pages));
         } else if (m.isi) {
-          window.currentModalPages = [{ halaman: 1, judul: '', konten: m.isi }];
-        } else {
-          window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+          try {
+            let parsed = (typeof m.isi === 'string') ? JSON.parse(m.isi) : m.isi;
+            if (typeof parsed === 'string') {
+              try { parsed = JSON.parse(parsed); } catch (e) {}
+            }
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              loadedPages = parsed.map((p, idx) => ({
+                halaman: p.halaman || (idx + 1),
+                judul: p.judul || `Halaman ${idx + 1}`,
+                konten: p.konten || ''
+              }));
+            } else {
+              loadedPages = [{ halaman: 1, judul: '', konten: m.isi }];
+            }
+          } catch (e) {
+            loadedPages = [{ halaman: 1, judul: '', konten: m.isi }];
+          }
         }
+
+        if (loadedPages.length === 0) {
+          loadedPages = [{ halaman: 1, judul: '', konten: '' }];
+        }
+
+        window.currentModalPages = loadedPages;
         window.renderModalPages();
 
         if (title) title.textContent = `Edit Modul Materi #${m.id}`;
@@ -2386,7 +2892,7 @@
 
       window.tutupModalMateri = function() {
         if (typeof window.closeMateriImageResizer === 'function') {
-          window.closeMateriImageResizer();
+          window.closeMateriImageResi);
         }
         const modal = document.getElementById('modal-materi');
         if (modal) modal.style.display = 'none';
@@ -2396,7 +2902,7 @@
       document.addEventListener('DOMContentLoaded', () => {
         const pagesContainer = document.getElementById('materi-pages-container');
         if (pagesContainer) {
-          pagesContainer.addEventListener('scroll', () => {
+          pagener.addEventListener('scroll', () => {
             if (window.activeMateriImg) {
               if (typeof window.repositionMateriResizer === 'function') window.repositionMateriResizer();
               if (typeof window.repositionResizeOverlay === 'function') window.repositionResizeOverlay();
@@ -2492,25 +2998,34 @@
     <!-- ========================================== -->
     <!-- MODAL TAMBAH & EDIT VIDIO PRAKTIK          -->
     <!-- ========================================== -->
-    <div id="modal-video" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
-      <div class="card-panel" style="width:100%; max-width:600px; background:#FFFFFF; border:1px solid #CBD5E1; box-shadow:0 25px 60px rgba(0,0,0,0.18); border-radius:24px; max-height:92vh; overflow-y:auto; position:relative; padding:24px;">
-        
+    <div id="modal-video"
+      style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+      <div class="card-panel"
+        style="width:100%; max-width:600px; background:#FFFFFF; border:1px solid #CBD5E1; box-shadow:0 25px 60px rgba(0,0,0,0.18); border-radius:24px; max-height:92vh; overflow-y:auto; position:relative; padding:24px;">
+
         <!-- Header Modal -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #F1F5F9; padding-bottom:14px;">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #F1F5F9; padding-bottom:14px;">
           <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <div
+              style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                 <line x1="8" y1="21" x2="16" y2="21"></line>
                 <line x1="12" y1="17" x2="12" y2="21"></line>
               </svg>
             </div>
             <div>
-              <h3 id="modal-video-title" style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Tambah Vidio Praktik Baru</h3>
-              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Cukup cantumkan link YouTube, thumbnail & video player akan dibuat otomatis</p>
+              <h3 id="modal-video-title" style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Tambah
+                Vidio Praktik Baru</h3>
+              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Cukup cantumkan link YouTube, thumbnail & video
+                player akan dibuat otomatis</p>
             </div>
           </div>
-          <button id="btn-close-modal-video" type="button" style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" title="Tutup Modal">&times;</button>
+          <button id="btn-close-modal-video" type="button"
+            style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;"
+            title="Tutup Modal">&times;</button>
         </div>
 
         <!-- Form Tambah / Edit Vidio -->
@@ -2518,13 +3033,17 @@
           <input type="hidden" id="input-video-id" value="">
 
           <div style="margin-bottom:14px;">
-            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Judul Vidio Praktik *</label>
-            <input type="text" id="input-video-judul" class="input-field" placeholder="Contoh: Konfigurasi Hotspot & User Login MikroTik" required style="background:#FFFFFF;">
+            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Judul
+              Vidio Praktik *</label>
+            <input type="text" id="input-video-judul" class="input-field"
+              placeholder="Contoh: Konfigurasi Hotspot & User Login MikroTik" required style="background:#FFFFFF;">
           </div>
 
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
             <div>
-              <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kategori Materi *</label>
+              <label
+                style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kategori
+                Materi *</label>
               <select id="input-video-kategori" class="input-field" required style="background:#FFFFFF;">
                 <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
                 <option value="Mikrotik">Mikrotik</option>
@@ -2532,38 +3051,57 @@
               </select>
             </div>
             <div>
-              <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Durasi Video (Menit:Detik)</label>
-              <input type="text" id="input-video-durasi" class="input-field" placeholder="Contoh: 15:30" style="background:#FFFFFF;">
+              <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Durasi
+                Video (Menit:Detik)</label>
+              <input type="text" id="input-video-durasi" class="input-field" placeholder="Contoh: 15:30"
+                style="background:#FFFFFF;">
             </div>
           </div>
 
           <div style="margin-bottom:14px;">
-            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Link URL YouTube *</label>
-            <input type="url" id="input-video-url" class="input-field" placeholder="Paste link YouTube apa saja (contoh: https://youtu.be/... atau https://www.youtube.com/watch?v=...)" required style="background:#FFFFFF;">
-            <span style="font-size:11px; color:#64748B; margin-top:4px; display:block;">Mendukung semua format link YouTube (biasa, share youtu.be, shorts, atau embed).</span>
+            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Link URL
+              YouTube *</label>
+            <input type="url" id="input-video-url" class="input-field"
+              placeholder="Paste link YouTube apa saja (contoh: https://youtu.be/... atau https://www.youtube.com/watch?v=...)"
+              required style="background:#FFFFFF;">
+            <span style="font-size:11px; color:#64748B; margin-top:4px; display:block;">Mendukung semua format link
+              YouTube (biasa, share youtu.be, shorts, atau embed).</span>
           </div>
 
           <!-- Live Thumbnail Preview Box -->
-          <div id="video-preview-box" style="margin-bottom:16px; padding:12px 14px; background:#F8FAFC; border:1.5px dashed #CBD5E1; border-radius:14px; display:flex; align-items:center; gap:14px;">
-            <div style="width:110px; height:68px; border-radius:10px; overflow:hidden; background:#0F172A; flex-shrink:0; display:flex; align-items:center; justify-content:center; position:relative;">
-              <img id="video-preview-thumb" src="" alt="Thumbnail" style="width:100%; height:100%; object-fit:cover; display:none;">
-              <span id="video-preview-placeholder" style="color:#64748B; font-size:10.5px; text-align:center; padding:4px;">Cover YouTube</span>
+          <div id="video-preview-box"
+            style="margin-bottom:16px; padding:12px 14px; background:#F8FAFC; border:1.5px dashed #CBD5E1; border-radius:14px; display:flex; align-items:center; gap:14px;">
+            <div
+              style="width:110px; height:68px; border-radius:10px; overflow:hidden; background:#0F172A; flex-shrink:0; display:flex; align-items:center; justify-content:center; position:relative;">
+              <img id="video-preview-thumb" src="" alt="Thumbnail"
+                style="width:100%; height:100%; object-fit:cover; display:none;">
+              <span id="video-preview-placeholder"
+                style="color:#64748B; font-size:10.5px; text-align:center; padding:4px;">Cover YouTube</span>
             </div>
             <div>
-              <strong id="video-preview-status" style="font-size:12px; color:#64748B; display:block;">Masukkan link YouTube di atas</strong>
-              <p style="margin:2px 0 0; font-size:11px; color:#94A3B8; line-height:1.4;">Cover gambar video dan link pemutar akan otomatis diekstrak oleh sistem.</p>
+              <strong id="video-preview-status" style="font-size:12px; color:#64748B; display:block;">Masukkan link
+                YouTube di atas</strong>
+              <p style="margin:2px 0 0; font-size:11px; color:#94A3B8; line-height:1.4;">Cover gambar video dan link
+                pemutar akan otomatis diekstrak oleh sistem.</p>
             </div>
           </div>
 
           <div style="margin-bottom:18px;">
-            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Deskripsi Singkat (Opsional)</label>
-            <textarea id="input-video-deskripsi" class="input-field" rows="3" placeholder="Tuliskan poin-poin materi atau penjelasan praktik..." style="background:#FFFFFF; resize:vertical;"></textarea>
+            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Deskripsi
+              Singkat (Opsional)</label>
+            <textarea id="input-video-deskripsi" class="input-field" rows="3"
+              placeholder="Tuliskan poin-poin materi atau penjelasan praktik..."
+              style="background:#FFFFFF; resize:vertical;"></textarea>
           </div>
 
           <div style="display:flex; justify-content:flex-end; gap:10px;">
-            <button type="button" id="btn-batal-modal-video" class="btn-secondary" style="padding:10px 18px; font-size:13px;">Batal</button>
-            <button type="submit" id="btn-simpan-video" class="btn-primary" style="padding:10px 22px; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <button type="button" id="btn-batal-modal-video" class="btn-secondary"
+              style="padding:10px 18px; font-size:13px;">Batal</button>
+            <button type="submit" id="btn-simpan-video" class="btn-primary"
+              style="padding:10px 22px; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
               <span>Simpan Vidio</span>
             </button>
           </div>
@@ -2574,36 +3112,62 @@
     <!-- ========================================== -->
     <!-- MODAL DETAIL SISWA & KREDENSIAL LOGIN      -->
     <!-- ========================================== -->
-    <div id="modal-detail-siswa" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
-      <div class="card-panel" style="width:100%; max-width:560px; background:#FFFFFF; border:1px solid #CBD5E1; box-shadow:0 25px 60px rgba(0,0,0,0.18); border-radius:24px; max-height:92vh; overflow-y:auto; position:relative; padding:24px;">
-        
+    <div id="modal-detail-siswa"
+      style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+      <div class="card-panel"
+        style="width:100%; max-width:560px; background:#FFFFFF; border:1px solid #CBD5E1; box-shadow:0 25px 60px rgba(0,0,0,0.18); border-radius:24px; max-height:92vh; overflow-y:auto; position:relative; padding:24px;">
+
         <!-- Header Modal -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #F1F5F9; padding-bottom:14px;">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #F1F5F9; padding-bottom:14px;">
           <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-1.5 1.5L16 7l-3-3 1.5-1.5a2.121 2.121 0 0 1 3 3L18 6.5m-3.5 3.5L12 12m-2-2l-4 4a2 2 0 0 0 0 2.83l3.17 3.17a2 2 0 0 0 2.83 0l4-4-6-6z"/></svg>
+            <div
+              style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M21 2l-2 2m-1.5 1.5L16 7l-3-3 1.5-1.5a2.121 2.121 0 0 1 3 3L18 6.5m-3.5 3.5L12 12m-2-2l-4 4a2 2 0 0 0 0 2.83l3.17 3.17a2 2 0 0 0 2.83 0l4-4-6-6z" />
+              </svg>
             </div>
             <div>
-              <h3 style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Detail Akun & Kredensial Siswa</h3>
-              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Informasi profil, akses kata sandi, dan performa siswa</p>
+              <h3 style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Detail Akun & Kredensial Siswa
+              </h3>
+              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Informasi profil, akses kata sandi, dan performa
+                siswa</p>
             </div>
           </div>
-          <button id="btn-close-modal-detail" style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" title="Tutup Modal">&times;</button>
+          <button id="btn-close-modal-detail"
+            style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;"
+            title="Tutup Modal">&times;</button>
         </div>
 
         <!-- Profil Ringkas -->
-        <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; padding:14px 16px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:16px;">
-          <img id="modal-siswa-foto" src="uploads/default.png" alt="Avatar" style="width:60px; height:60px; border-radius:50%; object-fit:cover; border:2.5px solid #0D5BFF; box-shadow:0 4px 10px rgba(13,91,255,0.15);">
+        <div
+          style="display:flex; align-items:center; gap:16px; margin-bottom:16px; padding:14px 16px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:16px;">
+          <img id="modal-siswa-foto" src="uploads/default.png" alt="Avatar"
+            style="width:60px; height:60px; border-radius:50%; object-fit:cover; border:2.5px solid #0D5BFF; box-shadow:0 4px 10px rgba(13,91,255,0.15);">
           <div style="flex:1;">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
               <h4 id="modal-siswa-nama" style="margin:0; font-size:16.5px; font-weight:800; color:#0F172A;">-</h4>
-              <span class="badge badge-purple" style="font-size:11px; display:inline-flex; align-items:center; gap:4px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              <span class="badge badge-purple"
+                style="font-size:11px; display:inline-flex; align-items:center; gap:4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                  <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                </svg>
                 <span>Siswa Terdaftar</span>
               </span>
             </div>
-            <div id="modal-siswa-tgl" style="font-size:12px; color:#64748B; margin-top:4px; display:flex; align-items:center; gap:4px;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <div id="modal-siswa-tgl"
+              style="font-size:12px; color:#64748B; margin-top:4px; display:flex; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
               <span>Terdaftar: -</span>
             </div>
           </div>
@@ -2611,55 +3175,80 @@
 
         <!-- Mini Stats Kuis Siswa -->
         <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:18px;">
-          <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:10px; text-align:center;">
+          <div
+            style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:10px; text-align:center;">
             <span style="font-size:11px; color:#166534; font-weight:700; display:block;">Total Ujian</span>
             <strong id="modal-siswa-total-kuis" style="font-size:16px; color:#15803D;">0</strong>
           </div>
-          <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:12px; padding:10px; text-align:center;">
+          <div
+            style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:12px; padding:10px; text-align:center;">
             <span style="font-size:11px; color:#1E40AF; font-weight:700; display:block;">Rata-Rata</span>
             <strong id="modal-siswa-avg-skor" style="font-size:16px; color:#0D5BFF;">0</strong>
           </div>
-          <div style="background:#FAF5FF; border:1px solid #E9D5FF; border-radius:12px; padding:10px; text-align:center;">
+          <div
+            style="background:#FAF5FF; border:1px solid #E9D5FF; border-radius:12px; padding:10px; text-align:center;">
             <span style="font-size:11px; color:#6B21A8; font-weight:700; display:block;">Skor Tertinggi</span>
             <strong id="modal-siswa-max-skor" style="font-size:16px; color:#7C3AED;">0</strong>
           </div>
         </div>
 
         <!-- Box Kredensial Login Siswa -->
-        <div style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:16px; padding:16px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
-          <h4 style="margin:0 0 12px; font-size:13.5px; font-weight:800; color:#0D5BFF; display:flex; align-items:center; gap:6px;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <div
+          style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:16px; padding:16px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+          <h4
+            style="margin:0 0 12px; font-size:13.5px; font-weight:800; color:#0D5BFF; display:flex; align-items:center; gap:6px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
             <span>Kredensial Masuk Siswa:</span>
           </h4>
 
           <div style="display:flex; flex-direction:column; gap:12px;">
             <!-- Email / Username -->
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#F8FAFC; border:1px solid #E2E8F0; padding:10px 14px; border-radius:10px;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; background:#F8FAFC; border:1px solid #E2E8F0; padding:10px 14px; border-radius:10px;">
               <div>
                 <span style="font-size:11.5px; color:#64748B; font-weight:600; display:block;">Email / Username:</span>
                 <code id="modal-siswa-email" style="font-size:13.5px; color:#0D5BFF; font-weight:700;">-</code>
               </div>
-              <button type="button" class="btn-copy-cred" data-copy="modal-siswa-email" title="Salin Email" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#334155; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:4px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <button type="button" class="btn-copy-cred" data-copy="modal-siswa-email" title="Salin Email"
+                style="background:#FFFFFF; border:1px solid #CBD5E1; color:#334155; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
                 <span>Salin</span>
               </button>
             </div>
 
             <!-- Kata Sandi Siswa -->
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#F8FAFC; border:1px solid #E2E8F0; padding:10px 14px; border-radius:10px;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; background:#F8FAFC; border:1px solid #E2E8F0; padding:10px 14px; border-radius:10px;">
               <div>
                 <span style="font-size:11.5px; color:#64748B; font-weight:600; display:block;">Kata Sandi Akun:</span>
-                <code id="modal-siswa-pwd" style="font-size:15px; color:#15803D; font-weight:800; background:#DCFCE7; padding:3px 10px; border-radius:6px; border:1px solid #BBF7D0; letter-spacing:0.5px; display:inline-block; margin-top:2px;">-</code>
+                <code id="modal-siswa-pwd"
+                  style="font-size:15px; color:#15803D; font-weight:800; background:#DCFCE7; padding:3px 10px; border-radius:6px; border:1px solid #BBF7D0; letter-spacing:0.5px; display:inline-block; margin-top:2px;">-</code>
               </div>
               <div style="display:flex; align-items:center; gap:6px;">
-                <button type="button" id="btn-toggle-modal-pwd" title="Lihat / Sembunyikan Sandi" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#0D5BFF; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:4px;">
+                <button type="button" id="btn-toggle-modal-pwd" title="Lihat / Sembunyikan Sandi"
+                  style="background:#FFFFFF; border:1px solid #CBD5E1; color:#0D5BFF; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer; font-weight:700; display:flex; align-items:center; gap:4px;">
                   <span id="btn-toggle-modal-pwd-icon" style="display:inline-flex; align-items:center;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
                   </span>
                   <span id="btn-toggle-modal-pwd-text">Lihat Sandi</span>
                 </button>
-                <button type="button" class="btn-copy-cred" data-copy="modal-siswa-pwd" title="Salin Kata Sandi" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#334155; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:4px;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <button type="button" class="btn-copy-cred" data-copy="modal-siswa-pwd" title="Salin Kata Sandi"
+                  style="background:#FFFFFF; border:1px solid #CBD5E1; color:#334155; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:4px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
                   <span>Salin</span>
                 </button>
               </div>
@@ -2669,15 +3258,28 @@
 
         <!-- Form Reset / Ganti Kata Sandi Siswa -->
         <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:16px; padding:16px;">
-          <h4 style="margin:0 0 4px; font-size:13px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          <h4
+            style="margin:0 0 4px; font-size:13px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
             <span>Ubah / Atur Ulang Kata Sandi</span>
           </h4>
-          <p style="margin:0 0 10px; font-size:11.5px; color:#64748B;">Atur kata sandi baru jika siswa lupa password akun mereka.</p>
+          <p style="margin:0 0 10px; font-size:11.5px; color:#64748B;">Atur kata sandi baru jika siswa lupa password
+            akun mereka.</p>
           <div style="display:flex; gap:8px;">
-            <input type="text" id="modal-input-new-pwd" class="input-field" placeholder="Masukkan kata sandi baru..." style="font-size:12.5px; padding:8px 12px; background:#FFFFFF;">
-            <button type="button" id="btn-submit-reset-pwd" class="btn-primary" style="width:auto; white-space:nowrap; padding:8px 16px; font-size:12px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            <input type="text" id="modal-input-new-pwd" class="input-field" placeholder="Masukkan kata sandi baru..."
+              style="font-size:12.5px; padding:8px 12px; background:#FFFFFF;">
+            <button type="button" id="btn-submit-reset-pwd" class="btn-primary"
+              style="width:auto; white-space:nowrap; padding:8px 16px; font-size:12px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
               <span>Simpan Sandi</span>
             </button>
           </div>
@@ -2688,43 +3290,67 @@
     <!-- ========================================== -->
     <!-- MODAL TAMBAH AKUN SISWA BARU              -->
     <!-- ========================================== -->
-    <div id="modal-tambah-siswa" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
-      <div class="card-panel" style="width:100%; max-width:520px; background:#FFFFFF; border:1px solid #CBD5E1; box-shadow:0 25px 60px rgba(0,0,0,0.18); border-radius:24px; max-height:92vh; overflow-y:auto; position:relative; padding:24px;">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #F1F5F9; padding-bottom:14px;">
+    <div id="modal-tambah-siswa"
+      style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+      <div class="card-panel"
+        style="width:100%; max-width:520px; background:#FFFFFF; border:1px solid #CBD5E1; box-shadow:0 25px 60px rgba(0,0,0,0.18); border-radius:24px; max-height:92vh; overflow-y:auto; position:relative; padding:24px;">
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #F1F5F9; padding-bottom:14px;">
           <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+            <div
+              style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <line x1="20" y1="8" x2="20" y2="14"></line>
+                <line x1="23" y1="11" x2="17" y2="11"></line>
+              </svg>
             </div>
             <div>
               <h3 style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Tambah Akun Siswa Baru</h3>
-              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Daftarkan akun siswa langsung dari panel administrator</p>
+              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Daftarkan akun siswa langsung dari panel
+                administrator</p>
             </div>
           </div>
-          <button id="btn-close-modal-tambah-siswa" type="button" style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" title="Tutup Modal">&times;</button>
+          <button id="btn-close-modal-tambah-siswa" type="button"
+            style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;"
+            title="Tutup Modal">&times;</button>
         </div>
 
         <form id="form-tambah-siswa">
           <div style="margin-bottom:14px;">
-            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Nama Lengkap Siswa *</label>
-            <input type="text" id="input-tambah-siswa-nama" class="input-field" placeholder="Contoh: Muhammad Fikri" required style="background:#FFFFFF;">
+            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Nama
+              Lengkap Siswa *</label>
+            <input type="text" id="input-tambah-siswa-nama" class="input-field" placeholder="Contoh: Muhammad Fikri"
+              required style="background:#FFFFFF;">
           </div>
 
           <div style="margin-bottom:14px;">
-            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Email / Username Siswa *</label>
-            <input type="text" id="input-tambah-siswa-email" class="input-field" placeholder="Contoh: fikri@netora.id atau fikri123" required style="background:#FFFFFF;">
+            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Email /
+              Username Siswa *</label>
+            <input type="text" id="input-tambah-siswa-email" class="input-field"
+              placeholder="Contoh: fikri@netora.id atau fikri123" required style="background:#FFFFFF;">
           </div>
 
           <div style="margin-bottom:18px;">
-            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kata Sandi Akun</label>
-            <input type="text" id="input-tambah-siswa-password" class="input-field" placeholder="Default: 123456" style="background:#FFFFFF;">
-            <span style="font-size:11px; color:#64748B; margin-top:4px; display:block;">Kosongkan jika ingin menggunakan kata sandi bawaan (123456).</span>
+            <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kata
+              Sandi Akun</label>
+            <input type="text" id="input-tambah-siswa-password" class="input-field" placeholder="Default: 123456"
+              style="background:#FFFFFF;">
+            <span style="font-size:11px; color:#64748B; margin-top:4px; display:block;">Kosongkan jika ingin menggunakan
+              kata sandi bawaan (123456).</span>
           </div>
 
           <div style="display:flex; justify-content:flex-end; gap:10px;">
-            <button type="button" id="btn-batal-modal-tambah-siswa" class="btn-secondary" style="padding:10px 18px; font-size:13px;">Batal</button>
-            <button type="submit" id="btn-simpan-siswa-baru" class="btn-primary" style="padding:10px 22px; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <button type="button" id="btn-batal-modal-tambah-siswa" class="btn-secondary"
+              style="padding:10px 18px; font-size:13px;">Batal</button>
+            <button type="submit" id="btn-simpan-siswa-baru" class="btn-primary"
+              style="padding:10px 22px; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
               <span>Simpan Akun Siswa</span>
             </button>
           </div>
@@ -2734,7 +3360,8 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.6"></script>
-  <script src="js/admin.js?v=2026.6"></script>
+  <script src="js/netora.js?v=2026.7"></script>
+  <script src="js/admin.js?v=2026.7"></script>
 </body>
+
 </html>

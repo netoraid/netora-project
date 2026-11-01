@@ -7,7 +7,10 @@ function parseMateriPages(item) {
   let pages = [];
   if (item && item.isi) {
     try {
-      const parsed = JSON.parse(item.isi);
+      let parsed = (typeof item.isi === 'string') ? JSON.parse(item.isi) : item.isi;
+      if (typeof parsed === 'string') {
+        try { parsed = JSON.parse(parsed); } catch (e) {}
+      }
       if (Array.isArray(parsed) && parsed.length > 0) {
         pages = parsed.map((p, idx) => ({
           halaman: p.halaman || (idx + 1),

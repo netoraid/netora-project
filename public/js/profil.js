@@ -1,10 +1,10 @@
-window.initProfilPage = async function() {
+window.initProfilPage = async function () {
   const profileNama = document.getElementById('profile-nama');
   const editNama = document.getElementById('edit-nama');
   if (!profileNama && !editNama) return;
 
   // 1. Controller Tab Switching Sinkron & Instan (0ms delay)
-  window.switchProfilTab = window.switchProfilTab || function(targetId, btnEl) {
+  window.switchProfilTab = window.switchProfilTab || function (targetId, btnEl) {
     if (!targetId) return;
     const allPanels = document.querySelectorAll('.profil-tab-content');
     allPanels.forEach(panel => {
@@ -69,7 +69,9 @@ window.initProfilPage = async function() {
 
     if (profileNama) profileNama.textContent = u.nama || 'Pengguna Netora';
     if (profileEmail) profileEmail.textContent = u.email || '';
-    if (profileImg && u.foto) profileImg.src = u.foto;
+    if (profileImg) {
+      profileImg.src = typeof getUserAvatarUrl === 'function' ? getUserAvatarUrl(u) : (u.foto || 'uploads/default.svg');
+    }
     if (profileJoined && u.created_at) {
       const tgl = typeof formatTanggal === 'function' ? formatTanggal(u.created_at) : u.created_at;
       profileJoined.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><span>Bergabung sejak ${tgl}</span>`;
@@ -103,12 +105,12 @@ window.initProfilPage = async function() {
       const u = JSON.parse(stored);
       applyUserFields(u);
     }
-  } catch(e) {}
+  } catch (e) { }
 
   let user = null;
   try {
     user = typeof requireLogin === 'function' ? await requireLogin() : (typeof getUser === 'function' ? await getUser() : null);
-  } catch(e) {
+  } catch (e) {
     console.warn('Auth check error in profil:', e);
   }
   if (!user) return;
@@ -129,7 +131,7 @@ window.initProfilPage = async function() {
         applyUserFields(data.user);
         try {
           sessionStorage.setItem('netora_user_cache', JSON.stringify({ ...user, ...data.user }));
-        } catch(e) {}
+        } catch (e) { }
       }
     } catch (err) {
       console.warn('Gagal memuat profil:', err);
@@ -218,6 +220,8 @@ window.initProfilPage = async function() {
         if (res.ok && data.success) {
           if (typeof toast === 'function') toast(data.message, 'success');
           if (profileImg) profileImg.src = data.foto + '?t=' + Date.now();
+          if (user) user.foto = data.foto;
+          try { sessionStorage.setItem('netora_user_cache', JSON.stringify({ ...user, foto: data.foto })); } catch (e) { }
         } else {
           if (typeof toast === 'function') toast(data.error || 'Gagal mengunggah foto', 'error');
         }
@@ -238,7 +242,7 @@ window.initProfilPage = async function() {
   const btnHapusFoto = document.getElementById('btn-hapus-foto');
   if (btnHapusFoto) {
     btnHapusFoto.onclick = async () => {
-      if (profileImg && profileImg.src.includes('default.png')) {
+      if (profileImg && (profileImg.src.includes('default.svg') || profileImg.src.includes('data:image/svg'))) {
         if (typeof toast === 'function') toast('Foto profil kamu sudah menggunakan avatar standar.', 'info');
         return;
       }
@@ -256,7 +260,11 @@ window.initProfilPage = async function() {
         const data = await res.json();
         if (res.ok && data.success) {
           if (typeof toast === 'function') toast('Foto profil berhasil dihapus!', 'success');
-          if (profileImg) profileImg.src = 'uploads/default.png?t=' + Date.now();
+          if (profileImg) {
+            profileImg.src = typeof getUserAvatarUrl === 'function' ? getUserAvatarUrl({ ...user, foto: null }) : 'uploads/default.svg';
+          }
+          if (user) user.foto = null;
+          try { sessionStorage.setItem('netora_user_cache', JSON.stringify({ ...user, foto: null })); } catch (e) { }
         } else {
           if (typeof toast === 'function') toast(data.error || 'Gagal menghapus foto profil.', 'error');
         }
@@ -283,7 +291,7 @@ window.initProfilPage = async function() {
         const data = await res.json();
         if (res.ok && data.success) {
           if (typeof toast === 'function') toast(data.message, 'success');
-          try { sessionStorage.clear(); } catch (e) {}
+          try { sessionStorage.clear(); } catch (e) { }
           setTimeout(() => {
             window.location.href = '/login.html';
           }, 1200);

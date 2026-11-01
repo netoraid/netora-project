@@ -23,7 +23,13 @@ window.initAdminDashboard = async function() {
   const adminNama = document.getElementById('admin-nama');
   const adminAvatar = document.getElementById('admin-avatar');
   if (adminNama) adminNama.textContent = user.nama;
-  if (adminAvatar && user.foto) adminAvatar.src = user.foto;
+  if (adminAvatar) {
+    adminAvatar.src = typeof getUserAvatarUrl === 'function' ? getUserAvatarUrl(user) : (user.foto || 'uploads/default.svg');
+    adminAvatar.onerror = function() {
+      this.onerror = null;
+      this.src = typeof getUserAvatarUrl === 'function' ? getUserAvatarUrl({ nama: user ? user.nama : 'Admin' }) : 'uploads/default.svg';
+    };
+  }
 
   // 2. Live Real-time Clock
   function updateClock() {
@@ -856,6 +862,15 @@ window.initAdminDashboard = async function() {
 
     editor.focus();
 
+    // Jika ada gambar aktif yang diklik dan memilih alignment
+    if (window.activeMateriImg && (cmd === 'justifyLeft' || cmd === 'justifyCenter' || cmd === 'justifyRight' || cmd === 'justifyFull')) {
+      if (cmd === 'justifyLeft' && typeof window.setMateriImagePosition === 'function') window.setMateriImagePosition('left');
+      else if (cmd === 'justifyRight' && typeof window.setMateriImagePosition === 'function') window.setMateriImagePosition('right');
+      else if (typeof window.setMateriImagePosition === 'function') window.setMateriImagePosition('center');
+      window.syncModalPageData(index);
+      return;
+    }
+
     if (cmd === 'formatCode') {
       const sel = window.getSelection();
       const selectedText = sel ? sel.toString() : '';
@@ -1008,16 +1023,32 @@ window.initAdminDashboard = async function() {
           </div>
 
           <div>
-            <label style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px;">
-              <span>Konten / Isi Materi Halaman Ini (Word-Like Editor) *</span>
-              <span style="color:#0D5BFF; font-weight:600; font-size:11px;">💡 Mendukung Paste Foto Langsung (Ctrl+V)</span>
-            </label>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:12px; font-weight:700; color:#334155;">Konten / Isi Materi Halaman Ini (Word-Like Editor) *</span>
+              <span style="color:#0D5BFF; font-weight:700; font-size:11.5px; display:inline-flex; align-items:center; gap:5px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <span>Bisa Paste Screenshot (Ctrl+V) & Tarik Gambar dengan Kursor</span>
+              </span>
+            </div>
 
-            <!-- Toolbar Ala Microsoft Word -->
-            <div class="editor-toolbar" style="display:flex; flex-wrap:wrap; align-items:center; gap:4px; background:#F1F5F9; border:1px solid #CBD5E1; border-bottom:none; border-top-left-radius:10px; border-top-right-radius:10px; padding:6px 10px;">
+            <!-- Toolbar Ala Microsoft Word: Format, Alignment, Lists, & Media -->
+            <div class="editor-toolbar">
               <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'bold')" title="Tebal (Ctrl+B)"><b>B</b></button>
               <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'italic')" title="Miring (Ctrl+I)"><i>I</i></button>
               <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'underline')" title="Garis Bawah (Ctrl+U)"><u>U</u></button>
+              <span style="width:1px; height:18px; background:#CBD5E1; margin:0 3px;"></span>
+              <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'justifyLeft')" title="Rata Kiri">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="14" y2="12"></line><line x1="3" y1="18" x2="18" y2="18"></line></svg>
+              </button>
+              <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'justifyCenter')" title="Rata Tengah">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="6" y1="12" x2="18" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+              </button>
+              <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'justifyRight')" title="Rata Kanan">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="10" y1="12" x2="21" y2="12"></line><line x1="6" y1="18" x2="21" y2="18"></line></svg>
+              </button>
+              <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'justifyFull')" title="Rata Kanan-Kiri (Justify)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+              </button>
               <span style="width:1px; height:18px; background:#CBD5E1; margin:0 3px;"></span>
               <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'formatBlock', '<h2>')" title="Sub-Judul Besar">H2</button>
               <button type="button" class="editor-btn" onclick="execEditorCmd(${index}, 'formatBlock', '<h3>')" title="Sub-Judul Sedang">H3</button>
@@ -1029,7 +1060,7 @@ window.initAdminDashboard = async function() {
               <span style="width:1px; height:18px; background:#CBD5E1; margin:0 3px;"></span>
               
               <!-- Tombol Sisipkan Foto -->
-              <button type="button" class="editor-btn editor-btn-primary" onclick="triggerUploadImageMateri(${index})" title="Sisipkan Foto / Screenshot Praktikum" style="background:#0D5BFF; color:#fff; border-color:#0D5BFF; display:inline-flex; align-items:center; gap:5px; font-weight:700;">
+              <button type="button" class="editor-btn editor-btn-primary" onclick="triggerUploadImageMateri(${index})" title="Sisipkan Foto / Screenshot Praktikum">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                 <span>Sisipkan Foto</span>
               </button>
@@ -1037,12 +1068,22 @@ window.initAdminDashboard = async function() {
               <input type="file" class="editor-file-input" accept="image/*" style="display:none;" onchange="handleImageUploadMateri(${index}, this)">
             </div>
 
-            <!-- Canvas Editor Seperti Lembar Kerja Word -->
-            <div class="editor-canvas" contenteditable="true" data-placeholder="Ketik materi di sini... Anda bisa langsung tekan Enter untuk paragraf baru atau paste screenshot (Ctrl+V) langsung menempel rapi!" oninput="syncModalPageData(${index})" onpaste="handleCanvasPaste(${index}, event)" style="background:#FFFFFF; border:1px solid #CBD5E1; border-bottom-left-radius:10px; border-bottom-right-radius:10px; padding:14px 16px; min-height:160px; max-height:420px; overflow-y:auto; font-size:13.5px; line-height:1.65; color:#1E293B; outline:none;">${initialHtml}</div>
+            <!-- Canvas Editor Seperti Lembar Kerja Word yang Luas -->
+            <div class="editor-canvas" contenteditable="true" data-placeholder="Ketik materi pembelajaran di sini... Anda bisa langsung menekan Enter untuk paragraf baru atau paste screenshot (Ctrl+V) langsung menempel rapi!" oninput="syncModalPageData(${index})" onpaste="handleCanvasPaste(${index}, event)"></div>
           </div>
         </div>
       `;
     }).join('');
+
+    // Pastikan konten halaman diset langsung ke innerHTML canvas
+    currentModalPages.forEach((page, index) => {
+      const card = container.querySelector(`.materi-page-card[data-index="${index}"]`);
+      if (!card) return;
+      const canvas = card.querySelector('.editor-canvas');
+      if (canvas) {
+        canvas.innerHTML = prepareInitialEditorHtml(page.konten || '');
+      }
+    });
 
     // Aktifkan drag-and-drop gambar dengan kursor laptop & sync data otomatis
     container.querySelectorAll('.materi-page-card').forEach((card, idx) => {
@@ -1205,8 +1246,13 @@ window.initAdminDashboard = async function() {
     if (selKatEl) selKatEl.value = '';
     if (isiEl) isiEl.value = '';
     
-    currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
-    renderModalPages();
+    window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+    currentModalPages = window.currentModalPages;
+    if (typeof window.renderModalPages === 'function') {
+      window.renderModalPages();
+    } else {
+      renderModalPages();
+    }
 
     if (title) title.textContent = 'Tambah Modul Materi Baru';
     modal.style.display = 'flex';
@@ -1214,18 +1260,19 @@ window.initAdminDashboard = async function() {
 
   window.bukaModalEditMateri = async function(id) {
     console.log('[Netora Admin] Membuka modal edit materi ID:', id);
-    let m = globalMateri.find(item => String(item.id) === String(id));
-    if (!m || !m.pages || m.pages.length === 0) {
-      try {
-        const res = await fetch(`/api/admin/materi/${id}`);
-        const data = await res.json();
-        if (res.ok && data.success && data.materi) {
-          m = data.materi;
-        }
-      } catch (err) {
-        console.error('Gagal mengambil data materi:', err);
+    let m = (window.globalMateri || globalMateri || []).find(item => String(item.id) === String(id));
+    
+    try {
+      const filterId = isNaN(Number(id)) ? id : Number(id);
+      const res = await fetch(`/api/admin/materi/${filterId}`);
+      const data = await res.json();
+      if (res.ok && data.success && data.materi) {
+        m = data.materi;
       }
+    } catch (err) {
+      console.error('Gagal mengambil data materi:', err);
     }
+
     if (!m) {
       toast('Data modul materi tidak ditemukan.', 'error');
       return;
@@ -1247,14 +1294,41 @@ window.initAdminDashboard = async function() {
     if (selKatEl) selKatEl.value = m.kategori || '';
     if (isiEl) isiEl.value = m.isi || '';
 
+    let loadedPages = [];
     if (m.pages && Array.isArray(m.pages) && m.pages.length > 0) {
-      currentModalPages = JSON.parse(JSON.stringify(m.pages));
+      loadedPages = JSON.parse(JSON.stringify(m.pages));
     } else if (m.isi) {
-      currentModalPages = [{ halaman: 1, judul: '', konten: m.isi }];
-    } else {
-      currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+      try {
+        let parsed = (typeof m.isi === 'string') ? JSON.parse(m.isi) : m.isi;
+        if (typeof parsed === 'string') {
+          try { parsed = JSON.parse(parsed); } catch (e) {}
+        }
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          loadedPages = parsed.map((p, idx) => ({
+            halaman: p.halaman || (idx + 1),
+            judul: p.judul || `Halaman ${idx + 1}`,
+            konten: p.konten || ''
+          }));
+        } else {
+          loadedPages = [{ halaman: 1, judul: '', konten: m.isi }];
+        }
+      } catch (e) {
+        loadedPages = [{ halaman: 1, judul: '', konten: m.isi }];
+      }
     }
-    renderModalPages();
+
+    if (loadedPages.length === 0) {
+      loadedPages = [{ halaman: 1, judul: '', konten: '' }];
+    }
+
+    window.currentModalPages = loadedPages;
+    currentModalPages = window.currentModalPages;
+
+    if (typeof window.renderModalPages === 'function') {
+      window.renderModalPages();
+    } else {
+      renderModalPages();
+    }
 
     if (title) title.textContent = `Edit Modul Materi #${m.id}`;
     modal.style.display = 'flex';

@@ -576,7 +576,10 @@ function parseMateriPagesAdmin(m) {
   let pages = [];
   if (m && m.isi) {
     try {
-      const parsed = JSON.parse(m.isi);
+      let parsed = (typeof m.isi === 'string') ? JSON.parse(m.isi) : m.isi;
+      if (typeof parsed === 'string') {
+        try { parsed = JSON.parse(parsed); } catch (e) {}
+      }
       if (Array.isArray(parsed) && parsed.length > 0) {
         pages = parsed.map((p, idx) => ({
           halaman: p.halaman || (idx + 1),
@@ -632,10 +635,11 @@ router.get('/materi', async (req, res) => {
 router.get('/materi/:id', async (req, res) => {
   const { id } = req.params;
   try {
+    const filterId = isNaN(Number(id)) ? id : Number(id);
     const { data: m, error } = await supabase
       .from('materi')
       .select('*')
-      .eq('id', id)
+      .eq('id', filterId)
       .maybeSingle();
 
     if (error || !m) {

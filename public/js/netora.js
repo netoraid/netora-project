@@ -20,7 +20,28 @@ function pressGlow(el, e) {
   el.classList.add('is-pressed');
 }
 
-// 2. Ambil data user aktif dengan Smart Cache (0ms load saat berpindah halaman)
+// 2. Helper foto profil pengguna murni dari database (Bukan dummy logo)
+function getUserAvatarUrl(user) {
+  if (!user) {
+    const defaultSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128"><rect width="128" height="128" rx="64" fill="#0D5BFF"/><circle cx="64" cy="46" r="22" fill="#FFFFFF"/><path d="M26 106c0-21 17-38 38-38s38 17 38 38" fill="#FFFFFF"/></svg>`;
+    return 'data:image/svg+xml;utf8,' + encodeURIComponent(defaultSvg);
+  }
+
+  const foto = (user.foto || '').trim();
+  // Jika user memiliki foto profil kustom di database (bukan logo dummy)
+  if (foto && !foto.includes('logo.png') && !foto.endsWith('default.png')) {
+    return foto;
+  }
+
+  // Jika belum mengunggah foto kustom, buat avatar inisial rapi dari nama di database
+  const nama = (user.nama || 'Pengguna').trim();
+  const initial = (nama.charAt(0) || 'U').toUpperCase();
+  const initialSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128"><rect width="128" height="128" rx="64" fill="#0D5BFF"/><text x="50%" y="54%" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="56" font-weight="800" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">${initial}</text></svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(initialSvg);
+}
+window.getUserAvatarUrl = getUserAvatarUrl;
+
+// 3. Ambil data user aktif dengan Smart Cache (0ms load saat berpindah halaman)
 let _netoraUserCache = null;
 let _netoraUserPromise = null;
 

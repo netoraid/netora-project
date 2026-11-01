@@ -55,13 +55,15 @@ if (fs.existsSync(rootLogo) && !fs.existsSync(publicLogo)) {
   } catch (e) {}
 }
 
-const defaultAvatar = path.join(uploadsDir, 'default.png');
-if (!fs.existsSync(defaultAvatar)) {
-  if (fs.existsSync(publicLogo)) {
-    try { fs.copyFileSync(publicLogo, defaultAvatar); } catch (e) {}
-  } else if (fs.existsSync(rootLogo)) {
-    try { fs.copyFileSync(rootLogo, defaultAvatar); } catch (e) {}
-  }
+const defaultAvatarSvg = path.join(uploadsDir, 'default.svg');
+const defaultAvatarPng = path.join(uploadsDir, 'default.png');
+// Pastikan avatar standar Netora adalah avatar profil pengguna murni, BUKAN logo dummy
+if (fs.existsSync(defaultAvatarSvg)) {
+  try {
+    if (!fs.existsSync(defaultAvatarPng) || (fs.existsSync(publicLogo) && fs.statSync(defaultAvatarPng).size === fs.statSync(publicLogo).size)) {
+      fs.copyFileSync(defaultAvatarSvg, defaultAvatarPng);
+    }
+  } catch (e) {}
 }
 
 const app = express();

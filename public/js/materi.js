@@ -127,10 +127,15 @@ window.initMateriPage = async function() {
 
       if (list.length === 0) {
         materiContainer.innerHTML = `
-          <div class="netora-fade-in" style="text-align:center; padding:36px 20px; color:#64748B; font-size:13.5px;">
-            <div style="font-size:32px; margin-bottom:8px;">📚</div>
-            <strong style="color:#1E293B;">Belum ada modul materi</strong><br>
-            <span style="font-size:12px; color:#94A3B8; margin-top:4px; display:inline-block;">Modul pembelajaran yang dibuat Guru / Admin akan otomatis muncul di sini.</span>
+          <div class="netora-fade-in" style="text-align:center; padding:36px 20px; background:#FFFFFF; border-radius:20px; margin:14px 16px; border:1.5px dashed #CBD5E1; box-shadow:0 2px 12px rgba(15,23,42,0.03);">
+            <div style="width:52px; height:52px; border-radius:16px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <h4 style="margin:0 0 6px; font-size:15px; font-weight:800; color:#1E293B;">Belum Ada Modul Materi</h4>
+            <p style="margin:0 auto; font-size:12.5px; color:#64748B; max-width:340px; line-height:1.5;">Modul pembelajaran yang dibuat Guru / Admin akan otomatis muncul di sini.</p>
           </div>
         `;
         return;

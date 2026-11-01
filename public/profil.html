@@ -207,9 +207,9 @@
     <div style="background:#FFFFFF; border-radius:22px; padding:24px 20px 20px; margin:-10px 16px 16px; text-align:center;
       box-shadow:0 8px 24px rgba(13,91,255,0.07); border:1px solid rgba(0,0,0,0.04); position:relative; z-index:11;">
 
-      <!-- Avatar Foto Profil Bersih Tanpa Icon Bulat Overlay -->
+      <!-- Avatar Foto Profil Murni dari Database -->
       <div class="avatar-wrap" style="position:relative; width:90px; height:90px; margin:0 auto 12px; flex-shrink:0;">
-        <img id="profile-img" src="uploads/default.png" alt="Foto Profil" onerror="this.onerror=null; this.src='assets/logo.png';"
+        <img id="profile-img" src="uploads/default.svg" alt="Foto Profil" onerror="this.onerror=null; if(typeof getUserAvatarUrl==='function'){this.src=getUserAvatarUrl({nama:document.getElementById('profile-nama')?.textContent});}else{this.src='uploads/default.svg';}"
           style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:3.5px solid #0D5BFF; box-shadow:0 6px 20px rgba(13,91,255,0.2); display:block; background:#EFF6FF;">
         <input type="file" id="input-foto" accept="image/*" style="display:none;">
       </div>

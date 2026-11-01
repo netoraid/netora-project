@@ -25,7 +25,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const guruNama = document.getElementById('guru-nama');
   const guruAvatar = document.getElementById('guru-avatar');
   if (guruNama) guruNama.textContent = user.nama || 'Guru Pembimbing';
-  if (guruAvatar && user.foto) guruAvatar.src = user.foto;
+  if (guruAvatar) {
+    guruAvatar.src = typeof getUserAvatarUrl === 'function' ? getUserAvatarUrl(user) : (user.foto || 'uploads/default.svg');
+    guruAvatar.onerror = function() {
+      this.onerror = null;
+      this.src = typeof getUserAvatarUrl === 'function' ? getUserAvatarUrl({ nama: user ? user.nama : 'Guru' }) : 'uploads/default.svg';
+    };
+  }
 
   // 2. Jam Digital Real-time
   function updateLiveClock() {

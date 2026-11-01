@@ -107,9 +107,10 @@ window.initBerandaPage = async function() {
           `;
         } else {
           const safeName = typeof escapeHtml === 'function' ? escapeHtml(namaAwal) : namaAwal;
+          const avatarUrl = typeof getUserAvatarUrl === 'function' ? getUserAvatarUrl(u) : '';
           headerRight.innerHTML = `
-            <a href="profil.html" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:12px; font-size:12px; font-weight:700; text-decoration:none; background:rgba(255,255,255,0.15); color:#FFFFFF; border:1px solid rgba(255,255,255,0.25);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <a href="profil.html" style="display:inline-flex; align-items:center; gap:8px; padding:4px 12px 4px 5px; border-radius:20px; font-size:12px; font-weight:700; text-decoration:none; background:rgba(255,255,255,0.15); color:#FFFFFF; border:1px solid rgba(255,255,255,0.25); transition:0.2s;">
+              <img src="${avatarUrl}" alt="${safeName}" style="width:24px; height:24px; border-radius:50%; object-fit:cover; border:1.5px solid #FFFFFF; flex-shrink:0;">
               <span>${safeName}</span>
             </a>
           `;
@@ -190,10 +191,15 @@ window.loadMateriBeranda = async function() {
       }).join('');
     } else {
       container.innerHTML = `
-        <div style="text-align:center; padding:24px 16px; background:#FFFFFF; border-radius:16px; border:1px dashed #CBD5E1; color:#64748B;">
-          <div style="font-size:24px; margin-bottom:4px;">📚</div>
-          <div style="font-size:12.5px; font-weight:700; color:#334155;">Belum ada modul materi</div>
-          <div style="font-size:11.5px; color:#94A3B8; margin-top:2px;">Modul yang dibuat Admin/Guru akan otomatis muncul di sini.</div>
+        <div class="materi-empty-card" style="text-align:center; padding:36px 20px; background:#FFFFFF; border-radius:20px; border:1.5px dashed #CBD5E1; box-shadow:0 4px 18px rgba(13,91,255,0.03); margin:0; width:100%; box-sizing:border-box;">
+          <div style="width:52px; height:52px; border-radius:16px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+          </div>
+          <h4 style="margin:0 0 6px; font-size:15px; font-weight:800; color:#1E293B;">Belum Ada Modul Materi</h4>
+          <p style="margin:0 auto; font-size:12.5px; color:#64748B; max-width:380px; line-height:1.5;">Modul pembelajaran yang dibuat oleh Guru atau Administrator akan otomatis tersinkronisasi di sini.</p>
         </div>
       `;
     }

@@ -3128,14 +3128,20 @@ body.admin-page {
 /* RESPONSIVE DESKTOP ADAPTATION (Widescreen >= 768px & 992px)               */
 /* ========================================================================== */
 @media (min-width: 768px) {
+  html, body {
+    background: #F4F7FC !important;
+  }
+
   .netora-mobile-app {
-    max-width: 1200px !important;
-    margin: 20px auto !important;
-    border-radius: 28px !important;
-    min-height: calc(100vh - 40px) !important;
-    border: 1px solid rgba(13, 91, 255, 0.12) !important;
-    box-shadow: 0 16px 50px rgba(13, 91, 255, 0.08) !important;
-    padding-bottom: 40px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    min-height: 100vh !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding-bottom: 50px !important;
+    background: #F4F7FC !important;
   }
 
   /* Sembunyikan status bar HP di layar desktop/laptop */
@@ -3151,19 +3157,33 @@ body.admin-page {
   /* Tampilkan navbar navigasi atas khusus desktop */
   .desktop-top-nav-links {
     display: flex !important;
-  }
-
-  /* Header Desktop yang lebih lega */
-  .app-top-header-royal {
-    padding: 18px 28px !important;
-    border-bottom-left-radius: 28px !important;
-    border-bottom-right-radius: 28px !important;
-  }
-
-  /* Header Nav Row Desktop Wrapping */
-  .header-nav-row {
+    align-items: center !important;
+    gap: 6px !important;
     flex-wrap: wrap !important;
-    gap: 12px !important;
+  }
+
+  /* Header Desktop yang lebih lega, elegan & Full Width */
+  .app-top-header-royal {
+    padding: 20px 0 !important;
+    border-bottom-left-radius: 24px !important;
+    border-bottom-right-radius: 24px !important;
+    box-shadow: 0 8px 30px rgba(13, 91, 255, 0.15) !important;
+    width: 100% !important;
+  }
+
+  /* Header Nav Row Desktop Wrapping & Centered Container */
+  .header-nav-row,
+  .subpage-header-row {
+    max-width: 1380px !important;
+    margin: 0 auto !important;
+    padding: 0 36px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 14px !important;
   }
   .header-greeting-title {
     font-size: 21px !important;
@@ -3172,16 +3192,27 @@ body.admin-page {
     font-size: 13px !important;
   }
 
+  /* Banner Carousel Desktop Container */
+  .banner-carousel-wrap {
+    max-width: 1380px !important;
+    margin: 24px auto 14px !important;
+    border-radius: 24px !important;
+    box-shadow: 0 8px 32px rgba(13, 91, 255, 0.09) !important;
+  }
+
   /* Grid Menu Utama: Di desktop otomatis 4 kolom sejajar & proporsional */
   .menu-grid-2x2 {
+    max-width: 1380px !important;
+    margin: 0 auto !important;
     grid-template-columns: repeat(4, 1fr) !important;
-    gap: 18px !important;
-    padding: 0 28px !important;
+    gap: 20px !important;
+    padding: 0 36px !important;
+    box-sizing: border-box !important;
   }
 
   .menu-card-2x2 {
-    padding: 20px !important;
-    min-height: 175px !important;
+    padding: 22px 20px !important;
+    min-height: 180px !important;
     border-radius: 22px !important;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   }
@@ -3221,32 +3252,69 @@ body.admin-page {
 
   /* Section Header padding desktop */
   .section-header-orange {
-    margin: 28px 28px 16px !important;
-    font-size: 19px !important;
+    max-width: 1380px !important;
+    margin: 32px auto 16px !important;
+    padding: 0 36px !important;
+    font-size: 20px !important;
+    box-sizing: border-box !important;
   }
 
   /* Section Modul Terbaru di Dashboard Siswa Desktop (2 Kolom Rapi) */
   .beranda-materi-section {
-    margin-top: 28px !important;
-    padding: 0 28px 30px !important;
+    max-width: 1380px !important;
+    margin: 36px auto 0 !important;
+    padding: 0 36px 48px !important;
+    box-sizing: border-box !important;
   }
 
   .beranda-materi-header {
-    margin-bottom: 16px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 18px !important;
   }
 
   .beranda-materi-title {
-    font-size: 17px !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    color: #0F172A !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .beranda-materi-bar {
+    width: 4px !important;
+    height: 18px !important;
+    background: #0D5BFF !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
   }
 
   .beranda-materi-more {
     font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #0D5BFF !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 7px 16px !important;
+    border-radius: 12px !important;
+    background: rgba(13, 91, 255, 0.08) !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .beranda-materi-more:hover {
+    background: #0D5BFF !important;
+    color: #FFFFFF !important;
+    transform: translateX(2px) !important;
   }
 
   #beranda-materi-list {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 16px !important;
+    gap: 18px !important;
   }
 
   #beranda-materi-list .white-item-card {
@@ -3263,12 +3331,14 @@ body.admin-page {
 
   /* Hero Card Dark di Desktop: Lebih lebar, teks dan router side-by-side */
   .hero-card-dark {
-    margin: -10px 28px 24px !important;
+    max-width: 1380px !important;
+    margin: -10px auto 24px !important;
     padding: 34px 40px !important;
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
     gap: 28px !important;
+    box-sizing: border-box !important;
   }
 
   .hero-card-content {
@@ -3310,8 +3380,10 @@ body.admin-page {
 
   /* Hero Card Blue di Desktop */
   .hero-card-blue {
-    margin: 24px 28px !important;
-    padding: 24px 30px !important;
+    max-width: 1380px !important;
+    margin: 24px auto !important;
+    padding: 24px 34px !important;
+    box-sizing: border-box !important;
   }
 
   .hero-blue-text h3 {
@@ -3324,31 +3396,50 @@ body.admin-page {
 
   /* Filter Pills di Desktop */
   .filter-pills-row {
-    padding: 4px 28px 18px !important;
+    max-width: 1380px !important;
+    margin: 0 auto !important;
+    padding: 4px 36px 18px !important;
+    box-sizing: border-box !important;
   }
 
   /* Kalkulator Split 2 Kolom di Desktop (Input Kiri, Hasil Kanan) */
   .calc-desktop-split {
+    max-width: 1380px !important;
+    margin: 0 auto !important;
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 24px !important;
-    padding: 0 28px !important;
+    padding: 0 36px !important;
     align-items: start !important;
+    box-sizing: border-box !important;
   }
 
   /* Grid 3 Kolom untuk Video, Quiz, Materi di Desktop */
   .desktop-grid-3col {
+    max-width: 1380px !important;
+    margin: 0 auto !important;
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 16px !important;
-    padding: 0 28px !important;
+    gap: 18px !important;
+    padding: 0 36px !important;
+    box-sizing: border-box !important;
   }
 
   .desktop-grid-2col {
+    max-width: 1380px !important;
+    margin: 0 auto !important;
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 16px !important;
-    padding: 0 28px !important;
+    gap: 18px !important;
+    padding: 0 36px !important;
+    box-sizing: border-box !important;
+  }
+
+  .stat-summary-grid {
+    max-width: 1380px !important;
+    margin: 0 auto !important;
+    padding: 16px 36px !important;
+    box-sizing: border-box !important;
   }
 
   .white-item-card,
@@ -5380,49 +5471,129 @@ textarea.form-input {
 /* ======================================================== */
 .modal-materi-dialog {
   width: 100%;
-  max-width: 720px;
+  max-width: 760px;
   background: #FFFFFF;
   border: 1px solid #CBD5E1;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.22);
   border-radius: 24px;
-  max-height: 94vh;
+  max-height: 95vh;
   overflow-y: auto;
   position: relative;
-  padding: 22px;
+  padding: 24px;
   box-sizing: border-box;
   margin: auto;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.editor-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+  background: #F1F5F9;
+  border: 1.5px solid #CBD5E1;
+  border-bottom: 1px solid #E2E8F0;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+
+.editor-btn {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  color: #334155;
+  border-radius: 8px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.editor-btn:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+  border-color: #94A3B8;
+}
+
+.editor-btn:active, .editor-btn.active {
+  background: #0D5BFF;
+  color: #FFFFFF;
+  border-color: #0D5BFF;
+}
+
+.editor-btn-primary {
+  background: #0D5BFF !important;
+  color: #FFFFFF !important;
+  border-color: #0D5BFF !important;
+}
+
+.editor-btn-primary:hover {
+  background: #0948cc !important;
+  border-color: #0948cc !important;
+}
+
+.editor-canvas {
+  background: #FFFFFF;
+  border: 1.5px solid #CBD5E1;
+  border-top: none;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 18px 22px;
+  min-height: 240px;
+  max-height: 480px;
+  overflow-y: auto;
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: #1E293B;
+  outline: none;
+}
+
+.editor-canvas:focus {
+  border-color: #0D5BFF;
+  box-shadow: 0 0 0 3px rgba(13, 91, 255, 0.12);
+}
+
 @media (min-width: 992px) {
   .modal-materi-dialog {
-    width: 94% !important;
-    max-width: 1160px !important;
-    padding: 28px 36px !important;
-    border-radius: 26px !important;
+    width: 95% !important;
+    max-width: 1280px !important;
+    padding: 30px 40px !important;
+    border-radius: 28px !important;
   }
 
   #materi-pages-container {
-    max-height: 62vh !important;
+    max-height: 68vh !important;
     padding-right: 8px !important;
   }
 
   .editor-canvas {
-    min-height: 280px !important;
-    max-height: 520px !important;
-    font-size: 14.5px !important;
-    line-height: 1.8 !important;
-    padding: 18px 22px !important;
+    min-height: 380px !important;
+    max-height: 580px !important;
+    font-size: 15px !important;
+    line-height: 1.85 !important;
+    padding: 22px 28px !important;
   }
 }
 
 @media (min-width: 1440px) {
   .modal-materi-dialog {
-    max-width: 1220px !important;
+    max-width: 1360px !important;
   }
 
   .editor-canvas {
-    min-height: 320px !important;
+    min-height: 440px !important;
+    max-height: 640px !important;
   }
 }
 
