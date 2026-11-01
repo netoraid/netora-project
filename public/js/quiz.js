@@ -54,17 +54,6 @@ window.initQuizPage = function() {
 
     const topics = [];
 
-    // Jika ada lebih dari 1 kategori atau soal cukup banyak, tambahkan paket komprehensif
-    if (allQuestions.length > 0) {
-      topics.push({
-        id: 'komprehensif',
-        title: 'Evaluasi Kompetensi TKJ Terpadu',
-        category: 'all',
-        duration: `${Math.max(5, Math.min(30, allQuestions.length * 2))} menit`,
-        soalCount: allQuestions.length
-      });
-    }
-
     // Tambahkan topik per kategori yang ditemukan di database
     categories.forEach((cat, idx) => {
       const count = getAvailableSoalCount(cat);
@@ -372,14 +361,6 @@ window.initQuizPage = function() {
         card.style.background = 'rgba(13,91,255,0.06)';
         const activeBadge = card.querySelector('.opt-badge');
         if (activeBadge) { activeBadge.style.background = '#0D5BFF'; activeBadge.style.color = '#FFFFFF'; }
-
-        // Auto next
-        if (currentIndex < total - 1) {
-          setTimeout(() => {
-            currentIndex++;
-            renderCurrentQuestion();
-          }, 350);
-        }
       });
     });
 

@@ -1454,7 +1454,7 @@
           </div>
 
           <div class="resizer-divider"></div>
-          <button type="button" class="btn-delete-img" onclick="deleteMateriActiveImage()" title="Hapus Gambar Ini">🗑️ Hapus</button>
+          <span style="font-size:11px; color:#94A3B8; padding:0 4px;" title="Tekan Backspace atau Delete di keyboard untuk menghapus gambar">Hapus: <kbd style="background:rgba(255,255,255,0.14); border-radius:4px; padding:1px 5px; color:#fff; font-size:10px; font-family:inherit;">Backspace</kbd> / <kbd style="background:rgba(255,255,255,0.14); border-radius:4px; padding:1px 5px; color:#fff; font-size:10px; font-family:inherit;">Delete</kbd></span>
           <button type="button" onclick="closeMateriImageResizer()" style="font-size:16px; padding:2px 6px; color:#94A3B8; cursor:pointer;" title="Tutup Toolbar">&times;</button>
         </div>
 
@@ -1836,8 +1836,18 @@
       });
 
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && window.activeMateriImg) {
-          window.closeMateriImageResizer();
+        if (window.activeMateriImg) {
+          if (e.key === 'Backspace' || e.key === 'Delete') {
+            e.preventDefault();
+            e.stopPropagation();
+            if (typeof window.deleteMateriActiveImage === 'function') {
+              window.deleteMateriActiveImage();
+            }
+            return;
+          }
+          if (e.key === 'Escape') {
+            window.closeMateriImageResizer();
+          }
         }
       });
 

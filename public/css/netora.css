@@ -3160,17 +3160,105 @@ body.admin-page {
     border-bottom-right-radius: 28px !important;
   }
 
-  /* Grid Menu Utama: Di desktop otomatis 4 kolom sejajar */
+  /* Header Nav Row Desktop Wrapping */
+  .header-nav-row {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+  }
+  .header-greeting-title {
+    font-size: 21px !important;
+  }
+  .header-greeting-sub {
+    font-size: 13px !important;
+  }
+
+  /* Grid Menu Utama: Di desktop otomatis 4 kolom sejajar & proporsional */
   .menu-grid-2x2 {
     grid-template-columns: repeat(4, 1fr) !important;
     gap: 18px !important;
     padding: 0 28px !important;
   }
 
+  .menu-card-2x2 {
+    padding: 20px !important;
+    min-height: 175px !important;
+    border-radius: 22px !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .menu-card-2x2:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 12px 28px rgba(13, 91, 255, 0.12) !important;
+    border-color: rgba(13, 91, 255, 0.22) !important;
+  }
+
+  .menu-card-2x2:hover .circle-arrow-btn {
+    transform: translateX(3px);
+  }
+
+  .menu-card-iconbox {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 14px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .menu-card-title {
+    font-size: 16px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .menu-card-desc {
+    font-size: 12.5px !important;
+    line-height: 1.5 !important;
+  }
+
+  .circle-arrow-btn {
+    width: 32px !important;
+    height: 32px !important;
+    transition: transform 0.2s ease !important;
+  }
+
   /* Section Header padding desktop */
   .section-header-orange {
     margin: 28px 28px 16px !important;
     font-size: 19px !important;
+  }
+
+  /* Section Modul Terbaru di Dashboard Siswa Desktop (2 Kolom Rapi) */
+  .beranda-materi-section {
+    margin-top: 28px !important;
+    padding: 0 28px 30px !important;
+  }
+
+  .beranda-materi-header {
+    margin-bottom: 16px !important;
+  }
+
+  .beranda-materi-title {
+    font-size: 17px !important;
+  }
+
+  .beranda-materi-more {
+    font-size: 13px !important;
+  }
+
+  #beranda-materi-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  #beranda-materi-list .white-item-card {
+    padding: 14px 18px !important;
+    border-radius: 18px !important;
+    transition: all 0.22s ease !important;
+  }
+
+  #beranda-materi-list .white-item-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(13, 91, 255, 0.1) !important;
+    border-color: rgba(13, 91, 255, 0.2) !important;
   }
 
   /* Hero Card Dark di Desktop: Lebih lebar, teks dan router side-by-side */
@@ -3828,6 +3916,58 @@ body.admin-page {
 .circle-arrow-orange { background: #FF7A00; }
 .circle-arrow-purple { background: #7C3AED; }
 .circle-arrow-cyan { background: #00B4D8; }
+
+/* Section: Modul Pembelajaran Terbaru di Beranda */
+.beranda-materi-section {
+  margin-top: 22px;
+  padding: 0 16px 20px;
+}
+
+.beranda-materi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.beranda-materi-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #0F172A;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.beranda-materi-bar {
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  background: #0D5BFF;
+  border-radius: 4px;
+}
+
+.beranda-materi-more {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0D5BFF;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.beranda-materi-more:hover {
+  color: #0047BA;
+  transform: translateX(2px);
+}
+
+#beranda-materi-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
 /* Filter Pill Bar (Horizontal Scroll) */
 .filter-pills-row {
