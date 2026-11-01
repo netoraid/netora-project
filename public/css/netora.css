@@ -5170,6 +5170,72 @@ textarea.form-input {
 }
 
 /* ======================================================== */
+/* WORD-LIKE INTERACTIVE IMAGE RESIZER & DRAG DROP HANDLES  */
+/* ======================================================== */
+.materi-img-resize-overlay {
+  position: fixed;
+  border: 1.5px dashed #0D5BFF;
+  pointer-events: none;
+  z-index: 100004;
+  box-sizing: border-box;
+  display: none;
+  transition: opacity 0.1s ease;
+}
+
+.materi-img-resize-overlay .resize-handle {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  background: #FFFFFF;
+  border: 2px solid #0D5BFF;
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  pointer-events: auto;
+  box-sizing: border-box;
+}
+
+.materi-img-resize-overlay .handle-tl { top: -6px; left: -6px; cursor: nwse-resize; }
+.materi-img-resize-overlay .handle-tr { top: -6px; right: -6px; cursor: nesw-resize; }
+.materi-img-resize-overlay .handle-bl { bottom: -6px; left: -6px; cursor: nesw-resize; }
+.materi-img-resize-overlay .handle-br { bottom: -6px; right: -6px; cursor: nwse-resize; }
+.materi-img-resize-overlay .handle-ml { top: calc(50% - 6px); left: -6px; cursor: ew-resize; }
+.materi-img-resize-overlay .handle-mr { top: calc(50% - 6px); right: -6px; cursor: ew-resize; }
+
+.editor-drop-indicator {
+  height: 3px;
+  background: #0D5BFF;
+  border-radius: 3px;
+  margin: 8px 0;
+  box-shadow: 0 0 10px rgba(13, 91, 255, 0.65);
+  pointer-events: none;
+}
+
+.materi-page-card.is-dragging {
+  opacity: 0.45 !important;
+  transform: scale(0.985);
+  border: 1.5px dashed #0D5BFF !important;
+}
+
+.materi-page-card.drag-target-above {
+  border-top: 3px solid #0D5BFF !important;
+}
+
+.materi-page-card.drag-target-below {
+  border-bottom: 3px solid #0D5BFF !important;
+}
+
+.page-drag-handle {
+  cursor: grab;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.page-drag-handle:active {
+  cursor: grabbing;
+}
+
+/* ======================================================== */
 /* MODAL MATERI WORD-LIKE EXPANSIVE DESKTOP LAYOUT         */
 /* ======================================================== */
 .modal-materi-dialog {
@@ -5184,6 +5250,7 @@ textarea.form-input {
   position: relative;
   padding: 22px;
   box-sizing: border-box;
+  margin: auto;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 

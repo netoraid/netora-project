@@ -1344,7 +1344,7 @@
     <!-- ========================================== -->
     <!-- MODAL TAMBAH & EDIT MODUL MATERI           -->
     <!-- ========================================== -->
-    <div id="modal-materi" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:16px;">
+    <div id="modal-materi" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:16px; overflow-y:auto;">
       <div class="card-panel modal-materi-dialog">
         
         <!-- Header Modal -->
@@ -1418,7 +1418,7 @@
           </div>
         </form>
 
-        <!-- Floating Image Resizer Bar (Slider Perbesar/Perkecil & Drag Bebas Pakai Kursor Laptop) -->
+        <!-- Floating Image Resizer Bar (Slider Ukuran & Geser Posisi Gambar) -->
         <div id="materi-img-resizer-bar" class="materi-img-resizer-bar" style="display:none;">
           <span class="resizer-title">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
@@ -1429,16 +1429,29 @@
           <!-- Tombol Slider yang Digeser-geser (Bisa sampai ukuran paling kecil 5%) -->
           <div class="resizer-slider-wrap">
             <span style="font-size:10.5px; color:#94A3B8; font-weight:700;">5%</span>
-            <input type="range" id="resizer-slider" min="5" max="100" step="1" value="50" oninput="setMateriImageSize(this.value)" title="Geser ke kiri untuk mengecilkan (sampai 5%), geser ke kanan untuk memperbesar">
+            <input type="range" id="resizer-slider" min="5" max="100" step="1" value="50" oninput="setMateriImageSize(this.value, false)" onchange="setMateriImageSize(this.value, true)" title="Geser ke kiri untuk mengecilkan (sampai 5%), geser ke kanan untuk memperbesar">
             <span style="font-size:10.5px; color:#94A3B8; font-weight:700;">100%</span>
           </div>
 
           <div class="resizer-divider"></div>
-          
-          <span style="font-size:11.5px; color:#38BDF8; font-weight:600; display:inline-flex; align-items:center; gap:4px; padding:0 4px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
-            <span>Tarik/geser gambar dengan kursor laptop untuk pindah posisi</span>
+
+          <!-- Tombol Geser Posisi Gambar (Kiri, Tengah, Kanan) -->
+          <span class="resizer-title" style="margin-left:2px;">
+            <span>Geser:</span>
           </span>
+          <div class="resizer-group" title="Geser Posisi Horizontal">
+            <button type="button" id="btn-align-left" onclick="setMateriImagePosition('left')" title="Geser ke Kiri (Wrap Kiri)">⬅️ Kiri</button>
+            <button type="button" id="btn-align-center" onclick="setMateriImagePosition('center')" title="Geser ke Tengah">⏹️ Tengah</button>
+            <button type="button" id="btn-align-right" onclick="setMateriImagePosition('right')" title="Geser ke Kanan (Wrap Kanan)">➡️ Kanan</button>
+          </div>
+
+          <div class="resizer-divider"></div>
+
+          <!-- Tombol Geser Urutan Paragraf (Naik / Turun) -->
+          <div class="resizer-group" title="Geser Urutan Paragraf">
+            <button type="button" onclick="geserMateriImageOrder(-1)" title="Geser Naik (Pindah ke Atas Paragraf)">⬆️ Naik</button>
+            <button type="button" onclick="geserMateriImageOrder(1)" title="Geser Turun (Pindah ke Bawah Paragraf)">⬇️ Turun</button>
+          </div>
 
           <div class="resizer-divider"></div>
           <button type="button" class="btn-delete-img" onclick="deleteMateriActiveImage()" title="Hapus Gambar Ini">🗑️ Hapus</button>
@@ -1566,10 +1579,182 @@
         if (bar) {
           bar.style.display = 'flex';
           window.repositionMateriResizer();
+          if (typeof window.updateImagePositionButtons === 'function') {
+            window.updateImagePositionButtons(img);
+          }
+        }
+        if (typeof window.repositionResizeOverlay === 'function') {
+          window.repositionResizeOverlay();
         }
       };
 
-      window.setMateriImageSize = function(size) {
+      // Word-like Interactive Corner Resize Handles (Tarik Sudut Gambar)
+      window.repositionResizeOverlay = function() {
+        let overlay = document.getElementById('materi-img-resize-overlay');
+        if (!window.activeMateriImg) {
+          if (overlay) overlay.style.display = 'none';
+          return;
+        }
+        if (!overlay) {
+          overlay = document.createElement('div');
+          overlay.id = 'materi-img-resize-overlay';
+          overlay.className = 'materi-img-resize-overlay';
+          overlay.innerHTML = `
+            <div class="resize-handle handle-tl" data-dir="tl" title="Tarik sudut untuk ubah ukuran"></div>
+            <div class="resize-handle handle-tr" data-dir="tr" title="Tarik sudut untuk ubah ukuran"></div>
+            <div class="resize-handle handle-bl" data-dir="bl" title="Tarik sudut untuk ubah ukuran"></div>
+            <div class="resize-handle handle-br" data-dir="br" title="Tarik sudut untuk ubah ukuran"></div>
+            <div class="resize-handle handle-ml" data-dir="ml" title="Tarik sisi untuk ubah lebar"></div>
+            <div class="resize-handle handle-mr" data-dir="mr" title="Tarik sisi untuk ubah lebar"></div>
+          `;
+          document.body.appendChild(overlay);
+
+          let isResizing = false;
+          let rDir = '';
+          let rStartX = 0;
+          let rStartWidth = 0;
+          let rCanvasWidth = 600;
+
+          overlay.addEventListener('mousedown', (e) => {
+            const handle = e.target.closest('.resize-handle');
+            if (!handle || !window.activeMateriImg) return;
+            e.preventDefault();
+            e.stopPropagation();
+
+            isResizing = true;
+            rDir = handle.dataset.dir;
+            rStartX = e.clientX;
+            const imgRect = window.activeMateriImg.getBoundingClientRect();
+            rStartWidth = imgRect.width;
+
+            const card = window.activeMateriImg.closest('.materi-page-card');
+            const canvas = card ? card.querySelector('.editor-canvas') : null;
+            rCanvasWidth = canvas ? (canvas.clientWidth - 36) : 600;
+            document.body.style.userSelect = 'none';
+          });
+
+          window.addEventListener('mousemove', (e) => {
+            if (!isResizing || !window.activeMateriImg) return;
+            e.preventDefault();
+            let deltaX = e.clientX - rStartX;
+            if (rDir === 'tl' || rDir === 'bl' || rDir === 'ml') {
+              deltaX = -deltaX;
+            }
+            let newWidthPx = rStartWidth + (deltaX * 1.5);
+            let newPct = Math.max(5, Math.min(100, Math.round((newWidthPx / rCanvasWidth) * 100)));
+            window.setMateriImageSize(newPct, false);
+            window.repositionResizeOverlay();
+          });
+
+          window.addEventListener('mouseup', () => {
+            if (isResizing) {
+              isResizing = false;
+              document.body.style.userSelect = '';
+              if (window.activeMateriPageIdx !== null) {
+                window.syncModalPageData(window.activeMateriPageIdx);
+              }
+              window.repositionResizeOverlay();
+              if (typeof window.repositionMateriResizer === 'function') {
+                window.repositionMateriResizer();
+              }
+            }
+          });
+        }
+
+        const rect = window.activeMateriImg.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) {
+          overlay.style.display = 'none';
+          return;
+        }
+        overlay.style.display = 'block';
+        overlay.style.top = `${rect.top}px`;
+        overlay.style.left = `${rect.left}px`;
+        overlay.style.width = `${rect.width}px`;
+        overlay.style.height = `${rect.height}px`;
+      };
+
+      window.updateImagePositionButtons = function(img) {
+        if (!img) return;
+        const isLeft = img.classList.contains('align-left') || img.style.float === 'left';
+        const isRight = img.classList.contains('align-right') || img.style.float === 'right';
+        const isCenter = !isLeft && !isRight;
+
+        const btnLeft = document.getElementById('btn-align-left');
+        const btnCenter = document.getElementById('btn-align-center');
+        const btnRight = document.getElementById('btn-align-right');
+
+        if (btnLeft) btnLeft.classList.toggle('active', isLeft);
+        if (btnCenter) btnCenter.classList.toggle('active', isCenter);
+        if (btnRight) btnRight.classList.toggle('active', isRight);
+      };
+
+      window.setMateriImagePosition = function(pos) {
+        if (!window.activeMateriImg) return;
+        const img = window.activeMateriImg;
+        const parentP = img.closest('p');
+
+        img.classList.remove('align-left', 'align-right');
+        img.style.float = '';
+
+        if (pos === 'left') {
+          img.classList.add('align-left');
+          img.style.float = 'left';
+          img.style.margin = '6px 16px 10px 0';
+          img.style.display = 'inline-block';
+          if (parentP) parentP.style.textAlign = 'left';
+        } else if (pos === 'right') {
+          img.classList.add('align-right');
+          img.style.float = 'right';
+          img.style.margin = '6px 0 10px 16px';
+          img.style.display = 'inline-block';
+          if (parentP) parentP.style.textAlign = 'right';
+        } else {
+          // Center
+          img.style.float = 'none';
+          img.style.margin = '10px auto';
+          img.style.display = 'block';
+          if (parentP) parentP.style.textAlign = 'center';
+        }
+
+        window.updateImagePositionButtons(img);
+
+        if (window.activeMateriPageIdx !== null) {
+          window.syncModalPageData(window.activeMateriPageIdx);
+        }
+        if (typeof window.repositionMateriResizer === 'function') {
+          setTimeout(window.repositionMateriResizer, 40);
+        }
+      };
+
+      window.geserMateriImageOrder = function(direction) {
+        if (!window.activeMateriImg) return;
+        const img = window.activeMateriImg;
+        const card = img.closest('.materi-page-card');
+        const canvas = card ? card.querySelector('.editor-canvas') : null;
+        if (!canvas) return;
+
+        const block = img.closest('p, figure') || img;
+        if (direction < 0) {
+          const prev = block.previousElementSibling;
+          if (prev) {
+            canvas.insertBefore(block, prev);
+          }
+        } else {
+          const next = block.nextElementSibling;
+          if (next) {
+            canvas.insertBefore(block, next.nextElementSibling);
+          }
+        }
+
+        if (window.activeMateriPageIdx !== null) {
+          window.syncModalPageData(window.activeMateriPageIdx);
+        }
+        if (typeof window.repositionMateriResizer === 'function') {
+          setTimeout(window.repositionMateriResizer, 40);
+        }
+      };
+
+      window.setMateriImageSize = function(size, isFinal = false) {
         if (!window.activeMateriImg) return;
         // Pengaturan ukuran digeser-geser dari paling kecil 5% hingga 100%
         const pct = Math.max(5, Math.min(100, parseInt(size) || 50));
@@ -1587,12 +1772,14 @@
         const badge = document.getElementById('resizer-val-badge');
         if (badge) badge.textContent = `${pct}%`;
         const slider = document.getElementById('resizer-slider');
-        if (slider) slider.value = pct;
+        if (slider && slider.value != pct) slider.value = pct;
 
         if (window.activeMateriPageIdx !== null) {
           window.syncModalPageData(window.activeMateriPageIdx);
         }
-        window.repositionMateriResizer();
+        if (isFinal && typeof window.repositionMateriResizer === 'function') {
+          window.repositionMateriResizer();
+        }
       };
 
       window.deleteMateriActiveImage = function() {
@@ -1614,6 +1801,8 @@
       window.closeMateriImageResizer = function() {
         const bar = document.getElementById('materi-img-resizer-bar');
         if (bar) bar.style.display = 'none';
+        const overlay = document.getElementById('materi-img-resize-overlay');
+        if (overlay) overlay.style.display = 'none';
         if (window.activeMateriImg) {
           window.activeMateriImg.classList.remove('editor-img-active');
           window.activeMateriImg = null;
@@ -1640,7 +1829,10 @@
       });
 
       window.addEventListener('resize', () => {
-        if (window.activeMateriImg) window.repositionMateriResizer();
+        if (window.activeMateriImg) {
+          if (typeof window.repositionMateriResizer === 'function') window.repositionMateriResizer();
+          if (typeof window.repositionResizeOverlay === 'function') window.repositionResizeOverlay();
+        }
       });
 
       document.addEventListener('keydown', (e) => {
@@ -1800,12 +1992,14 @@
 
           return `
             <div class="materi-page-card" data-index="${index}" style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:16px; position:relative; margin-bottom:16px; transition:all 0.2s;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <div style="display:flex; align-items:center; gap:8px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                <div class="page-drag-handle" draggable="true" title="Tahan dan geser kartu ini untuk menukar urutan halaman" style="display:inline-flex; align-items:center; gap:8px; cursor:grab; padding:4px 8px; border-radius:8px; background:rgba(13,91,255,0.06); transition:background 0.15s;">
+                  <span style="font-size:16px; color:#0D5BFF; line-height:1; font-weight:bold;">⠿</span>
                   <span style="background:#0D5BFF; color:#fff; font-size:11px; font-weight:800; padding:3px 10px; border-radius:8px;">
                     Halaman ${index + 1}
                   </span>
                   <span style="font-size:13px; font-weight:700; color:#1E293B;">Bagian Modul ${index + 1}</span>
+                  <span style="font-size:11px; color:#64748B; font-weight:600; margin-left:2px;">(Tarik untuk geser urutan)</span>
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
                   ${index > 0 ? `
@@ -1868,7 +2062,78 @@
           `;
         }).join('');
 
-        // Aktifkan pemindahan posisi gambar langsung dengan kursor laptop (Drag & Drop)
+        // 1. Drag & Drop Reorder Kartu Halaman Murni Pakai Kursor / Tanpa Tombol
+        let draggedCardIdx = null;
+        container.querySelectorAll('.materi-page-card').forEach((card, idx) => {
+          const handle = card.querySelector('.page-drag-handle');
+          if (handle) {
+            handle.addEventListener('dragstart', (e) => {
+              draggedCardIdx = idx;
+              card.classList.add('is-dragging');
+              if (e.dataTransfer) {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', String(idx));
+              }
+            });
+
+            handle.addEventListener('dragend', () => {
+              card.classList.remove('is-dragging');
+              container.querySelectorAll('.materi-page-card').forEach(c => {
+                c.classList.remove('drag-target-above', 'drag-target-below', 'is-dragging');
+              });
+              draggedCardIdx = null;
+            });
+          }
+
+          card.addEventListener('dragover', (e) => {
+            if (draggedCardIdx !== null && draggedCardIdx !== idx) {
+              e.preventDefault();
+              if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+
+              const rect = card.getBoundingClientRect();
+              const isAbove = e.clientY < rect.top + rect.height / 2;
+              card.classList.toggle('drag-target-above', isAbove);
+              card.classList.toggle('drag-target-below', !isAbove);
+            }
+          });
+
+          card.addEventListener('dragleave', () => {
+            card.classList.remove('drag-target-above', 'drag-target-below');
+          });
+
+          card.addEventListener('drop', (e) => {
+            if (draggedCardIdx !== null && draggedCardIdx !== idx) {
+              e.preventDefault();
+              card.classList.remove('drag-target-above', 'drag-target-below');
+
+              window.syncAllModalPages();
+              const pages = window.currentModalPages;
+              const movedItem = pages.splice(draggedCardIdx, 1)[0];
+
+              const rect = card.getBoundingClientRect();
+              const isAbove = e.clientY < rect.top + rect.height / 2;
+              let targetIdx = idx;
+              if (draggedCardIdx < idx) {
+                targetIdx = isAbove ? idx - 1 : idx;
+              } else {
+                targetIdx = isAbove ? idx : idx + 1;
+              }
+              targetIdx = Math.max(0, Math.min(pages.length, targetIdx));
+              pages.splice(targetIdx, 0, movedItem);
+              pages.forEach((p, i) => { p.halaman = i + 1; });
+
+              draggedCardIdx = null;
+              window.renderModalPages();
+              if (typeof toast === 'function') {
+                toast(`Urutan Halaman ${targetIdx + 1} berhasil digeser!`, 'info');
+              }
+            }
+          });
+        });
+
+        // 2. Drag & Drop Gambar Bebas & Adaptif (Tarik & Geser Posisi Murni Kursor Tanpa Tombol)
+        let draggedImgEl = null;
+
         container.querySelectorAll('.materi-page-card').forEach((card, idx) => {
           const canvas = card.querySelector('.editor-canvas');
           if (canvas) {
@@ -1878,31 +2143,115 @@
             });
 
             canvas.addEventListener('dragstart', (e) => {
-              if (e.target && e.target.tagName === 'IMG') {
-                window.closeMateriImageResizer();
-                e.target.style.opacity = '0.4';
-                e.target.style.cursor = 'grabbing';
+              const img = e.target.closest('img');
+              if (img) {
+                draggedImgEl = img;
+                if (typeof window.closeMateriImageResizer === 'function') {
+                  window.closeMateriImageResizer();
+                }
+                img.style.opacity = '0.35';
+                img.style.cursor = 'grabbing';
+                if (e.dataTransfer) {
+                  e.dataTransfer.effectAllowed = 'move';
+                  e.dataTransfer.setData('text/html', img.outerHTML);
+                  e.dataTransfer.setData('text/plain', img.src || '');
+                }
               }
+            });
+
+            canvas.addEventListener('dragover', (e) => {
+              if (draggedImgEl) {
+                e.preventDefault();
+                if (e.dataTransfer) {
+                  e.dataTransfer.dropEffect = 'move';
+                }
+
+                // Tampilkan garis indikator drop antar paragraf
+                let targetBlock = e.target.closest('p, figure, h2, h3, h4, pre, ul, ol, div');
+                if (targetBlock && targetBlock.parentNode === canvas) {
+                  let ind = canvas.querySelector('.editor-drop-indicator');
+                  if (!ind) {
+                    ind = document.createElement('div');
+                    ind.className = 'editor-drop-indicator';
+                  }
+                  const rect = targetBlock.getBoundingClientRect();
+                  if (e.clientY < rect.top + rect.height / 2) {
+                    canvas.insertBefore(ind, targetBlock);
+                  } else {
+                    canvas.insertBefore(ind, targetBlock.nextSibling);
+                  }
+                }
+              }
+            });
+
+            canvas.addEventListener('dragleave', (e) => {
+              if (!canvas.contains(e.relatedTarget)) {
+                canvas.querySelectorAll('.editor-drop-indicator').forEach(el => el.remove());
+              }
+            });
+
+            canvas.addEventListener('drop', (e) => {
+              if (!draggedImgEl) return;
+              e.preventDefault();
+              canvas.querySelectorAll('.editor-drop-indicator').forEach(el => el.remove());
+
+              const blockToMove = draggedImgEl.closest('p, figure') || draggedImgEl;
+              const targetNode = e.target;
+
+              // Deteksi posisi horizontal kursor drop (Otomatis Kiri, Tengah, Kanan)
+              const canvasRect = canvas.getBoundingClientRect();
+              const relX = (e.clientX - canvasRect.left) / canvasRect.width;
+
+              if (targetNode && targetNode !== blockToMove && targetNode !== draggedImgEl) {
+                const targetBlock = targetNode.closest('p, figure, h2, h3, h4, pre, ul, ol, div');
+                if (targetBlock && targetBlock !== blockToMove && targetBlock.parentNode === canvas) {
+                  const rect = targetBlock.getBoundingClientRect();
+                  const relY = e.clientY - rect.top;
+                  if (relY < rect.height / 2) {
+                    canvas.insertBefore(blockToMove, targetBlock);
+                  } else {
+                    canvas.insertBefore(blockToMove, targetBlock.nextSibling);
+                  }
+                } else if (document.caretRangeFromPoint) {
+                  const range = document.caretRangeFromPoint(e.clientX, e.clientY);
+                  if (range) {
+                    range.insertNode(blockToMove);
+                  }
+                } else {
+                  canvas.appendChild(blockToMove);
+                }
+              }
+
+              // Set alignment adaptif berdasarkan lokasi drop mouse
+              window.activeMateriImg = draggedImgEl;
+              if (relX < 0.28) {
+                window.setMateriImagePosition('left');
+              } else if (relX > 0.72) {
+                window.setMateriImagePosition('right');
+              } else {
+                window.setMateriImagePosition('center');
+              }
+
+              setTimeout(() => {
+                canvas.querySelectorAll('p, figure').forEach(f => {
+                  if (!f.querySelector('img') && !f.textContent.trim()) f.remove();
+                });
+                window.syncModalPageData(idx);
+              }, 60);
             });
 
             canvas.addEventListener('dragend', (e) => {
+              canvas.querySelectorAll('.editor-drop-indicator').forEach(el => el.remove());
+              if (draggedImgEl) {
+                draggedImgEl.style.opacity = '1';
+                draggedImgEl.style.cursor = 'grab';
+                draggedImgEl = null;
+              }
               if (e.target && e.target.tagName === 'IMG') {
                 e.target.style.opacity = '1';
                 e.target.style.cursor = 'grab';
-                canvas.querySelectorAll('figure').forEach(f => {
-                  if (!f.querySelector('img') && !f.textContent.trim()) f.remove();
-                });
-                window.syncModalPageData(idx);
               }
-            });
-
-            canvas.addEventListener('drop', () => {
-              setTimeout(() => {
-                canvas.querySelectorAll('figure').forEach(f => {
-                  if (!f.querySelector('img') && !f.textContent.trim()) f.remove();
-                });
-                window.syncModalPageData(idx);
-              }, 80);
+              window.syncModalPageData(idx);
             });
           }
         });
@@ -2038,8 +2387,9 @@
         const pagesContainer = document.getElementById('materi-pages-container');
         if (pagesContainer) {
           pagesContainer.addEventListener('scroll', () => {
-            if (window.activeMateriImg && typeof window.repositionMateriResizer === 'function') {
-              window.repositionMateriResizer();
+            if (window.activeMateriImg) {
+              if (typeof window.repositionMateriResizer === 'function') window.repositionMateriResizer();
+              if (typeof window.repositionResizeOverlay === 'function') window.repositionResizeOverlay();
             }
           }, { passive: true });
         }

@@ -514,6 +514,34 @@ window.initMateriPage = async function() {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             });
           });
+
+          // Dukungan Geser / Swipe Layar HP Tanpa Tombol (Gesture Buku)
+          let touchStartX = 0;
+          let touchStartY = 0;
+          detailContainer.ontouchstart = (e) => {
+            if (e.changedTouches && e.changedTouches[0]) {
+              touchStartX = e.changedTouches[0].screenX;
+              touchStartY = e.changedTouches[0].screenY;
+            }
+          };
+          detailContainer.ontouchend = (e) => {
+            if (e.changedTouches && e.changedTouches[0]) {
+              const diffX = e.changedTouches[0].screenX - touchStartX;
+              const diffY = e.changedTouches[0].screenY - touchStartY;
+              // Swipe horizontal jelas (minimal 55px horizontal dan deviasi vertikal rendah)
+              if (Math.abs(diffX) > 55 && Math.abs(diffY) < 60) {
+                if (diffX < 0 && activePage < totalPages) {
+                  // Geser ke kiri -> Halaman Berikutnya
+                  renderReaderView(activePage + 1);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else if (diffX > 0 && activePage > 1) {
+                  // Geser ke kanan -> Halaman Sebelumnya
+                  renderReaderView(activePage - 1);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }
+            }
+          };
         }
 
         renderDetailView(requestedPage);

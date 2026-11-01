@@ -822,8 +822,11 @@ window.initAdminDashboard = async function() {
     }).join('');
   }
 
-  // Multi-page state & handlers for admin modal
-  let currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+  // Multi-page state & handlers for admin modal (Sinkron dengan window.currentModalPages)
+  if (!window.currentModalPages || !Array.isArray(window.currentModalPages)) {
+    window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
+  }
+  let currentModalPages = window.currentModalPages;
 
   function prepareInitialEditorHtml(raw) {
     if (!raw) return '<p><br></p>';
@@ -955,6 +958,10 @@ window.initAdminDashboard = async function() {
   };
 
   function renderModalPages() {
+    if (typeof window.renderModalPages === 'function' && window.renderModalPages !== renderModalPages) {
+      window.renderModalPages();
+      return;
+    }
     const container = document.getElementById('materi-pages-container');
     const badge = document.getElementById('badge-page-count');
     if (!container) return;
@@ -1085,7 +1092,11 @@ window.initAdminDashboard = async function() {
       const judul = cards[index].querySelector('.page-judul-input')?.value || '';
       const editor = cards[index].querySelector('.editor-canvas');
       const konten = editor ? editor.innerHTML : '';
-      if (currentModalPages[index]) {
+      if (window.currentModalPages && window.currentModalPages[index]) {
+        window.currentModalPages[index].judul = judul;
+        window.currentModalPages[index].konten = konten;
+      }
+      if (currentModalPages && currentModalPages[index]) {
         currentModalPages[index].judul = judul;
         currentModalPages[index].konten = konten;
       }
@@ -1097,45 +1108,72 @@ window.initAdminDashboard = async function() {
     if (!container) return;
     const cards = container.querySelectorAll('.materi-page-card');
     cards.forEach((card, idx) => {
-      if (currentModalPages[idx]) {
-        currentModalPages[idx].judul = card.querySelector('.page-judul-input')?.value || '';
-        const editor = card.querySelector('.editor-canvas');
-        currentModalPages[idx].konten = editor ? editor.innerHTML : '';
+      const judul = card.querySelector('.page-judul-input')?.value || '';
+      const editor = card.querySelector('.editor-canvas');
+      const konten = editor ? editor.innerHTML : '';
+      if (window.currentModalPages && window.currentModalPages[idx]) {
+        window.currentModalPages[idx].judul = judul;
+        window.currentModalPages[idx].konten = konten;
+      }
+      if (currentModalPages && currentModalPages[idx]) {
+        currentModalPages[idx].judul = judul;
+        currentModalPages[idx].konten = konten;
       }
     });
   }
 
   window.geserHalamanMateri = function(index, direction) {
-    syncAllModalPages();
+    if (typeof window.syncAllModalPages === 'function') window.syncAllModalPages();
+    else syncAllModalPages();
+
+    const pages = window.currentModalPages || currentModalPages;
     const targetIndex = index + direction;
-    if (targetIndex >= 0 && targetIndex < currentModalPages.length) {
-      const temp = currentModalPages[index];
-      currentModalPages[index] = currentModalPages[targetIndex];
-      currentModalPages[targetIndex] = temp;
-      currentModalPages.forEach((p, idx) => { p.halaman = idx + 1; });
-      renderModalPages();
+    if (targetIndex >= 0 && targetIndex < pages.length) {
+      const temp = pages[index];
+      pages[index] = pages[targetIndex];
+      pages[targetIndex] = temp;
+      pages.forEach((p, idx) => { p.halaman = idx + 1; });
+      if (typeof window.renderModalPages === 'function') {
+        window.renderModalPages();
+      } else {
+        renderModalPages();
+      }
     }
   };
 
   window.hapusHalamanMateri = function(index) {
-    syncAllModalPages();
-    if (currentModalPages.length <= 1) {
+    if (typeof window.syncAllModalPages === 'function') window.syncAllModalPages();
+    else syncAllModalPages();
+
+    const pages = window.currentModalPages || currentModalPages;
+    if (pages.length <= 1) {
       toast('Modul materi minimal harus memiliki 1 halaman.', 'warning');
       return;
     }
-    currentModalPages.splice(index, 1);
-    currentModalPages.forEach((p, idx) => { p.halaman = idx + 1; });
-    renderModalPages();
+    pages.splice(index, 1);
+    pages.forEach((p, idx) => { p.halaman = idx + 1; });
+    if (typeof window.renderModalPages === 'function') {
+      window.renderModalPages();
+    } else {
+      renderModalPages();
+    }
   };
 
   window.tambahHalamanMateriBaru = function() {
-    syncAllModalPages();
-    currentModalPages.push({
-      halaman: currentModalPages.length + 1,
+    if (typeof window.syncAllModalPages === 'function') window.syncAllModalPages();
+    else syncAllModalPages();
+
+    const pages = window.currentModalPages || currentModalPages;
+    pages.push({
+      halaman: pages.length + 1,
       judul: '',
       konten: ''
     });
-    renderModalPages();
+    if (typeof window.renderModalPages === 'function') {
+      window.renderModalPages();
+    } else {
+      renderModalPages();
+    }
     const container = document.getElementById('materi-pages-container');
     if (container) {
       setTimeout(() => { container.scrollTop = container.scrollHeight; }, 60);
