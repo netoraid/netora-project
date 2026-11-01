@@ -7,16 +7,17 @@
 | Parameter | Detail Konfigurasi Produksi |
 |---|---|
 | **Nama Aplikasi** | **NETORA v2 — Portal Pembelajaran TKJ** |
-| **URL Domain Resmi (HTTPS)** | 👉 **`https://netora.web.id`** |
-| **URL Server Pterodactyl Asli** | `http://203.175.125.151:2974` |
+| **URL Domain Resmi (HTTPS)** | 👉 **`https://netora.web.id`** & **`https://www.netora.web.id`** (ONLINE & AKTIF) |
+| **URL Server Pterodactyl Asli** | `http://163.52.135.155:2974` |
 | **Panel Hosting** | FinCloud Pterodactyl (`https://panel.fincloud.my.id/server/1f5ca09c`) |
-| **Node IP Server** | `203.175.125.151` |
+| **Node IP Server** | `163.52.135.155` |
 | **Port Alokasi Pterodactyl** | **`2974`** |
+| **Registrar Domain** | DomaiNesia (Status: Active, Registrar Lock: Disabled) |
 | **DNS & CDN Provider** | Cloudflare Free Plan |
 | **Cloudflare Nameservers** | `fattouche.ns.cloudflare.com` & `lorna.ns.cloudflare.com` |
 | **Mode SSL / Enkripsi** | Cloudflare Flexible + Always Use HTTPS + Auto HTTPS Rewrites |
-| **Port Forwarding Rule** | Cloudflare Origin Rule (Rewrite 443 $\rightarrow$ Destination Port `2974`) |
-| **Cloud Database** | **Supabase Cloud (PostgreSQL)** |
+| **Port Forwarding Rule** | Cloudflare Origin Rule (`port-netora`: Rewrite 443 $\rightarrow$ Destination Port `2974`) |
+| **Cloud Database** | **Supabase Cloud (PostgreSQL)** — Terhubung Sukses |
 | **Repository Git Resmi** | `https://github.com/netoraid/netora-project` |
 | **Format Aplikasi Mobile** | Progressive Web App (PWA) & APK Ready via PWABuilder |
 
@@ -927,6 +928,75 @@ curl http://localhost:3000/api/auth/me
 # 3. Menguji detail modul materi ID 2
 curl http://localhost:3000/api/materi/2
 ```
+
+---
+
+## 📌 11. Catatan Checkpoint Terakhir & Log Sesi Coding (Update 30 Oktober 2026)
+
+### A. Rekap Masalah yang Telah Tuntas Diselesaikan (100% Solved)
+1. **Pemulihan Koneksi Database Supabase Cloud**:
+   - Status: Project Supabase yang sebelumnya paused di free tier telah diaktifkan kembali.
+   - Verifikasi Server: `✅ [DATABASE] Terhubung sukses ke Supabase PostgreSQL!`.
+2. **Perubahan Node IP Hosting Pterodactyl FinCloud**:
+   - Node IP Pterodactyl berpindah dari `203.175.125.151` ke **`163.52.135.155`** pada port **`2974`**.
+   - Server FinCloud aktif melayani lalu lintas HTTP di `http://163.52.135.155:2974`.
+3. **Penyelesaian Domain NXDOMAIN & Integrasi Cloudflare**:
+   - Kendala: DomaiNesia sempat menampilkan *"An issue was encountered while updating the domain nameservers"* yang menyebabkan `netora.web.id` menghasilkan NXDOMAIN di seluruh DNS resolver.
+   - Penyebab: **Registrar Lock** di DomaiNesia dalam kondisi aktif mengunci delegasi registry PANDI.
+   - Solusi:
+     - Registrar Lock berhasil di-**Disable** di DomaiNesia.
+     - Nameservers Cloudflare berhasil di-*save* sempurna: `fattouche.ns.cloudflare.com` & `lorna.ns.cloudflare.com`.
+     - DNS Cloudflare: Record `A` (`netora.web.id` $\rightarrow$ `163.52.135.155`) dan `CNAME` (`www` $\rightarrow$ `netora.web.id`) diset **Proxied (Awan Oranye)**.
+     - SSL/TLS Cloudflare: Diset ke mode **Flexible** (karena origin Pterodactyl melayani HTTP biasa di port 2974).
+     - Cloudflare Origin Rule (`port-netora`): Merewrite port tujuan 443 ke port **2974**.
+     - Status: **`https://netora.web.id`** dan **`https://www.netora.web.id`** telah **100% ONLINE dan AKTIF** secara global.
+
+### B. Fitur Baru: Word-Like Rich Text Editor & Image Storage Modul Pembelajaran
+1. **Backend Storage (`routes/admin.js` & `server.js`)**:
+   - Menggunakan dependensi `multer` disk storage menyimpan gambar di direktori `public/uploads/materi/`.
+   - Menambahkan endpoint `POST /api/admin/materi/upload-gambar` dengan filter berkas gambar (JPG, PNG, WebP, GIF, SVG) dan batas ukuran berkas 10MB.
+   - `server.js` otomatis membuat folder `public/uploads/materi/` saat inisialisasi server.
+2. **Admin WYSIWYG Editor (`public/js/admin.js` & `public/admin.html`)**:
+   - Menggantikan `<textarea>` statis dengan antarmuka toolbar bergaya Microsoft Word:
+     - Pemformatan Teks: **Bold**, *Italic*, <u>Underline</u>.
+     - Hierarki Judul: `H2` (Sub-Topik Utama), `H3` (Sub-Topik Pendukung), `Teks` (`<p>`).
+     - Daftar: `1. List` (Ordered) dan `• List` (Unordered).
+     - Blok Skrip CLI: Tombol `</> Script CLI` menyisipkan blok kode `<pre><code>` dengan sintaks Mikrotik/Cisco.
+     - Sisipkan Foto: Tombol `🖼️ Sisipkan Foto` membuka dialog file untuk mengunggah gambar praktikum.
+     - **Clipboard Paste (`Ctrl + V`)**: Menempelkan tangkapan layar langsung dari clipboard ke area editor tanpa perlu simpan file terlebih dahulu.
+     - Canvas `contenteditable="true"` berdesain bersih dengan tinggi minimum 160px dan scrollbar otomatis.
+3. **Tampilan Siswa Responsif & Lightbox Zoom (`public/js/materi.js` & `public/css/netora.css`)**:
+   - `public/js/materi.js`: Fungsi `formatMateriContent(raw)` mendeteksi konten HTML rich text maupun teks polos warisan terdahulu (*backward-compatible*).
+   - `.materi-rich-content`: Format responsif dengan `max-width: 100%`, gambar otomatis menyesuaikan lebar layar HP maupun Desktop tanpa terpotong (*overflow proof*).
+   - **Fitur Lightbox Tap-to-Zoom**: Setiap gambar praktikum di materi dapat disentuh/diklik untuk menampilkan pratinjau resolusi penuh di modal fullscreen berlatar belakang gelap transparan.
+   - **Tombol Salin Skrip CLI**: Setiap blok `<pre>` terminal memiliki tombol mengambang *"📋 Salin Script"* yang menyalin isi kode ke clipboard siswa dalam satu ketukan.
+
+### C. Ringkasan File yang Dimodifikasi pada Sesi Ini
+| File | Deskripsi Perubahan |
+|---|---|
+| `routes/admin.js` | Konfigurasi `multer` & endpoint `POST /api/admin/materi/upload-gambar` |
+| `server.js` | Inisialisasi pembuatan folder `public/uploads/materi` otomatis |
+| `public/admin.html` | Pembaruan modal materi, penyelarasan script admin, dan bump cache-buster `?v=2026.6` |
+| `public/js/admin.js` | Implementasi penuh Word-like editor toolbar, canvas paste handler, image upload, sync data, dan validasi submit |
+| `public/css/netora.css` | Styling `.editor-toolbar`, `.editor-canvas`, `.materi-rich-content`, `.materi-media-figure`, dan `.materi-lightbox-modal` |
+| `public/js/materi.js` | Parser rich content `formatMateriContent`, engine modal lightbox zoom, dan copy button script CLI |
+| `planing.md` | Pembaruan live master documentation dan checkpoint arsitektur sistem |
+
+### D. Langkah Singkat Melanjutkan pada Sesi Berikutnya
+1. **Push & Deploy Kode Terbaru**:
+   ```bash
+   git add .
+   git commit -m "feat: complete word-like rich text editor, image upload, and documentation update"
+   git push origin main
+   ```
+2. **Restart Container Pterodactyl**:
+   - Klik tombol **Restart** di panel FinCloud agar container menarik commit terbaru secara otomatis (`git pull`).
+3. **Hard Refresh Browser**:
+   - Buka `https://netora.web.id/admin.html` dan tekan `Ctrl + F5` untuk memastikan asset JavaScript terbaru termuat.
+4. **Item Pengembangan Lanjutan yang Siap Dikerjakan**:
+   - Uji coba live pembuatan materi dengan 3-5 halaman berseri lengkap dengan screenshot Winbox/Packet Tracer.
+   - Penambahan fitur ekspor modul materi ke format PDF bagi siswa.
+   - Fitur upload lampiran berkas tugas siswa pada laboratorium kuis/tugas.
 
 ---
 

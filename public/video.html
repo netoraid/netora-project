@@ -81,54 +81,29 @@
       <input type="text" id="input-search-video" placeholder="Cari judul vidio praktik..." style="width:100%; padding:10px 14px; border-radius:12px; border:1px solid #CBD5E1; font-size:13px; box-sizing:border-box;">
     </div>
 
-    <!-- Container Daftar Video Tutorial -->
+    <!-- Filter Pills Row Video (Dinamis dari Database Supabase) -->
+    <div class="filter-pills-row" id="video-filter-row" style="display:flex;">
+      <button type="button" class="filter-pill active" data-cat="all">Semua</button>
+    </div>
+
+    <!-- Container Daftar Video Tutorial (Dinamis dari Supabase) -->
     <div id="video-container" style="padding-bottom:4px;">
       <div class="desktop-grid-2col">
-        <div class="video-card-item" style="background:#FFFFFF; border-radius:18px; margin:0 16px 12px; box-shadow:0 2px 14px rgba(13,91,255,0.04); border:1px solid rgba(0,0,0,0.04); overflow:hidden;">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; cursor:pointer;" onclick="togglePlayVideo(1)">
-            <div class="item-left-flex">
-              <div class="item-square-thumb" style="position:relative; width:90px; height:60px; border-radius:10px; overflow:hidden; background:#0F172A; flex-shrink:0;">
-                <img src="https://img.youtube.com/vi/qiQR5rTSshw/hqdefault.jpg" alt="Simulasi Jaringan Cisco Packet Tracer" style="width:100%; height:100%; object-fit:cover; display:block;">
-                <div style="position:absolute; inset:0; background:rgba(0,0,0,0.22); display:flex; align-items:center; justify-content:center;">
-                  <div style="width:24px; height:24px; border-radius:50%; background:rgba(13,91,255,0.95); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.35);">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF" style="margin-left:1.5px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                  </div>
-                </div>
-                <span class="item-thumb-duration" style="position:absolute; bottom:3px; right:4px; font-size:9.5px; font-weight:700; padding:1.5px 5px; background:rgba(15,23,42,0.85); color:#FFFFFF; border-radius:4px; line-height:1;">15:20</span>
-              </div>
-              <div class="item-meta-col">
-                <h4 class="item-title-text">Simulasi Jaringan Cisco Packet Tracer</h4>
-                <div class="item-sub-text">
-                  <span style="color:#0D5BFF; font-weight:700;">Cisco Packet Tracer</span>
-                </div>
-              </div>
-            </div>
-            <div class="item-chevron-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        <div class="skeleton-item-card">
+          <div class="skeleton-item-left">
+            <div class="netora-skeleton skeleton-square-thumb" style="width:68px; height:46px; border-radius:10px;"></div>
+            <div class="skeleton-meta-col">
+              <div class="netora-skeleton skeleton-line h-18 w-80"></div>
+              <div class="netora-skeleton skeleton-line w-40"></div>
             </div>
           </div>
         </div>
-        <div class="video-card-item" style="background:#FFFFFF; border-radius:18px; margin:0 16px 12px; box-shadow:0 2px 14px rgba(13,91,255,0.04); border:1px solid rgba(0,0,0,0.04); overflow:hidden;">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; cursor:pointer;" onclick="togglePlayVideo(2)">
-            <div class="item-left-flex">
-              <div class="item-square-thumb" style="position:relative; width:90px; height:60px; border-radius:10px; overflow:hidden; background:#0F172A; flex-shrink:0;">
-                <img src="https://img.youtube.com/vi/IPvYjXCsTg8/hqdefault.jpg" alt="Pengenalan Mikrotik dan Jaringan Komputer" style="width:100%; height:100%; object-fit:cover; display:block;">
-                <div style="position:absolute; inset:0; background:rgba(0,0,0,0.22); display:flex; align-items:center; justify-content:center;">
-                  <div style="width:24px; height:24px; border-radius:50%; background:rgba(13,91,255,0.95); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.35);">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF" style="margin-left:1.5px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                  </div>
-                </div>
-                <span class="item-thumb-duration" style="position:absolute; bottom:3px; right:4px; font-size:9.5px; font-weight:700; padding:1.5px 5px; background:rgba(15,23,42,0.85); color:#FFFFFF; border-radius:4px; line-height:1;">18:32</span>
-              </div>
-              <div class="item-meta-col">
-                <h4 class="item-title-text">Pengenalan Mikrotik dan Jaringan Komputer</h4>
-                <div class="item-sub-text">
-                  <span style="color:#0D5BFF; font-weight:700;">Dasar Mikrotik</span>
-                </div>
-              </div>
-            </div>
-            <div class="item-chevron-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        <div class="skeleton-item-card">
+          <div class="skeleton-item-left">
+            <div class="netora-skeleton skeleton-square-thumb" style="width:68px; height:46px; border-radius:10px;"></div>
+            <div class="skeleton-meta-col">
+              <div class="netora-skeleton skeleton-line h-18 w-80"></div>
+              <div class="netora-skeleton skeleton-line w-40"></div>
             </div>
           </div>
         </div>

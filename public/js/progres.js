@@ -38,16 +38,17 @@ window.initProgresPage = function() {
       if (statAverageEl) statAverageEl.textContent = `${avgScore}%`;
       if (statCompletedEl) statCompletedEl.textContent = `${riwayat.length} Sesi`;
 
-      // Update tingkat penguasaan kompetensi real-time dari performa kuis
-      const mikrotikScore = avgScore;
-      const subnetScore = Math.min(100, Math.round(avgScore * 1.05));
-      const firewallScore = Math.max(0, Math.round(avgScore * 0.9));
-      const linuxScore = Math.max(0, Math.round(avgScore * 0.95));
+      const sum = scores.reduce((a, b) => a + b, 0);
+      const lulusCount = scores.filter(s => s >= 70).length;
+      const lulusRate = Math.round((lulusCount / scores.length) * 100);
+      // Indeks ketuntasan terpadu (50% frekuensi ujian + 50% kualitas rata-rata skor)
+      const progressOverall = Math.min(100, Math.max(10, Math.round((Math.min(scores.length, 5) / 5) * 50 + (avgScore / 100) * 50)));
 
-      updateSkillBar('mikrotik', mikrotikScore);
-      updateSkillBar('subnet', subnetScore);
-      updateSkillBar('firewall', firewallScore);
-      updateSkillBar('linux', linuxScore);
+      // Update tingkat penguasaan kompetensi murni dari performa kuis di database
+      updateSkillBar('mikrotik', avgScore);
+      updateSkillBar('subnet', maxScore);
+      updateSkillBar('firewall', lulusRate);
+      updateSkillBar('linux', progressOverall);
 
       if (historyContainer) {
         historyContainer.innerHTML = '<div class="netora-fade-in">' + riwayat.map(item => {

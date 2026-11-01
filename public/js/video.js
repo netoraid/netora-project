@@ -8,15 +8,8 @@ window.initVideoPage = function() {
 
   let allVideos = [];
   let playingVideoId = null;
-
-  const defaultVideos = [
-    { id: 1, judul: 'Simulasi Jaringan Cisco Packet Tracer', kategori: 'Cisco Packet Tracer', durasi: '15:20', progress: 0, url_youtube: 'https://www.youtube-nocookie.com/embed/qiQR5rTSshw' },
-    { id: 2, judul: 'Pengenalan Mikrotik dan Jaringan Komputer', kategori: 'Dasar Mikrotik', durasi: '18:32', progress: 0, url_youtube: 'https://www.youtube-nocookie.com/embed/IPvYjXCsTg8' },
-    { id: 3, judul: 'Tutorial Video Interaktif & Lab Jaringan', kategori: 'Dasar Jaringan', durasi: '14:20', progress: 0, url_youtube: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE' },
-    { id: 4, judul: 'Konfigurasi IP Address & Subnetting', kategori: 'Layanan Jaringan', durasi: '12:45', progress: 0, url_youtube: 'https://www.youtube-nocookie.com/embed/qiQR5rTSshw' },
-    { id: 5, judul: 'Manajemen Bandwidth & Firewall', kategori: 'Mikrotik Queue', durasi: '16:50', progress: 0, url_youtube: 'https://www.youtube-nocookie.com/embed/IPvYjXCsTg8' },
-    { id: 6, judul: 'Konfigurasi Hotspot & User Login', kategori: 'Manajemen User', durasi: '17:40', progress: 0, url_youtube: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE' }
-  ];
+  let currentCategory = 'all';
+  const filterRow = document.getElementById('video-filter-row');
 
   function extractYouTubeInfo(url) {
     if (!url) return { videoId: null, embedUrl: '', thumbnailUrl: '', directUrl: '' };
@@ -35,7 +28,7 @@ window.initVideoPage = function() {
       return {
         videoId: null,
         embedUrl: str,
-        thumbnailUrl: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=360&auto=format&fit=crop&q=80',
+        thumbnailUrl: '',
         directUrl: str
       };
     }
@@ -50,7 +43,7 @@ window.initVideoPage = function() {
 
   function renderVideoSkeleton() {
     if (!videoContainer) return;
-    videoContainer.innerHTML = '<div class="desktop-grid-2col">' + [1, 2, 3, 4, 5, 6].map(() => `
+    videoContainer.innerHTML = '<div class="desktop-grid-2col">' + [1, 2, 3, 4].map(() => `
       <div class="skeleton-item-card">
         <div class="skeleton-item-left">
           <div class="netora-skeleton skeleton-square-thumb" style="width:68px; height:46px; border-radius:10px;"></div>
@@ -63,6 +56,32 @@ window.initVideoPage = function() {
     `).join('') + '</div>';
   }
 
+  function renderVideoFilterPills() {
+    if (!filterRow) return;
+    const categories = ['all'];
+    allVideos.forEach(v => {
+      const k = (v.kategori || '').trim();
+      if (k && !categories.some(c => c.toLowerCase() === k.toLowerCase())) {
+        categories.push(k);
+      }
+    });
+
+    filterRow.innerHTML = categories.map(cat => {
+      const label = cat === 'all' ? 'Semua' : (typeof escapeHtml === 'function' ? escapeHtml(cat) : cat);
+      const isActive = (currentCategory.toLowerCase() === cat.toLowerCase()) ? 'active' : '';
+      return `<button type="button" class="filter-pill ${isActive}" data-cat="${typeof escapeHtml === 'function' ? escapeHtml(cat) : cat}">${label}</button>`;
+    }).join('');
+
+    filterRow.querySelectorAll('.filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterRow.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.cat || 'all';
+        renderVideoCards();
+      });
+    });
+  }
+
   async function loadVideos() {
     renderVideoSkeleton();
 
@@ -70,61 +89,57 @@ window.initVideoPage = function() {
     try {
       const cached = sessionStorage.getItem('netora_video_cache');
       if (cached) {
-        allVideos = JSON.parse(cached);
-        if (allVideos.length > 0) renderVideoCards();
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          allVideos = parsed;
+          renderVideoFilterPills();
+          renderVideoCards();
+        }
       }
     } catch (e) {}
 
     try {
-      const res = await fetch('/api/video');
+      const res = await fetch('/api/video?t=' + Date.now());
       const data = await res.json();
 
-      if (res.ok && data.success && data.video && data.video.length > 0) {
+      if (res.ok && data.success && Array.isArray(data.video)) {
         allVideos = data.video.map(v => {
           const yt = extractYouTubeInfo(v.url_youtube);
           return {
             id: v.id,
-            judul: v.judul,
+            judul: v.judul || 'Vidio Praktik',
             deskripsi: v.deskripsi || '',
-            kategori: v.kategori || 'Mikrotik',
+            kategori: v.kategori || 'TKJ',
             durasi: v.durasi || '15:00',
             progress: 0,
             url_youtube: yt.embedUrl || v.url_youtube,
             direct_url: yt.directUrl || v.url_youtube,
-            thumbnail_url: v.thumbnail_url || yt.thumbnailUrl || 'https://img.youtube.com/vi/wKkLSmLp37g/hqdefault.jpg'
+            thumbnail_url: v.thumbnail_url || yt.thumbnailUrl || ''
           };
         });
         try { sessionStorage.setItem('netora_video_cache', JSON.stringify(allVideos)); } catch (e) {}
-      } else if (allVideos.length === 0) {
-        allVideos = defaultVideos.map(v => {
-          const yt = extractYouTubeInfo(v.url_youtube);
-          return {
-            ...v,
-            direct_url: yt.directUrl,
-            thumbnail_url: yt.thumbnailUrl
-          };
-        });
+      } else {
+        allVideos = [];
       }
-      renderVideoCards();
     } catch (err) {
-      if (allVideos.length === 0) {
-        allVideos = defaultVideos.map(v => {
-          const yt = extractYouTubeInfo(v.url_youtube);
-          return {
-            ...v,
-            direct_url: yt.directUrl,
-            thumbnail_url: yt.thumbnailUrl
-          };
-        });
-        renderVideoCards();
-      }
+      console.warn('Gagal memuat video dari database:', err);
     }
+
+    renderVideoFilterPills();
+    renderVideoCards();
   }
 
   function renderVideoCards() {
     const q = (inputSearch ? inputSearch.value : '').toLowerCase().trim();
 
     let list = allVideos.filter(v => {
+      if (currentCategory !== 'all') {
+        const cf = currentCategory.toLowerCase();
+        const vk = (v.kategori || '').toLowerCase();
+        if (vk !== cf && !vk.includes(cf) && !cf.includes(vk)) {
+          return false;
+        }
+      }
       if (q && !v.judul.toLowerCase().includes(q) && !(v.kategori || '').toLowerCase().includes(q)) {
         return false;
       }
@@ -132,7 +147,23 @@ window.initVideoPage = function() {
     });
 
     if (list.length === 0) {
-      videoContainer.innerHTML = '<div style="text-align:center; padding:30px; color:#64748B; font-size:13px;">Tidak ada video yang sesuai pencarian.</div>';
+      if (allVideos.length === 0) {
+        videoContainer.innerHTML = `
+          <div class="netora-fade-in" style="text-align:center; padding:36px 20px; background:#FFFFFF; border-radius:20px; margin:14px 16px; border:1px solid #E2E8F0; box-shadow:0 2px 12px rgba(15,23,42,0.04);">
+            <div style="width:52px; height:52px; border-radius:16px; background:#EFF6FF; color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </div>
+            <h4 style="margin:0 0 6px; font-size:15px; font-weight:800; color:#1E293B;">Belum Ada Vidio Praktik di Database</h4>
+            <p style="margin:0 auto; font-size:12.5px; color:#64748B; max-width:320px; line-height:1.5;">Vidio praktikum dan simulasi jaringan yang ditambahkan Guru / Administrator di panel admin akan otomatis tampil di sini.</p>
+          </div>
+        `;
+      } else {
+        videoContainer.innerHTML = `
+          <div style="text-align:center; padding:32px 20px; color:#64748B; font-size:13px;">
+            <p style="margin:0;">Tidak ada vidio yang cocok dengan pencarian / kategori ini.</p>
+          </div>
+        `;
+      }
       return;
     }
 

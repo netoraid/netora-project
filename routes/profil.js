@@ -53,12 +53,13 @@ router.get('/', requireAuth, async (req, res) => {
       user.foto = 'uploads/default.png';
     }
 
+    const limitRiwayat = parseInt(req.query.limit, 10) || 100;
     const { data: riwayat, error: rErr } = await supabase
       .from('nilai_quiz')
       .select('id, skor, tanggal')
       .eq('user_id', req.session.userId)
       .order('id', { ascending: false })
-      .limit(5);
+      .limit(limitRiwayat);
 
     return res.json({ success: true, user, riwayat: riwayat || [] });
   } catch (err) {

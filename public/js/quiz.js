@@ -12,32 +12,106 @@ window.initQuizPage = function() {
   let userAnswers = {};
   let currentCategory = 'all';
 
-  const quizTopics = [
-    { id: 'cisco', title: 'Cisco Packet Tracer', category: 'Cisco Packet Tracer', duration: '15 menit', soalCount: 10, rating: '4.8' },
-    { id: 'mikrotik', title: 'Mikrotik RouterOS', category: 'Mikrotik', duration: '15 menit', soalCount: 10, rating: '4.7' },
-    { id: 'server', title: 'Server & Linux Networking', category: 'Server & Linux', duration: '15 menit', soalCount: 10, rating: '4.6' },
-    { id: 'komprehensif', title: 'Evaluasi Kompetensi TKJ Terpadu', category: 'all', duration: '15 menit', soalCount: 10, rating: '4.9' }
-  ];
-
-  function getTopicIconSvg(id) {
-    switch (id) {
-      case 'cisco':
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
-      case 'mikrotik':
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
-      case 'server':
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`;
-      default:
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`;
+  function getTopicIconSvg(kategoriStr) {
+    const text = (kategoriStr || '').toLowerCase();
+    if (text.includes('cisco') || text.includes('packet tracer') || text.includes('switch') || text.includes('vlan')) {
+      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
     }
+    if (text.includes('mikrotik') || text.includes('router') || text.includes('queue') || text.includes('bandwidth')) {
+      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
+    }
+    if (text.includes('server') || text.includes('linux') || text.includes('nginx') || text.includes('ssh')) {
+      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`;
+    }
+    if (text.includes('subnet') || text.includes('ip') || text.includes('cidr') || text.includes('kalkulator')) {
+      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="8" y1="14" x2="8" y2="14"/></svg>`;
+    }
+    if (text.includes('firewall') || text.includes('keamanan') || text.includes('security')) {
+      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+    }
+    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`;
   }
 
   function getAvailableSoalCount(category) {
-    if (category === 'all') {
+    if (!category || category === 'all') {
       return allQuestions.length;
     }
     const filtered = allQuestions.filter(q => q.kategori && (q.kategori.toLowerCase() === category.toLowerCase() || q.kategori.toLowerCase().includes(category.toLowerCase())));
     return filtered.length;
+  }
+
+  // Bangun topik kuis secara 100% dinamis dari kategori bank soal yang ada di Supabase
+  function getDynamicQuizTopics() {
+    if (!allQuestions || allQuestions.length === 0) return [];
+
+    const categories = [];
+    allQuestions.forEach(q => {
+      const k = (q.kategori || '').trim();
+      if (k && !categories.some(c => c.toLowerCase() === k.toLowerCase())) {
+        categories.push(k);
+      }
+    });
+
+    const topics = [];
+
+    // Jika ada lebih dari 1 kategori atau soal cukup banyak, tambahkan paket komprehensif
+    if (allQuestions.length > 0) {
+      topics.push({
+        id: 'komprehensif',
+        title: 'Evaluasi Kompetensi TKJ Terpadu',
+        category: 'all',
+        duration: `${Math.max(5, Math.min(30, allQuestions.length * 2))} menit`,
+        soalCount: allQuestions.length
+      });
+    }
+
+    // Tambahkan topik per kategori yang ditemukan di database
+    categories.forEach((cat, idx) => {
+      const count = getAvailableSoalCount(cat);
+      if (count > 0) {
+        topics.push({
+          id: 'cat_' + idx,
+          title: cat,
+          category: cat,
+          duration: `${Math.max(5, count * 2)} menit`,
+          soalCount: count
+        });
+      }
+    });
+
+    return topics;
+  }
+
+  function renderQuizFilterPills() {
+    if (!quizFilterRow) return;
+    if (allQuestions.length === 0) {
+      quizFilterRow.style.display = 'none';
+      return;
+    }
+
+    const categories = ['all'];
+    allQuestions.forEach(q => {
+      const k = (q.kategori || '').trim();
+      if (k && !categories.some(c => c.toLowerCase() === k.toLowerCase())) {
+        categories.push(k);
+      }
+    });
+
+    quizFilterRow.style.display = 'flex';
+    quizFilterRow.innerHTML = categories.map(cat => {
+      const label = cat === 'all' ? 'Semua' : (typeof escapeHtml === 'function' ? escapeHtml(cat) : cat);
+      const isActive = (currentCategory.toLowerCase() === cat.toLowerCase()) ? 'active' : '';
+      return `<button type="button" class="filter-pill ${isActive}" data-cat="${typeof escapeHtml === 'function' ? escapeHtml(cat) : cat}">${label}</button>`;
+    }).join('');
+
+    quizFilterRow.querySelectorAll('.filter-pill').forEach(btn => {
+      btn.onclick = () => {
+        quizFilterRow.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.cat || 'all';
+        renderTopicList();
+      };
+    });
   }
 
   function renderQuizSkeleton() {
@@ -65,13 +139,14 @@ window.initQuizPage = function() {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) {
           allQuestions = parsed;
+          renderQuizFilterPills();
           renderTopicList();
         }
       }
     } catch (e) {}
 
     try {
-      const res = await fetch('/api/quiz');
+      const res = await fetch('/api/quiz?t=' + Date.now());
       const data = await res.json();
       if (res.ok && data.success && Array.isArray(data.quiz)) {
         allQuestions = data.quiz.sort((a, b) => Number(a.id) - Number(b.id));
@@ -83,6 +158,8 @@ window.initQuizPage = function() {
     } catch (err) {
       console.warn('Gagal fetch database kuis:', err);
     }
+
+    renderQuizFilterPills();
     renderTopicList();
   }
   window.loadQuizData = loadQuizData;
@@ -98,19 +175,7 @@ window.initQuizPage = function() {
 
     window.renderTopicList = renderTopicList;
 
-    // Filter Pill Listener untuk Kuis
-    if (quizFilterRow) {
-      quizFilterRow.querySelectorAll('.filter-pill').forEach(btn => {
-        btn.onclick = () => {
-          quizFilterRow.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentCategory = btn.dataset.cat || 'all';
-          renderTopicList();
-        };
-      });
-    }
-
-    // Jika bank soal kuis kosong dari admin, sembunyikan filter dan tampilkan pesan kosong
+    // Jika bank soal kuis kosong dari database Supabase, tampilkan pesan kosong
     if (allQuestions.length === 0) {
       if (quizFilterRow) quizFilterRow.style.display = 'none';
       quizContainer.innerHTML = `
@@ -118,9 +183,9 @@ window.initQuizPage = function() {
           <div style="width:52px; height:52px; border-radius:14px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px;">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           </div>
-          <h4 style="margin:0 0 8px; color:#1E293B; font-size:16px; font-weight:800;">Belum Ada Kuis Tersedia</h4>
+          <h4 style="margin:0 0 8px; color:#1E293B; font-size:16px; font-weight:800;">Belum Ada Kuis Tersedia di Database</h4>
           <p style="margin:0 0 16px; font-size:13px; color:#64748B; line-height:1.5; max-width:360px; margin-left:auto; margin-right:auto;">
-            Saat ini bank soal kuis masih kosong. Soal kuis akan muncul otomatis di sini setelah ditambahkan oleh Guru / Administrator dari Panel Admin.
+            Saat ini bank soal kuis masih kosong di database. Soal kuis akan muncul otomatis di sini setelah ditambahkan oleh Guru / Administrator dari Panel Admin.
           </p>
           <a href="beranda.html" class="btn-hero-orange" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
@@ -131,12 +196,11 @@ window.initQuizPage = function() {
       return;
     }
 
-    // Jika ada soal di database, tampilkan pill filter
-    if (quizFilterRow) quizFilterRow.style.display = 'flex';
+    const dynamicTopics = getDynamicQuizTopics();
 
-    let filtered = quizTopics;
+    let filtered = dynamicTopics;
     if (currentCategory !== 'all') {
-      filtered = quizTopics.filter(t => t.category.toLowerCase() === currentCategory.toLowerCase());
+      filtered = dynamicTopics.filter(t => t.category.toLowerCase() === currentCategory.toLowerCase());
     }
 
     // Hanya tampilkan topik yang memiliki soal aktif
@@ -149,7 +213,7 @@ window.initQuizPage = function() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           </div>
           <h4 style="margin:0 0 6px; color:#1E293B; font-size:15px; font-weight:800;">Belum Ada Soal di Kategori Ini</h4>
-          <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Soal kuis untuk kategori ini belum tersedia. Silakan pilih kategori lain.</p>
+          <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Soal kuis untuk kategori ini belum tersedia di database. Silakan pilih kategori lain.</p>
           <button type="button" class="btn-hero-orange" style="display:inline-flex; align-items:center; gap:8px;" onclick="renderTopicList('all')">
             <span>Tampilkan Semua Kuis</span>
           </button>
@@ -160,19 +224,19 @@ window.initQuizPage = function() {
 
     quizContainer.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + activeTopics.map(t => {
       const count = getAvailableSoalCount(t.category);
+      const icon = getTopicIconSvg(t.category || t.title);
       return `
-        <div class="white-item-card" style="cursor:pointer;" onclick="startQuizTopic('${t.id}', '${t.title}', '${t.category}')">
+        <div class="white-item-card" style="cursor:pointer;" onclick="startQuizTopic('${t.id}', '${typeof escapeHtml === 'function' ? escapeHtml(t.title) : t.title}', '${typeof escapeHtml === 'function' ? escapeHtml(t.category) : t.category}')">
           <div class="item-left-flex">
             <div class="item-square-thumb" style="background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center;">
-              ${getTopicIconSvg(t.id)}
+              ${icon}
             </div>
             <div class="item-meta-col">
-              <h4 class="item-title-text">${escapeHtml(t.title)}</h4>
+              <h4 class="item-title-text">${typeof escapeHtml === 'function' ? escapeHtml(t.title) : t.title}</h4>
               <div class="item-sub-text">
                 <span>${count} Soal Aktif • ${t.duration}</span>
-                <span class="item-star-rating" style="display:inline-flex; align-items:center; gap:3px;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                  <span>${t.rating}</span>
+                <span style="display:inline-flex; align-items:center; gap:3px; background:#EFF6FF; color:#0D5BFF; font-weight:700; padding:1px 6px; border-radius:6px; font-size:10.5px;">
+                  <span>Ujian TKJ</span>
                 </span>
               </div>
             </div>
