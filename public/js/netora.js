@@ -1370,8 +1370,8 @@ document.addEventListener('DOMContentLoaded', () => {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      animation: netoraStudyFadeIn 0.25s ease forwards;
+      padding: 16px;
+      animation: netoraStudyFadeIn 0.22s ease forwards;
     `;
 
     if (!document.getElementById('netora-study-keyframes')) {
@@ -1383,52 +1383,88 @@ document.addEventListener('DOMContentLoaded', () => {
           to { opacity: 1; }
         }
         @keyframes netoraStudyScaleIn {
-          from { opacity: 0; transform: scale(0.92) translateY(12px); }
+          from { opacity: 0; transform: scale(0.92) translateY(10px); }
           to { opacity: 1; transform: scale(1) translateY(0); }
         }
         @keyframes netoraStudyPulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-          50% { box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.35); }
+          50% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+        }
+        @media (max-width: 480px) {
+          .netora-study-modal-box {
+            max-width: 310px !important;
+            padding: 18px 16px 16px !important;
+            border-radius: 18px !important;
+          }
+          .netora-study-icon-wrap {
+            width: 46px !important;
+            height: 46px !important;
+            border-radius: 14px !important;
+            margin-bottom: 8px !important;
+          }
+          .netora-study-icon-wrap svg {
+            width: 24px !important;
+            height: 24px !important;
+          }
+          .netora-study-title {
+            font-size: 16.5px !important;
+            margin-bottom: 6px !important;
+          }
+          .netora-study-text {
+            font-size: 12.5px !important;
+            line-height: 1.45 !important;
+            margin-bottom: 16px !important;
+          }
+          .netora-study-btn-primary {
+            padding: 10px 14px !important;
+            font-size: 12px !important;
+            border-radius: 10px !important;
+          }
+          .netora-study-btn-secondary {
+            padding: 8px 14px !important;
+            font-size: 11.5px !important;
+            border-radius: 10px !important;
+          }
         }
       `;
       document.head.appendChild(styleEl);
     }
 
     overlay.innerHTML = `
-      <div style="background: #FFFFFF; border-radius: 28px; padding: 32px 28px; max-width: 460px; width: 100%; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(239, 68, 68, 0.2); text-align: center; position: relative; animation: netoraStudyScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+      <div class="netora-study-modal-box" style="background: #FFFFFF; border-radius: 20px; padding: 24px 20px 20px; max-width: 360px; width: 100%; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.05); text-align: center; position: relative; animation: netoraStudyScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
         <!-- Glowing Animated Clock Icon -->
-        <div style="width: 68px; height: 68px; border-radius: 22px; background: rgba(239, 68, 68, 0.1); color: #EF4444; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; animation: netoraStudyPulse 2.4s infinite;">
-          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="netora-study-icon-wrap" style="width: 52px; height: 52px; border-radius: 16px; background: rgba(239, 68, 68, 0.09); color: #EF4444; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; animation: netoraStudyPulse 2.4s infinite;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
         </div>
 
         <!-- Badge Kategori Pengingat -->
-        <div style="margin-bottom: 8px;">
-          <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #DC2626; background: #FEF2F2; border: 1px solid #FECACA; padding: 4px 12px; border-radius: 20px; display: inline-block;">
-            ⏰ Batas Waktu Belajar Tercapai
+        <div style="margin-bottom: 10px;">
+          <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; color: #DC2626; background: #FEF2F2; border: 1px solid #FECACA; padding: 3px 10px; border-radius: 12px; display: inline-block;">
+            ⏰ Batas Waktu Belajar
           </span>
         </div>
 
         <!-- Headline -->
-        <h3 style="margin: 0 0 10px; font-size: 21px; font-weight: 800; color: #0F172A; line-height: 1.3;">
+        <h3 class="netora-study-title" style="margin: 0 0 8px; font-size: 18px; font-weight: 800; color: #0F172A; line-height: 1.3;">
           Waktunya Istirahat!
         </h3>
 
         <!-- Teks Peringatan Kustom Sesuai Permintaan User -->
-        <p style="margin: 0 0 26px; font-size: 15px; color: #334155; line-height: 1.6; font-weight: 500;">
+        <p class="netora-study-text" style="margin: 0 0 20px; font-size: 13.5px; color: #475569; line-height: 1.5; font-weight: 500;">
           Halo, <strong style="color: #0D5BFF; font-weight: 800;">${escapeHtml(userName)}</strong> kamu telah melebihi batas waktu yang telah di anjurkan untuk belajar.
         </p>
 
         <!-- Tombol Aksi -->
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button type="button" id="btn-study-snooze-action"
-            style="background: linear-gradient(135deg, #0D5BFF, #0040C1); color: #FFFFFF; font-weight: 700; border-radius: 14px; padding: 13px 20px; border: none; cursor: pointer; font-size: 14px; box-shadow: 0 4px 16px rgba(13, 91, 255, 0.35); transition: all 0.2s;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button type="button" id="btn-study-snooze-action" class="netora-study-btn-primary"
+            style="background: linear-gradient(135deg, #0D5BFF, #0040C1); color: #FFFFFF; font-weight: 700; border-radius: 12px; padding: 11px 16px; border: none; cursor: pointer; font-size: 13px; box-shadow: 0 4px 14px rgba(13, 91, 255, 0.3); transition: all 0.2s;">
             Saya Mengerti (Ingatkan ${snoozeMins} Menit Lagi)
           </button>
-          <button type="button" id="btn-study-logout-action"
-            style="background: #F1F5F9; color: #475569; font-weight: 700; border-radius: 14px; padding: 11px 20px; border: 1px solid #CBD5E1; cursor: pointer; font-size: 13px; transition: all 0.2s;">
+          <button type="button" id="btn-study-logout-action" class="netora-study-btn-secondary"
+            style="background: #F8FAFC; color: #475569; font-weight: 600; border-radius: 12px; padding: 9.5px 16px; border: 1px solid #CBD5E1; cursor: pointer; font-size: 12.5px; transition: all 0.2s;">
             Keluar / Istirahat Penuh
           </button>
         </div>
