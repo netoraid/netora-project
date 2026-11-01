@@ -5133,22 +5133,28 @@ textarea.form-input {
   box-shadow: 0 4px 14px rgba(0,0,0,0.08);
   border: 2px solid #E2E8F0;
   cursor: pointer;
+  transition: border-color 0.15s, outline 0.15s, transform 0.15s;
 }
 
 .editor-canvas img:hover {
   border-color: #0D5BFF;
 }
 
+.editor-canvas img.editor-img-active {
+  border-color: #0D5BFF !important;
+  outline: 3px solid #0D5BFF !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 8px 24px rgba(13, 91, 255, 0.22) !important;
+}
+
 .editor-canvas img.align-left {
   float: left;
-  margin: 6px 14px 10px 0;
-  max-width: 45%;
+  margin: 6px 16px 10px 0;
 }
 
 .editor-canvas img.align-right {
   float: right;
-  margin: 6px 0 10px 14px;
-  max-width: 45%;
+  margin: 6px 0 10px 16px;
 }
 
 .editor-canvas pre {
@@ -5161,5 +5167,250 @@ textarea.form-input {
   overflow-x: auto;
   margin: 10px 0;
 }
+
+/* ======================================================== */
+/* MODAL MATERI WORD-LIKE EXPANSIVE DESKTOP LAYOUT         */
+/* ======================================================== */
+.modal-materi-dialog {
+  width: 100%;
+  max-width: 720px;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.22);
+  border-radius: 24px;
+  max-height: 94vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 22px;
+  box-sizing: border-box;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 992px) {
+  .modal-materi-dialog {
+    width: 94% !important;
+    max-width: 1160px !important;
+    padding: 28px 36px !important;
+    border-radius: 26px !important;
+  }
+
+  #materi-pages-container {
+    max-height: 62vh !important;
+    padding-right: 8px !important;
+  }
+
+  .editor-canvas {
+    min-height: 280px !important;
+    max-height: 520px !important;
+    font-size: 14.5px !important;
+    line-height: 1.8 !important;
+    padding: 18px 22px !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .modal-materi-dialog {
+    max-width: 1220px !important;
+  }
+
+  .editor-canvas {
+    min-height: 320px !important;
+  }
+}
+
+/* ======================================================== */
+/* FLOATING IMAGE RESIZER & ALIGNMENT TOOLBAR              */
+/* ======================================================== */
+.materi-img-resizer-bar {
+  position: fixed;
+  z-index: 100005;
+  background: #0F172A;
+  color: #FFFFFF;
+  border-radius: 14px;
+  padding: 8px 12px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-family: inherit;
+  font-size: 12px;
+  animation: netoraFadeInScale 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes netoraFadeInScale {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.materi-img-resizer-bar .resizer-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #94A3B8;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.materi-img-resizer-bar .resizer-badge {
+  background: #0D5BFF;
+  color: #FFFFFF;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 11px;
+}
+
+.materi-img-resizer-bar .resizer-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 3px;
+  border-radius: 8px;
+}
+
+.materi-img-resizer-bar button {
+  background: transparent;
+  border: none;
+  color: #CBD5E1;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.materi-img-resizer-bar button:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+}
+
+.materi-img-resizer-bar button.active {
+  background: #0D5BFF;
+  color: #FFFFFF;
+}
+
+.materi-img-resizer-bar .btn-delete-img {
+  background: rgba(239, 68, 68, 0.2);
+  color: #FCA5A5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.materi-img-resizer-bar .btn-delete-img:hover {
+  background: #EF4444;
+  color: #FFFFFF;
+}
+
+.materi-img-resizer-bar .resizer-slider-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px;
+}
+
+.materi-img-resizer-bar input[type="range"] {
+  width: 75px;
+  accent-color: #0D5BFF;
+  cursor: pointer;
+}
+
+.materi-img-resizer-bar .resizer-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.16);
+  margin: 0 2px;
+}
+
+/* ======================================================== */
+/* MATERI DETAIL RICH CONTENT STYLES                       */
+/* ======================================================== */
+.materi-rich-content {
+  color: #1E293B;
+  font-size: 14.5px;
+  line-height: 1.8;
+  word-wrap: break-word;
+}
+
+.materi-rich-content h2 {
+  font-size: 18.5px;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 20px 0 10px;
+}
+
+.materi-rich-content h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1E293B;
+  margin: 16px 0 8px;
+}
+
+.materi-rich-content p {
+  margin: 10px 0;
+}
+
+.materi-rich-content figure {
+  margin: 18px 0;
+  text-align: center;
+  max-width: 100%;
+}
+
+.materi-rich-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E2E8F0;
+  cursor: zoom-in;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.materi-rich-content img:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+}
+
+.materi-rich-content figcaption {
+  font-size: 12px;
+  color: #64748B;
+  margin-top: 8px;
+  font-style: italic;
+  text-align: center;
+}
+
+.materi-rich-content pre {
+  background: #0F172A;
+  color: #38BDF8;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-family: Consolas, Monaco, "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 14px 0;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .materi-rich-content figure[style*="float: left"],
+  .materi-rich-content figure[style*="float: right"],
+  .materi-rich-content img[style*="float: left"],
+  .materi-rich-content img[style*="float: right"] {
+    float: none !important;
+    margin: 12px auto !important;
+    width: 100% !important;
+  }
+}
+
 
 

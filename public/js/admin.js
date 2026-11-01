@@ -935,15 +935,22 @@ window.initAdminDashboard = async function() {
     editor.focus();
     const cleanCaption = captionText && !captionText.startsWith('image.') ? captionText : 'Screenshot Panduan Praktikum';
     const figureHtml = `
-      <figure class="materi-media-figure" style="margin:16px 0; text-align:center;">
-        <img src="${imgUrl}" alt="${cleanCaption}" style="max-width:100%; height:auto; border-radius:12px; border:1px solid #E2E8F0; box-shadow:0 4px 14px rgba(0,0,0,0.06); display:block; margin:0 auto;" />
-        <figcaption style="font-size:12px; color:#64748B; margin-top:6px; font-style:italic;">${cleanCaption}</figcaption>
+      <figure class="materi-media-figure" style="margin:16px auto; text-align:center; width:100%;">
+        <img src="${imgUrl}" alt="${cleanCaption}" style="width:65%; max-width:100%; height:auto; border-radius:12px; border:1px solid #E2E8F0; box-shadow:0 4px 14px rgba(0,0,0,0.06); display:block; margin:8px auto; cursor:pointer;" />
+        <figcaption style="font-size:12px; color:#64748B; margin-top:6px; font-style:italic;">${cleanCaption} (klik gambar untuk ubah ukuran & posisi)</figcaption>
       </figure>
       <p><br></p>
     `;
 
     document.execCommand('insertHTML', false, figureHtml);
     window.syncModalPageData(index);
+
+    setTimeout(() => {
+      const insertedImg = editor.querySelector(`img[src="${imgUrl}"]`);
+      if (insertedImg && typeof window.selectMateriImageForResize === 'function') {
+        window.selectMateriImageForResize(insertedImg);
+      }
+    }, 120);
   };
 
   function renderModalPages() {
@@ -1176,6 +1183,9 @@ window.initAdminDashboard = async function() {
   };
 
   window.tutupModalMateri = function() {
+    if (typeof window.closeMateriImageResizer === 'function') {
+      window.closeMateriImageResizer();
+    }
     const modal = document.getElementById('modal-materi');
     if (modal) modal.style.display = 'none';
   };

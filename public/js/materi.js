@@ -430,9 +430,9 @@ window.initMateriPage = async function() {
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                       </button>
                     ` : `
-                      <a href="quiz.html" class="btn-hero-orange" style="flex:1; padding:12px 14px; font-size:13px; font-weight:800; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none;">
-                        <span>🎉 Selesai! Evaluasi di Kuis</span>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                      <a href="materi.html" class="btn-primary" style="flex:1; padding:12px 14px; font-size:13.5px; font-weight:800; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; background:#0D5BFF; color:#FFFFFF; box-shadow:0 4px 14px rgba(13,91,255,0.25);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span>Selesai Membaca Modul</span>
                       </a>
                     `}
                   </div>
