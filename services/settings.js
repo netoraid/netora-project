@@ -11,7 +11,7 @@ const DEFAULT_DURASI_SETTING = {
   enabled: true,
   max_duration_minutes: 60,
   mode: 'harian', // 'harian' (reset tiap hari 00:00) | 'sesi' (dihitung per sesi login aktif)
-  pesan: 'Kamu telah belajar melebihi batas waktu yang dianjurkan oleh Guru & Administrator. Istirahatkan matamu sejenak (aturan 20-20-20), minum air putih, dan lakukan relaksasi tubuh sebelum melanjutkan belajar!',
+  pesan: 'kamu telah melebihi batas waktu yang telah di anjurkan untuk belajar',
   snooze_minutes: 10,
   updated_at: new Date().toISOString()
 };

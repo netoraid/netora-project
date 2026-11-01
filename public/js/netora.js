@@ -1412,49 +1412,20 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <!-- Headline -->
-        <h3 style="margin: 0 0 8px; font-size: 21px; font-weight: 800; color: #0F172A; line-height: 1.3;">
-          Waktunya Istirahat Sejenak!
+        <h3 style="margin: 0 0 10px; font-size: 21px; font-weight: 800; color: #0F172A; line-height: 1.3;">
+          Waktunya Istirahat!
         </h3>
 
-        <!-- Sapaan Siswa -->
-        <p style="margin: 0 0 16px; font-size: 13.5px; color: #64748B; line-height: 1.5;">
-          Halo <strong style="color: #0F172A;">${escapeHtml(userName)}</strong>, kamu telah tekun menggunakan web Netora. Sesuai anjuran kesehatan, disarankan untuk mengistirahatkan mata dan pikiran sejenak.
+        <!-- Teks Peringatan Kustom Sesuai Permintaan User -->
+        <p style="margin: 0 0 26px; font-size: 15px; color: #334155; line-height: 1.6; font-weight: 500;">
+          Halo, <strong style="color: #0D5BFF; font-weight: 800;">${escapeHtml(userName)}</strong> kamu telah melebihi batas waktu yang telah di anjurkan untuk belajar.
         </p>
-
-        <!-- Stat Box Durasi -->
-        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 18px; padding: 14px 16px; margin-bottom: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center;">
-          <div style="text-align: center; border-right: 1px solid #E2E8F0; padding-right: 8px;">
-            <span style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; display: block; margin-bottom: 2px;">Waktu Aktif Kamu</span>
-            <strong style="font-size: 20px; font-weight: 800; color: #EF4444;">${minutes} Menit</strong>
-          </div>
-          <div style="text-align: center; padding-left: 8px;">
-            <span style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; display: block; margin-bottom: 2px;">Batas Maksimal</span>
-            <strong style="font-size: 20px; font-weight: 800; color: #0D5BFF;">${maxMinutes} Menit</strong>
-          </div>
-        </div>
-
-        <!-- Kotak Pesan Himbauan Admin / Guru -->
-        <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 16px; padding: 14px 16px; margin-bottom: 16px; text-align: left;">
-          <div style="display: flex; align-items: flex-start; gap: 10px;">
-            <span style="font-size: 18px; line-height: 1;">📢</span>
-            <div style="font-size: 12.5px; color: #78350F; line-height: 1.5;">
-              <strong style="display: block; font-weight: 700; margin-bottom: 2px; color: #92400E;">Pesan dari Admin / Guru:</strong>
-              <span>${escapeHtml(pesanHimbauan)}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tips Kesehatan 20-20-20 -->
-        <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 14px; padding: 10px 14px; margin-bottom: 22px; font-size: 11.5px; color: #166534; text-align: left; display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 15px;">🌿</span>
-          <span><strong>Tips Aturan 20-20-20:</strong> Setiap 20 menit menatap layar, pandang objek berjarak 6 meter selama 20 detik, minum air putih, dan regangkan otot leher.</span>
-        </div>
 
         <!-- Tombol Aksi -->
         <div style="display: flex; flex-direction: column; gap: 10px;">
           <button type="button" id="btn-study-snooze-action"
             style="background: linear-gradient(135deg, #0D5BFF, #0040C1); color: #FFFFFF; font-weight: 700; border-radius: 14px; padding: 13px 20px; border: none; cursor: pointer; font-size: 14px; box-shadow: 0 4px 16px rgba(13, 91, 255, 0.35); transition: all 0.2s;">
-            Saya Mengerti & Istirahat (Ingatkan ${snoozeMins} Menit Lagi)
+            Saya Mengerti (Ingatkan ${snoozeMins} Menit Lagi)
           </button>
           <button type="button" id="btn-study-logout-action"
             style="background: #F1F5F9; color: #475569; font-weight: 700; border-radius: 14px; padding: 11px 20px; border: 1px solid #CBD5E1; cursor: pointer; font-size: 13px; transition: all 0.2s;">

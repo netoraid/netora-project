@@ -274,7 +274,8 @@ CREATE POLICY "Akses publik baca app_settings" ON public.app_settings FOR SELECT
 INSERT INTO public.app_settings (key, value)
 VALUES (
     'durasi_belajar',
-    '{"enabled": true, "max_duration_minutes": 60, "mode": "harian", "pesan": "Kamu telah belajar melebihi batas waktu yang dianjurkan oleh Guru & Administrator. Istirahatkan matamu sejenak (aturan 20-20-20), minum air putih, dan lakukan relaksasi tubuh sebelum melanjutkan belajar!", "snooze_minutes": 10}'::jsonb
+    '{"enabled": true, "max_duration_minutes": 60, "mode": "harian", "pesan": "kamu telah melebihi batas waktu yang telah di anjurkan untuk belajar", "snooze_minutes": 10}'::jsonb
 )
 ON CONFLICT (key) DO NOTHING;
+
 

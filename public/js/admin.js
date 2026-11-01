@@ -2174,7 +2174,7 @@ window.initAdminDashboard = async function() {
       btnResetPesan.addEventListener('click', () => {
         const pesanText = document.getElementById('setting-durasi-pesan');
         if (pesanText) {
-          pesanText.value = 'Kamu telah belajar melebihi batas waktu yang dianjurkan oleh Guru & Administrator. Istirahatkan matamu sejenak (aturan 20-20-20), minum air putih, dan lakukan relaksasi tubuh sebelum melanjutkan belajar!';
+          pesanText.value = 'kamu telah melebihi batas waktu yang telah di anjurkan untuk belajar';
         }
       });
     }
