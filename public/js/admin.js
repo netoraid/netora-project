@@ -827,11 +827,13 @@ window.initAdminDashboard = async function() {
 
   function prepareInitialEditorHtml(raw) {
     if (!raw) return '<p><br></p>';
-    if (/<[a-z][\s\S]*>/i.test(raw)) {
-      return raw;
+    let str = String(raw).trim();
+    str = str.replace(/<figcaption[^>]*>[\s\S]*?<\/figcaption>/gi, '');
+    if (/<[a-z][\s\S]*>/i.test(str)) {
+      return str;
     }
     // Konversi teks polos berbaris-baris menjadi tag <p>
-    const safeStr = typeof escapeHtml === 'function' ? escapeHtml(raw) : raw;
+    const safeStr = typeof escapeHtml === 'function' ? escapeHtml(str) : str;
     return safeStr.split(/\r?\n\r?\n/).map(block => {
       const clean = block.trim();
       if (!clean) return '';
@@ -934,15 +936,14 @@ window.initAdminDashboard = async function() {
 
     editor.focus();
     const cleanCaption = captionText && !captionText.startsWith('image.') ? captionText : 'Screenshot Panduan Praktikum';
-    const figureHtml = `
-      <figure class="materi-media-figure" style="margin:16px auto; text-align:center; width:100%;">
-        <img src="${imgUrl}" alt="${cleanCaption}" style="width:65%; max-width:100%; height:auto; border-radius:12px; border:1px solid #E2E8F0; box-shadow:0 4px 14px rgba(0,0,0,0.06); display:block; margin:8px auto; cursor:pointer;" />
-        <figcaption style="font-size:12px; color:#64748B; margin-top:6px; font-style:italic;">${cleanCaption} (klik gambar untuk ubah ukuran & posisi)</figcaption>
-      </figure>
+    const imgHtml = `
+      <p style="text-align:center; margin:14px 0;">
+        <img src="${imgUrl}" alt="${cleanCaption}" draggable="true" style="width:50%; max-width:100%; height:auto; border-radius:12px; display:inline-block; margin:6px auto; box-shadow:0 4px 14px rgba(0,0,0,0.06); cursor:grab;" />
+      </p>
       <p><br></p>
     `;
 
-    document.execCommand('insertHTML', false, figureHtml);
+    document.execCommand('insertHTML', false, imgHtml);
     window.syncModalPageData(index);
 
     setTimeout(() => {
@@ -1035,6 +1036,45 @@ window.initAdminDashboard = async function() {
         </div>
       `;
     }).join('');
+
+    // Aktifkan drag-and-drop gambar dengan kursor laptop & sync data otomatis
+    container.querySelectorAll('.materi-page-card').forEach((card, idx) => {
+      const canvas = card.querySelector('.editor-canvas');
+      if (canvas) {
+        canvas.querySelectorAll('img').forEach(img => {
+          img.draggable = true;
+          img.style.cursor = 'grab';
+        });
+
+        canvas.addEventListener('dragstart', (e) => {
+          if (e.target && e.target.tagName === 'IMG') {
+            if (typeof window.closeMateriImageResizer === 'function') window.closeMateriImageResizer();
+            e.target.style.opacity = '0.4';
+            e.target.style.cursor = 'grabbing';
+          }
+        });
+
+        canvas.addEventListener('dragend', (e) => {
+          if (e.target && e.target.tagName === 'IMG') {
+            e.target.style.opacity = '1';
+            e.target.style.cursor = 'grab';
+            canvas.querySelectorAll('figure').forEach(f => {
+              if (!f.querySelector('img') && !f.textContent.trim()) f.remove();
+            });
+            window.syncModalPageData(idx);
+          }
+        });
+
+        canvas.addEventListener('drop', () => {
+          setTimeout(() => {
+            canvas.querySelectorAll('figure').forEach(f => {
+              if (!f.querySelector('img') && !f.textContent.trim()) f.remove();
+            });
+            window.syncModalPageData(idx);
+          }, 80);
+        });
+      }
+    });
   }
 
   window.syncModalPageData = function(index) {

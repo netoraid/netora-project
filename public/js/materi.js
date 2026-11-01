@@ -205,7 +205,11 @@ window.initMateriPage = async function() {
         // Helper render konten terstruktur / rich text aman & responsif
         function formatMateriContent(raw) {
           if (!raw) return '<p style="color:#94A3B8; font-style:italic;">Belum ada konten pada halaman ini.</p>';
-          const str = String(raw).trim();
+          let str = String(raw).trim();
+          
+          // Hapus semua tag figcaption / keterangan nama file gambar di tampilan user
+          str = str.replace(/<figcaption[^>]*>[\s\S]*?<\/figcaption>/gi, '');
+
           // Jika teks mengandung tag HTML terstruktur
           if (/<(p|img|h2|h3|h4|ul|ol|li|pre|code|figure|div|table|strong|em|b|i|u)/i.test(str)) {
             return str;

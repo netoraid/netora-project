@@ -4903,11 +4903,7 @@ textarea.form-input {
 }
 
 .materi-rich-content figcaption {
-  font-size: 12px;
-  color: #64748B;
-  font-weight: 600;
-  margin-top: 6px;
-  font-style: italic;
+  display: none !important;
 }
 
 /* Blok Kode CLI Terminal & Syntax (TKJ MikroTik / Linux) */
@@ -5128,16 +5124,21 @@ textarea.form-input {
   max-width: 100%;
   height: auto;
   border-radius: 12px;
-  display: block;
-  margin: 12px auto;
+  display: inline-block;
+  margin: 8px auto;
   box-shadow: 0 4px 14px rgba(0,0,0,0.08);
   border: 2px solid #E2E8F0;
-  cursor: pointer;
+  cursor: grab !important;
+  user-select: auto;
   transition: border-color 0.15s, outline 0.15s, transform 0.15s;
 }
 
 .editor-canvas img:hover {
   border-color: #0D5BFF;
+}
+
+.editor-canvas img:active {
+  cursor: grabbing !important;
 }
 
 .editor-canvas img.editor-img-active {
@@ -5317,7 +5318,7 @@ textarea.form-input {
 }
 
 .materi-img-resizer-bar input[type="range"] {
-  width: 75px;
+  width: 140px;
   accent-color: #0D5BFF;
   cursor: pointer;
 }
@@ -5381,11 +5382,7 @@ textarea.form-input {
 }
 
 .materi-rich-content figcaption {
-  font-size: 12px;
-  color: #64748B;
-  margin-top: 8px;
-  font-style: italic;
-  text-align: center;
+  display: none !important;
 }
 
 .materi-rich-content pre {

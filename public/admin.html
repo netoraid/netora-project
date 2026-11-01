@@ -1418,28 +1418,29 @@
           </div>
         </form>
 
-        <!-- Floating Image Resizer & Alignment Bar -->
+        <!-- Floating Image Resizer Bar (Slider Perbesar/Perkecil & Drag Bebas Pakai Kursor Laptop) -->
         <div id="materi-img-resizer-bar" class="materi-img-resizer-bar" style="display:none;">
           <span class="resizer-title">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
             <span>Ukuran:</span>
           </span>
-          <span class="resizer-badge" id="resizer-val-badge">65%</span>
-          <div class="resizer-group">
-            <button type="button" class="resizer-pct-btn" data-size="25" onclick="setMateriImageSize(25)" title="Ukuran 25%">25%</button>
-            <button type="button" class="resizer-pct-btn" data-size="50" onclick="setMateriImageSize(50)" title="Ukuran 50%">50%</button>
-            <button type="button" class="resizer-pct-btn" data-size="75" onclick="setMateriImageSize(75)" title="Ukuran 75%">75%</button>
-            <button type="button" class="resizer-pct-btn" data-size="100" onclick="setMateriImageSize(100)" title="Ukuran 100% Penuh">100%</button>
-          </div>
+          <span class="resizer-badge" id="resizer-val-badge">50%</span>
+          
+          <!-- Tombol Slider yang Digeser-geser (Bisa sampai ukuran paling kecil 5%) -->
           <div class="resizer-slider-wrap">
-            <input type="range" id="resizer-slider" min="20" max="100" step="5" value="65" oninput="setMateriImageSize(this.value)" title="Geser untuk ukuran presisi">
+            <span style="font-size:10.5px; color:#94A3B8; font-weight:700;">5%</span>
+            <input type="range" id="resizer-slider" min="5" max="100" step="1" value="50" oninput="setMateriImageSize(this.value)" title="Geser ke kiri untuk mengecilkan (sampai 5%), geser ke kanan untuk memperbesar">
+            <span style="font-size:10.5px; color:#94A3B8; font-weight:700;">100%</span>
           </div>
+
           <div class="resizer-divider"></div>
-          <div class="resizer-group">
-            <button type="button" class="resizer-align-btn" data-align="left" onclick="setMateriImageAlign('left')" title="Rata Kiri & Teks Mengalir">◀ Kiri</button>
-            <button type="button" class="resizer-align-btn active" data-align="center" onclick="setMateriImageAlign('center')" title="Rata Tengah">■ Tengah</button>
-            <button type="button" class="resizer-align-btn" data-align="right" onclick="setMateriImageAlign('right')" title="Rata Kanan & Teks Mengalir">Kanan ▶</button>
-          </div>
+          
+          <span style="font-size:11.5px; color:#38BDF8; font-weight:600; display:inline-flex; align-items:center; gap:4px; padding:0 4px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
+            <span>Tarik/geser gambar dengan kursor laptop untuk pindah posisi</span>
+          </span>
+
+          <div class="resizer-divider"></div>
           <button type="button" class="btn-delete-img" onclick="deleteMateriActiveImage()" title="Hapus Gambar Ini">🗑️ Hapus</button>
           <button type="button" onclick="closeMateriImageResizer()" style="font-size:16px; padding:2px 6px; color:#94A3B8; cursor:pointer;" title="Tutup Toolbar">&times;</button>
         </div>
@@ -1547,37 +1548,19 @@
         const card = img.closest('.materi-page-card');
         window.activeMateriPageIdx = card ? parseInt(card.dataset.index) : null;
 
-        // Hitung persentase lebar saat ini
-        let currentWidth = 65;
+        // Hitung persentase lebar saat ini (mendukung ukuran paling kecil 5%)
+        let currentWidth = 50;
         const styleW = img.style.width || (img.closest('figure')?.style.width) || '';
         if (styleW.includes('%')) {
-          currentWidth = parseInt(styleW) || 65;
+          currentWidth = Math.max(5, Math.min(100, parseInt(styleW) || 50));
         } else if (img.style.maxWidth && img.style.maxWidth.includes('%')) {
-          currentWidth = parseInt(img.style.maxWidth) || 65;
+          currentWidth = Math.max(5, Math.min(100, parseInt(img.style.maxWidth) || 50));
         }
 
         const badge = document.getElementById('resizer-val-badge');
         if (badge) badge.textContent = `${currentWidth}%`;
         const slider = document.getElementById('resizer-slider');
         if (slider) slider.value = currentWidth;
-
-        // Update active preset button
-        document.querySelectorAll('.resizer-pct-btn').forEach(btn => {
-          if (parseInt(btn.dataset.size) === currentWidth) btn.classList.add('active');
-          else btn.classList.remove('active');
-        });
-
-        // Cek alignment saat ini
-        const fig = img.closest('figure');
-        const floatVal = (fig && fig.style.float) || img.style.float || 'none';
-        let alignVal = 'center';
-        if (floatVal === 'left') alignVal = 'left';
-        else if (floatVal === 'right') alignVal = 'right';
-
-        document.querySelectorAll('.resizer-align-btn').forEach(btn => {
-          if (btn.dataset.align === alignVal) btn.classList.add('active');
-          else btn.classList.remove('active');
-        });
 
         const bar = document.getElementById('materi-img-resizer-bar');
         if (bar) {
@@ -1588,7 +1571,8 @@
 
       window.setMateriImageSize = function(size) {
         if (!window.activeMateriImg) return;
-        const pct = Math.max(15, Math.min(100, parseInt(size) || 65));
+        // Pengaturan ukuran digeser-geser dari paling kecil 5% hingga 100%
+        const pct = Math.max(5, Math.min(100, parseInt(size) || 50));
         
         window.activeMateriImg.style.width = `${pct}%`;
         window.activeMateriImg.style.maxWidth = '100%';
@@ -1596,70 +1580,14 @@
 
         const figure = window.activeMateriImg.closest('figure');
         if (figure) {
-          if (figure.style.float === 'left' || figure.style.float === 'right') {
-            figure.style.width = `${pct}%`;
-          } else {
-            figure.style.width = '100%';
-          }
+          figure.style.width = `${pct}%`;
+          figure.style.maxWidth = '100%';
         }
 
         const badge = document.getElementById('resizer-val-badge');
         if (badge) badge.textContent = `${pct}%`;
         const slider = document.getElementById('resizer-slider');
         if (slider) slider.value = pct;
-
-        document.querySelectorAll('.resizer-pct-btn').forEach(btn => {
-          if (parseInt(btn.dataset.size) === pct) btn.classList.add('active');
-          else btn.classList.remove('active');
-        });
-
-        if (window.activeMateriPageIdx !== null) {
-          window.syncModalPageData(window.activeMateriPageIdx);
-        }
-        window.repositionMateriResizer();
-      };
-
-      window.setMateriImageAlign = function(align) {
-        if (!window.activeMateriImg) return;
-        const figure = window.activeMateriImg.closest('figure') || window.activeMateriImg;
-        const curWidth = window.activeMateriImg.style.width || '65%';
-
-        if (align === 'left') {
-          window.activeMateriImg.style.display = 'block';
-          window.activeMateriImg.style.float = 'left';
-          window.activeMateriImg.style.margin = '8px 18px 12px 0';
-          if (figure !== window.activeMateriImg) {
-            figure.style.float = 'left';
-            figure.style.margin = '8px 18px 12px 0';
-            figure.style.textAlign = 'left';
-            figure.style.width = curWidth;
-          }
-        } else if (align === 'right') {
-          window.activeMateriImg.style.display = 'block';
-          window.activeMateriImg.style.float = 'right';
-          window.activeMateriImg.style.margin = '8px 0 12px 18px';
-          if (figure !== window.activeMateriImg) {
-            figure.style.float = 'right';
-            figure.style.margin = '8px 0 12px 18px';
-            figure.style.textAlign = 'right';
-            figure.style.width = curWidth;
-          }
-        } else {
-          window.activeMateriImg.style.display = 'block';
-          window.activeMateriImg.style.float = 'none';
-          window.activeMateriImg.style.margin = '14px auto';
-          if (figure !== window.activeMateriImg) {
-            figure.style.float = 'none';
-            figure.style.margin = '14px auto';
-            figure.style.textAlign = 'center';
-            figure.style.width = '100%';
-          }
-        }
-
-        document.querySelectorAll('.resizer-align-btn').forEach(btn => {
-          if (btn.dataset.align === align) btn.classList.add('active');
-          else btn.classList.remove('active');
-        });
 
         if (window.activeMateriPageIdx !== null) {
           window.syncModalPageData(window.activeMateriPageIdx);
@@ -1743,17 +1671,17 @@
           if (res.ok && data.success && data.url) {
             if (canvas) {
               canvas.focus();
-              const imgHtml = `<figure style="margin:16px auto; text-align:center; width:100%;"><img src="${data.url}" alt="Screenshot Materi" style="width:65%; max-width:100%; height:auto; border-radius:12px; display:block; margin:8px auto; box-shadow:0 4px 16px rgba(0,0,0,0.08); cursor:pointer;"><figcaption style="font-size:12px; color:#64748B; margin-top:6px; font-style:italic;">Keterangan foto (klik gambar untuk ubah ukuran & posisi)</figcaption></figure><p><br></p>`;
+              const imgHtml = `<p style="text-align:center; margin:14px 0;"><img src="${data.url}" alt="Screenshot Materi" draggable="true" style="width:50%; max-width:100%; height:auto; border-radius:12px; display:inline-block; margin:6px auto; box-shadow:0 4px 16px rgba(0,0,0,0.08); cursor:grab;"></p><p><br></p>`;
               document.execCommand('insertHTML', false, imgHtml);
               window.syncModalPageData(index);
 
-              // Auto-select gambar yang baru diunggah untuk langsung atur ukuran
+              // Auto-select gambar yang baru diunggah untuk langsung atur ukuran slider
               setTimeout(() => {
                 const insertedImg = canvas.querySelector(`img[src="${data.url}"]`);
                 if (insertedImg) window.selectMateriImageForResize(insertedImg);
               }, 120);
             }
-            if (typeof toast === 'function') toast('Foto berhasil disisipkan! Klik gambar jika ingin memperkecil/memperbesar.', 'success');
+            if (typeof toast === 'function') toast('Foto berhasil disisipkan! Tarik gambar dengan kursor untuk geser posisi.', 'success');
           } else {
             if (typeof toast === 'function') toast(data.error || 'Gagal mengunggah foto.', 'error');
             else alert(data.error || 'Gagal mengunggah foto.');
@@ -1793,17 +1721,17 @@
               if (res.ok && data.success && data.url) {
                 if (canvas) {
                   canvas.focus();
-                  const imgHtml = `<figure style="margin:16px auto; text-align:center; width:100%;"><img src="${data.url}" alt="Screenshot Praktikum" style="width:65%; max-width:100%; height:auto; border-radius:12px; display:block; margin:8px auto; box-shadow:0 4px 16px rgba(0,0,0,0.08); cursor:pointer;"><figcaption style="font-size:12px; color:#64748B; margin-top:6px; font-style:italic;">Keterangan praktikum (klik gambar untuk atur ukuran & posisi)</figcaption></figure><p><br></p>`;
+                  const imgHtml = `<p style="text-align:center; margin:14px 0;"><img src="${data.url}" alt="Screenshot Praktikum" draggable="true" style="width:50%; max-width:100%; height:auto; border-radius:12px; display:inline-block; margin:6px auto; box-shadow:0 4px 16px rgba(0,0,0,0.08); cursor:grab;"></p><p><br></p>`;
                   document.execCommand('insertHTML', false, imgHtml);
                   window.syncModalPageData(index);
 
-                  // Auto-select gambar yang baru ditempel untuk langsung atur ukuran
+                  // Auto-select gambar yang baru ditempel untuk langsung atur ukuran slider
                   setTimeout(() => {
                     const insertedImg = canvas.querySelector(`img[src="${data.url}"]`);
                     if (insertedImg) window.selectMateriImageForResize(insertedImg);
                   }, 120);
                 }
-                if (typeof toast === 'function') toast('Screenshot berhasil ditempel! Klik gambar jika ingin ubah ukuran.', 'success');
+                if (typeof toast === 'function') toast('Screenshot berhasil ditempel! Tarik gambar dengan kursor untuk geser posisi.', 'success');
               } else {
                 if (typeof toast === 'function') toast(data.error || 'Gagal menempelkan screenshot.', 'error');
               }
@@ -1859,6 +1787,9 @@
         container.innerHTML = window.currentModalPages.map((page, index) => {
           const safeJudul = (page.judul || '').replace(/"/g, '&quot;');
           let initialHtml = page.konten || '';
+          // Bersihkan sisa tag figcaption nama file / petunjuk lama jika ada
+          initialHtml = initialHtml.replace(/<figcaption[^>]*>[\s\S]*?<\/figcaption>/gi, '');
+
           // Jika konten sebelumnya berupa teks biasa tanpa HTML tag, konversi baris baru menjadi paragraf
           if (initialHtml && !initialHtml.includes('<') && !initialHtml.includes('>')) {
             initialHtml = initialHtml.split('\n').filter(line => line.trim()).map(line => `<p>${line}</p>`).join('');
@@ -1903,7 +1834,7 @@
               <div>
                 <label style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px;">
                   <span>Konten / Isi Materi Halaman Ini (Word-Like Rich Editor) *</span>
-                  <span style="color:#0D5BFF; font-weight:600; font-size:11px;">💡 Mendukung Paste Foto Langsung (Ctrl+V)</span>
+                  <span style="color:#0D5BFF; font-weight:600; font-size:11px;">💡 Tarik gambar dengan kursor untuk geser posisi</span>
                 </label>
 
                 <!-- Toolbar Ala Word -->
@@ -1936,6 +1867,45 @@
             </div>
           `;
         }).join('');
+
+        // Aktifkan pemindahan posisi gambar langsung dengan kursor laptop (Drag & Drop)
+        container.querySelectorAll('.materi-page-card').forEach((card, idx) => {
+          const canvas = card.querySelector('.editor-canvas');
+          if (canvas) {
+            canvas.querySelectorAll('img').forEach(img => {
+              img.draggable = true;
+              img.style.cursor = 'grab';
+            });
+
+            canvas.addEventListener('dragstart', (e) => {
+              if (e.target && e.target.tagName === 'IMG') {
+                window.closeMateriImageResizer();
+                e.target.style.opacity = '0.4';
+                e.target.style.cursor = 'grabbing';
+              }
+            });
+
+            canvas.addEventListener('dragend', (e) => {
+              if (e.target && e.target.tagName === 'IMG') {
+                e.target.style.opacity = '1';
+                e.target.style.cursor = 'grab';
+                canvas.querySelectorAll('figure').forEach(f => {
+                  if (!f.querySelector('img') && !f.textContent.trim()) f.remove();
+                });
+                window.syncModalPageData(idx);
+              }
+            });
+
+            canvas.addEventListener('drop', () => {
+              setTimeout(() => {
+                canvas.querySelectorAll('figure').forEach(f => {
+                  if (!f.querySelector('img') && !f.textContent.trim()) f.remove();
+                });
+                window.syncModalPageData(idx);
+              }, 80);
+            });
+          }
+        });
       };
 
       window.geserHalamanMateri = function(index, direction) {
