@@ -213,6 +213,17 @@ app.use('/api/profil', require('./routes/profil'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/guru', require('./routes/guru'));
 
+// Endpoint Pengaturan Batas Waktu Belajar Siswa (Dapat diakses oleh klien siswa)
+const { getDurasiSetting } = require('./services/settings');
+app.get('/api/setting/durasi', async (req, res) => {
+  try {
+    const setting = await getDurasiSetting();
+    res.json({ success: true, setting });
+  } catch (err) {
+    res.status(500).json({ error: 'Gagal memuat pengaturan durasi.' });
+  }
+});
+
 // Route Utama: Masuk ke Halaman Login terlebih dahulu (atau langsung ke Dashboard sesuai role)
 app.get('/', async (req, res) => {
   if (req.session && req.session.userId) {

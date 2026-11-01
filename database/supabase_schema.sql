@@ -256,3 +256,25 @@ VALUES
     'Mikrotik',
     '25:10'
 );
+
+-- ==============================================================================
+-- 10. TABEL: app_settings (Konfigurasi Global & Batas Waktu Belajar Siswa)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.app_settings (
+    key VARCHAR(100) PRIMARY KEY,
+    value JSONB NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Row Level Security (RLS) app_settings
+ALTER TABLE public.app_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Akses publik baca app_settings" ON public.app_settings FOR SELECT USING (true);
+
+-- Initial seed setting durasi belajar siswa (Default: 60 Menit)
+INSERT INTO public.app_settings (key, value)
+VALUES (
+    'durasi_belajar',
+    '{"enabled": true, "max_duration_minutes": 60, "mode": "harian", "pesan": "Kamu telah belajar melebihi batas waktu yang dianjurkan oleh Guru & Administrator. Istirahatkan matamu sejenak (aturan 20-20-20), minum air putih, dan lakukan relaksasi tubuh sebelum melanjutkan belajar!", "snooze_minutes": 10}'::jsonb
+)
+ON CONFLICT (key) DO NOTHING;
+

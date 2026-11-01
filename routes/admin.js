@@ -6,7 +6,8 @@ const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const { supabase } = require('../database/supabase');
 const { requireAdmin } = require('../middleware/auth');
-const { broadcastPengumuman, broadcastHapusPengumuman, broadcastQuizDataChanged, broadcastMateriBaru } = require('../services/socket');
+const { broadcastPengumuman, broadcastHapusPengumuman, broadcastQuizDataChanged, broadcastMateriBaru, broadcastDurasiSetting } = require('../services/socket');
+const { getDurasiSetting, updateDurasiSetting } = require('../services/settings');
 const pengumumanRouter = require('./pengumuman');
 
 // Direktori upload gambar materi
@@ -1090,6 +1091,43 @@ router.delete('/video/:id', async (req, res) => {
   } catch (err) {
     console.error('Admin Hapus Video Error:', err);
     return res.status(500).json({ error: 'Gagal menghapus vidio praktik.' });
+  }
+});
+
+// 18. GET /api/admin/durasi-setting - Ambil Konfigurasi Batas Waktu Belajar Siswa
+router.get('/durasi-setting', async (req, res) => {
+  try {
+    const setting = await getDurasiSetting();
+    return res.json({ success: true, setting });
+  } catch (err) {
+    console.error('Admin Get Durasi Setting Error:', err);
+    return res.status(500).json({ error: 'Gagal memuat pengaturan batas durasi belajar.' });
+  }
+});
+
+// 19. POST /api/admin/durasi-setting - Perbarui Batas Waktu Belajar Siswa
+router.post('/durasi-setting', async (req, res) => {
+  try {
+    const { enabled, max_duration_minutes, mode, pesan, snooze_minutes } = req.body;
+    const updated = await updateDurasiSetting({
+      enabled,
+      max_duration_minutes,
+      mode,
+      pesan,
+      snooze_minutes
+    });
+
+    // Broadcast ke seluruh klien real-time melalui Socket.IO
+    broadcastDurasiSetting(updated);
+
+    return res.json({
+      success: true,
+      message: 'Pengaturan batas waktu belajar siswa berhasil disimpan & disinkronkan!',
+      setting: updated
+    });
+  } catch (err) {
+    console.error('Admin Update Durasi Setting Error:', err);
+    return res.status(500).json({ error: 'Gagal menyimpan pengaturan durasi belajar.' });
   }
 });
 

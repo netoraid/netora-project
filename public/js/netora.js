@@ -1288,16 +1288,302 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
+      // 8. Sinkronisasi Pembaruan Batas Waktu Belajar Real-time oleh Admin
+      socket.on('durasi:updated', (newSetting) => {
+        if (newSetting && typeof updateActiveStudySetting === 'function') {
+          updateActiveStudySetting(newSetting);
+        }
+      });
+
     } catch (e) {
       console.warn('Real-time connection note:', e);
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => loadSocketIoScript(startSocket));
-  } else {
+  // ==========================================
+  // SISTEM PELACAKAN DURASI BELAJAR SISWA & MODAL PENGINGAT
+  // ==========================================
+  let _netoraStudyTrackerTimer = null;
+  let _netoraStudySetting = null;
+  let _netoraStudyUser = null;
+
+  // Audio Chime Lembut (Web Audio API Synthesizer - 0 dependencies)
+  function playStudyGentleChime() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      if (ctx.state === 'suspended') {
+        ctx.resume().catch(() => {});
+      }
+      const now = ctx.currentTime;
+
+      // Nada 1: C5 (523.25 Hz)
+      const osc1 = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(523.25, now);
+      gain1.gain.setValueAtTime(0.09, now);
+      gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.65);
+      osc1.connect(gain1);
+      gain1.connect(ctx.destination);
+      osc1.start(now);
+      osc1.stop(now + 0.65);
+
+      // Nada 2: E5 (659.25 Hz)
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(659.25, now + 0.18);
+      gain2.gain.setValueAtTime(0.09, now + 0.18);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.start(now + 0.18);
+      osc2.stop(now + 0.9);
+    } catch (e) {}
+  }
+
+  // Tampilkan Pop-Up Modal Pengingat di Tengah Layar
+  function showStudyDurationWarningModal(user, setting, totalSeconds) {
+    if (document.getElementById('netora-study-modal-overlay')) {
+      return;
+    }
+
+    playStudyGentleChime();
+
+    const minutes = Math.floor(totalSeconds / 60);
+    const maxMinutes = setting.max_duration_minutes || 60;
+    const snoozeMins = setting.snooze_minutes || 10;
+    const userName = (user && user.nama) ? user.nama : 'Siswa';
+    const pesanHimbauan = (setting && setting.pesan) ? setting.pesan : 'Kamu telah belajar melebihi batas waktu yang dianjurkan. Istirahatkan matamu sejenak demi kesehatan mata dan pikiran!';
+
+    const overlay = document.createElement('div');
+    overlay.id = 'netora-study-modal-overlay';
+    overlay.style.cssText = `
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 16, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 10000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: netoraStudyFadeIn 0.25s ease forwards;
+    `;
+
+    if (!document.getElementById('netora-study-keyframes')) {
+      const styleEl = document.createElement('style');
+      styleEl.id = 'netora-study-keyframes';
+      styleEl.textContent = `
+        @keyframes netoraStudyFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes netoraStudyScaleIn {
+          from { opacity: 0; transform: scale(0.92) translateY(12px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes netoraStudyPulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+          50% { box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+        }
+      `;
+      document.head.appendChild(styleEl);
+    }
+
+    overlay.innerHTML = `
+      <div style="background: #FFFFFF; border-radius: 28px; padding: 32px 28px; max-width: 460px; width: 100%; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(239, 68, 68, 0.2); text-align: center; position: relative; animation: netoraStudyScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+        <!-- Glowing Animated Clock Icon -->
+        <div style="width: 68px; height: 68px; border-radius: 22px; background: rgba(239, 68, 68, 0.1); color: #EF4444; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; animation: netoraStudyPulse 2.4s infinite;">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+
+        <!-- Badge Kategori Pengingat -->
+        <div style="margin-bottom: 8px;">
+          <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #DC2626; background: #FEF2F2; border: 1px solid #FECACA; padding: 4px 12px; border-radius: 20px; display: inline-block;">
+            ⏰ Batas Waktu Belajar Tercapai
+          </span>
+        </div>
+
+        <!-- Headline -->
+        <h3 style="margin: 0 0 8px; font-size: 21px; font-weight: 800; color: #0F172A; line-height: 1.3;">
+          Waktunya Istirahat Sejenak!
+        </h3>
+
+        <!-- Sapaan Siswa -->
+        <p style="margin: 0 0 16px; font-size: 13.5px; color: #64748B; line-height: 1.5;">
+          Halo <strong style="color: #0F172A;">${escapeHtml(userName)}</strong>, kamu telah tekun menggunakan web Netora. Sesuai anjuran kesehatan, disarankan untuk mengistirahatkan mata dan pikiran sejenak.
+        </p>
+
+        <!-- Stat Box Durasi -->
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 18px; padding: 14px 16px; margin-bottom: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center;">
+          <div style="text-align: center; border-right: 1px solid #E2E8F0; padding-right: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; display: block; margin-bottom: 2px;">Waktu Aktif Kamu</span>
+            <strong style="font-size: 20px; font-weight: 800; color: #EF4444;">${minutes} Menit</strong>
+          </div>
+          <div style="text-align: center; padding-left: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; display: block; margin-bottom: 2px;">Batas Maksimal</span>
+            <strong style="font-size: 20px; font-weight: 800; color: #0D5BFF;">${maxMinutes} Menit</strong>
+          </div>
+        </div>
+
+        <!-- Kotak Pesan Himbauan Admin / Guru -->
+        <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 16px; padding: 14px 16px; margin-bottom: 16px; text-align: left;">
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <span style="font-size: 18px; line-height: 1;">📢</span>
+            <div style="font-size: 12.5px; color: #78350F; line-height: 1.5;">
+              <strong style="display: block; font-weight: 700; margin-bottom: 2px; color: #92400E;">Pesan dari Admin / Guru:</strong>
+              <span>${escapeHtml(pesanHimbauan)}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tips Kesehatan 20-20-20 -->
+        <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 14px; padding: 10px 14px; margin-bottom: 22px; font-size: 11.5px; color: #166534; text-align: left; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 15px;">🌿</span>
+          <span><strong>Tips Aturan 20-20-20:</strong> Setiap 20 menit menatap layar, pandang objek berjarak 6 meter selama 20 detik, minum air putih, dan regangkan otot leher.</span>
+        </div>
+
+        <!-- Tombol Aksi -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button type="button" id="btn-study-snooze-action"
+            style="background: linear-gradient(135deg, #0D5BFF, #0040C1); color: #FFFFFF; font-weight: 700; border-radius: 14px; padding: 13px 20px; border: none; cursor: pointer; font-size: 14px; box-shadow: 0 4px 16px rgba(13, 91, 255, 0.35); transition: all 0.2s;">
+            Saya Mengerti & Istirahat (Ingatkan ${snoozeMins} Menit Lagi)
+          </button>
+          <button type="button" id="btn-study-logout-action"
+            style="background: #F1F5F9; color: #475569; font-weight: 700; border-radius: 14px; padding: 11px 20px; border: 1px solid #CBD5E1; cursor: pointer; font-size: 13px; transition: all 0.2s;">
+            Keluar / Istirahat Penuh
+          </button>
+        </div>
+      </div>
+    `;
+
+    function closeModal() {
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.2s ease';
+      setTimeout(() => {
+        if (overlay.parentNode) overlay.remove();
+      }, 200);
+    }
+
+    const btnSnooze = overlay.querySelector('#btn-study-snooze-action');
+    if (btnSnooze) {
+      btnSnooze.addEventListener('click', () => {
+        if (user && user.id) {
+          const snoozeKey = `netora_study_snooze_${user.id}`;
+          const snoozeUntil = Date.now() + (snoozeMins * 60 * 1000);
+          localStorage.setItem(snoozeKey, snoozeUntil);
+        }
+        closeModal();
+        if (typeof toast === 'function') {
+          toast(`⏰ Pengingat dijeda selama ${snoozeMins} menit. Selamat beristirahat sejenak!`, 'info');
+        }
+      });
+    }
+
+    const btnLogout = overlay.querySelector('#btn-study-logout-action');
+    if (btnLogout) {
+      btnLogout.addEventListener('click', () => {
+        closeModal();
+        if (typeof logout === 'function') {
+          logout();
+        } else {
+          window.location.href = '/login.html';
+        }
+      });
+    }
+
+    document.body.appendChild(overlay);
+  }
+
+  window.showStudyDurationWarningModal = showStudyDurationWarningModal;
+
+  function updateActiveStudySetting(newSetting) {
+    if (!newSetting) return;
+    _netoraStudySetting = newSetting;
+    console.log('⏰ [NETORA] Setting batas waktu belajar diperbarui via WebSocket:', newSetting);
+  }
+
+  // Inisialisasi Pelacak Waktu Belajar Siswa
+  async function initStudyDurationTracker() {
+    if (_netoraStudyTrackerTimer) return;
+
+    if (typeof getUser === 'function') {
+      try {
+        _netoraStudyUser = await getUser();
+      } catch (e) {}
+    }
+
+    // Hanya aktif untuk siswa
+    if (!_netoraStudyUser || _netoraStudyUser.role !== 'siswa') {
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/setting/durasi');
+      const data = await res.json();
+      if (data.success && data.setting) {
+        _netoraStudySetting = data.setting;
+      }
+    } catch (e) {}
+
+    if (!_netoraStudySetting) {
+      _netoraStudySetting = {
+        enabled: true,
+        max_duration_minutes: 60,
+        mode: 'harian',
+        pesan: 'Kamu telah belajar melebihi batas waktu yang dianjurkan oleh Guru & Administrator. Istirahatkan matamu sejenak (aturan 20-20-20), minum air putih, dan lakukan relaksasi tubuh sebelum melanjutkan belajar!',
+        snooze_minutes: 10
+      };
+    }
+
+    function getStudyKey() {
+      const mode = (_netoraStudySetting && _netoraStudySetting.mode) || 'harian';
+      if (mode === 'sesi') {
+        return `netora_study_time_sess_${_netoraStudyUser.id}`;
+      }
+      const today = new Date().toISOString().slice(0, 10);
+      return `netora_study_time_${_netoraStudyUser.id}_${today}`;
+    }
+
+    const TICK_INTERVAL = 3;
+    _netoraStudyTrackerTimer = setInterval(() => {
+      if (document.visibilityState === 'hidden') return;
+      if (!_netoraStudySetting || !_netoraStudySetting.enabled) return;
+
+      const storageKey = getStudyKey();
+      let totalSec = parseInt(localStorage.getItem(storageKey) || '0', 10);
+      totalSec += TICK_INTERVAL;
+      localStorage.setItem(storageKey, totalSec);
+
+      const maxSec = (_netoraStudySetting.max_duration_minutes || 60) * 60;
+      if (totalSec >= maxSec) {
+        const snoozeKey = `netora_study_snooze_${_netoraStudyUser.id}`;
+        const snoozedUntil = parseInt(localStorage.getItem(snoozeKey) || '0', 10);
+        if (Date.now() >= snoozedUntil) {
+          showStudyDurationWarningModal(_netoraStudyUser, _netoraStudySetting, totalSec);
+        }
+      }
+    }, TICK_INTERVAL * 1000);
+  }
+
+  function startAllFeatures() {
     loadSocketIoScript(startSocket);
+    initStudyDurationTracker();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startAllFeatures);
+  } else {
+    startAllFeatures();
   }
 })();
+
 
 

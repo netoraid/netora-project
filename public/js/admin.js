@@ -2052,6 +2052,201 @@ window.initAdminDashboard = async function() {
     });
   }
 
+  // ==========================================
+  // FETCH & MANAJEMEN: PENGATURAN DURASI BELAJAR SISWA
+  // ==========================================
+  let currentDurasiSetting = null;
+
+  async function loadDurasiSettingAdmin() {
+    try {
+      const res = await fetch('/api/admin/durasi-setting');
+      const data = await res.json();
+      if (data.success && data.setting) {
+        currentDurasiSetting = data.setting;
+        renderDurasiSettingAdmin(data.setting);
+      }
+    } catch (err) {
+      console.error('Gagal memuat setting durasi:', err);
+    }
+  }
+
+  function renderDurasiSettingAdmin(s) {
+    const enabledInput = document.getElementById('setting-durasi-enabled');
+    const menitInput = document.getElementById('setting-durasi-menit');
+    const rangeInput = document.getElementById('setting-durasi-range');
+    const snoozeSelect = document.getElementById('setting-durasi-snooze');
+    const pesanText = document.getElementById('setting-durasi-pesan');
+
+    if (enabledInput) enabledInput.checked = !!s.enabled;
+    if (menitInput) menitInput.value = s.max_duration_minutes || 60;
+    if (rangeInput) rangeInput.value = s.max_duration_minutes || 60;
+    if (snoozeSelect) snoozeSelect.value = s.snooze_minutes || 10;
+    if (pesanText) pesanText.value = s.pesan || '';
+
+    // Mode radio
+    const modeRadios = document.querySelectorAll('input[name="setting-durasi-mode"]');
+    modeRadios.forEach(r => {
+      r.checked = (r.value === (s.mode || 'harian'));
+    });
+
+    updateDurasiUiLabels(s.enabled, s.max_duration_minutes || 60);
+  }
+
+  function updateDurasiUiLabels(enabled, minutes) {
+    const badgeStatus = document.getElementById('badge-durasi-status');
+    const labelPreview = document.getElementById('label-durasi-preview');
+
+    if (badgeStatus) {
+      if (enabled) {
+        badgeStatus.className = 'badge badge-green';
+        badgeStatus.textContent = '● Sistem Pembatasan Aktif';
+      } else {
+        badgeStatus.className = 'badge badge-red';
+        badgeStatus.textContent = '○ Sistem Dinonaktifkan';
+      }
+    }
+
+    if (labelPreview) {
+      const hours = Math.floor(minutes / 60);
+      const remMins = minutes % 60;
+      let text = `${minutes} Menit`;
+      if (hours > 0 && remMins > 0) text += ` (${hours} Jam ${remMins} Menit)`;
+      else if (hours > 0) text += ` (${hours} Jam)`;
+      labelPreview.textContent = text;
+    }
+
+    // Highlight preset button
+    document.querySelectorAll('.btn-preset-durasi').forEach(btn => {
+      const m = parseInt(btn.dataset.minutes, 10);
+      if (m === parseInt(minutes, 10)) {
+        btn.style.background = '#EFF6FF';
+        btn.style.borderColor = '#93C5FD';
+        btn.style.color = '#0D5BFF';
+        btn.style.fontWeight = '700';
+      } else {
+        btn.style.background = '#F1F5F9';
+        btn.style.borderColor = '#E2E8F0';
+        btn.style.color = '#475569';
+        btn.style.fontWeight = '600';
+      }
+    });
+  }
+
+  function initDurasiSettingEvents() {
+    const enabledInput = document.getElementById('setting-durasi-enabled');
+    const menitInput = document.getElementById('setting-durasi-menit');
+    const rangeInput = document.getElementById('setting-durasi-range');
+    const formSetting = document.getElementById('form-durasi-setting');
+    const btnPreview = document.getElementById('btn-preview-modal-durasi');
+    const btnResetPesan = document.getElementById('btn-reset-pesan-durasi');
+
+    if (enabledInput) {
+      enabledInput.addEventListener('change', () => {
+        updateDurasiUiLabels(enabledInput.checked, parseInt((menitInput ? menitInput.value : 60), 10));
+      });
+    }
+
+    if (menitInput && rangeInput) {
+      menitInput.addEventListener('input', () => {
+        const val = parseInt(menitInput.value, 10) || 1;
+        rangeInput.value = Math.min(240, val);
+        updateDurasiUiLabels(enabledInput ? enabledInput.checked : true, val);
+      });
+
+      rangeInput.addEventListener('input', () => {
+        menitInput.value = rangeInput.value;
+        updateDurasiUiLabels(enabledInput ? enabledInput.checked : true, rangeInput.value);
+      });
+    }
+
+    // Preset buttons
+    document.querySelectorAll('.btn-preset-durasi').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const m = parseInt(btn.dataset.minutes, 10);
+        if (menitInput) menitInput.value = m;
+        if (rangeInput) rangeInput.value = Math.min(240, m);
+        updateDurasiUiLabels(enabledInput ? enabledInput.checked : true, m);
+      });
+    });
+
+    // Reset pesan
+    if (btnResetPesan) {
+      btnResetPesan.addEventListener('click', () => {
+        const pesanText = document.getElementById('setting-durasi-pesan');
+        if (pesanText) {
+          pesanText.value = 'Kamu telah belajar melebihi batas waktu yang dianjurkan oleh Guru & Administrator. Istirahatkan matamu sejenak (aturan 20-20-20), minum air putih, dan lakukan relaksasi tubuh sebelum melanjutkan belajar!';
+        }
+      });
+    }
+
+    // Test preview modal
+    if (btnPreview) {
+      btnPreview.addEventListener('click', () => {
+        const menit = parseInt(menitInput ? menitInput.value : 60, 10) || 60;
+        const pesan = (document.getElementById('setting-durasi-pesan') || {}).value || '';
+        const mode = (document.querySelector('input[name="setting-durasi-mode"]:checked') || {}).value || 'harian';
+        const snooze = parseInt((document.getElementById('setting-durasi-snooze') || {}).value || 10, 10);
+
+        if (typeof window.showStudyDurationWarningModal === 'function') {
+          window.showStudyDurationWarningModal(
+            { nama: 'Siswa Contoh (Preview Admin)', role: 'siswa' },
+            { enabled: true, max_duration_minutes: menit, mode: mode, pesan: pesan, snooze_minutes: snooze },
+            menit * 60 + 120 // simulasi lewat 2 menit
+          );
+        } else {
+          toast('Modal pengingat durasi: ' + menit + ' menit', 'info');
+        }
+      });
+    }
+
+    // Form submit
+    if (formSetting) {
+      formSetting.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btnSubmit = document.getElementById('btn-simpan-durasi-setting');
+        const textBtn = document.getElementById('text-btn-simpan-durasi');
+        const prevText = textBtn ? textBtn.textContent : '';
+
+        try {
+          if (btnSubmit) btnSubmit.disabled = true;
+          if (textBtn) textBtn.textContent = 'Menyimpan...';
+
+          const enabled = enabledInput ? enabledInput.checked : true;
+          const max_duration_minutes = parseInt(menitInput.value, 10) || 60;
+          const mode = (document.querySelector('input[name="setting-durasi-mode"]:checked') || {}).value || 'harian';
+          const snooze_minutes = parseInt((document.getElementById('setting-durasi-snooze') || {}).value, 10) || 10;
+          const pesan = (document.getElementById('setting-durasi-pesan') || {}).value || '';
+
+          const res = await fetch('/api/admin/durasi-setting', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              enabled,
+              max_duration_minutes,
+              mode,
+              snooze_minutes,
+              pesan
+            })
+          });
+
+          const data = await res.json();
+          if (data.success) {
+            toast('✅ Pengaturan batas waktu belajar siswa berhasil disimpan!', 'success');
+            currentDurasiSetting = data.setting;
+            renderDurasiSettingAdmin(data.setting);
+          } else {
+            toast(data.error || 'Gagal menyimpan pengaturan durasi.', 'error');
+          }
+        } catch (err) {
+          toast('Terjadi kesalahan jaringan saat menyimpan setting durasi.', 'error');
+        } finally {
+          if (btnSubmit) btnSubmit.disabled = false;
+          if (textBtn) textBtn.textContent = prevText;
+        }
+      });
+    }
+  }
+
   // Initial Load
   loadStats();
   loadAktivitas();
@@ -2061,6 +2256,8 @@ window.initAdminDashboard = async function() {
   loadMateri();
   loadVideoAdmin();
   loadQuizAdmin();
+  loadDurasiSettingAdmin();
+  initDurasiSettingEvents();
 
   // Auto-Sync Polling cerdas (Hanya aktif saat tab sedang dilihat, interval 15 detik)
   let isPolling = false;

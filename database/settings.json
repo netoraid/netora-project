@@ -1,0 +1,10 @@
+{
+  "durasi_belajar": {
+    "enabled": true,
+    "max_duration_minutes": 60,
+    "mode": "harian",
+    "pesan": "Kamu telah belajar melebihi batas waktu yang dianjurkan oleh Guru & Administrator. Istirahatkan matamu sejenak (aturan 20-20-20), minum air putih, dan lakukan relaksasi tubuh sebelum melanjutkan belajar!",
+    "snooze_minutes": 10,
+    "updated_at": "2026-11-01T06:00:00.000Z"
+  }
+}

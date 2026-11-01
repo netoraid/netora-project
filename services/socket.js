@@ -131,6 +131,13 @@ function broadcastQuizDataChanged() {
   }
 }
 
+// Helper: Broadcast Pembaruan Pengaturan Batas Waktu Belajar Siswa
+function broadcastDurasiSetting(setting) {
+  if (ioInstance) {
+    ioInstance.emit('durasi:updated', setting);
+  }
+}
+
 function getIO() {
   return ioInstance;
 }
@@ -143,5 +150,6 @@ module.exports = {
   broadcastQuizSubmitted,
   broadcastMateriBaru,
   broadcastOnlineStats,
-  broadcastQuizDataChanged
+  broadcastQuizDataChanged,
+  broadcastDurasiSetting
 };
