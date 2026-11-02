@@ -805,7 +805,15 @@ window.initAdminDashboard = async function() {
             <span style="font-size:12px; color:#64748B; line-height:1.4; display:block;">${escapeHtml(ringkasan)}</span>
           </td>
           <td>
-            <span class="badge badge-purple" style="font-size:11.5px;">${escapeHtml(m.kategori)}</span>
+            ${(() => {
+              const rawK = (m.kategori || '').toLowerCase();
+              let badgeClass = 'badge-blue';
+              let label = m.kategori || 'MikroTik';
+              if (rawK.includes('cisco')) { badgeClass = 'badge-cyan'; label = 'Cisco Packet Tracer'; }
+              else if (rawK.includes('server') || rawK.includes('linux')) { badgeClass = 'badge-green'; label = 'Server dan Linux'; }
+              else { badgeClass = 'badge-blue'; label = 'MikroTik'; }
+              return `<span class="badge ${badgeClass}" style="font-size:11.5px; font-weight:700;">${escapeHtml(label)}</span>`;
+            })()}
           </td>
           <td style="color:#475569; font-size:12.5px; font-weight:600;">
             ${m.total_halaman || 1} Halaman
