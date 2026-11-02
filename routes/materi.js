@@ -45,10 +45,25 @@ function parseMateriPages(item) {
 // GET /api/materi (Akses Baca Materi)
 router.get('/', async (req, res) => {
   try {
-    const { data: list, error } = await supabase
+    let query = supabase
       .from('materi')
       .select('id, judul, kategori, isi, created_at')
       .order('id', { ascending: true });
+
+    if (req.query.kategori) {
+      const kat = req.query.kategori.toLowerCase();
+      if (kat.includes('cisco')) {
+        query = query.ilike('kategori', '%cisco%');
+      } else if (kat.includes('mikro')) {
+        query = query.ilike('kategori', '%mikro%');
+      } else if (kat.includes('server') || kat.includes('linux')) {
+        query = query.or('kategori.ilike.%server%,kategori.ilike.%linux%');
+      } else {
+        query = query.eq('kategori', req.query.kategori);
+      }
+    }
+
+    const { data: list, error } = await query;
 
     if (error) {
       console.error('Fetch Materi Supabase Error:', error);

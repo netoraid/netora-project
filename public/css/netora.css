@@ -5835,3 +5835,284 @@ textarea.form-input {
 .switch-container input:checked + .switch-slider:before {
   transform: translateX(24px);
 }
+
+/* ===================================================
+   NETORA v2 — SISTEM KATEGORI MATERI PEMBELAJARAN
+   MikroTik, Cisco Packet Tracer, Server dan Linux
+=================================================== */
+
+.materi-kategori-wrap {
+  padding: 0 16px 24px;
+}
+
+.materi-category-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+@media (min-width: 768px) {
+  .materi-category-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+}
+
+.materi-cat-card {
+  background: #FFFFFF;
+  border-radius: 22px;
+  padding: 22px 20px;
+  border: 1.5px solid #E2E8F0;
+  box-shadow: 0 6px 20px rgba(13, 91, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.materi-cat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #CBD5E1;
+  transition: background 0.25s ease;
+}
+
+.materi-cat-card[data-cat="mikrotik"]::before {
+  background: linear-gradient(90deg, #0D5BFF, #3B82F6);
+}
+
+.materi-cat-card[data-cat="cisco"]::before {
+  background: linear-gradient(90deg, #0284C7, #06B6D4);
+}
+
+.materi-cat-card[data-cat="server-linux"]::before {
+  background: linear-gradient(90deg, #10B981, #059669);
+}
+
+.materi-cat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 36px rgba(13, 91, 255, 0.12);
+  border-color: #BFDBFE;
+}
+
+.materi-cat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.materi-cat-iconbox {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+}
+
+.materi-cat-card:hover .materi-cat-iconbox {
+  transform: scale(1.08) rotate(2deg);
+}
+
+.materi-cat-icon-mikrotik {
+  background: rgba(13, 91, 255, 0.1);
+  color: #0D5BFF;
+  border: 1px solid rgba(13, 91, 255, 0.15);
+}
+
+.materi-cat-icon-cisco {
+  background: rgba(2, 132, 199, 0.1);
+  color: #0284C7;
+  border: 1px solid rgba(2, 132, 199, 0.15);
+}
+
+.materi-cat-icon-server-linux {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+  border: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+.materi-cat-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.materi-cat-badge-blue {
+  background: #EFF6FF;
+  color: #0D5BFF;
+  border: 1px solid #BFDBFE;
+}
+
+.materi-cat-badge-cyan {
+  background: #ECFEFF;
+  color: #0891B2;
+  border: 1px solid #A5F3FC;
+}
+
+.materi-cat-badge-green {
+  background: #F0FDF4;
+  color: #16A34A;
+  border: 1px solid #BBF7D0;
+}
+
+.materi-cat-title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.3;
+}
+
+.materi-cat-subtag {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.materi-cat-desc {
+  margin: 0 0 14px;
+  font-size: 12.5px;
+  color: #64748B;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.materi-cat-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.materi-cat-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.materi-cat-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.materi-cat-cta {
+  font-size: 12.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.2s ease;
+}
+
+.materi-cat-card:hover .materi-cat-cta {
+  gap: 9px;
+}
+
+.materi-cat-cta-arrow {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  transition: transform 0.2s ease;
+}
+
+.materi-cat-card:hover .materi-cat-cta-arrow {
+  transform: translateX(3px);
+}
+
+/* Category Detail View Banner / Breadcrumbs */
+.category-active-banner {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 16px 20px;
+  margin: 16px;
+  border: 1.5px solid #E2E8F0;
+  box-shadow: 0 4px 18px rgba(13, 91, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.category-active-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.category-active-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.category-active-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.category-active-desc {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #64748B;
+}
+
+.category-btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  color: #1E293B;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.category-btn-back:hover {
+  background: #E2E8F0;
+  color: #0D5BFF;
+  border-color: #BFDBFE;
+  transform: translateX(-2px);
+}
+

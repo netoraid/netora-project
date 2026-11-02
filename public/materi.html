@@ -7,7 +7,7 @@
   <meta name="description" content="Netora — Rangkuman Materi Lengkap Teknik Komputer dan Jaringan.">
   <title>Netora — Materi</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css">
+  <link rel="stylesheet" href="css/netora.css?v=2026.8">
 </head>
 
 <body style="background:#E2E8F0; margin:0; padding:0;">
@@ -19,13 +19,13 @@
 
       <div class="subpage-header-row">
         <div style="display:flex; align-items:center; gap:12px;">
-          <a href="beranda.html" class="subpage-back-btn" title="Kembali ke Beranda">
+          <a href="beranda.html" class="subpage-back-btn" id="materi-top-back-btn" title="Kembali ke Beranda">
             <svg style="width:18px; height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="2.5">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
           </a>
-          <h2 class="subpage-title" style="text-align:left;">Materi</h2>
+          <h2 class="subpage-title" id="materi-header-title" style="text-align:left;">Materi</h2>
         </div>
 
         <!-- Menu Navigasi Desktop -->
@@ -104,8 +104,8 @@
       </div>
     </header>
 
-    <!-- Card Hero Biru (Rangkuman Materi Lengkap) -->
-    <div class="hero-card-blue">
+    <!-- Card Hero Biru (Kategori & Informasi Materi) -->
+    <div class="hero-card-blue" id="materi-hero-card">
       <div class="hero-blue-iconbox" style="font-size:26px;">
         <svg style="width:26px; height:26px;" viewBox="0 0 24 24" fill="currentColor">
           <path
@@ -113,27 +113,173 @@
         </svg>
       </div>
       <div class="hero-blue-text">
-        <h3>Rangkuman Materi Lengkap</h3>
-        <p>Pelajari materi TKJ dari dasar hingga lanjutan, kapan saja dan di mana saja.</p>
+        <h3 id="materi-hero-title">Kategori Materi Pembelajaran</h3>
+        <p id="materi-hero-subtitle">Pilih bidang keahlian di bawah untuk mempelajari modul dan materi praktik TKJ secara terstruktur.</p>
       </div>
     </div>
 
-    <!-- Filter Pills Row Materi (Dinamis dari Database Supabase) -->
-    <div class="filter-pills-row" id="materi-filter-row">
-      <button type="button" class="filter-pill active" data-cat="all">Semua</button>
+    <!-- ============================================================== -->
+    <!-- SECTION 1: PILIHAN KATEGORI MATERI (TAMPILAN UTAMA SAAT MASUK) -->
+    <!-- ============================================================== -->
+    <div id="materi-kategori-section" class="materi-kategori-wrap">
+      <div class="section-header-orange" style="margin: 0 0 14px;">
+        <span>Pilih Kategori Pembelajaran</span>
+      </div>
+
+      <div class="materi-category-grid">
+        <!-- 1. Kategori MikroTik -->
+        <div class="materi-cat-card" data-cat="mikrotik" onclick="pilihKategoriMateri('mikrotik')">
+          <div>
+            <div class="materi-cat-top">
+              <div class="materi-cat-iconbox materi-cat-icon-mikrotik">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+              </div>
+              <span class="materi-cat-badge materi-cat-badge-blue" id="badge-count-mikrotik">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                <span>... Modul</span>
+              </span>
+            </div>
+            <h3 class="materi-cat-title">MikroTik</h3>
+            <span class="materi-cat-subtag" style="color:#0D5BFF;">RouterOS & Network Admin</span>
+            <p class="materi-cat-desc">
+              Pelajari konfigurasi RouterOS, manajemen bandwidth Simple Queue & Queue Tree, Hotspot, NAT Firewall, serta Winbox.
+            </p>
+            <div class="materi-cat-pills">
+              <span class="materi-cat-pill">Winbox</span>
+              <span class="materi-cat-pill">Routing</span>
+              <span class="materi-cat-pill">Queue</span>
+              <span class="materi-cat-pill">NAT Firewall</span>
+            </div>
+          </div>
+          <div class="materi-cat-footer">
+            <span class="materi-cat-cta" style="color:#0D5BFF;">
+              <span>Buka Materi MikroTik</span>
+              <span class="materi-cat-cta-arrow" style="background:#0D5BFF;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <!-- 2. Kategori Cisco Packet Tracer -->
+        <div class="materi-cat-card" data-cat="cisco" onclick="pilihKategoriMateri('cisco')">
+          <div>
+            <div class="materi-cat-top">
+              <div class="materi-cat-iconbox materi-cat-icon-cisco">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                  <path d="M6 8h12"></path>
+                  <path d="M6 12h8"></path>
+                </svg>
+              </div>
+              <span class="materi-cat-badge materi-cat-badge-cyan" id="badge-count-cisco">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                <span>... Modul</span>
+              </span>
+            </div>
+            <h3 class="materi-cat-title">Cisco Packet Tracer</h3>
+            <span class="materi-cat-subtag" style="color:#0284C7;">Simulasi & Topologi Switch/Router</span>
+            <p class="materi-cat-desc">
+              Simulasi interaktif jaringan komputer, konfigurasi VLAN, VTP, Trunking Switch Layer 2/3, STP, dan protokol routing Cisco IOS.
+            </p>
+            <div class="materi-cat-pills">
+              <span class="materi-cat-pill">VLAN</span>
+              <span class="materi-cat-pill">Trunking</span>
+              <span class="materi-cat-pill">CLI IOS</span>
+              <span class="materi-cat-pill">Topologi</span>
+            </div>
+          </div>
+          <div class="materi-cat-footer">
+            <span class="materi-cat-cta" style="color:#0284C7;">
+              <span>Buka Materi Cisco</span>
+              <span class="materi-cat-cta-arrow" style="background:#0284C7;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <!-- 3. Kategori Server dan Linux -->
+        <div class="materi-cat-card" data-cat="server-linux" onclick="pilihKategoriMateri('server-linux')">
+          <div>
+            <div class="materi-cat-top">
+              <div class="materi-cat-iconbox materi-cat-icon-server-linux">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="4 17 10 11 4 5"></polyline>
+                  <line x1="12" y1="19" x2="20" y2="19"></line>
+                </svg>
+              </div>
+              <span class="materi-cat-badge materi-cat-badge-green" id="badge-count-server-linux">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                <span>... Modul</span>
+              </span>
+            </div>
+            <h3 class="materi-cat-title">Server dan Linux</h3>
+            <span class="materi-cat-subtag" style="color:#10B981;">Sistem Operasi & Layanan Server</span>
+            <p class="materi-cat-desc">
+              Administrasi Linux Debian/Ubuntu Server, manajemen service Nginx/Apache Web Server, SSH Remote, konfigurasi DNS, dan hosting.
+            </p>
+            <div class="materi-cat-pills">
+              <span class="materi-cat-pill">Debian/Ubuntu</span>
+              <span class="materi-cat-pill">Nginx Web</span>
+              <span class="materi-cat-pill">SSH Remote</span>
+              <span class="materi-cat-pill">DNS & DHCP</span>
+            </div>
+          </div>
+          <div class="materi-cat-footer">
+            <span class="materi-cat-cta" style="color:#10B981;">
+              <span>Buka Materi Server & Linux</span>
+              <span class="materi-cat-cta-arrow" style="background:#10B981;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Input Pencarian (Toggle) -->
-    <div id="search-materi-box" style="display:none; padding:0 16px 12px;">
-      <input type="text" id="input-search-materi" placeholder="Ketik kata kunci modul..."
-        style="width:100%; padding:10px 14px; border-radius:12px; border:1px solid #CBD5E1; font-size:13px; box-sizing:border-box;">
-    </div>
+    <!-- ============================================================== -->
+    <!-- SECTION 2: DAFTAR MODUL KHUSUS KATEGORI YANG DIPILIH          -->
+    <!-- ============================================================== -->
+    <div id="materi-list-section" style="display:none; padding-bottom: 24px;">
 
-    <!-- Container Daftar Modul Materi -->
-    <div id="materi-container" style="padding-bottom:4px;">
-      <div class="desktop-grid-2col">
-        <div class="skeleton-item-card"><div class="skeleton-item-left"><div class="netora-skeleton skeleton-square-thumb"></div><div class="skeleton-meta-col"><div class="netora-skeleton skeleton-line h-18 w-75"></div><div class="netora-skeleton skeleton-line w-40"></div></div></div></div>
-        <div class="skeleton-item-card"><div class="skeleton-item-left"><div class="netora-skeleton skeleton-square-thumb"></div><div class="skeleton-meta-col"><div class="netora-skeleton skeleton-line h-18 w-75"></div><div class="netora-skeleton skeleton-line w-40"></div></div></div></div>
+      <!-- Banner Kategori Aktif + Tombol Kembali ke Pilihan Kategori -->
+      <div class="category-active-banner">
+        <div class="category-active-left">
+          <div class="category-active-icon" id="cat-active-icon">
+            <!-- Icon kategori dinamis diinjeksikan via js -->
+          </div>
+          <div>
+            <h3 class="category-active-title" id="cat-active-title">Materi Kategori</h3>
+            <p class="category-active-desc" id="cat-active-desc">Menampilkan daftar modul pembelajaran untuk kategori ini.</p>
+          </div>
+        </div>
+        <button type="button" class="category-btn-back" id="btn-back-kategori" onclick="kembaliKeKategori()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span>Pilih Kategori Lain</span>
+        </button>
+      </div>
+
+      <!-- Input Pencarian (Toggle) -->
+      <div id="search-materi-box" style="display:none; padding:0 16px 12px;">
+        <input type="text" id="input-search-materi" placeholder="Cari modul dalam kategori ini..."
+          style="width:100%; padding:10px 14px; border-radius:12px; border:1px solid #CBD5E1; font-size:13px; box-sizing:border-box;">
+      </div>
+
+      <!-- Container Daftar Modul Materi -->
+      <div id="materi-container" style="padding-bottom:4px;">
+        <div class="desktop-grid-2col">
+          <div class="skeleton-item-card"><div class="skeleton-item-left"><div class="netora-skeleton skeleton-square-thumb"></div><div class="skeleton-meta-col"><div class="netora-skeleton skeleton-line h-18 w-75"></div><div class="netora-skeleton skeleton-line w-40"></div></div></div></div>
+          <div class="skeleton-item-card"><div class="skeleton-item-left"><div class="netora-skeleton skeleton-square-thumb"></div><div class="skeleton-meta-col"><div class="netora-skeleton skeleton-line h-18 w-75"></div><div class="netora-skeleton skeleton-line w-40"></div></div></div></div>
+        </div>
       </div>
     </div>
 
@@ -173,8 +319,8 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.3"></script>
-  <script src="js/materi.js?v=2026.3"></script>
+  <script src="js/netora.js?v=2026.8"></script>
+  <script src="js/materi.js?v=2026.8"></script>
 </body>
 
 </html>

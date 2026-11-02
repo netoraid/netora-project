@@ -8,7 +8,7 @@
     content="Dashboard Administrator Netora - Monitoring Aktivitas Siswa, Kuis, Modul, dan Nilai Ujian TKJ.">
   <title>Netora — Dashboard Admin Monitoring Siswa</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.7">
+  <link rel="stylesheet" href="css/netora.css?v=2026.8">
   <style>
     /* ===================================================
        NETORA ADMIN CONSOLE — LIGHT EDTECH THEME
@@ -1419,11 +1419,11 @@
             <input type="text" id="search-materi-admin" class="input-field" placeholder="Cari judul modul..."
               style="width:210px; padding:9px 14px; font-size:13px;">
             <select id="filter-materi-kategori" class="input-field"
-              style="width:160px; padding:9px 12px; font-size:13px;">
+              style="width:170px; padding:9px 12px; font-size:13px; font-weight:600;">
               <option value="all">Semua Kategori</option>
+              <option value="MikroTik">MikroTik</option>
               <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
-              <option value="Mikrotik">Mikrotik</option>
-              <option value="Server & Linux">Server & Linux</option>
+              <option value="Server dan Linux">Server dan Linux</option>
             </select>
             <button id="btn-tambah-materi" onclick="bukaModalTambahMateri()" type="button" class="btn-primary"
               style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
@@ -1974,11 +1974,16 @@
             </div>
             <div>
               <label
-                style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kategori
+                style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Pilihan Kategori
                 Modul *</label>
-              <input type="text" id="input-materi-kategori" class="input-field"
-                placeholder="Contoh: Cisco Packet Tracer" required style="background:#FFFFFF; font-size:13.5px;"
-                oninput="const sel = document.getElementById('select-materi-kategori'); if(sel) sel.value = this.value;">
+              <select id="input-materi-kategori" class="input-field" required
+                style="background:#FFFFFF; font-size:13.5px; font-weight:600; cursor:pointer;"
+                onchange="const sel = document.getElementById('select-materi-kategori'); if(sel) sel.value = this.value;">
+                <option value="" disabled selected>-- Pilih Kategori Modul --</option>
+                <option value="MikroTik">MikroTik</option>
+                <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
+                <option value="Server dan Linux">Server dan Linux</option>
+              </select>
             </div>
           </div>
 
@@ -3054,8 +3059,14 @@
 
         if (idEl) idEl.value = m.id;
         if (judulEl) judulEl.value = m.judul || '';
-        if (katEl) katEl.value = m.kategori || '';
-        if (selKatEl) selKatEl.value = m.kategori || '';
+        let normalizedKat = 'MikroTik';
+        const rawKat = (m.kategori || '').toLowerCase().trim();
+        if (rawKat.includes('cisco') || rawKat.includes('packet tracer')) normalizedKat = 'Cisco Packet Tracer';
+        else if (rawKat.includes('server') || rawKat.includes('linux')) normalizedKat = 'Server dan Linux';
+        else normalizedKat = 'MikroTik';
+
+        if (katEl) katEl.value = normalizedKat;
+        if (selKatEl) selKatEl.value = normalizedKat;
         if (isiEl) isiEl.value = m.isi || '';
 
         let loadedPages = [];
@@ -3562,8 +3573,8 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.7"></script>
-  <script src="js/admin.js?v=2026.7"></script>
+  <script src="js/netora.js?v=2026.8"></script>
+  <script src="js/admin.js?v=2026.8"></script>
 </body>
 
 </html>

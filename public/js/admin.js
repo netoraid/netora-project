@@ -773,7 +773,13 @@ window.initAdminDashboard = async function() {
     const katFilter = document.getElementById('filter-materi-kategori')?.value || 'all';
 
     let list = globalMateri.filter(m => {
-      if (katFilter !== 'all' && m.kategori !== katFilter) return false;
+      if (katFilter !== 'all') {
+        const k = (m.kategori || '').toLowerCase();
+        const f = katFilter.toLowerCase();
+        if (f.includes('cisco') && !k.includes('cisco')) return false;
+        if (f.includes('mikro') && !k.includes('mikro')) return false;
+        if ((f.includes('server') || f.includes('linux')) && !(k.includes('server') || k.includes('linux'))) return false;
+      }
       if (q && !m.judul.toLowerCase().includes(q) && !(m.isi || '').toLowerCase().includes(q)) return false;
       return true;
     });
@@ -1290,8 +1296,14 @@ window.initAdminDashboard = async function() {
 
     if (idEl) idEl.value = m.id;
     if (judulEl) judulEl.value = m.judul || '';
-    if (katEl) katEl.value = m.kategori || '';
-    if (selKatEl) selKatEl.value = m.kategori || '';
+    let normalizedKat = 'MikroTik';
+    const rawKat = (m.kategori || '').toLowerCase().trim();
+    if (rawKat.includes('cisco') || rawKat.includes('packet tracer')) normalizedKat = 'Cisco Packet Tracer';
+    else if (rawKat.includes('server') || rawKat.includes('linux')) normalizedKat = 'Server dan Linux';
+    else normalizedKat = 'MikroTik';
+
+    if (katEl) katEl.value = normalizedKat;
+    if (selKatEl) selKatEl.value = normalizedKat;
     if (isiEl) isiEl.value = m.isi || '';
 
     let loadedPages = [];

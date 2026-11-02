@@ -1047,6 +1047,46 @@ curl http://localhost:3000/api/materi/2
 
 ---
 
+## 🚀 15. Catatan Pembaruan Sesi (2 November 2026) — Sistem Kategori & Navigasi Materi
+
+### A. Rekapitulasi Perubahan & Peningkatan Utama
+
+1. **Pengelompokan Materi Berdasarkan 3 Kategori Utama**:
+   - Menu **Materi** tidak lagi menampilkan seluruh modul sekaligus dalam satu halaman panjang.
+   - Halaman utama materi kini menyajikan **3 Card Kategori Utama** dengan desain modern, minimalis, dan ikon interaktif:
+     - **MikroTik** (RouterOS, Winbox, Routing, Bandwidth Management, NAT Firewall)
+     - **Cisco Packet Tracer** (Topologi Jaringan, Switch L2/L3, VLAN, VTP, Trunking, CLI IOS)
+     - **Server dan Linux** (Debian/Ubuntu Server, Nginx Web Server, SSH Remote, DNS/DHCP)
+   - Setiap card kategori dilengkapi badge jumlah modul yang terdaftar secara dinamis dari database, deskripsi ringkas, daftar tag topik, dan tombol akses.
+
+2. **Sistem Navigasi Khusus Kategori & Tombol Kembali**:
+   - Menekan card kategori akan membuka tampilan khusus yang **hanya menampilkan materi sesuai kategori yang dipilih**:
+     - Materi MikroTik hanya tampil di kategori MikroTik.
+     - Materi Cisco Packet Tracer hanya tampil di kategori Cisco Packet Tracer.
+     - Materi Server dan Linux hanya tampil di kategori Server dan Linux.
+   - Dilengkapi **Tombol Kembali** (*"← Pilih Kategori Lain"* dan tombol back di header) sehingga siswa dapat dengan mudah berpindah antar kategori tanpa reload yang mengganggu.
+   - Mendukung integrasi URL parameter (`materi.html?kategori=mikrotik`, `cisco`, `server-linux`) sehingga status kategori tetap terjaga saat refresh atau menggunakan tombol Back/Forward browser.
+   - Di halaman `materi-detail.html`, tombol navigasi kembali dan tombol *"Selesai Membaca Modul"* otomatis mengarahkan siswa kembali ke kategori yang sebelumnya mereka buka.
+
+3. **Form Upload & Edit Admin dengan Dropdown Kategori Terstruktur**:
+   - Pada modal Tambah / Edit Modul Materi di panel admin (`public/admin.html`), input kategori teks bebas diganti dengan `<select id="input-materi-kategori">` yang mewajibkan admin memilih salah satu dari 3 kategori resmi.
+   - Materi yang diunggah otomatis terpetakan ke kategori database dan tersimpan aman di Supabase PostgreSQL.
+   - Seluruh fitur upload, edit, hapus, dan lihat modul materi tetap dipertahankan 100%.
+
+### B. Ringkasan File yang Dimodifikasi pada Sesi Ini
+| File | Detail Perubahan |
+|---|---|
+| `public/materi.html` | Restrukturisasi tampilan: Seksi 1 Pilihan Kategori (3 card interaktif) dan Seksi 2 Daftar Modul Kategori dengan banner & tombol kembali |
+| `public/js/materi.js` | Logika navigasi kategori (`pilihKategoriMateri`, `kembaliKeKategori`), mapping kategori dinamis, filter strictly per-kategori, URL synchronization, dan integrasi detail view |
+| `public/css/netora.css` | Styling `.materi-category-grid`, `.materi-cat-card`, badge kategori warna-warni, `.category-active-banner`, dan `.category-btn-back`. Asset bump ke `?v=2026.8` |
+| `public/admin.html` | Pembaruan modal materi dengan dropdown pilihan kategori wajib (MikroTik, Cisco Packet Tracer, Server dan Linux) dan filter kategori tabel admin |
+| `public/js/admin.js` | Penyelarasan filter kategori tabel dan normalisasi pre-select dropdown pada fungsi `bukaModalEditMateri` |
+| `routes/materi.js` | Dukungan opsional query param `?kategori=` dengan pencarian ilike pada Supabase |
+| `planing.md` | Pencatatan dokumentasi sistem arsitektur kategori materi sesi 2 November 2026 |
+
+---
+
 *Dokumentasi ini mencerminkan konfigurasi final arsitektur sistem produksi NETORA v2 — Tim Pengembang Netora © 2026.*
+
 
 

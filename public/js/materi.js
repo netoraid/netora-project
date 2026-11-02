@@ -3,29 +3,67 @@ window.initMateriPage = async function() {
   const detailContainer = document.getElementById('materi-detail-container');
   if (!materiContainer && !detailContainer) return;
 
-  getUser().then(user => updateNavHeader(user));
-  const filterRow = document.getElementById('materi-filter-row');
+  if (typeof getUser === 'function') {
+    getUser().then(user => {
+      if (typeof updateNavHeader === 'function') updateNavHeader(user);
+    });
+  }
+
+  // Definisi Master 3 Kategori Pembelajaran NETORA
+  const CATEGORIES = {
+    'mikrotik': {
+      id: 'mikrotik',
+      name: 'MikroTik',
+      badgeText: 'RouterOS & Network Admin',
+      desc: 'Pelajari konfigurasi RouterOS, manajemen bandwidth Simple Queue & Queue Tree, Hotspot, NAT Firewall, serta Winbox.',
+      iconColor: '#0D5BFF',
+      iconBg: 'rgba(13, 91, 255, 0.1)',
+      icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`
+    },
+    'cisco': {
+      id: 'cisco',
+      name: 'Cisco Packet Tracer',
+      badgeText: 'Simulasi & Topologi Switch/Router',
+      desc: 'Simulasi interaktif jaringan komputer, konfigurasi VLAN, VTP, Trunking Switch Layer 2/3, STP, dan protokol routing Cisco IOS.',
+      iconColor: '#0284C7',
+      iconBg: 'rgba(2, 132, 199, 0.1)',
+      icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><path d="M6 8h12"></path><path d="M6 12h8"></path></svg>`
+    },
+    'server-linux': {
+      id: 'server-linux',
+      name: 'Server dan Linux',
+      badgeText: 'Sistem Operasi & Layanan Server',
+      desc: 'Administrasi Linux Debian/Ubuntu Server, manajemen service Nginx/Apache Web Server, SSH Remote, konfigurasi DNS, dan hosting.',
+      iconColor: '#10B981',
+      iconBg: 'rgba(16, 185, 129, 0.1)',
+      icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`
+    }
+  };
+
+  // Helper Pemetaan Kategori Dinamis & Kompatibel (Anti-salah eja di database)
+  function getMateriCategoryKey(m) {
+    const k = (m.kategori || '').toLowerCase().trim();
+    const t = (m.judul || '').toLowerCase().trim();
+    const combined = k + ' ' + t;
+
+    if (k.includes('cisco') || combined.includes('cisco') || combined.includes('packet tracer') || combined.includes('vlan') || combined.includes('trunking')) {
+      return 'cisco';
+    }
+    if (k.includes('mikro') || combined.includes('mikrotik') || combined.includes('routeros') || combined.includes('winbox') || combined.includes('queue')) {
+      return 'mikrotik';
+    }
+    if (k.includes('server') || k.includes('linux') || combined.includes('linux') || combined.includes('debian') || combined.includes('ubuntu') || combined.includes('nginx') || combined.includes('ssh')) {
+      return 'server-linux';
+    }
+    return 'mikrotik'; // fallback default
+  }
+
+  let allMateri = [];
+  let currentActiveCategory = null;
+
   const btnSearch = document.getElementById('btn-search-materi');
   const searchBox = document.getElementById('search-materi-box');
   const inputSearch = document.getElementById('input-search-materi');
-
-  let allMateri = [];
-  let currentFilter = 'all';
-
-  // Preset Icon Mapping (SVG)
-  function getMateriIcon(kategori, judul) {
-    const text = (kategori + ' ' + judul).toLowerCase();
-    if (text.includes('cisco') || text.includes('packet tracer') || text.includes('switch') || text.includes('vlan')) {
-      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
-    }
-    if (text.includes('mikrotik') || text.includes('router') || text.includes('queue') || text.includes('bandwidth')) {
-      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
-    }
-    if (text.includes('linux') || text.includes('server') || text.includes('nginx') || text.includes('ssh')) {
-      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`;
-    }
-    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`;
-  }
 
   function renderMateriSkeleton() {
     if (!materiContainer) return;
@@ -42,53 +80,159 @@ window.initMateriPage = async function() {
     `).join('') + '</div>';
   }
 
-  // 1. Halaman List Materi
+  // 1. Logika Halaman Katalog Materi (materi.html)
   if (materiContainer) {
-    function renderFilterPills() {
-      if (!filterRow) return;
-      const categories = ['all'];
-      allMateri.forEach(m => {
-        const k = (m.kategori || '').trim();
-        if (k && !categories.some(c => c.toLowerCase() === k.toLowerCase())) {
-          categories.push(k);
-        }
-      });
 
-      filterRow.innerHTML = categories.map(cat => {
-        const label = cat === 'all' ? 'Semua' : escapeHtml(cat);
-        const isActive = (currentFilter.toLowerCase() === cat.toLowerCase()) ? 'active' : '';
-        return `<button type="button" class="filter-pill ${isActive}" data-cat="${escapeHtml(cat)}">${label}</button>`;
-      }).join('');
+    function updateCategoryBadges() {
+      const countMikrotik = allMateri.filter(m => getMateriCategoryKey(m) === 'mikrotik').length;
+      const countCisco = allMateri.filter(m => getMateriCategoryKey(m) === 'cisco').length;
+      const countServer = allMateri.filter(m => getMateriCategoryKey(m) === 'server-linux').length;
 
-      filterRow.querySelectorAll('.filter-pill').forEach(btn => {
-        btn.addEventListener('click', () => {
-          filterRow.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentFilter = btn.dataset.cat || 'all';
-          renderMateriCards();
-        });
-      });
+      const badgeMikrotik = document.getElementById('badge-count-mikrotik');
+      const badgeCisco = document.getElementById('badge-count-cisco');
+      const badgeServer = document.getElementById('badge-count-server-linux');
+
+      if (badgeMikrotik) {
+        badgeMikrotik.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countMikrotik} Modul</span>`;
+      }
+      if (badgeCisco) {
+        badgeCisco.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countCisco} Modul</span>`;
+      }
+      if (badgeServer) {
+        badgeServer.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countServer} Modul</span>`;
+      }
     }
+
+    window.pilihKategoriMateri = function(catKey, pushState = true) {
+      let normalizedKey = String(catKey || '').toLowerCase().trim();
+      if (!CATEGORIES[normalizedKey]) {
+        if (/cisco/i.test(normalizedKey)) normalizedKey = 'cisco';
+        else if (/server|linux/i.test(normalizedKey)) normalizedKey = 'server-linux';
+        else normalizedKey = 'mikrotik';
+      }
+      const cat = CATEGORIES[normalizedKey];
+      if (!cat) return;
+
+      currentActiveCategory = normalizedKey;
+
+      if (pushState) {
+        try {
+          const newUrl = `${window.location.pathname}?kategori=${normalizedKey}`;
+          window.history.pushState({ kategori: normalizedKey }, '', newUrl);
+        } catch(e) {}
+      }
+
+      // Update Tampilan DOM
+      const kategoriSec = document.getElementById('materi-kategori-section');
+      const listSec = document.getElementById('materi-list-section');
+      const heroCard = document.getElementById('materi-hero-card');
+      const topBackBtn = document.getElementById('materi-top-back-btn');
+      const headerTitle = document.getElementById('materi-header-title');
+
+      if (kategoriSec) kategoriSec.style.display = 'none';
+      if (listSec) listSec.style.display = 'block';
+      if (heroCard) heroCard.style.display = 'none';
+
+      if (topBackBtn) {
+        topBackBtn.onclick = (e) => {
+          e.preventDefault();
+          window.kembaliKeKategori();
+        };
+        topBackBtn.title = 'Kembali ke Pilihan Kategori';
+      }
+
+      if (headerTitle) {
+        headerTitle.textContent = `Materi ${cat.name}`;
+      }
+
+      // Update Banner Info Kategori Aktif
+      const catIcon = document.getElementById('cat-active-icon');
+      const catTitle = document.getElementById('cat-active-title');
+      const catDesc = document.getElementById('cat-active-desc');
+
+      if (catIcon) {
+        catIcon.innerHTML = cat.icon;
+        catIcon.style.color = cat.iconColor;
+        catIcon.style.background = cat.iconBg;
+      }
+      if (catTitle) {
+        catTitle.textContent = `Materi ${cat.name}`;
+      }
+      if (catDesc) {
+        const totalInCat = allMateri.filter(m => getMateriCategoryKey(m) === normalizedKey).length;
+        catDesc.textContent = `${cat.desc} (${totalInCat} Modul Tersedia)`;
+      }
+
+      renderMateriCards();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.kembaliKeKategori = function(pushState = true) {
+      currentActiveCategory = null;
+
+      if (pushState) {
+        try {
+          window.history.pushState({}, '', window.location.pathname);
+        } catch(e) {}
+      }
+
+      const kategoriSec = document.getElementById('materi-kategori-section');
+      const listSec = document.getElementById('materi-list-section');
+      const heroCard = document.getElementById('materi-hero-card');
+      const topBackBtn = document.getElementById('materi-top-back-btn');
+      const headerTitle = document.getElementById('materi-header-title');
+
+      if (kategoriSec) kategoriSec.style.display = 'block';
+      if (listSec) listSec.style.display = 'none';
+      if (heroCard) heroCard.style.display = 'flex';
+
+      if (topBackBtn) {
+        topBackBtn.onclick = null;
+        topBackBtn.href = 'beranda.html';
+        topBackBtn.title = 'Kembali ke Beranda';
+      }
+
+      if (headerTitle) {
+        headerTitle.textContent = 'Materi';
+      }
+
+      if (inputSearch) inputSearch.value = '';
+      if (searchBox) searchBox.style.display = 'none';
+
+      updateCategoryBadges();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Sinkronisasi navigasi tombol Back / Forward di browser
+    window.addEventListener('popstate', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cat = urlParams.get('kategori') || urlParams.get('kat');
+      if (cat) {
+        window.pilihKategoriMateri(cat, false);
+      } else {
+        window.kembaliKeKategori(false);
+      }
+    });
 
     async function loadMateri(isSilent = false) {
       if (!isSilent && (!allMateri || allMateri.length === 0)) {
         renderMateriSkeleton();
       }
 
-      // 1. Cek apakah ada cache di sessionStorage untuk render instan
+      // 1. Cek cache lokal di sessionStorage untuk render kilat
       try {
         const cached = sessionStorage.getItem('netora_materi_cache');
         if (cached) {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
             allMateri = parsed;
-            renderFilterPills();
-            renderMateriCards();
+            updateCategoryBadges();
+            if (currentActiveCategory) renderMateriCards();
           }
         }
       } catch (e) {}
 
-      // 2. Selalu fetch data terkini dari server (Stale-While-Revalidate)
+      // 2. Fetch data mutakhir dari API Supabase
       try {
         const res = await fetch('/api/materi?t=' + Date.now());
         const data = await res.json();
@@ -96,66 +240,73 @@ window.initMateriPage = async function() {
         if (res.ok && data.success && Array.isArray(data.materi)) {
           allMateri = data.materi;
           try { sessionStorage.setItem('netora_materi_cache', JSON.stringify(data.materi)); } catch (e) {}
-          renderFilterPills();
-          renderMateriCards();
+          updateCategoryBadges();
+
+          // Cek URL apakah langsung membuka kategori tertentu
+          const urlParams = new URLSearchParams(window.location.search);
+          const initialCat = urlParams.get('kategori') || urlParams.get('kat');
+          if (initialCat) {
+            window.pilihKategoriMateri(initialCat, false);
+          } else if (currentActiveCategory) {
+            renderMateriCards();
+          }
         }
       } catch (err) {
         console.warn('Gagal memuat materi dari API:', err);
       }
     }
 
-    // Expose fungsi refresh untuk dipanggil saat ada update Socket.IO
     window.refreshMateriData = () => loadMateri(true);
     window.loadMateri = loadMateri;
 
     function renderMateriCards() {
-      const q = (inputSearch ? inputSearch.value : '').toLowerCase().trim();
+      if (!currentActiveCategory) return;
 
-      let list = allMateri.filter(m => {
-        if (currentFilter !== 'all') {
-          const cf = currentFilter.toLowerCase();
-          const mk = (m.kategori || '').toLowerCase();
-          if (mk !== cf && !mk.includes(cf) && !cf.includes(mk)) {
-            return false;
-          }
-        }
-        if (q && !m.judul.toLowerCase().includes(q) && !(m.kategori || '').toLowerCase().includes(q)) {
-          return false;
-        }
-        return true;
-      });
+      const q = (inputSearch ? inputSearch.value : '').toLowerCase().trim();
+      const cat = CATEGORIES[currentActiveCategory];
+
+      // KETENTUAN UTAMA: Materi kategori hanya ditampilkan di kategori yang bersangkutan
+      let list = allMateri.filter(m => getMateriCategoryKey(m) === currentActiveCategory);
+
+      if (q) {
+        list = list.filter(m => m.judul.toLowerCase().includes(q) || (m.preview || '').toLowerCase().includes(q));
+      }
 
       if (list.length === 0) {
         materiContainer.innerHTML = `
-          <div class="netora-fade-in" style="text-align:center; padding:36px 20px; background:#FFFFFF; border-radius:20px; margin:14px 16px; border:1.5px dashed #CBD5E1; box-shadow:0 2px 12px rgba(15,23,42,0.03);">
-            <div style="width:52px; height:52px; border-radius:16px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-              </svg>
+          <div class="netora-fade-in" style="text-align:center; padding:40px 20px; background:#FFFFFF; border-radius:22px; margin:14px 16px; border:1.5px dashed #CBD5E1; box-shadow:0 2px 12px rgba(15,23,42,0.03);">
+            <div style="width:56px; height:56px; border-radius:18px; background:${cat ? cat.iconBg : 'rgba(13,91,255,0.08)'}; color:${cat ? cat.iconColor : '#0D5BFF'}; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px;">
+              ${cat ? cat.icon : ''}
             </div>
-            <h4 style="margin:0 0 6px; font-size:15px; font-weight:800; color:#1E293B;">Belum Ada Modul Materi</h4>
-            <p style="margin:0 auto; font-size:12.5px; color:#64748B; max-width:340px; line-height:1.5;">Modul pembelajaran yang dibuat Guru / Admin akan otomatis muncul di sini.</p>
+            <h4 style="margin:0 0 6px; font-size:16px; font-weight:800; color:#1E293B;">
+              ${q ? 'Modul Tidak Ditemukan' : `Belum Ada Modul di Kategori ${cat ? cat.name : ''}`}
+            </h4>
+            <p style="margin:0 auto 16px; font-size:12.5px; color:#64748B; max-width:360px; line-height:1.5;">
+              ${q ? `Tidak ada materi yang cocok dengan pencarian "${escapeHtml(q)}".` : `Modul pembelajaran khusus ${cat ? cat.name : 'kategori ini'} yang diunggah Guru / Admin akan otomatis masuk dan tampil di sini.`}
+            </p>
+            <button type="button" onclick="kembaliKeKategori()" class="btn-secondary" style="padding:8px 18px; font-size:12.5px; border-radius:10px; cursor:pointer;">
+              ← Kembali ke Pilihan Kategori
+            </button>
           </div>
         `;
         return;
       }
 
-      materiContainer.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + list.map((item, idx) => {
-        const icon = getMateriIcon(item.kategori || '', item.judul || '');
+      materiContainer.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + list.map((item) => {
+        const icon = cat ? cat.icon : `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`;
         const pagesCount = item.total_halaman || (item.pages && Array.isArray(item.pages) ? item.pages.length : (item.isi ? 1 : 1));
         const pagesText = item.pages_text || `${pagesCount} halaman`;
 
         return `
-          <a href="materi-detail.html?id=${item.id}" class="white-item-card">
+          <a href="materi-detail.html?id=${item.id}&kat=${currentActiveCategory}" class="white-item-card">
             <div class="item-left-flex">
-              <div class="item-square-thumb" style="background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center;">
+              <div class="item-square-thumb" style="background:${cat ? cat.iconColor : '#0D5BFF'}; color:#fff; display:flex; align-items:center; justify-content:center;">
                 ${icon}
               </div>
               <div class="item-meta-col">
                 <h4 class="item-title-text">${escapeHtml(item.judul)}</h4>
                 <div class="item-sub-text">
-                  <span style="color:#0D5BFF; font-weight:700;">${escapeHtml(item.kategori || 'TKJ')}</span>
+                  <span style="color:${cat ? cat.iconColor : '#0D5BFF'}; font-weight:700;">${escapeHtml(cat ? cat.name : (item.kategori || 'TKJ'))}</span>
                   <span>•</span>
                   <span>${pagesText}</span>
                 </div>
@@ -169,9 +320,13 @@ window.initMateriPage = async function() {
       }).join('') + '</div>';
     }
 
-    // Search Toggle
+    // Toggle Kotak Pencarian
     if (btnSearch && searchBox) {
       btnSearch.addEventListener('click', () => {
+        if (!currentActiveCategory) {
+          // Jika masih di menu kategori, buka kategori pertama atau tampilkan input
+          window.pilihKategoriMateri('mikrotik');
+        }
         searchBox.style.display = searchBox.style.display === 'none' ? 'block' : 'none';
         if (searchBox.style.display === 'block' && inputSearch) inputSearch.focus();
       });
@@ -181,7 +336,23 @@ window.initMateriPage = async function() {
       inputSearch.addEventListener('input', renderMateriCards);
     }
 
+    // Jalankan pemuatan awal
     loadMateri();
+  }
+
+  // Preset Icon Mapping (SVG)
+  function getMateriIcon(kategori, judul) {
+    const text = ((kategori || '') + ' ' + (judul || '')).toLowerCase();
+    if (text.includes('cisco') || text.includes('packet tracer') || text.includes('switch') || text.includes('vlan')) {
+      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><path d="M6 8h12"></path><path d="M6 12h8"></path></svg>`;
+    }
+    if (text.includes('mikrotik') || text.includes('router') || text.includes('queue') || text.includes('bandwidth')) {
+      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
+    }
+    if (text.includes('linux') || text.includes('server') || text.includes('nginx') || text.includes('ssh') || text.includes('debian') || text.includes('ubuntu')) {
+      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`;
+    }
+    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`;
   }
 
   // 2. Halaman Detail Materi (materi-detail.html)
@@ -189,9 +360,23 @@ window.initMateriPage = async function() {
     const urlParams = new URLSearchParams(window.location.search);
     const materiId = urlParams.get('id');
     const requestedPage = parseInt(urlParams.get('page')) || null;
+    const fromKat = urlParams.get('kat') || urlParams.get('kategori') || '';
+
+    // Selaraskan tombol kembali pada header atas jika siswa datang dari kategori tertentu
+    const topBackBtn = document.querySelector('.subpage-back-btn');
+    if (topBackBtn && fromKat) {
+      topBackBtn.href = `materi.html?kategori=${encodeURIComponent(fromKat)}`;
+      topBackBtn.title = 'Kembali ke Kategori Materi';
+    }
+
+    const actionCatalogBtn = document.querySelector('.subpage-action-btn');
+    if (actionCatalogBtn && fromKat) {
+      actionCatalogBtn.href = `materi.html?kategori=${encodeURIComponent(fromKat)}`;
+      actionCatalogBtn.title = 'Kembali ke Katalog Kategori';
+    }
 
     if (!materiId) {
-      window.location.href = 'materi.html';
+      window.location.href = fromKat ? `materi.html?kategori=${encodeURIComponent(fromKat)}` : 'materi.html';
       return;
     }
 
@@ -439,7 +624,7 @@ window.initMateriPage = async function() {
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                       </button>
                     ` : `
-                      <a href="materi.html" class="btn-primary" style="flex:1; padding:12px 14px; font-size:13.5px; font-weight:800; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; background:#0D5BFF; color:#FFFFFF; box-shadow:0 4px 14px rgba(13,91,255,0.25);">
+                      <a href="${fromKat ? `materi.html?kategori=${encodeURIComponent(fromKat)}` : 'materi.html'}" class="btn-primary" style="flex:1; padding:12px 14px; font-size:13.5px; font-weight:800; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; background:#0D5BFF; color:#FFFFFF; box-shadow:0 4px 14px rgba(13,91,255,0.25);">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                         <span>Selesai Membaca Modul</span>
                       </a>
