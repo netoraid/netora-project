@@ -5842,22 +5842,35 @@ textarea.form-input {
 =================================================== */
 
 .materi-kategori-wrap {
-  padding: 0 16px 20px;
-  max-width: 860px;
-  margin: 0 auto;
+  padding: 0 16px 24px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.materi-kategori-wrap .section-header-orange {
+  margin: 12px 0 14px 0 !important;
+  padding: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
 }
 
 .materi-category-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
+  .materi-kategori-wrap {
+    max-width: 1380px !important;
+    margin: 0 auto !important;
+    padding: 0 36px 32px !important;
+  }
   .materi-category-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
   }
 }
 

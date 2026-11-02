@@ -6,7 +6,194 @@
   <meta name="description" content="Netora — Panduan Vidio Praktik Pembelajaran dan Konfigurasi Jaringan TKJ.">
   <title>Netora — Vidio Praktik</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.8">
+  <link rel="stylesheet" href="css/netora.css?v=2026.9">
+  <style>
+    /* NETORA v2 — KATEGORI PEMBELAJARAN (RESPONSIF & RAPIH) */
+    .materi-kategori-wrap {
+      padding: 0 16px 24px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .materi-kategori-wrap .section-header-orange {
+      margin: 12px 0 14px 0 !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+      box-sizing: border-box;
+    }
+
+    .materi-category-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    @media (min-width: 768px) {
+      .materi-kategori-wrap {
+        max-width: 1380px !important;
+        margin: 0 auto !important;
+        padding: 0 36px 32px !important;
+      }
+      .materi-category-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 20px !important;
+      }
+    }
+
+    .materi-cat-card {
+      background: #FFFFFF !important;
+      border-radius: 18px !important;
+      padding: 16px 18px !important;
+      border: 1.5px solid #E2E8F0 !important;
+      box-shadow: 0 4px 16px rgba(13, 91, 255, 0.05) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      cursor: pointer !important;
+      text-decoration: none !important;
+      color: inherit !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      position: relative !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+      min-height: 110px !important;
+    }
+
+    .materi-cat-card::before {
+      content: '' !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      height: 4px !important;
+      background: #CBD5E1 !important;
+      transition: background 0.25s ease !important;
+    }
+
+    .materi-cat-card[data-cat="mikrotik"]::before {
+      background: linear-gradient(90deg, #0D5BFF, #3B82F6) !important;
+    }
+
+    .materi-cat-card[data-cat="cisco"]::before {
+      background: linear-gradient(90deg, #0284C7, #06B6D4) !important;
+    }
+
+    .materi-cat-card[data-cat="server-linux"]::before {
+      background: linear-gradient(90deg, #10B981, #059669) !important;
+    }
+
+    .materi-cat-card:hover {
+      transform: translateY(-4px) !important;
+      box-shadow: 0 12px 28px rgba(13, 91, 255, 0.12) !important;
+      border-color: #BFDBFE !important;
+    }
+
+    .materi-cat-top {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      margin-bottom: 12px !important;
+      width: 100% !important;
+    }
+
+    .materi-cat-iconbox {
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 13px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: transform 0.25s ease !important;
+      flex-shrink: 0 !important;
+    }
+
+    .materi-cat-card:hover .materi-cat-iconbox {
+      transform: scale(1.08) rotate(2deg) !important;
+    }
+
+    .materi-cat-icon-mikrotik {
+      background: #EFF6FF !important;
+      color: #0D5BFF !important;
+      border: 1px solid rgba(13, 91, 255, 0.18) !important;
+    }
+
+    .materi-cat-icon-cisco {
+      background: #ECFEFF !important;
+      color: #0284C7 !important;
+      border: 1px solid rgba(2, 132, 199, 0.18) !important;
+    }
+
+    .materi-cat-icon-server-linux {
+      background: #F0FDF4 !important;
+      color: #10B981 !important;
+      border: 1px solid rgba(16, 185, 129, 0.18) !important;
+    }
+
+    .materi-cat-badge {
+      font-size: 11px !important;
+      font-weight: 750 !important;
+      padding: 4px 10px !important;
+      border-radius: 12px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+      white-space: nowrap !important;
+    }
+
+    .materi-cat-badge-blue {
+      background: #EFF6FF !important;
+      color: #0D5BFF !important;
+      border: 1px solid #BFDBFE !important;
+    }
+
+    .materi-cat-badge-cyan {
+      background: #ECFEFF !important;
+      color: #0891B2 !important;
+      border: 1px solid #A5F3FC !important;
+    }
+
+    .materi-cat-badge-green {
+      background: #F0FDF4 !important;
+      color: #16A34A !important;
+      border: 1px solid #BBF7D0 !important;
+    }
+
+    .materi-cat-bottom {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 10px !important;
+      width: 100% !important;
+      margin-top: 6px !important;
+    }
+
+    .materi-cat-title {
+      margin: 0 !important;
+      font-size: 15.5px !important;
+      font-weight: 800 !important;
+      color: #0F172A !important;
+      line-height: 1.25 !important;
+    }
+
+    .materi-cat-cta-arrow {
+      width: 26px !important;
+      height: 26px !important;
+      min-width: 26px !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: #FFFFFF !important;
+      transition: transform 0.2s ease !important;
+      flex-shrink: 0 !important;
+    }
+
+    .materi-cat-card:hover .materi-cat-cta-arrow {
+      transform: translateX(3px) !important;
+    }
+  </style>
 </head>
 <body style="background:#E2E8F0; margin:0; padding:0;">
 
