@@ -136,22 +136,18 @@ window.initVideoPage = async function() {
     const countVideoCisco = allVideos.filter(v => getCategoryKey(v) === 'cisco').length;
     const countVideoServer = allVideos.filter(v => getCategoryKey(v) === 'server-linux').length;
 
-    const countMateriMikrotik = allMateri.filter(m => getCategoryKey(m) === 'mikrotik').length;
-    const countMateriCisco = allMateri.filter(m => getCategoryKey(m) === 'cisco').length;
-    const countMateriServer = allMateri.filter(m => getCategoryKey(m) === 'server-linux').length;
-
     const badgeMikrotik = document.getElementById('badge-video-count-mikrotik');
     const badgeCisco = document.getElementById('badge-video-count-cisco');
     const badgeServer = document.getElementById('badge-video-count-server-linux');
 
     if (badgeMikrotik) {
-      badgeMikrotik.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoMikrotik} Vidio • ${countMateriMikrotik} Modul</span>`;
+      badgeMikrotik.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoMikrotik} Vidio</span>`;
     }
     if (badgeCisco) {
-      badgeCisco.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoCisco} Vidio • ${countMateriCisco} Modul</span>`;
+      badgeCisco.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoCisco} Vidio</span>`;
     }
     if (badgeServer) {
-      badgeServer.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoServer} Vidio • ${countMateriServer} Modul</span>`;
+      badgeServer.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoServer} Vidio</span>`;
     }
   }
 
@@ -194,7 +190,7 @@ window.initVideoPage = async function() {
     }
 
     if (headerTitle) {
-      headerTitle.textContent = `Vidio & Materi ${cat.name}`;
+      headerTitle.textContent = `Vidio ${cat.name}`;
     }
 
     // Update Banner Info Kategori Aktif
@@ -208,16 +204,14 @@ window.initVideoPage = async function() {
       catIcon.style.background = cat.iconBg;
     }
     if (catTitle) {
-      catTitle.textContent = `Kategori: ${cat.name}`;
+      catTitle.textContent = `Vidio: ${cat.name}`;
     }
     if (catDesc) {
       const totalVideo = allVideos.filter(v => getCategoryKey(v) === normalizedKey).length;
-      const totalMateri = allMateri.filter(m => getCategoryKey(m) === normalizedKey).length;
-      catDesc.textContent = `${cat.desc} (${totalVideo} Vidio Praktik • ${totalMateri} Modul Pembelajaran)`;
+      catDesc.textContent = `${cat.desc} (${totalVideo} Vidio Praktik)`;
     }
 
     renderVideoCards();
-    renderMateriCards();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -284,11 +278,10 @@ window.initVideoPage = async function() {
         const parsedM = JSON.parse(cachedMateri);
         if (Array.isArray(parsedM) && parsedM.length > 0) allMateri = parsedM;
       }
-      if (allVideos.length > 0 || allMateri.length > 0) {
+      if (allVideos.length > 0) {
         updateCategoryBadges();
         if (currentActiveCategory) {
           renderVideoCards();
-          renderMateriCards();
         }
       }
     } catch (e) {}
@@ -338,7 +331,6 @@ window.initVideoPage = async function() {
         window.pilihKategoriVideo(initialCat, false);
       } else if (currentActiveCategory) {
         renderVideoCards();
-        renderMateriCards();
       }
     } catch (err) {
       console.warn('Gagal memuat video/materi:', err);
@@ -512,7 +504,6 @@ window.initVideoPage = async function() {
   if (inputSearch) {
     inputSearch.addEventListener('input', () => {
       renderVideoCards();
-      renderMateriCards();
     });
   }
 

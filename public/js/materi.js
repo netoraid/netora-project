@@ -140,22 +140,18 @@ window.initMateriPage = async function() {
       const countMateriCisco = allMateri.filter(m => getMateriCategoryKey(m) === 'cisco').length;
       const countMateriServer = allMateri.filter(m => getMateriCategoryKey(m) === 'server-linux').length;
 
-      const countVideoMikrotik = allVideos.filter(v => getMateriCategoryKey(v) === 'mikrotik').length;
-      const countVideoCisco = allVideos.filter(v => getMateriCategoryKey(v) === 'cisco').length;
-      const countVideoServer = allVideos.filter(v => getMateriCategoryKey(v) === 'server-linux').length;
-
       const badgeMikrotik = document.getElementById('badge-count-mikrotik');
       const badgeCisco = document.getElementById('badge-count-cisco');
       const badgeServer = document.getElementById('badge-count-server-linux');
 
       if (badgeMikrotik) {
-        badgeMikrotik.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countMateriMikrotik} Modul • ${countVideoMikrotik} Vidio</span>`;
+        badgeMikrotik.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countMateriMikrotik} Modul</span>`;
       }
       if (badgeCisco) {
-        badgeCisco.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countMateriCisco} Modul • ${countVideoCisco} Vidio</span>`;
+        badgeCisco.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countMateriCisco} Modul</span>`;
       }
       if (badgeServer) {
-        badgeServer.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countMateriServer} Modul • ${countVideoServer} Vidio</span>`;
+        badgeServer.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countMateriServer} Modul</span>`;
       }
     }
 
@@ -198,7 +194,7 @@ window.initMateriPage = async function() {
       }
 
       if (headerTitle) {
-        headerTitle.textContent = `Materi & Vidio ${cat.name}`;
+        headerTitle.textContent = `Materi ${cat.name}`;
       }
 
       // Update Banner Info Kategori Aktif
@@ -212,16 +208,14 @@ window.initMateriPage = async function() {
         catIcon.style.background = cat.iconBg;
       }
       if (catTitle) {
-        catTitle.textContent = `Kategori: ${cat.name}`;
+        catTitle.textContent = `Materi: ${cat.name}`;
       }
       if (catDesc) {
         const totalMateri = allMateri.filter(m => getMateriCategoryKey(m) === normalizedKey).length;
-        const totalVideo = allVideos.filter(v => getMateriCategoryKey(v) === normalizedKey).length;
-        catDesc.textContent = `${cat.desc} (${totalMateri} Modul Pembelajaran • ${totalVideo} Vidio Praktik)`;
+        catDesc.textContent = `${cat.desc} (${totalMateri} Modul Pembelajaran)`;
       }
 
       renderMateriCards();
-      renderVideoCards();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -290,11 +284,10 @@ window.initMateriPage = async function() {
           const parsedV = JSON.parse(cachedVideo);
           if (Array.isArray(parsedV) && parsedV.length > 0) allVideos = parsedV;
         }
-        if (allMateri.length > 0 || allVideos.length > 0) {
+        if (allMateri.length > 0) {
           updateCategoryBadges();
           if (currentActiveCategory) {
             renderMateriCards();
-            renderVideoCards();
           }
         }
       } catch (e) {}
@@ -344,7 +337,6 @@ window.initMateriPage = async function() {
           window.pilihKategoriMateri(initialCat, false);
         } else if (currentActiveCategory) {
           renderMateriCards();
-          renderVideoCards();
         }
       } catch (err) {
         console.warn('Gagal memuat materi/video dari API:', err);
@@ -522,7 +514,6 @@ window.initMateriPage = async function() {
     if (inputSearch) {
       inputSearch.addEventListener('input', () => {
         renderMateriCards();
-        renderVideoCards();
       });
     }
 
