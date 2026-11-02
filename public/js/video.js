@@ -67,6 +67,11 @@ window.initVideoPage = async function() {
   const searchBox = document.getElementById('search-video-box');
   const inputSearch = document.getElementById('input-search-video');
 
+  const escapeHtml = typeof window.escapeHtml === 'function' ? window.escapeHtml : (str => {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  });
+
   function extractYouTubeInfo(url) {
     if (!url) return { videoId: null, embedUrl: '', thumbnailUrl: '', directUrl: '' };
     const str = String(url).trim();

@@ -1,5 +1,5 @@
-// Netora PWA Service Worker v3 - Auto Invalidate Cache
-const CACHE_NAME = 'netora-app-v3';
+// Netora PWA Service Worker v4 - Auto Invalidate Cache
+const CACHE_NAME = 'netora-app-v4';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

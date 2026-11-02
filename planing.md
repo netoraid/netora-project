@@ -1084,7 +1084,8 @@ curl http://localhost:3000/api/materi/2
 | File | Detail Perubahan |
 |---|---|
 | `public/materi.html` | Penambahan dua seksi terpisah (*Materi Pembelajaran* & *Video Praktik*) pada tampilan kategori aktif, update badge jumlah modul & video |
-| `public/js/materi.js` | Fetch paralel `/api/materi` & `/api/video`, fungsi `renderMateriCards` & `renderVideoCards`, parser YouTube, toggle pemutar video inline |
+| `public/js/materi.js` | Fetch paralel `/api/materi` & `/api/video`, fungsi `renderMateriCards` & `renderVideoCards`, fallback `escapeHtml`, parser YouTube, toggle video player |
+| `public/sw.js` | Update versi Service Worker Cache ke `netora-app-v4` untuk invalidasi cache otomatis di browser siswa |
 | `public/video.html` | Penghapusan `#video-filter-row` horizontal pills, implementasi 3 Card Kategori Utama, dan tampilan khusus dua bagian (*Video Praktik* & *Materi Pembelajaran*) |
 | `public/js/video.js` | Logika navigasi 3 kategori card, render video dan materi terkait per-kategori, URL synchronization, dan pencarian serentak |
 | `public/css/netora.css` | Penambahan styling `.category-section-header-wrap`, `.category-section-iconbox`, subheader materi/video, badge counter, dan card hover effects |

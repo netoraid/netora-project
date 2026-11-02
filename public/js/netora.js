@@ -439,6 +439,7 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+window.escapeHtml = escapeHtml;
 
 // 7. Sinkronisasi Badge Dot Merah Notifikasi (Muncul jika ada notifikasi baru, hilang jika sudah dibaca)
 let _lastNotifSyncTime = 0;
