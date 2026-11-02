@@ -5842,38 +5842,41 @@ textarea.form-input {
 =================================================== */
 
 .materi-kategori-wrap {
-  padding: 0 16px 24px;
+  padding: 0 16px 20px;
+  max-width: 860px;
+  margin: 0 auto;
 }
 
 .materi-category-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 12px;
   margin-top: 8px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 640px) {
   .materi-category-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
   }
 }
 
 .materi-cat-card {
   background: #FFFFFF;
-  border-radius: 22px;
-  padding: 22px 20px;
+  border-radius: 16px;
+  padding: 14px 16px;
   border: 1.5px solid #E2E8F0;
-  box-shadow: 0 6px 20px rgba(13, 91, 255, 0.05);
+  box-shadow: 0 4px 14px rgba(13, 91, 255, 0.04);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
   text-decoration: none;
   color: inherit;
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .materi-cat-card::before {
@@ -5882,7 +5885,7 @@ textarea.form-input {
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 3.5px;
   background: #CBD5E1;
   transition: background 0.25s ease;
 }
@@ -5900,22 +5903,22 @@ textarea.form-input {
 }
 
 .materi-cat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 16px 36px rgba(13, 91, 255, 0.12);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(13, 91, 255, 0.1);
   border-color: #BFDBFE;
 }
 
 .materi-cat-top {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
 .materi-cat-iconbox {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5946,7 +5949,7 @@ textarea.form-input {
 
 .materi-cat-badge {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 750;
   padding: 4px 10px;
   border-radius: 10px;
   display: inline-flex;
@@ -5972,53 +5975,55 @@ textarea.form-input {
   border: 1px solid #BBF7D0;
 }
 
-.materi-cat-title {
-  margin: 0 0 6px;
-  font-size: 18px;
-  font-weight: 800;
-  color: #0F172A;
-  line-height: 1.3;
-}
-
-.materi-cat-subtag {
-  font-size: 11.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-  display: block;
-}
-
-.materi-cat-desc {
-  margin: 0 0 14px;
-  font-size: 12.5px;
-  color: #64748B;
-  line-height: 1.5;
-  flex: 1;
-}
-
-.materi-cat-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 18px;
-}
-
-.materi-cat-pill {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: #F1F5F9;
-  color: #475569;
-}
-
-.materi-cat-footer {
+.materi-cat-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 14px;
-  border-top: 1px solid #F1F5F9;
+  gap: 8px;
+}
+
+.materi-cat-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.25;
+}
+
+.materi-cat-cta-arrow {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  transition: transform 0.2s ease;
+}
+
+.materi-cat-card:hover .materi-cat-cta-arrow {
+  transform: translateX(3px);
+}
+
+.materi-cat-subtag {
+  display: none;
+}
+
+.materi-cat-desc {
+  display: none;
+}
+
+.materi-cat-pills {
+  display: none;
+}
+
+.materi-cat-pill {
+  display: none;
+}
+
+.materi-cat-footer {
+  display: none;
 }
 
 .materi-cat-cta {
