@@ -1556,11 +1556,13 @@ window.initAdminDashboard = async function() {
     const filterKat = document.getElementById('filter-quiz-kategori')?.value || 'all';
 
     let list = globalQuiz.filter(item => {
-      if (filterKat !== 'all' && (item.kategori || '').toLowerCase() !== filterKat.toLowerCase()) {
+      const kat = (item.kategori_utama || item.kategori || '').toLowerCase();
+      const judul = (item.judul_kuis || '').toLowerCase();
+      if (filterKat !== 'all' && kat !== filterKat.toLowerCase() && !kat.includes(filterKat.toLowerCase())) {
         return false;
       }
       if (q) {
-        const text = (item.pertanyaan + ' ' + (item.kategori || '') + ' ' + item.pilihan_a + ' ' + item.pilihan_b + ' ' + item.pilihan_c + ' ' + item.pilihan_d).toLowerCase();
+        const text = (item.pertanyaan + ' ' + (item.kategori || '') + ' ' + judul + ' ' + item.pilihan_a + ' ' + item.pilihan_b + ' ' + item.pilihan_c + ' ' + item.pilihan_d).toLowerCase();
         if (!text.includes(q)) return false;
       }
       return true;
@@ -1576,13 +1578,21 @@ window.initAdminDashboard = async function() {
 
     tbody.innerHTML = list.map((item, idx) => {
       const kunci = (item.jawaban_benar || 'A').toUpperCase();
+      const judulKuis = item.judul_kuis || item.kategori_utama || item.kategori || 'Kuis Latihan';
+      const katUtama = item.kategori_utama || item.kategori || 'Umum';
 
       return `
         <tr>
           <td style="color:#64748B; font-weight:700; vertical-align:top; padding-top:14px;">${idx + 1}</td>
+          <td style="vertical-align:top; padding-top:14px; min-width:160px;">
+            <strong style="color:#0F172A; font-size:13px; line-height:1.35; display:block; margin-bottom:4px;">
+              ${escapeHtml(judulKuis)}
+            </strong>
+            <span class="badge badge-purple" style="font-size:10.5px; padding:2px 8px;">${escapeHtml(katUtama)}</span>
+          </td>
           <td>
             <div style="margin-bottom:8px;">
-              <strong style="color:#0F172A; font-size:14px; line-height:1.45; display:block;">${escapeHtml(item.pertanyaan)}</strong>
+              <strong style="color:#0F172A; font-size:13.5px; line-height:1.45; display:block;">${escapeHtml(item.pertanyaan)}</strong>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:12px;">
               <div style="padding:5px 8px; border-radius:6px; background:${kunci === 'A' ? '#DCFCE7' : '#F8FAFC'}; border:1px solid ${kunci === 'A' ? '#BBF7D0' : '#E2E8F0'}; color:${kunci === 'A' ? '#15803D' : '#475569'}; font-weight:${kunci === 'A' ? '700' : '400'};">
@@ -1598,9 +1608,6 @@ window.initAdminDashboard = async function() {
                 <strong style="color:${kunci === 'D' ? '#15803D' : '#0D5BFF'};">D.</strong> ${escapeHtml(item.pilihan_d)}
               </div>
             </div>
-          </td>
-          <td style="vertical-align:top; padding-top:14px;">
-            <span class="badge badge-purple" style="font-size:11px;">${escapeHtml(item.kategori || 'Umum')}</span>
           </td>
           <td style="text-align:center; vertical-align:top; padding-top:14px;">
             <span class="badge badge-green" style="font-weight:900; font-size:12px; padding:4px 10px;">
@@ -1623,20 +1630,169 @@ window.initAdminDashboard = async function() {
     }).join('');
   }
 
+  // Helper Multi-Soal Builder Admin
+  function createSoalCardHtmlAdmin(num, data = {}) {
+    return `
+      <div class="admin-soal-card" data-num="${num}" style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:14px; padding:16px; position:relative; box-shadow:0 2px 8px rgba(0,0,0,0.02); transition:border-color 0.2s;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #F1F5F9; padding-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="soal-badge-num-admin" style="background:#0D5BFF; color:#FFFFFF; font-size:12px; font-weight:800; padding:2px 10px; border-radius:6px;">Soal #${num}</span>
+            <span style="font-size:11.5px; color:#64748B;">Pilihan Ganda A-D</span>
+          </div>
+          <button type="button" class="btn-hapus-soal-card-admin" style="background:#FEE2E2; border:none; color:#DC2626; border-radius:6px; padding:4px 10px; font-size:11px; font-weight:700; cursor:pointer;" title="Hapus butir soal ini">
+            Hapus Soal
+          </button>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label style="font-size:12px; font-weight:700; color:#334155; margin-bottom:4px; display:block;">Pertanyaan Soal #${num} *</label>
+          <textarea class="input-field soal-item-pertanyaan-admin" rows="2" placeholder="Tuliskan pertanyaan butir #${num}..." required style="resize:vertical;">${escapeHtml(data.pertanyaan || '')}</textarea>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#0D5BFF; margin-bottom:4px; display:block;">Pilihan A *</label>
+            <input type="text" class="input-field soal-item-a-admin" placeholder="Pilihan A..." value="${escapeHtml(data.pilihan_a || '')}" required>
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#0D5BFF; margin-bottom:4px; display:block;">Pilihan B *</label>
+            <input type="text" class="input-field soal-item-b-admin" placeholder="Pilihan B..." value="${escapeHtml(data.pilihan_b || '')}" required>
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#0D5BFF; margin-bottom:4px; display:block;">Pilihan C *</label>
+            <input type="text" class="input-field soal-item-c-admin" placeholder="Pilihan C..." value="${escapeHtml(data.pilihan_c || '')}" required>
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#0D5BFF; margin-bottom:4px; display:block;">Pilihan D *</label>
+            <input type="text" class="input-field soal-item-d-admin" placeholder="Pilihan D..." value="${escapeHtml(data.pilihan_d || '')}" required>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          <label style="font-size:12px; font-weight:700; color:#15803D;">Kunci Jawaban Benar * :</label>
+          <select class="input-field soal-item-kunci-admin" style="width:130px; font-weight:800; color:#15803D; padding:6px 10px;">
+            <option value="A" ${data.jawaban_benar === 'A' ? 'selected' : ''}>Pilihan A</option>
+            <option value="B" ${data.jawaban_benar === 'B' ? 'selected' : ''}>Pilihan B</option>
+            <option value="C" ${data.jawaban_benar === 'C' ? 'selected' : ''}>Pilihan C</option>
+            <option value="D" ${data.jawaban_benar === 'D' ? 'selected' : ''}>Pilihan D</option>
+          </select>
+        </div>
+      </div>
+    `;
+  }
+
+  function updateSoalCardsIndexAdmin() {
+    const container = document.getElementById('container-soal-admin');
+    if (!container) return;
+    const cards = container.querySelectorAll('.admin-soal-card');
+    cards.forEach((card, idx) => {
+      const num = idx + 1;
+      card.setAttribute('data-num', num);
+      const badge = card.querySelector('.soal-badge-num-admin');
+      if (badge) badge.textContent = `Soal #${num}`;
+      const label = card.querySelector('label');
+      if (label && label.textContent.startsWith('Pertanyaan')) {
+        label.textContent = `Pertanyaan Soal #${num} *`;
+      }
+    });
+    const inputJumlah = document.getElementById('input-jumlah-soal-admin');
+    if (inputJumlah) inputJumlah.value = cards.length;
+    const btnLabel = document.getElementById('btn-simpan-soal-label');
+    if (btnLabel) btnLabel.textContent = `Simpan Paket Kuis (${cards.length} Soal)`;
+  }
+
+  function setSoalCardsCountAdmin(count) {
+    const container = document.getElementById('container-soal-admin');
+    if (!container) return;
+    const currentCards = container.querySelectorAll('.admin-soal-card');
+    const curLen = currentCards.length;
+    const targetLen = Math.max(1, Math.min(50, count));
+
+    if (targetLen > curLen) {
+      for (let i = curLen + 1; i <= targetLen; i++) {
+        container.insertAdjacentHTML('beforeend', createSoalCardHtmlAdmin(i));
+      }
+    } else if (targetLen < curLen) {
+      for (let i = curLen - 1; i >= targetLen; i--) {
+        currentCards[i].remove();
+      }
+    }
+    updateSoalCardsIndexAdmin();
+  }
+
+  // Quick Select Buttons Admin
+  document.querySelectorAll('.btn-quick-soal-admin').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetCount = parseInt(btn.dataset.soal, 10);
+      setSoalCardsCountAdmin(targetCount);
+      document.querySelectorAll('.btn-quick-soal-admin').forEach(b => {
+        b.style.borderColor = '#CBD5E1';
+        b.style.background = '#FFFFFF';
+        b.style.color = '#334155';
+      });
+      btn.style.borderColor = '#0D5BFF';
+      btn.style.background = '#EFF6FF';
+      btn.style.color = '#0D5BFF';
+    });
+  });
+
+  const inputJumlahSoalAdmin = document.getElementById('input-jumlah-soal-admin');
+  if (inputJumlahSoalAdmin) {
+    inputJumlahSoalAdmin.addEventListener('change', () => {
+      let val = parseInt(inputJumlahSoalAdmin.value, 10);
+      if (isNaN(val) || val < 1) val = 1;
+      if (val > 50) val = 50;
+      setSoalCardsCountAdmin(val);
+    });
+  }
+
+  const btnTambahButirAdmin = document.getElementById('btn-tambah-butir-admin');
+  if (btnTambahButirAdmin) {
+    btnTambahButirAdmin.addEventListener('click', () => {
+      const container = document.getElementById('container-soal-admin');
+      if (!container) return;
+      const curCount = container.querySelectorAll('.admin-soal-card').length;
+      container.insertAdjacentHTML('beforeend', createSoalCardHtmlAdmin(curCount + 1));
+      updateSoalCardsIndexAdmin();
+    });
+  }
+
+  const containerSoalAdmin = document.getElementById('container-soal-admin');
+  if (containerSoalAdmin) {
+    containerSoalAdmin.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-hapus-soal-card-admin');
+      if (!btn) return;
+      const cards = containerSoalAdmin.querySelectorAll('.admin-soal-card');
+      if (cards.length <= 1) {
+        toast('Minimal harus ada 1 butir soal dalam paket kuis.', 'warning');
+        return;
+      }
+      const card = btn.closest('.admin-soal-card');
+      if (card) {
+        card.remove();
+        updateSoalCardsIndexAdmin();
+      }
+    });
+  }
+
   // Modal Tambah / Edit Soal
   window.bukaModalTambahSoal = function() {
     const modal = document.getElementById('modal-soal-quiz');
     if (!modal) return;
 
-    document.getElementById('modal-soal-title').textContent = 'Tambah Soal Kuis Baru';
+    document.getElementById('modal-soal-title').textContent = 'Buat Paket Kuis Baru (Multi-Soal)';
+    document.getElementById('modal-soal-subtitle').textContent = 'Masukkan judul kuis dan input butir-butir soal sekaligus';
     document.getElementById('soal-id').value = '';
-    document.getElementById('input-soal-pertanyaan').value = '';
     document.getElementById('input-soal-kategori').value = 'Cisco Packet Tracer';
-    document.getElementById('input-soal-a').value = '';
-    document.getElementById('input-soal-b').value = '';
-    document.getElementById('input-soal-c').value = '';
-    document.getElementById('input-soal-d').value = '';
-    document.getElementById('input-soal-kunci').value = 'A';
+    document.getElementById('input-soal-judul').value = '';
+
+    // Tampilkan mode Multi-Soal, sembunyikan single soal
+    document.getElementById('wrap-jumlah-soal-admin').style.display = 'flex';
+    document.getElementById('wrap-multi-soal-admin').style.display = 'flex';
+    document.getElementById('wrap-single-soal-admin').style.display = 'none';
+
+    // Inisialisasi 5 butir soal
+    setSoalCardsCountAdmin(5);
 
     modal.style.display = 'flex';
   };
@@ -1649,14 +1805,25 @@ window.initAdminDashboard = async function() {
     if (!modal) return;
 
     document.getElementById('modal-soal-title').textContent = 'Edit Soal Kuis #' + item.id;
+    document.getElementById('modal-soal-subtitle').textContent = 'Perbarui pertanyaan, opsi pilihan, atau kunci jawaban butir ini';
     document.getElementById('soal-id').value = item.id;
-    document.getElementById('input-soal-pertanyaan').value = item.pertanyaan;
-    document.getElementById('input-soal-kategori').value = item.kategori || 'Cisco Packet Tracer';
-    document.getElementById('input-soal-a').value = item.pilihan_a;
-    document.getElementById('input-soal-b').value = item.pilihan_b;
-    document.getElementById('input-soal-c').value = item.pilihan_c;
-    document.getElementById('input-soal-d').value = item.pilihan_d;
+    document.getElementById('input-soal-kategori').value = item.kategori_utama || item.kategori || 'Cisco Packet Tracer';
+    document.getElementById('input-soal-judul').value = item.judul_kuis || item.kategori_utama || item.kategori || '';
+
+    // Sembunyikan mode Multi-Soal, tampilkan form edit Single Soal
+    document.getElementById('wrap-jumlah-soal-admin').style.display = 'none';
+    document.getElementById('wrap-multi-soal-admin').style.display = 'none';
+    document.getElementById('wrap-single-soal-admin').style.display = 'block';
+
+    document.getElementById('input-soal-pertanyaan').value = item.pertanyaan || '';
+    document.getElementById('input-soal-a').value = item.pilihan_a || '';
+    document.getElementById('input-soal-b').value = item.pilihan_b || '';
+    document.getElementById('input-soal-c').value = item.pilihan_c || '';
+    document.getElementById('input-soal-d').value = item.pilihan_d || '';
     document.getElementById('input-soal-kunci').value = (item.jawaban_benar || 'A').toUpperCase();
+
+    const btnLabel = document.getElementById('btn-simpan-soal-label');
+    if (btnLabel) btnLabel.textContent = 'Simpan Perubahan Soal';
 
     modal.style.display = 'flex';
   };
@@ -1682,57 +1849,140 @@ window.initAdminDashboard = async function() {
     });
   }
 
-  // Submit Form Soal Kuis (Tambah / Edit)
+  // Submit Form Soal Kuis (Tambah Paket Kuis / Edit Soal)
   const formSoalQuiz = document.getElementById('form-soal-quiz');
   if (formSoalQuiz) {
     formSoalQuiz.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const soalId = document.getElementById('soal-id').value;
-      const pertanyaan = document.getElementById('input-soal-pertanyaan').value.trim();
       const kategori = document.getElementById('input-soal-kategori').value;
-      const pilihan_a = document.getElementById('input-soal-a').value.trim();
-      const pilihan_b = document.getElementById('input-soal-b').value.trim();
-      const pilihan_c = document.getElementById('input-soal-c').value.trim();
-      const pilihan_d = document.getElementById('input-soal-d').value.trim();
-      const jawaban_benar = document.getElementById('input-soal-kunci').value;
+      const judul_kuis = document.getElementById('input-soal-judul').value.trim();
 
-      if (!pertanyaan || !pilihan_a || !pilihan_b || !pilihan_c || !pilihan_d) {
-        toast('Harap isi semua kolom pertanyaan dan pilihan A sampai D.', 'warning');
+      if (!judul_kuis) {
+        toast('Judul / nama kuis wajib diisi.', 'warning');
+        document.getElementById('input-soal-judul').focus();
         return;
       }
 
-      const bodyData = { pertanyaan, kategori, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar };
       const btnSubmit = document.getElementById('btn-simpan-soal');
+
+      // 1. Mode Edit Single Soal
+      if (soalId) {
+        const pertanyaan = document.getElementById('input-soal-pertanyaan').value.trim();
+        const pilihan_a = document.getElementById('input-soal-a').value.trim();
+        const pilihan_b = document.getElementById('input-soal-b').value.trim();
+        const pilihan_c = document.getElementById('input-soal-c').value.trim();
+        const pilihan_d = document.getElementById('input-soal-d').value.trim();
+        const jawaban_benar = document.getElementById('input-soal-kunci').value;
+
+        if (!pertanyaan || !pilihan_a || !pilihan_b || !pilihan_c || !pilihan_d) {
+          toast('Harap isi semua kolom pertanyaan dan pilihan A sampai D.', 'warning');
+          return;
+        }
+
+        const bodyData = { pertanyaan, kategori, judul_kuis, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar };
+
+        if (btnSubmit) {
+          btnSubmit.disabled = true;
+          btnSubmit.textContent = 'Menyimpan...';
+        }
+
+        try {
+          const res = await fetch(`/api/admin/quiz/${soalId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bodyData)
+          });
+          const data = await res.json();
+
+          if (res.ok && data.success) {
+            try { sessionStorage.removeItem('netora_quiz_cache'); } catch(e) {}
+            tutupModalSoal();
+            await loadQuizAdmin();
+            toast(data.message || 'Soal kuis berhasil diperbarui!', 'success');
+          } else {
+            toast(data.error || 'Gagal menyimpan soal kuis.', 'error');
+          }
+        } catch (err) {
+          toast('Terjadi kesalahan koneksi.', 'error');
+        } finally {
+          if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span id="btn-simpan-soal-label">Simpan Soal</span>';
+          }
+        }
+        return;
+      }
+
+      // 2. Mode Buat Paket Kuis Baru (Multi-Soal Sekaligus)
+      const container = document.getElementById('container-soal-admin');
+      const cards = container ? container.querySelectorAll('.admin-soal-card') : [];
+      if (cards.length === 0) {
+        toast('Harap tambahkan minimal 1 butir soal kuis.', 'warning');
+        return;
+      }
+
+      const soal_list = [];
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const num = i + 1;
+        const pertanyaan = card.querySelector('.soal-item-pertanyaan-admin')?.value.trim();
+        const pilihan_a = card.querySelector('.soal-item-a-admin')?.value.trim();
+        const pilihan_b = card.querySelector('.soal-item-b-admin')?.value.trim();
+        const pilihan_c = card.querySelector('.soal-item-c-admin')?.value.trim();
+        const pilihan_d = card.querySelector('.soal-item-d-admin')?.value.trim();
+        const jawaban_benar = card.querySelector('.soal-item-kunci-admin')?.value || 'A';
+
+        if (!pertanyaan || !pilihan_a || !pilihan_b || !pilihan_c || !pilihan_d) {
+          toast(`Butir soal #${num} belum lengkap. Pertanyaan dan opsi A-D wajib diisi!`, 'warning');
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.style.borderColor = '#EF4444';
+          return;
+        }
+        card.style.borderColor = '#E2E8F0';
+
+        soal_list.push({
+          pertanyaan,
+          pilihan_a,
+          pilihan_b,
+          pilihan_c,
+          pilihan_d,
+          jawaban_benar
+        });
+      }
+
       if (btnSubmit) {
         btnSubmit.disabled = true;
-        btnSubmit.textContent = 'Menyimpan...';
+        btnSubmit.textContent = 'Menyimpan Paket Kuis...';
       }
 
       try {
-        const url = soalId ? `/api/admin/quiz/${soalId}` : '/api/admin/quiz';
-        const method = soalId ? 'PUT' : 'POST';
-
-        const res = await fetch(url, {
-          method,
+        const res = await fetch('/api/admin/quiz', {
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(bodyData)
+          body: JSON.stringify({
+            kategori,
+            judul_kuis,
+            soal_list
+          })
         });
-        const data = await res.json();
 
+        const data = await res.json();
         if (res.ok && data.success) {
+          try { sessionStorage.removeItem('netora_quiz_cache'); } catch(e) {}
           tutupModalSoal();
           await loadQuizAdmin();
-          toast(data.message || 'Soal kuis berhasil disimpan!', 'success');
+          toast(data.message || `Kuis "${judul_kuis}" berhasil dibuat dengan ${soal_list.length} butir soal!`, 'success');
         } else {
-          toast(data.error || 'Gagal menyimpan soal kuis.', 'error');
+          toast(data.error || 'Gagal menyimpan paket kuis.', 'error');
         }
       } catch (err) {
         toast('Terjadi kesalahan koneksi.', 'error');
       } finally {
         if (btnSubmit) {
           btnSubmit.disabled = false;
-          btnSubmit.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Simpan Soal</span>';
+          updateSoalCardsIndexAdmin();
         }
       }
     });

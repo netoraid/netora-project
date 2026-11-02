@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
       .select('id, pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, kategori');
 
     if (kat && kat !== 'all') {
-      query = query.ilike('kategori', kat);
+      query = query.ilike('kategori', `%${kat}%`);
     }
 
     // Pastikan urutan selalu teratur dari soal pertama (ID terkecil) ke soal terakhir
@@ -26,7 +26,23 @@ router.get('/', async (req, res) => {
       return res.status(500).json({ error: 'Gagal memuat kuis.' });
     }
 
-    return res.json({ success: true, quiz: list || [] });
+    const parsed = (list || []).map(q => {
+      let mainKategori = (q.kategori || 'Umum').trim();
+      let judulKuis = mainKategori;
+      if (mainKategori.includes(':::')) {
+        const parts = mainKategori.split(':::');
+        mainKategori = parts[0].trim();
+        judulKuis = parts[1].trim();
+      }
+      return {
+        ...q,
+        kategori: mainKategori,
+        judul_kuis: judulKuis,
+        raw_kategori: q.kategori
+      };
+    });
+
+    return res.json({ success: true, quiz: parsed });
   } catch (err) {
     console.error('Fetch Quiz Error:', err);
     return res.status(500).json({ error: 'Gagal memuat kuis.' });

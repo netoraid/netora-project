@@ -454,8 +454,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let filtered = globalQuiz.filter(item => {
       const pertanyaan = (item.pertanyaan || '').toLowerCase();
-      const matchSearch = !searchKeyword || pertanyaan.includes(searchKeyword);
-      const matchKategori = filterKategori === 'all' || item.kategori === filterKategori;
+      const judul = (item.judul_kuis || '').toLowerCase();
+      const kat = (item.kategori_utama || item.kategori || '').toLowerCase();
+      const matchSearch = !searchKeyword || pertanyaan.includes(searchKeyword) || judul.includes(searchKeyword);
+      const matchKategori = filterKategori === 'all' || kat === filterKategori.toLowerCase() || kat.includes(filterKategori.toLowerCase());
       return matchSearch && matchKategori;
     });
 
@@ -476,16 +478,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     tbody.innerHTML = filtered.map((item, idx) => {
+      const judulKuis = item.judul_kuis || item.kategori_utama || item.kategori || 'Kuis Latihan';
+      const katUtama = item.kategori_utama || item.kategori || 'TKJ Umum';
+
       return `
         <tr>
           <td style="font-weight:700; color:#64748B;">${idx + 1}</td>
           <td>
-            <span style="display:inline-block; font-size:11px; font-weight:700; background:#EFF6FF; color:#0D5BFF; border:1px solid #BFDBFE; padding:4px 8px; border-radius:8px;">
-              ${escapeHtml(item.kategori || 'TKJ Umum')}
+            <div style="font-size:12px; font-weight:800; color:#0F172A; margin-bottom:4px;">
+              ${escapeHtml(judulKuis)}
+            </div>
+            <span style="display:inline-block; font-size:10.5px; font-weight:700; background:#EFF6FF; color:#0D5BFF; border:1px solid #BFDBFE; padding:2px 8px; border-radius:6px;">
+              ${escapeHtml(katUtama)}
             </span>
           </td>
           <td>
-            <strong style="color:#0F172A; font-size:13.5px; line-height:1.45; display:block;">${escapeHtml(item.pertanyaan)}</strong>
+            <strong style="color:#0F172A; font-size:13px; line-height:1.45; display:block;">${escapeHtml(item.pertanyaan)}</strong>
           </td>
           <td>
             <div style="font-size:11.5px; line-height:1.5; color:#475569;">
@@ -513,28 +521,211 @@ document.addEventListener('DOMContentLoaded', async () => {
     }).join('');
   }
 
-  // Event Listener Form Buat Soal Kuis Baru
+  // Helper Pembuat Kartu Butir Soal Guru
+  function createSoalCardHtmlGuru(num, data = {}) {
+    return `
+      <div class="guru-soal-card" data-num="${num}" style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:14px; padding:16px; position:relative; box-shadow:0 2px 8px rgba(0,0,0,0.02); transition:border-color 0.2s;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #F1F5F9; padding-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="soal-badge-num" style="background:#0D5BFF; color:#FFFFFF; font-size:12px; font-weight:800; padding:2px 10px; border-radius:6px;">Soal #${num}</span>
+            <span style="font-size:11.5px; color:#64748B;">Pilihan Ganda A-D</span>
+          </div>
+          <button type="button" class="btn-hapus-soal-card" style="background:#FEE2E2; border:none; color:#DC2626; border-radius:6px; padding:4px 10px; font-size:11px; font-weight:700; cursor:pointer;" title="Hapus butir soal ini">
+            Hapus Soal
+          </button>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label style="font-size:12px; font-weight:700; color:#334155; margin-bottom:4px; display:block;">Pertanyaan Soal #${num} *</label>
+          <textarea class="input-field soal-item-pertanyaan" rows="2" placeholder="Tuliskan butir pertanyaan di sini..." required style="resize:vertical;">${escapeHtml(data.pertanyaan || '')}</textarea>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#0D5BFF; margin-bottom:4px; display:block;">Pilihan A *</label>
+            <input type="text" class="input-field soal-item-a" placeholder="Pilihan A..." value="${escapeHtml(data.pilihan_a || '')}" required>
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#0D5BFF; margin-bottom:4px; display:block;">Pilihan B *</label>
+            <input type="text" class="input-field soal-item-b" placeholder="Pilihan B..." value="${escapeHtml(data.pilihan_b || '')}" required>
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#0D5BFF; margin-bottom:4px; display:block;">Pilihan C *</label>
+            <input type="text" class="input-field soal-item-c" placeholder="Pilihan C..." value="${escapeHtml(data.pilihan_c || '')}" required>
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#0D5BFF; margin-bottom:4px; display:block;">Pilihan D *</label>
+            <input type="text" class="input-field soal-item-d" placeholder="Pilihan D..." value="${escapeHtml(data.pilihan_d || '')}" required>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          <label style="font-size:12px; font-weight:700; color:#15803D;">Kunci Jawaban Benar * :</label>
+          <select class="input-field soal-item-kunci" style="width:130px; font-weight:800; color:#15803D; padding:6px 10px;">
+            <option value="A" ${data.jawaban_benar === 'A' ? 'selected' : ''}>Pilihan A</option>
+            <option value="B" ${data.jawaban_benar === 'B' ? 'selected' : ''}>Pilihan B</option>
+            <option value="C" ${data.jawaban_benar === 'C' ? 'selected' : ''}>Pilihan C</option>
+            <option value="D" ${data.jawaban_benar === 'D' ? 'selected' : ''}>Pilihan D</option>
+          </select>
+        </div>
+      </div>
+    `;
+  }
+
+  function updateSoalCardsIndexGuru() {
+    const container = document.getElementById('container-soal-guru');
+    if (!container) return;
+    const cards = container.querySelectorAll('.guru-soal-card');
+    cards.forEach((card, idx) => {
+      const num = idx + 1;
+      card.setAttribute('data-num', num);
+      const badge = card.querySelector('.soal-badge-num');
+      if (badge) badge.textContent = `Soal #${num}`;
+      const label = card.querySelector('label');
+      if (label && label.textContent.startsWith('Pertanyaan')) {
+        label.textContent = `Pertanyaan Soal #${num} *`;
+      }
+    });
+    const inputJumlah = document.getElementById('input-jumlah-soal-guru');
+    if (inputJumlah) inputJumlah.value = cards.length;
+    const btnSubmitLabel = document.getElementById('btn-submit-label-guru');
+    if (btnSubmitLabel) btnSubmitLabel.textContent = `Simpan Paket Kuis (${cards.length} Soal)`;
+  }
+
+  function setSoalCardsCountGuru(count) {
+    const container = document.getElementById('container-soal-guru');
+    if (!container) return;
+    const currentCards = container.querySelectorAll('.guru-soal-card');
+    const curLen = currentCards.length;
+    const targetLen = Math.max(1, Math.min(50, count));
+
+    if (targetLen > curLen) {
+      for (let i = curLen + 1; i <= targetLen; i++) {
+        container.insertAdjacentHTML('beforeend', createSoalCardHtmlGuru(i));
+      }
+    } else if (targetLen < curLen) {
+      for (let i = curLen - 1; i >= targetLen; i--) {
+        currentCards[i].remove();
+      }
+    }
+    updateSoalCardsIndexGuru();
+  }
+
+  // Inisialisasi kartu soal di form Guru
+  setSoalCardsCountGuru(5);
+
+  // Quick Soal Buttons
+  document.querySelectorAll('.btn-quick-soal-guru').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetCount = parseInt(btn.dataset.soal, 10);
+      setSoalCardsCountGuru(targetCount);
+      document.querySelectorAll('.btn-quick-soal-guru').forEach(b => {
+        b.style.borderColor = '#CBD5E1';
+        b.style.background = '#FFFFFF';
+        b.style.color = '#334155';
+      });
+      btn.style.borderColor = '#0D5BFF';
+      btn.style.background = '#EFF6FF';
+      btn.style.color = '#0D5BFF';
+    });
+  });
+
+  // Input jumlah soal manual
+  const inputJumlahSoalGuru = document.getElementById('input-jumlah-soal-guru');
+  if (inputJumlahSoalGuru) {
+    inputJumlahSoalGuru.addEventListener('change', () => {
+      let val = parseInt(inputJumlahSoalGuru.value, 10);
+      if (isNaN(val) || val < 1) val = 1;
+      if (val > 50) val = 50;
+      setSoalCardsCountGuru(val);
+    });
+  }
+
+  // Tambah 1 Butir Soal
+  const btnTambahButirGuru = document.getElementById('btn-tambah-butir-guru');
+  if (btnTambahButirGuru) {
+    btnTambahButirGuru.addEventListener('click', () => {
+      const container = document.getElementById('container-soal-guru');
+      if (!container) return;
+      const curCount = container.querySelectorAll('.guru-soal-card').length;
+      container.insertAdjacentHTML('beforeend', createSoalCardHtmlGuru(curCount + 1));
+      updateSoalCardsIndexGuru();
+    });
+  }
+
+  // Hapus butir soal tertentu dari container
+  const containerSoalGuru = document.getElementById('container-soal-guru');
+  if (containerSoalGuru) {
+    containerSoalGuru.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-hapus-soal-card');
+      if (!btn) return;
+      const cards = containerSoalGuru.querySelectorAll('.guru-soal-card');
+      if (cards.length <= 1) {
+        if (typeof toast === 'function') toast('Minimal harus ada 1 butir soal dalam kuis.', 'warning');
+        return;
+      }
+      const card = btn.closest('.guru-soal-card');
+      if (card) {
+        card.remove();
+        updateSoalCardsIndexGuru();
+      }
+    });
+  }
+
+  // Event Listener Form Buat Paket Kuis Baru Guru
   const formTambahQuiz = document.getElementById('form-tambah-quiz-guru');
   if (formTambahQuiz) {
     formTambahQuiz.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btnSubmit = document.getElementById('btn-submit-quiz');
       const kategori = document.getElementById('input-kategori-quiz').value;
-      const pertanyaan = document.getElementById('input-pertanyaan-quiz').value.trim();
-      const pilihan_a = document.getElementById('input-opsi-a').value.trim();
-      const pilihan_b = document.getElementById('input-opsi-b').value.trim();
-      const pilihan_c = document.getElementById('input-opsi-c').value.trim();
-      const pilihan_d = document.getElementById('input-opsi-d').value.trim();
-      const jawaban_benar = document.getElementById('input-kunci-quiz').value;
+      const judul_kuis = (document.getElementById('input-judul-quiz-guru')?.value || '').trim();
 
-      if (!pertanyaan || !pilihan_a || !pilihan_b || !pilihan_c || !pilihan_d) {
-        if (typeof toast === 'function') toast('Harap lengkapi semua kolom soal kuis.', 'warning');
+      if (!judul_kuis) {
+        if (typeof toast === 'function') toast('Judul / nama kuis wajib diisi.', 'warning');
+        document.getElementById('input-judul-quiz-guru')?.focus();
         return;
+      }
+
+      const container = document.getElementById('container-soal-guru');
+      const cards = container ? container.querySelectorAll('.guru-soal-card') : [];
+      if (cards.length === 0) {
+        if (typeof toast === 'function') toast('Harap tambahkan minimal 1 butir soal kuis.', 'warning');
+        return;
+      }
+
+      const soal_list = [];
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const num = i + 1;
+        const pertanyaan = card.querySelector('.soal-item-pertanyaan')?.value.trim();
+        const pilihan_a = card.querySelector('.soal-item-a')?.value.trim();
+        const pilihan_b = card.querySelector('.soal-item-b')?.value.trim();
+        const pilihan_c = card.querySelector('.soal-item-c')?.value.trim();
+        const pilihan_d = card.querySelector('.soal-item-d')?.value.trim();
+        const jawaban_benar = card.querySelector('.soal-item-kunci')?.value || 'A';
+
+        if (!pertanyaan || !pilihan_a || !pilihan_b || !pilihan_c || !pilihan_d) {
+          if (typeof toast === 'function') toast(`Butir soal #${num} belum lengkap. Pertanyaan dan pilihan A-D wajib diisi!`, 'warning');
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.style.borderColor = '#EF4444';
+          return;
+        }
+        card.style.borderColor = '#E2E8F0';
+
+        soal_list.push({
+          pertanyaan,
+          pilihan_a,
+          pilihan_b,
+          pilihan_c,
+          pilihan_d,
+          jawaban_benar
+        });
       }
 
       if (btnSubmit) {
         btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<span>Menyimpan...</span>';
+        btnSubmit.innerHTML = '<span>Menyimpan Kuis...</span>';
       }
 
       try {
@@ -543,19 +734,16 @@ document.addEventListener('DOMContentLoaded', async () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             kategori,
-            pertanyaan,
-            pilihan_a,
-            pilihan_b,
-            pilihan_c,
-            pilihan_d,
-            jawaban_benar
+            judul_kuis,
+            soal_list
           })
         });
 
         const data = await res.json();
         if (res.ok && data.success) {
-          if (typeof toast === 'function') toast(data.message || 'Soal kuis baru berhasil ditambahkan!', 'success');
-          formTambahQuiz.reset();
+          if (typeof toast === 'function') toast(data.message || `Kuis "${judul_kuis}" berhasil dibuat dengan ${soal_list.length} butir soal!`, 'success');
+          document.getElementById('input-judul-quiz-guru').value = '';
+          setSoalCardsCountGuru(5);
           loadQuiz();
           loadStats();
         } else {
@@ -566,10 +754,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       } finally {
         if (btnSubmit) {
           btnSubmit.disabled = false;
-          btnSubmit.innerHTML = `
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>Simpan Soal Kuis Baru</span>
-          `;
+          updateSoalCardsIndexGuru();
         }
       }
     });
@@ -608,7 +793,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const q = data.soal;
       document.getElementById('edit-quiz-id').value = q.id;
-      document.getElementById('edit-quiz-kategori').value = q.kategori || 'Teknik Komputer & Jaringan Umum';
+      document.getElementById('edit-quiz-kategori').value = q.kategori_utama || q.kategori || 'Teknik Komputer & Jaringan Umum';
+      const elJudul = document.getElementById('edit-quiz-judul');
+      if (elJudul) elJudul.value = q.judul_kuis || q.kategori_utama || q.kategori || '';
       document.getElementById('edit-quiz-pertanyaan').value = q.pertanyaan || '';
       document.getElementById('edit-quiz-a').value = q.pilihan_a || '';
       document.getElementById('edit-quiz-b').value = q.pilihan_b || '';
@@ -627,6 +814,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       e.preventDefault();
       const id = document.getElementById('edit-quiz-id').value;
       const kategori = document.getElementById('edit-quiz-kategori').value;
+      const judul_kuis = (document.getElementById('edit-quiz-judul')?.value || '').trim();
       const pertanyaan = document.getElementById('edit-quiz-pertanyaan').value.trim();
       const pilihan_a = document.getElementById('edit-quiz-a').value.trim();
       const pilihan_b = document.getElementById('edit-quiz-b').value.trim();
@@ -640,6 +828,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             kategori,
+            judul_kuis,
             pertanyaan,
             pilihan_a,
             pilihan_b,

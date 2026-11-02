@@ -234,9 +234,25 @@ router.get('/quiz', async (req, res) => {
       return res.status(500).json({ error: 'Gagal memuat daftar soal kuis.' });
     }
 
+    const parsed = (list || []).map(q => {
+      let mainKategori = (q.kategori || 'Umum').trim();
+      let judulKuis = mainKategori;
+      if (mainKategori.includes(':::')) {
+        const parts = mainKategori.split(':::');
+        mainKategori = parts[0].trim();
+        judulKuis = parts[1].trim();
+      }
+      return {
+        ...q,
+        kategori_utama: mainKategori,
+        judul_kuis: judulKuis,
+        raw_kategori: q.kategori
+      };
+    });
+
     return res.json({
       success: true,
-      quiz: list || []
+      quiz: parsed
     });
   } catch (err) {
     console.error('Guru Quiz Fetch Error:', err);
@@ -257,15 +273,86 @@ router.get('/quiz/:id', async (req, res) => {
     if (error || !q) {
       return res.status(404).json({ error: 'Soal kuis tidak ditemukan.' });
     }
-    return res.json({ success: true, soal: q });
+
+    let mainKategori = (q.kategori || 'Umum').trim();
+    let judulKuis = mainKategori;
+    if (mainKategori.includes(':::')) {
+      const parts = mainKategori.split(':::');
+      mainKategori = parts[0].trim();
+      judulKuis = parts[1].trim();
+    }
+
+    return res.json({
+      success: true,
+      soal: {
+        ...q,
+        kategori_utama: mainKategori,
+        judul_kuis: judulKuis,
+        raw_kategori: q.kategori
+      }
+    });
   } catch (err) {
     return res.status(500).json({ error: 'Gagal mengambil detail soal.' });
   }
 });
 
-// 6. POST /api/guru/quiz - Guru Menambah Soal Kuis Baru
+// 6. POST /api/guru/quiz - Guru Menambah Kuis Baru (Mendukung Multi-Soal Sekaligus & Single Soal)
 router.post('/quiz', async (req, res) => {
-  const { pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar, kategori } = req.body;
+  const { kategori, judul_kuis, soal_list } = req.body;
+  const kat = kategori && kategori.trim() ? kategori.trim() : 'Teknik Komputer & Jaringan';
+  const compositeKategori = (judul_kuis && judul_kuis.trim()) ? `${kat}:::${judul_kuis.trim()}` : kat;
+
+  // A. Mode Paket Kuis (Multi-Soal Sekaligus 1, 2, 5, 10, atau berapapun)
+  if (Array.isArray(soal_list) && soal_list.length > 0) {
+    const validRows = [];
+    for (let i = 0; i < soal_list.length; i++) {
+      const s = soal_list[i];
+      if (!s.pertanyaan || !s.pilihan_a || !s.pilihan_b || !s.pilihan_c || !s.pilihan_d || !s.jawaban_benar) {
+        return res.status(400).json({ error: `Butir soal #${i + 1} belum lengkap. Pertanyaan, pilihan A-D, dan kunci jawaban wajib diisi.` });
+      }
+      const kunci = (s.jawaban_benar || '').trim().toUpperCase();
+      if (!['A', 'B', 'C', 'D'].includes(kunci)) {
+        return res.status(400).json({ error: `Kunci jawaban butir soal #${i + 1} harus A, B, C, atau D.` });
+      }
+      validRows.push({
+        pertanyaan: s.pertanyaan.trim(),
+        pilihan_a: s.pilihan_a.trim(),
+        pilihan_b: s.pilihan_b.trim(),
+        pilihan_c: s.pilihan_c.trim(),
+        pilihan_d: s.pilihan_d.trim(),
+        jawaban_benar: kunci,
+        kategori: compositeKategori
+      });
+    }
+
+    try {
+      const { data: created, error } = await supabase
+        .from('quiz')
+        .insert(validRows)
+        .select();
+
+      if (error) {
+        console.error('Guru Insert Bulk Quiz Error:', error);
+        return res.status(500).json({ error: 'Gagal menambahkan paket butir soal kuis.' });
+      }
+
+      try {
+        broadcastQuizDataChanged();
+      } catch (e) {}
+
+      return res.json({
+        success: true,
+        message: `Kuis "${judul_kuis || kat}" berhasil dibuat oleh Guru dengan ${validRows.length} butir soal!`,
+        count: validRows.length
+      });
+    } catch (err) {
+      console.error('Guru Tambah Soal Bulk Quiz Error:', err);
+      return res.status(500).json({ error: 'Gagal menambahkan soal kuis baru.' });
+    }
+  }
+
+  // B. Mode Single Soal (Legacy)
+  const { pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar } = req.body;
   if (!pertanyaan || !pilihan_a || !pilihan_b || !pilihan_c || !pilihan_d || !jawaban_benar) {
     return res.status(400).json({ error: 'Seluruh pertanyaan, pilihan A-D, dan kunci jawaban wajib diisi.' });
   }
@@ -274,8 +361,6 @@ router.post('/quiz', async (req, res) => {
   if (!['A', 'B', 'C', 'D'].includes(kunci)) {
     return res.status(400).json({ error: 'Kunci jawaban harus berupa salah satu dari A, B, C, atau D.' });
   }
-
-  const kat = kategori && kategori.trim() ? kategori.trim() : 'Teknik Komputer & Jaringan';
 
   try {
     const { data: created, error } = await supabase
@@ -288,7 +373,7 @@ router.post('/quiz', async (req, res) => {
           pilihan_c: pilihan_c.trim(),
           pilihan_d: pilihan_d.trim(),
           jawaban_benar: kunci,
-          kategori: kat
+          kategori: compositeKategori
         }
       ])
       .select()
@@ -317,7 +402,7 @@ router.post('/quiz', async (req, res) => {
 // 7. PUT /api/guru/quiz/:id - Guru Memperbarui Soal Kuis
 router.put('/quiz/:id', async (req, res) => {
   const { id } = req.params;
-  const { pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar, kategori } = req.body;
+  const { pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar, kategori, judul_kuis, raw_kategori } = req.body;
 
   if (!pertanyaan || !pilihan_a || !pilihan_b || !pilihan_c || !pilihan_d || !jawaban_benar) {
     return res.status(400).json({ error: 'Seluruh pertanyaan, pilihan A-D, dan kunci jawaban wajib diisi.' });
@@ -329,6 +414,9 @@ router.put('/quiz/:id', async (req, res) => {
   }
 
   const kat = kategori && kategori.trim() ? kategori.trim() : 'Teknik Komputer & Jaringan';
+  const compositeKategori = (judul_kuis && judul_kuis.trim())
+    ? `${kat}:::${judul_kuis.trim()}`
+    : (raw_kategori || kat);
 
   try {
     const { data: updated, error } = await supabase
@@ -340,7 +428,7 @@ router.put('/quiz/:id', async (req, res) => {
         pilihan_c: pilihan_c.trim(),
         pilihan_d: pilihan_d.trim(),
         jawaban_benar: kunci,
-        kategori: kat
+        kategori: compositeKategori
       })
       .eq('id', id)
       .select()

@@ -32,40 +32,57 @@ window.initQuizPage = function() {
     return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`;
   }
 
+  function parseKategoriItem(item) {
+    let mainKategori = (item.kategori || 'Umum').trim();
+    let judulKuis = mainKategori;
+    if (mainKategori.includes(':::')) {
+      const parts = mainKategori.split(':::');
+      mainKategori = parts[0].trim();
+      judulKuis = parts[1].trim();
+    }
+    return {
+      category: item.kategori_utama || mainKategori,
+      title: item.judul_kuis || judulKuis,
+      raw: item.raw_kategori || item.kategori || mainKategori
+    };
+  }
+
   function getAvailableSoalCount(category) {
     if (!category || category === 'all') {
       return allQuestions.length;
     }
-    const filtered = allQuestions.filter(q => q.kategori && (q.kategori.toLowerCase() === category.toLowerCase() || q.kategori.toLowerCase().includes(category.toLowerCase())));
+    const filtered = allQuestions.filter(q => {
+      const info = parseKategoriItem(q);
+      return info.category.toLowerCase() === category.toLowerCase() || info.category.toLowerCase().includes(category.toLowerCase());
+    });
     return filtered.length;
   }
 
-  // Bangun topik kuis secara 100% dinamis dari kategori bank soal yang ada di Supabase
+  // Bangun paket kuis secara dinamis dari database Supabase
   function getDynamicQuizTopics() {
     if (!allQuestions || allQuestions.length === 0) return [];
 
-    const categories = [];
+    const map = new Map();
     allQuestions.forEach(q => {
-      const k = (q.kategori || '').trim();
-      if (k && !categories.some(c => c.toLowerCase() === k.toLowerCase())) {
-        categories.push(k);
+      const info = parseKategoriItem(q);
+      const key = info.raw;
+      if (!map.has(key)) {
+        map.set(key, {
+          id: key,
+          title: info.title,
+          category: info.category,
+          soalCount: 0
+        });
       }
+      map.get(key).soalCount++;
     });
 
     const topics = [];
-
-    // Tambahkan topik per kategori yang ditemukan di database
-    categories.forEach((cat, idx) => {
-      const count = getAvailableSoalCount(cat);
-      if (count > 0) {
-        topics.push({
-          id: 'cat_' + idx,
-          title: cat,
-          category: cat,
-          duration: `${Math.max(5, count * 2)} menit`,
-          soalCount: count
-        });
-      }
+    map.forEach(item => {
+      topics.push({
+        ...item,
+        duration: `${Math.max(3, item.soalCount * 2)} menit`
+      });
     });
 
     return topics;
@@ -80,7 +97,8 @@ window.initQuizPage = function() {
 
     const categories = ['all'];
     allQuestions.forEach(q => {
-      const k = (q.kategori || '').trim();
+      const info = parseKategoriItem(q);
+      const k = info.category;
       if (k && !categories.some(c => c.toLowerCase() === k.toLowerCase())) {
         categories.push(k);
       }
@@ -88,7 +106,7 @@ window.initQuizPage = function() {
 
     quizFilterRow.style.display = 'flex';
     quizFilterRow.innerHTML = categories.map(cat => {
-      const label = cat === 'all' ? 'Semua' : (typeof escapeHtml === 'function' ? escapeHtml(cat) : cat);
+      const label = cat === 'all' ? 'Semua Kuis' : (typeof escapeHtml === 'function' ? escapeHtml(cat) : cat);
       const isActive = (currentCategory.toLowerCase() === cat.toLowerCase()) ? 'active' : '';
       return `<button type="button" class="filter-pill ${isActive}" data-cat="${typeof escapeHtml === 'function' ? escapeHtml(cat) : cat}">${label}</button>`;
     }).join('');
@@ -192,17 +210,14 @@ window.initQuizPage = function() {
       filtered = dynamicTopics.filter(t => t.category.toLowerCase() === currentCategory.toLowerCase());
     }
 
-    // Hanya tampilkan topik yang memiliki soal aktif
-    const activeTopics = filtered.filter(t => getAvailableSoalCount(t.category) > 0);
-
-    if (activeTopics.length === 0) {
+    if (filtered.length === 0) {
       quizContainer.innerHTML = `
         <div class="netora-fade-in" style="background:#FFFFFF; border-radius:20px; padding:32px 20px; text-align:center; margin:16px; box-shadow:0 4px 18px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
           <div style="width:48px; height:48px; border-radius:14px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           </div>
-          <h4 style="margin:0 0 6px; color:#1E293B; font-size:15px; font-weight:800;">Belum Ada Soal di Kategori Ini</h4>
-          <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Soal kuis untuk kategori ini belum tersedia di database. Silakan pilih kategori lain.</p>
+          <h4 style="margin:0 0 6px; color:#1E293B; font-size:15px; font-weight:800;">Belum Ada Kuis di Kategori Ini</h4>
+          <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Kuis untuk kategori ini belum dibuat oleh Guru atau Admin. Silakan pilih kategori lain.</p>
           <button type="button" class="btn-hero-orange" style="display:inline-flex; align-items:center; gap:8px;" onclick="renderTopicList('all')">
             <span>Tampilkan Semua Kuis</span>
           </button>
@@ -211,22 +226,22 @@ window.initQuizPage = function() {
       return;
     }
 
-    quizContainer.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + activeTopics.map(t => {
-      const count = getAvailableSoalCount(t.category);
+    quizContainer.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + filtered.map(t => {
       const icon = getTopicIconSvg(t.category || t.title);
       return `
-        <div class="white-item-card" style="cursor:pointer;" onclick="startQuizTopic('${t.id}', '${typeof escapeHtml === 'function' ? escapeHtml(t.title) : t.title}', '${typeof escapeHtml === 'function' ? escapeHtml(t.category) : t.category}')">
+        <div class="white-item-card" style="cursor:pointer;" onclick="startQuizTopic('${escapeHtml(t.id)}', '${escapeHtml(t.title)}', '${escapeHtml(t.category)}')">
           <div class="item-left-flex">
             <div class="item-square-thumb" style="background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center;">
               ${icon}
             </div>
             <div class="item-meta-col">
-              <h4 class="item-title-text">${typeof escapeHtml === 'function' ? escapeHtml(t.title) : t.title}</h4>
+              <h4 class="item-title-text">${escapeHtml(t.title)}</h4>
               <div class="item-sub-text">
-                <span>${count} Soal Aktif • ${t.duration}</span>
-                <span style="display:inline-flex; align-items:center; gap:3px; background:#EFF6FF; color:#0D5BFF; font-weight:700; padding:1px 6px; border-radius:6px; font-size:10.5px;">
-                  <span>Ujian TKJ</span>
-                </span>
+                <span style="font-weight:700; color:#0D5BFF;">${escapeHtml(t.category)}</span>
+                <span>•</span>
+                <span>${t.soalCount} Soal</span>
+                <span>•</span>
+                <span>${t.duration}</span>
               </div>
             </div>
           </div>
@@ -244,17 +259,21 @@ window.initQuizPage = function() {
     if (quizFilterRow) quizFilterRow.style.display = 'none';
     if (quizHeaderTitle) quizHeaderTitle.textContent = topicTitle;
 
-    // Filter soal yang relevan, atau gunakan semua soal jika kategori umum
-    if (category === 'all') {
+    // Filter soal yang relevan berdasarkan ID paket kuis
+    currentQuestions = allQuestions.filter(q => {
+      const raw = q.raw_kategori || q.kategori;
+      return raw === topicId;
+    });
+
+    if (currentQuestions.length === 0 && category && category !== 'all') {
+      currentQuestions = allQuestions.filter(q => {
+        const info = parseKategoriItem(q);
+        return info.category.toLowerCase() === category.toLowerCase();
+      });
+    }
+
+    if (currentQuestions.length === 0) {
       currentQuestions = allQuestions.slice();
-    } else {
-      currentQuestions = allQuestions.filter(q => q.kategori && q.kategori.toLowerCase() === category.toLowerCase());
-      if (currentQuestions.length === 0) {
-        currentQuestions = allQuestions.filter(q => q.kategori && q.kategori.toLowerCase().includes(category.toLowerCase()));
-      }
-      if (currentQuestions.length === 0) {
-        currentQuestions = allQuestions.slice();
-      }
     }
 
     // Pastikan urutan selalu teratur dari soal pertama yang diinput (ID terkecil) ke soal terakhir

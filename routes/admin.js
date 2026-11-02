@@ -823,7 +823,23 @@ router.get('/quiz', async (req, res) => {
       return res.status(500).json({ error: 'Gagal memuat bank soal kuis.' });
     }
 
-    return res.json({ success: true, quiz: list || [], total: (list || []).length });
+    const parsed = (list || []).map(q => {
+      let mainKategori = (q.kategori || 'Umum').trim();
+      let judulKuis = mainKategori;
+      if (mainKategori.includes(':::')) {
+        const parts = mainKategori.split(':::');
+        mainKategori = parts[0].trim();
+        judulKuis = parts[1].trim();
+      }
+      return {
+        ...q,
+        kategori_utama: mainKategori,
+        judul_kuis: judulKuis,
+        raw_kategori: q.kategori
+      };
+    });
+
+    return res.json({ success: true, quiz: parsed, total: parsed.length });
   } catch (err) {
     console.error('Fetch Admin Quiz Error:', err);
     return res.status(500).json({ error: 'Gagal memuat bank soal kuis.' });
@@ -842,15 +858,84 @@ router.get('/quiz/:id', async (req, res) => {
     if (error || !q) {
       return res.status(404).json({ error: 'Soal kuis tidak ditemukan.' });
     }
-    return res.json({ success: true, soal: q });
+    let mainKategori = (q.kategori || 'Umum').trim();
+    let judulKuis = mainKategori;
+    if (mainKategori.includes(':::')) {
+      const parts = mainKategori.split(':::');
+      mainKategori = parts[0].trim();
+      judulKuis = parts[1].trim();
+    }
+    return res.json({
+      success: true,
+      soal: {
+        ...q,
+        kategori_utama: mainKategori,
+        judul_kuis: judulKuis,
+        raw_kategori: q.kategori
+      }
+    });
   } catch (err) {
     return res.status(500).json({ error: 'Gagal mengambil detail soal.' });
   }
 });
 
-// 11. POST /api/admin/quiz - Tambah soal kuis baru
+// 11. POST /api/admin/quiz - Tambah kuis baru (Mendukung Multi-Soal Sekaligus & Single Soal)
 router.post('/quiz', async (req, res) => {
-  const { pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar, kategori } = req.body;
+  const { kategori, judul_kuis, soal_list } = req.body;
+  const kat = kategori && kategori.trim() ? kategori.trim() : 'Cisco Packet Tracer';
+  const compositeKategori = (judul_kuis && judul_kuis.trim()) ? `${kat}:::${judul_kuis.trim()}` : kat;
+
+  // A. Mode Paket Kuis (Multi-Soal Sekaligus 1, 2, 5, 10, atau berapapun)
+  if (Array.isArray(soal_list) && soal_list.length > 0) {
+    const validRows = [];
+    for (let i = 0; i < soal_list.length; i++) {
+      const s = soal_list[i];
+      if (!s.pertanyaan || !s.pilihan_a || !s.pilihan_b || !s.pilihan_c || !s.pilihan_d || !s.jawaban_benar) {
+        return res.status(400).json({ error: `Butir soal #${i + 1} belum lengkap. Pertanyaan, pilihan A-D, dan kunci jawaban wajib diisi.` });
+      }
+      const kunci = (s.jawaban_benar || '').trim().toUpperCase();
+      if (!['A', 'B', 'C', 'D'].includes(kunci)) {
+        return res.status(400).json({ error: `Kunci jawaban butir soal #${i + 1} harus A, B, C, atau D.` });
+      }
+      validRows.push({
+        pertanyaan: s.pertanyaan.trim(),
+        pilihan_a: s.pilihan_a.trim(),
+        pilihan_b: s.pilihan_b.trim(),
+        pilihan_c: s.pilihan_c.trim(),
+        pilihan_d: s.pilihan_d.trim(),
+        jawaban_benar: kunci,
+        kategori: compositeKategori
+      });
+    }
+
+    try {
+      const { data: created, error } = await supabase
+        .from('quiz')
+        .insert(validRows)
+        .select();
+
+      if (error) {
+        console.error('Insert Bulk Quiz Supabase Error:', error);
+        return res.status(500).json({ error: 'Gagal menambahkan paket soal kuis.' });
+      }
+
+      try {
+        broadcastQuizDataChanged();
+      } catch (e) {}
+
+      return res.json({
+        success: true,
+        message: `Kuis "${judul_kuis || kat}" berhasil dibuat dengan ${validRows.length} butir soal!`,
+        count: validRows.length
+      });
+    } catch (err) {
+      console.error('Tambah Soal Bulk Quiz Error:', err);
+      return res.status(500).json({ error: 'Gagal menambahkan soal kuis baru.' });
+    }
+  }
+
+  // B. Mode Single Soal (Legacy)
+  const { pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar } = req.body;
   if (!pertanyaan || !pilihan_a || !pilihan_b || !pilihan_c || !pilihan_d || !jawaban_benar) {
     return res.status(400).json({ error: 'Seluruh pertanyaan, pilihan A-D, dan kunci jawaban wajib diisi.' });
   }
@@ -859,8 +944,6 @@ router.post('/quiz', async (req, res) => {
   if (!['A', 'B', 'C', 'D'].includes(kunci)) {
     return res.status(400).json({ error: 'Kunci jawaban harus berupa salah satu dari A, B, C, atau D.' });
   }
-
-  const kat = kategori && kategori.trim() ? kategori.trim() : 'Cisco Packet Tracer';
 
   try {
     const { data: created, error } = await supabase
@@ -873,7 +956,7 @@ router.post('/quiz', async (req, res) => {
           pilihan_c: pilihan_c.trim(),
           pilihan_d: pilihan_d.trim(),
           jawaban_benar: kunci,
-          kategori: kat
+          kategori: compositeKategori
         }
       ])
       .select()
@@ -901,7 +984,7 @@ router.post('/quiz', async (req, res) => {
 // 12. PUT /api/admin/quiz/:id - Update soal kuis
 router.put('/quiz/:id', async (req, res) => {
   const { id } = req.params;
-  const { pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar, kategori } = req.body;
+  const { pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar, kategori, judul_kuis, raw_kategori } = req.body;
 
   if (!pertanyaan || !pilihan_a || !pilihan_b || !pilihan_c || !pilihan_d || !jawaban_benar) {
     return res.status(400).json({ error: 'Seluruh pertanyaan, pilihan A-D, dan kunci jawaban wajib diisi.' });
@@ -913,6 +996,9 @@ router.put('/quiz/:id', async (req, res) => {
   }
 
   const kat = kategori && kategori.trim() ? kategori.trim() : 'Cisco Packet Tracer';
+  const compositeKategori = (judul_kuis && judul_kuis.trim())
+    ? `${kat}:::${judul_kuis.trim()}`
+    : (raw_kategori || kat);
 
   try {
     const { data: updated, error } = await supabase
@@ -924,7 +1010,7 @@ router.put('/quiz/:id', async (req, res) => {
         pilihan_c: pilihan_c.trim(),
         pilihan_d: pilihan_d.trim(),
         jawaban_benar: kunci,
-        kategori: kat
+        kategori: compositeKategori
       })
       .eq('id', id)
       .select()
