@@ -2292,7 +2292,7 @@ window.initAdminDashboard = async function() {
 
           const data = await res.json();
           if (data.success) {
-            toast('✅ Pengaturan batas waktu belajar siswa berhasil disimpan!', 'success');
+            toast('Pengaturan batas waktu belajar siswa berhasil disimpan!', 'success');
             currentDurasiSetting = data.setting;
             renderDurasiSettingAdmin(data.setting);
           } else {
