@@ -3211,8 +3211,8 @@ body.admin-page {
   }
 
   .menu-card-2x2 {
-    padding: 22px 20px !important;
-    min-height: 180px !important;
+    padding: 20px !important;
+    min-height: auto !important;
     border-radius: 22px !important;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   }
@@ -3905,12 +3905,12 @@ body.admin-page {
 .menu-card-2x2 {
   background: #FFFFFF;
   border-radius: 20px;
-  padding: 16px;
+  padding: 18px 16px;
   text-decoration: none;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 155px;
+  justify-content: flex-start;
+  min-height: auto;
   box-shadow: 0 4px 18px rgba(13, 91, 255, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.04);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
