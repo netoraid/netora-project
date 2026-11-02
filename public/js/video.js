@@ -72,6 +72,15 @@ window.initVideoPage = async function() {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
   });
 
+  function formatVideoDescription(desc) {
+    if (!desc || !desc.trim()) return '';
+    const safeText = escapeHtml(desc.trim());
+    const urlPattern = /(https?:\/\/[^\s<]+)/g;
+    return safeText.replace(urlPattern, url => {
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color:#0D5BFF; text-decoration:underline; font-weight:600; word-break:break-all;">${url}</a>`;
+    });
+  }
+
   function extractYouTubeInfo(url) {
     if (!url) return { videoId: null, embedUrl: '', thumbnailUrl: '', directUrl: '' };
     const str = String(url).trim();
@@ -402,7 +411,8 @@ window.initVideoPage = async function() {
           </div>
 
           ${isPlaying ? `
-            <div style="padding:0 14px 16px;">
+            <div style="padding:0 16px 18px;">
+              <!-- Iframe Player Video YouTube -->
               <div style="position:relative; width:100%; padding-bottom:56.25%; border-radius:14px; overflow:hidden; background:#000; box-shadow:0 4px 16px rgba(0,0,0,0.2);">
                 <iframe 
                   src="${escapeHtml(v.url_youtube)}" 
@@ -412,11 +422,45 @@ window.initVideoPage = async function() {
                   allowfullscreen>
                 </iframe>
               </div>
-              <div style="margin-top:10px; display:flex; justify-content:flex-end;">
-                <a href="${escapeHtml(directUrl)}" target="_blank" rel="noopener noreferrer" style="font-size:12px; color:#0D5BFF; text-decoration:none; display:inline-flex; align-items:center; gap:5px; font-weight:700; background:#EFF6FF; padding:6px 12px; border-radius:10px; border:1px solid #BFDBFE;">
+
+              <!-- Baris Meta & Link Buka YouTube -->
+              <div style="margin-top:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="font-size:11.5px; font-weight:700; color:#475569; background:#F1F5F9; padding:4px 10px; border-radius:8px; display:inline-flex; align-items:center; gap:4px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    ${escapeHtml(v.durasi || '15:00')}
+                  </span>
+                  <span style="font-size:11.5px; font-weight:700; color:#0D5BFF; background:rgba(13,91,255,0.08); padding:4px 10px; border-radius:8px;">
+                    ${escapeHtml(cat ? cat.name : (v.kategori || 'Praktikum'))}
+                  </span>
+                </div>
+                <a href="${escapeHtml(directUrl)}" target="_blank" rel="noopener noreferrer" style="font-size:12px; color:#0D5BFF; text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-weight:700; background:#EFF6FF; padding:6px 12px; border-radius:10px; border:1px solid #BFDBFE; transition:background 0.15s;">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                   <span>Buka di Aplikasi YouTube</span>
                 </a>
+              </div>
+
+              <!-- Deskripsi Vidio Praktik di Bawah Video YouTube -->
+              <div class="video-desc-wrap" style="margin-top:12px; padding:12px 14px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; text-align:left;">
+                <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                  <span style="font-size:12.5px; font-weight:700; color:#1E293B;">Deskripsi Vidio:</span>
+                </div>
+                ${v.deskripsi && v.deskripsi.trim() ? `
+                  <div style="font-size:12.5px; color:#334155; line-height:1.65; white-space:pre-line; word-break:break-word;">
+                    ${formatVideoDescription(v.deskripsi)}
+                  </div>
+                ` : `
+                  <p style="margin:0; font-size:12px; color:#94A3B8; font-style:italic;">
+                    Belum ada deskripsi untuk vidio praktik ini.
+                  </p>
+                `}
               </div>
             </div>
           ` : ''}

@@ -2053,6 +2053,7 @@ window.initAdminDashboard = async function() {
         const data = await res.json();
 
         if (res.ok && data.success) {
+          try { sessionStorage.removeItem('netora_video_cache'); } catch (e) {}
           window.tutupModalVideo();
           await loadVideoAdmin();
           loadStats();
@@ -2088,6 +2089,7 @@ window.initAdminDashboard = async function() {
       const data = await res.json();
 
       if (res.ok && data.success) {
+        try { sessionStorage.removeItem('netora_video_cache'); } catch (e) {}
         await loadVideoAdmin();
         loadStats();
         toast('Vidio praktik berhasil dihapus!', 'success');
