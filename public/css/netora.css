@@ -6116,3 +6116,100 @@ textarea.form-input {
   transform: translateX(-2px);
 }
 
+/* ============================================================== */
+/* SUB-SECTION HEADERS DALAM TAMPILAN KATEGORI (MATERI & VIDEO)   */
+/* ============================================================== */
+.category-section-header-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  margin: 14px 16px 10px;
+  border-bottom: 1.5px solid #E2E8F0;
+  gap: 12px;
+}
+
+.category-section-header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.category-section-iconbox {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconbox-materi-sec {
+  background: rgba(13, 91, 255, 0.1);
+  color: #0D5BFF;
+  border: 1px solid rgba(13, 91, 255, 0.2);
+}
+
+.iconbox-video-sec {
+  background: rgba(239, 68, 68, 0.1);
+  color: #DC2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.category-subheading {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.25;
+}
+
+.category-subheading-note {
+  font-size: 11.5px;
+  color: #64748B;
+  display: block;
+  margin-top: 2px;
+}
+
+.category-section-badge {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.category-section-badge.badge-blue {
+  background: #EFF6FF;
+  color: #0D5BFF;
+  border: 1px solid #BFDBFE;
+}
+
+.category-section-badge.badge-red {
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+}
+
+/* Video Card Enhancements inside Category */
+.video-card-item {
+  background: #FFFFFF;
+  border-radius: 18px;
+  margin: 0 16px 12px;
+  box-shadow: 0 2px 14px rgba(13, 91, 255, 0.04);
+  border: 1.5px solid #E2E8F0;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.desktop-grid-2col .video-card-item {
+  margin: 0 0 12px;
+}
+
+.video-card-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(13, 91, 255, 0.08);
+  border-color: #BFDBFE;
+}
+

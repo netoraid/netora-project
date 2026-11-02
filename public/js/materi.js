@@ -59,47 +59,98 @@ window.initMateriPage = async function() {
   }
 
   let allMateri = [];
+  let allVideos = [];
+  let playingVideoId = null;
   let currentActiveCategory = null;
 
   const btnSearch = document.getElementById('btn-search-materi');
   const searchBox = document.getElementById('search-materi-box');
   const inputSearch = document.getElementById('input-search-materi');
+  const videoContainer = document.getElementById('video-container-materi');
+
+  function extractYouTubeInfo(url) {
+    if (!url) return { videoId: null, embedUrl: '', thumbnailUrl: '', directUrl: '' };
+    const str = String(url).trim();
+    let videoId = null;
+
+    if (/^[\w-]{11}$/.test(str)) {
+      videoId = str;
+    } else {
+      const regExp = /(?:(?:www\.|m\.)?youtube\.com\/(?:(?:watch\?(?:.*&)?v=)|(?:embed|v|shorts|live)\/)|youtu\.be\/|youtube-nocookie\.com\/embed\/)([\w-]{11})/i;
+      const match = str.match(regExp);
+      videoId = match ? match[1] : null;
+    }
+
+    if (!videoId) {
+      return {
+        videoId: null,
+        embedUrl: str,
+        thumbnailUrl: '',
+        directUrl: str
+      };
+    }
+
+    return {
+      videoId,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1`,
+      thumbnailUrl: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+      directUrl: `https://www.youtube.com/watch?v=${videoId}`
+    };
+  }
 
   function renderMateriSkeleton() {
-    if (!materiContainer) return;
-    materiContainer.innerHTML = '<div class="desktop-grid-2col">' + [1, 2, 3, 4, 5, 6].map(() => `
-      <div class="skeleton-item-card">
-        <div class="skeleton-item-left">
-          <div class="netora-skeleton skeleton-square-thumb"></div>
-          <div class="skeleton-meta-col">
-            <div class="netora-skeleton skeleton-line h-18 w-75"></div>
-            <div class="netora-skeleton skeleton-line w-40"></div>
+    if (materiContainer) {
+      materiContainer.innerHTML = '<div class="desktop-grid-2col">' + [1, 2, 3, 4].map(() => `
+        <div class="skeleton-item-card">
+          <div class="skeleton-item-left">
+            <div class="netora-skeleton skeleton-square-thumb"></div>
+            <div class="skeleton-meta-col">
+              <div class="netora-skeleton skeleton-line h-18 w-75"></div>
+              <div class="netora-skeleton skeleton-line w-40"></div>
+            </div>
           </div>
         </div>
-      </div>
-    `).join('') + '</div>';
+      `).join('') + '</div>';
+    }
+    if (videoContainer) {
+      videoContainer.innerHTML = '<div class="desktop-grid-2col">' + [1, 2].map(() => `
+        <div class="skeleton-item-card">
+          <div class="skeleton-item-left">
+            <div class="netora-skeleton skeleton-square-thumb" style="width:68px; height:46px; border-radius:10px;"></div>
+            <div class="skeleton-meta-col">
+              <div class="netora-skeleton skeleton-line h-18 w-80"></div>
+              <div class="netora-skeleton skeleton-line w-40"></div>
+            </div>
+          </div>
+        </div>
+      `).join('') + '</div>';
+    }
   }
 
   // 1. Logika Halaman Katalog Materi (materi.html)
   if (materiContainer) {
 
     function updateCategoryBadges() {
-      const countMikrotik = allMateri.filter(m => getMateriCategoryKey(m) === 'mikrotik').length;
-      const countCisco = allMateri.filter(m => getMateriCategoryKey(m) === 'cisco').length;
-      const countServer = allMateri.filter(m => getMateriCategoryKey(m) === 'server-linux').length;
+      const countMateriMikrotik = allMateri.filter(m => getMateriCategoryKey(m) === 'mikrotik').length;
+      const countMateriCisco = allMateri.filter(m => getMateriCategoryKey(m) === 'cisco').length;
+      const countMateriServer = allMateri.filter(m => getMateriCategoryKey(m) === 'server-linux').length;
+
+      const countVideoMikrotik = allVideos.filter(v => getMateriCategoryKey(v) === 'mikrotik').length;
+      const countVideoCisco = allVideos.filter(v => getMateriCategoryKey(v) === 'cisco').length;
+      const countVideoServer = allVideos.filter(v => getMateriCategoryKey(v) === 'server-linux').length;
 
       const badgeMikrotik = document.getElementById('badge-count-mikrotik');
       const badgeCisco = document.getElementById('badge-count-cisco');
       const badgeServer = document.getElementById('badge-count-server-linux');
 
       if (badgeMikrotik) {
-        badgeMikrotik.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countMikrotik} Modul</span>`;
+        badgeMikrotik.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countMateriMikrotik} Modul • ${countVideoMikrotik} Vidio</span>`;
       }
       if (badgeCisco) {
-        badgeCisco.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countCisco} Modul</span>`;
+        badgeCisco.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countMateriCisco} Modul • ${countVideoCisco} Vidio</span>`;
       }
       if (badgeServer) {
-        badgeServer.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countServer} Modul</span>`;
+        badgeServer.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${countMateriServer} Modul • ${countVideoServer} Vidio</span>`;
       }
     }
 
@@ -142,7 +193,7 @@ window.initMateriPage = async function() {
       }
 
       if (headerTitle) {
-        headerTitle.textContent = `Materi ${cat.name}`;
+        headerTitle.textContent = `Materi & Vidio ${cat.name}`;
       }
 
       // Update Banner Info Kategori Aktif
@@ -156,19 +207,22 @@ window.initMateriPage = async function() {
         catIcon.style.background = cat.iconBg;
       }
       if (catTitle) {
-        catTitle.textContent = `Materi ${cat.name}`;
+        catTitle.textContent = `Kategori: ${cat.name}`;
       }
       if (catDesc) {
-        const totalInCat = allMateri.filter(m => getMateriCategoryKey(m) === normalizedKey).length;
-        catDesc.textContent = `${cat.desc} (${totalInCat} Modul Tersedia)`;
+        const totalMateri = allMateri.filter(m => getMateriCategoryKey(m) === normalizedKey).length;
+        const totalVideo = allVideos.filter(v => getMateriCategoryKey(v) === normalizedKey).length;
+        catDesc.textContent = `${cat.desc} (${totalMateri} Modul Pembelajaran • ${totalVideo} Vidio Praktik)`;
       }
 
       renderMateriCards();
+      renderVideoCards();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     window.kembaliKeKategori = function(pushState = true) {
       currentActiveCategory = null;
+      playingVideoId = null;
 
       if (pushState) {
         try {
@@ -221,38 +275,74 @@ window.initMateriPage = async function() {
 
       // 1. Cek cache lokal di sessionStorage untuk render kilat
       try {
-        const cached = sessionStorage.getItem('netora_materi_cache');
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            allMateri = parsed;
-            updateCategoryBadges();
-            if (currentActiveCategory) renderMateriCards();
+        const cachedMateri = sessionStorage.getItem('netora_materi_cache');
+        if (cachedMateri) {
+          const parsed = JSON.parse(cachedMateri);
+          if (Array.isArray(parsed) && parsed.length > 0) allMateri = parsed;
+        }
+        const cachedVideo = sessionStorage.getItem('netora_video_cache');
+        if (cachedVideo) {
+          const parsedV = JSON.parse(cachedVideo);
+          if (Array.isArray(parsedV) && parsedV.length > 0) allVideos = parsedV;
+        }
+        if (allMateri.length > 0 || allVideos.length > 0) {
+          updateCategoryBadges();
+          if (currentActiveCategory) {
+            renderMateriCards();
+            renderVideoCards();
           }
         }
       } catch (e) {}
 
-      // 2. Fetch data mutakhir dari API Supabase
+      // 2. Fetch data mutakhir materi & video dari API Supabase secara paralel
       try {
-        const res = await fetch('/api/materi?t=' + Date.now());
-        const data = await res.json();
+        const [resMateri, resVideo] = await Promise.all([
+          fetch('/api/materi?t=' + Date.now()).catch(() => null),
+          fetch('/api/video?t=' + Date.now()).catch(() => null)
+        ]);
 
-        if (res.ok && data.success && Array.isArray(data.materi)) {
-          allMateri = data.materi;
-          try { sessionStorage.setItem('netora_materi_cache', JSON.stringify(data.materi)); } catch (e) {}
-          updateCategoryBadges();
-
-          // Cek URL apakah langsung membuka kategori tertentu
-          const urlParams = new URLSearchParams(window.location.search);
-          const initialCat = urlParams.get('kategori') || urlParams.get('kat');
-          if (initialCat) {
-            window.pilihKategoriMateri(initialCat, false);
-          } else if (currentActiveCategory) {
-            renderMateriCards();
+        if (resMateri && resMateri.ok) {
+          const dataM = await resMateri.json();
+          if (dataM.success && Array.isArray(dataM.materi)) {
+            allMateri = dataM.materi;
+            try { sessionStorage.setItem('netora_materi_cache', JSON.stringify(dataM.materi)); } catch (e) {}
           }
         }
+
+        if (resVideo && resVideo.ok) {
+          const dataV = await resVideo.json();
+          if (dataV.success && Array.isArray(dataV.video)) {
+            allVideos = dataV.video.map(v => {
+              const yt = extractYouTubeInfo(v.url_youtube);
+              return {
+                id: v.id,
+                judul: v.judul || 'Vidio Praktik',
+                deskripsi: v.deskripsi || '',
+                kategori: v.kategori || 'MikroTik',
+                durasi: v.durasi || '15:00',
+                progress: 0,
+                url_youtube: yt.embedUrl || v.url_youtube,
+                direct_url: yt.directUrl || v.url_youtube,
+                thumbnail_url: v.thumbnail_url || yt.thumbnailUrl || ''
+              };
+            });
+            try { sessionStorage.setItem('netora_video_cache', JSON.stringify(allVideos)); } catch (e) {}
+          }
+        }
+
+        updateCategoryBadges();
+
+        // Cek URL apakah langsung membuka kategori tertentu
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialCat = urlParams.get('kategori') || urlParams.get('kat');
+        if (initialCat) {
+          window.pilihKategoriMateri(initialCat, false);
+        } else if (currentActiveCategory) {
+          renderMateriCards();
+          renderVideoCards();
+        }
       } catch (err) {
-        console.warn('Gagal memuat materi dari API:', err);
+        console.warn('Gagal memuat materi/video dari API:', err);
       }
     }
 
@@ -260,33 +350,33 @@ window.initMateriPage = async function() {
     window.loadMateri = loadMateri;
 
     function renderMateriCards() {
-      if (!currentActiveCategory) return;
+      if (!currentActiveCategory || !materiContainer) return;
 
       const q = (inputSearch ? inputSearch.value : '').toLowerCase().trim();
       const cat = CATEGORIES[currentActiveCategory];
 
-      // KETENTUAN UTAMA: Materi kategori hanya ditampilkan di kategori yang bersangkutan
+      // Filter materi berdasarkan kategori aktif
       let list = allMateri.filter(m => getMateriCategoryKey(m) === currentActiveCategory);
 
       if (q) {
         list = list.filter(m => m.judul.toLowerCase().includes(q) || (m.preview || '').toLowerCase().includes(q));
       }
 
+      const countBadge = document.getElementById('cat-badge-materi-count');
+      if (countBadge) countBadge.textContent = `${list.length} Modul`;
+
       if (list.length === 0) {
         materiContainer.innerHTML = `
-          <div class="netora-fade-in" style="text-align:center; padding:40px 20px; background:#FFFFFF; border-radius:22px; margin:14px 16px; border:1.5px dashed #CBD5E1; box-shadow:0 2px 12px rgba(15,23,42,0.03);">
-            <div style="width:56px; height:56px; border-radius:18px; background:${cat ? cat.iconBg : 'rgba(13,91,255,0.08)'}; color:${cat ? cat.iconColor : '#0D5BFF'}; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <div class="netora-fade-in" style="text-align:center; padding:32px 18px; background:#FFFFFF; border-radius:18px; margin:0 16px 12px; border:1.5px dashed #CBD5E1; box-shadow:0 2px 12px rgba(15,23,42,0.02);">
+            <div style="width:48px; height:48px; border-radius:14px; background:${cat ? cat.iconBg : 'rgba(13,91,255,0.08)'}; color:${cat ? cat.iconColor : '#0D5BFF'}; display:inline-flex; align-items:center; justify-content:center; margin-bottom:10px;">
               ${cat ? cat.icon : ''}
             </div>
-            <h4 style="margin:0 0 6px; font-size:16px; font-weight:800; color:#1E293B;">
+            <h4 style="margin:0 0 4px; font-size:15px; font-weight:800; color:#1E293B;">
               ${q ? 'Modul Tidak Ditemukan' : `Belum Ada Modul di Kategori ${cat ? cat.name : ''}`}
             </h4>
-            <p style="margin:0 auto 16px; font-size:12.5px; color:#64748B; max-width:360px; line-height:1.5;">
-              ${q ? `Tidak ada materi yang cocok dengan pencarian "${escapeHtml(q)}".` : `Modul pembelajaran khusus ${cat ? cat.name : 'kategori ini'} yang diunggah Guru / Admin akan otomatis masuk dan tampil di sini.`}
+            <p style="margin:0 auto; font-size:12px; color:#64748B; max-width:340px; line-height:1.45;">
+              ${q ? `Tidak ada materi yang cocok dengan pencarian "${escapeHtml(q)}".` : `Modul pembelajaran khusus ${cat ? cat.name : 'kategori ini'} yang diunggah Guru / Admin akan otomatis tampil di sini.`}
             </p>
-            <button type="button" onclick="kembaliKeKategori()" class="btn-secondary" style="padding:8px 18px; font-size:12.5px; border-radius:10px; cursor:pointer;">
-              ← Kembali ke Pilihan Kategori
-            </button>
           </div>
         `;
         return;
@@ -298,7 +388,7 @@ window.initMateriPage = async function() {
         const pagesText = item.pages_text || `${pagesCount} halaman`;
 
         return `
-          <a href="materi-detail.html?id=${item.id}&kat=${currentActiveCategory}" class="white-item-card">
+          <a href="materi-detail.html?id=${item.id}&kat=${currentActiveCategory}" class="white-item-card" style="margin: 0 16px 10px;">
             <div class="item-left-flex">
               <div class="item-square-thumb" style="background:${cat ? cat.iconColor : '#0D5BFF'}; color:#fff; display:flex; align-items:center; justify-content:center;">
                 ${icon}
@@ -320,11 +410,103 @@ window.initMateriPage = async function() {
       }).join('') + '</div>';
     }
 
+    function renderVideoCards() {
+      if (!currentActiveCategory || !videoContainer) return;
+
+      const q = (inputSearch ? inputSearch.value : '').toLowerCase().trim();
+      const cat = CATEGORIES[currentActiveCategory];
+
+      // Filter video berdasarkan kategori aktif
+      let list = allVideos.filter(v => getMateriCategoryKey(v) === currentActiveCategory);
+
+      if (q) {
+        list = list.filter(v => v.judul.toLowerCase().includes(q) || (v.deskripsi || '').toLowerCase().includes(q));
+      }
+
+      const countBadge = document.getElementById('cat-badge-video-count');
+      if (countBadge) countBadge.textContent = `${list.length} Vidio`;
+
+      if (list.length === 0) {
+        videoContainer.innerHTML = `
+          <div class="netora-fade-in" style="text-align:center; padding:32px 18px; background:#FFFFFF; border-radius:18px; margin:0 16px 12px; border:1.5px dashed #CBD5E1; box-shadow:0 2px 12px rgba(15,23,42,0.02);">
+            <div style="width:48px; height:48px; border-radius:14px; background:rgba(239,68,68,0.08); color:#DC2626; display:inline-flex; align-items:center; justify-content:center; margin-bottom:10px;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </div>
+            <h4 style="margin:0 0 4px; font-size:15px; font-weight:800; color:#1E293B;">
+              ${q ? 'Vidio Tidak Ditemukan' : `Belum Ada Vidio Praktik di Kategori ${cat ? cat.name : ''}`}
+            </h4>
+            <p style="margin:0 auto; font-size:12px; color:#64748B; max-width:340px; line-height:1.45;">
+              ${q ? `Tidak ada vidio praktik yang cocok dengan pencarian "${escapeHtml(q)}".` : `Vidio praktikum dan tutorial khusus ${cat ? cat.name : 'kategori ini'} yang ditambahkan di panel Guru / Admin akan otomatis muncul di sini.`}
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      videoContainer.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + list.map(v => {
+        const isPlaying = playingVideoId === v.id;
+        const directUrl = v.direct_url || (extractYouTubeInfo(v.url_youtube).directUrl) || v.url_youtube;
+
+        return `
+          <div class="video-card-item">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; cursor:pointer;" onclick="togglePlayMateriVideo(${v.id})">
+              <div class="item-left-flex">
+                <div class="item-square-thumb" style="position:relative; width:90px; height:60px; border-radius:10px; overflow:hidden; background:#0F172A; flex-shrink:0;">
+                  <img src="${escapeHtml(v.thumbnail_url)}" alt="${escapeHtml(v.judul)}" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.style.opacity='0.2'">
+                  <div style="position:absolute; inset:0; background:rgba(0,0,0,0.22); display:flex; align-items:center; justify-content:center;">
+                    <div style="width:24px; height:24px; border-radius:50%; background:rgba(13,91,255,0.95); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.35);">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF" style="margin-left:1.5px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    </div>
+                  </div>
+                  <span class="item-thumb-duration" style="position:absolute; bottom:3px; right:4px; font-size:9.5px; font-weight:700; padding:1.5px 5px; background:rgba(15,23,42,0.85); color:#FFFFFF; border-radius:4px; line-height:1;">${escapeHtml(v.durasi || '15:00')}</span>
+                </div>
+                <div class="item-meta-col">
+                  <h4 class="item-title-text">${escapeHtml(v.judul)}</h4>
+                  <div class="item-sub-text">
+                    <span style="color:#DC2626; font-weight:700;">${escapeHtml(cat ? cat.name : (v.kategori || 'Praktikum'))}</span>
+                    <span>•</span>
+                    <span>${escapeHtml(v.durasi || '15:00')}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item-chevron-icon" style="transform:${isPlaying ? 'rotate(90deg)' : 'none'}; transition:0.2s; display:flex; align-items:center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+            </div>
+
+            ${isPlaying ? `
+              <div style="padding:0 14px 16px;">
+                <div style="position:relative; width:100%; padding-bottom:56.25%; border-radius:14px; overflow:hidden; background:#000; box-shadow:0 4px 16px rgba(0,0,0,0.2);">
+                  <iframe 
+                    src="${escapeHtml(v.url_youtube)}" 
+                    style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                  </iframe>
+                </div>
+                <div style="margin-top:10px; display:flex; justify-content:flex-end;">
+                  <a href="${escapeHtml(directUrl)}" target="_blank" rel="noopener noreferrer" style="font-size:12px; color:#0D5BFF; text-decoration:none; display:inline-flex; align-items:center; gap:5px; font-weight:700; background:#EFF6FF; padding:6px 12px; border-radius:10px; border:1px solid #BFDBFE;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    <span>Buka di Aplikasi YouTube</span>
+                  </a>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('') + '</div>';
+    }
+
+    window.togglePlayMateriVideo = function(id) {
+      playingVideoId = playingVideoId === id ? null : id;
+      renderVideoCards();
+    };
+
     // Toggle Kotak Pencarian
     if (btnSearch && searchBox) {
       btnSearch.addEventListener('click', () => {
         if (!currentActiveCategory) {
-          // Jika masih di menu kategori, buka kategori pertama atau tampilkan input
           window.pilihKategoriMateri('mikrotik');
         }
         searchBox.style.display = searchBox.style.display === 'none' ? 'block' : 'none';
@@ -333,7 +515,10 @@ window.initMateriPage = async function() {
     }
 
     if (inputSearch) {
-      inputSearch.addEventListener('input', renderMateriCards);
+      inputSearch.addEventListener('input', () => {
+        renderMateriCards();
+        renderVideoCards();
+      });
     }
 
     // Jalankan pemuatan awal

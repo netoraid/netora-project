@@ -1820,7 +1820,15 @@ window.initAdminDashboard = async function() {
     if (!tbody) return;
 
     const q = (document.getElementById('search-video-admin')?.value || '').toLowerCase().trim();
+    const filterKat = (document.getElementById('filter-video-kategori')?.value || 'all').toLowerCase().trim();
+
     let list = globalVideos.filter(v => {
+      if (filterKat !== 'all') {
+        const vk = (v.kategori || '').toLowerCase();
+        if (filterKat.includes('cisco') && !vk.includes('cisco')) return false;
+        if (filterKat.includes('mikro') && !vk.includes('mikro')) return false;
+        if ((filterKat.includes('server') || filterKat.includes('linux')) && (!vk.includes('server') && !vk.includes('linux'))) return false;
+      }
       if (q && !v.judul.toLowerCase().includes(q) && !(v.deskripsi || '').toLowerCase().includes(q) && !(v.kategori || '').toLowerCase().includes(q)) {
         return false;
       }
@@ -1862,7 +1870,15 @@ window.initAdminDashboard = async function() {
             </a>
           </td>
           <td>
-            <span class="badge badge-purple" style="font-size:11.5px;">${escapeHtml(v.kategori || 'Mikrotik')}</span>
+            ${(() => {
+              const rawK = (v.kategori || '').toLowerCase();
+              let badgeClass = 'badge-blue';
+              let label = v.kategori || 'MikroTik';
+              if (rawK.includes('cisco')) { badgeClass = 'badge-cyan'; label = 'Cisco Packet Tracer'; }
+              else if (rawK.includes('server') || rawK.includes('linux')) { badgeClass = 'badge-green'; label = 'Server dan Linux'; }
+              else { badgeClass = 'badge-blue'; label = 'MikroTik'; }
+              return `<span class="badge ${badgeClass}" style="font-size:11.5px; font-weight:700;">${escapeHtml(label)}</span>`;
+            })()}
           </td>
           <td>
             <span style="font-size:12.5px; font-weight:700; color:#334155;">${escapeHtml(v.durasi || '15:00')}</span>
@@ -1928,6 +1944,8 @@ window.initAdminDashboard = async function() {
 
     if (form) form.reset();
     document.getElementById('input-video-id').value = '';
+    const katEl = document.getElementById('input-video-kategori');
+    if (katEl) katEl.value = '';
     if (title) title.textContent = 'Tambah Vidio Praktik Baru';
     updateLiveVideoPreview('');
     modal.style.display = 'flex';
@@ -1943,7 +1961,14 @@ window.initAdminDashboard = async function() {
 
     document.getElementById('input-video-id').value = v.id;
     document.getElementById('input-video-judul').value = v.judul || '';
-    document.getElementById('input-video-kategori').value = v.kategori || 'Mikrotik';
+    
+    let katVal = 'MikroTik';
+    const rawK = (v.kategori || '').toLowerCase().trim();
+    if (rawK.includes('cisco')) katVal = 'Cisco Packet Tracer';
+    else if (rawK.includes('server') || rawK.includes('linux')) katVal = 'Server dan Linux';
+    else katVal = 'MikroTik';
+
+    document.getElementById('input-video-kategori').value = katVal;
     document.getElementById('input-video-durasi').value = v.durasi || '15:00';
     document.getElementById('input-video-url').value = v.url_youtube || '';
     document.getElementById('input-video-deskripsi').value = v.deskripsi || '';
@@ -1973,10 +1998,23 @@ window.initAdminDashboard = async function() {
       e.preventDefault();
       const id = document.getElementById('input-video-id').value;
       const judul = document.getElementById('input-video-judul').value.trim();
-      const kategori = document.getElementById('input-video-kategori').value;
+      const kategori = (document.getElementById('input-video-kategori').value || '').trim();
       const durasi = document.getElementById('input-video-durasi').value.trim() || '15:00';
       const url_youtube = document.getElementById('input-video-url').value.trim();
       const deskripsi = document.getElementById('input-video-deskripsi').value.trim();
+
+      if (!judul) {
+        toast('Judul vidio praktik wajib diisi.', 'warning');
+        return;
+      }
+      if (!kategori) {
+        toast('Wajib memilih kategori vidio praktik (MikroTik, Cisco Packet Tracer, atau Server dan Linux).', 'warning');
+        return;
+      }
+      if (!url_youtube) {
+        toast('Link URL YouTube wajib diisi.', 'warning');
+        return;
+      }
 
       const btnSubmit = document.getElementById('btn-simpan-video');
       if (btnSubmit) {
@@ -2055,6 +2093,9 @@ window.initAdminDashboard = async function() {
 
   const searchVideoAdminInput = document.getElementById('search-video-admin');
   if (searchVideoAdminInput) searchVideoAdminInput.addEventListener('input', renderVideoAdminTable);
+
+  const filterVideoKatInput = document.getElementById('filter-video-kategori');
+  if (filterVideoKatInput) filterVideoKatInput.addEventListener('change', renderVideoAdminTable);
 
   // Logout Admin
   const btnLogout = document.getElementById('btn-admin-logout');

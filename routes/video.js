@@ -53,7 +53,7 @@ router.get('/', async (req, res) => {
         videoId: yt.videoId,
         thumbnail_url: yt.thumbnailUrl,
         url_youtube: yt.embedUrl || v.url_youtube,
-        kategori: v.kategori || 'Mikrotik',
+        kategori: v.kategori || 'MikroTik',
         durasi: v.durasi || '15:00'
       };
     });
@@ -74,7 +74,13 @@ router.post('/', async (req, res) => {
 
   const yt = parseYouTubeLink(url_youtube);
   const embedUrl = yt.embedUrl || url_youtube.trim();
-  const kat = (kategori && kategori.trim()) ? kategori.trim() : 'Mikrotik';
+  let kat = 'MikroTik';
+  if (kategori && String(kategori).trim()) {
+    const rawK = String(kategori).toLowerCase().trim();
+    if (rawK.includes('cisco')) kat = 'Cisco Packet Tracer';
+    else if (rawK.includes('server') || rawK.includes('linux')) kat = 'Server dan Linux';
+    else kat = 'MikroTik';
+  }
   const dur = (durasi && durasi.trim()) ? durasi.trim() : '15:00';
   const desc = (deskripsi && deskripsi.trim()) ? deskripsi.trim() : '';
 
@@ -121,7 +127,13 @@ router.put('/:id', async (req, res) => {
 
   const yt = parseYouTubeLink(url_youtube);
   const embedUrl = yt.embedUrl || url_youtube.trim();
-  const kat = (kategori && kategori.trim()) ? kategori.trim() : 'Mikrotik';
+  let kat = 'MikroTik';
+  if (kategori && String(kategori).trim()) {
+    const rawK = String(kategori).toLowerCase().trim();
+    if (rawK.includes('cisco')) kat = 'Cisco Packet Tracer';
+    else if (rawK.includes('server') || rawK.includes('linux')) kat = 'Server dan Linux';
+    else kat = 'MikroTik';
+  }
   const dur = (durasi && durasi.trim()) ? durasi.trim() : '15:00';
   const desc = (deskripsi && deskripsi.trim()) ? deskripsi.trim() : '';
 
