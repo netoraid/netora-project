@@ -95,13 +95,16 @@ async function updateDurasiSetting(input) {
 
   // 2. Coba simpan ke Supabase jika tabel app_settings tersedia
   try {
-    await supabase
+    const { error } = await supabase
       .from('app_settings')
       .upsert({
         key: 'durasi_belajar',
         value: cleanSettings,
-        updated_at: new Date()
+        updated_at: new Date().toISOString()
       });
+    if (error) {
+      console.warn('⚠️ [SETTINGS] Catatan: Sinkronisasi cloud Supabase (app_settings) ditunda:', error.message);
+    }
   } catch (err) {
     console.warn('⚠️ [SETTINGS] Catatan: Sinkronisasi cloud Supabase (app_settings) ditunda, data tersimpan di storage server.');
   }

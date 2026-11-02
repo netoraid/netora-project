@@ -2120,7 +2120,7 @@
 
     <!-- Inline Script Manager Modul Materi & Tab Switching (Bypass Cache & Error-Proof) -->
     <script>
-      wind ow.switchAdminTab = function(targetId) {
+      window.switchAdminTab = function(targetId) {
         if (!targetId) return;
         const tabBtns = document.querySelectorAll('.admin-tab-btn');
         const tabContents = document.querySelectorAll('.admin-tab-content');
@@ -2148,7 +2148,7 @@
 
       window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
 
-      win dow.execEditorCmd = function(index, command, value = null) {
+      window.execEditorCmd = function(index, command, value = null) {
         const container = document.getElementById('materi-pages-container');
         if (!container) return;
         const cards = container.querySelectorAll('.materi-page-card');
@@ -2162,7 +2162,7 @@
           if (command === 'justifyLeft') window.setMateriImagePosition('left');
           else if (command === 'justifyRight') window.setMateriImagePosition('right');
           else window.setMateriImagePosition('center');
-          wi ndow.syncModalPageData(index);
+          window.syncModalPageData(index);
           return;
         }
 
@@ -2170,7 +2170,7 @@
           const selection = window.getSelection();
           const selectedText = selection ? selection.toString() : '';
           const sampleCode = selectedText || `# Masukkan script / perintah CLI di sini\ninterface print\nip address print`;
-          document.execCommand('insertHTML', false, `<pre><code>${sampleCode}</code></pre><p><br></p >`);
+          document.execCommand('insertHTML', false, `<pre><code>${sampleCode}</code></pre><p><br></p>`);
         } else {
           document.execCommand(command, false, value);
         }
@@ -2195,7 +2195,7 @@
 
         const rect = window.activeMateriImg.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0) {
-          window.closeMateriImage Resizer();
+          window.closeMateriImageResizer();
           return;
         }
 
@@ -2322,7 +2322,7 @@
               }
               window.repositionResizeOverlay();
               if (typeof window.repositionMateriResizer === 'function') {
-                window.repositionMater iResizer();
+                window.repositionMateriResizer();
               }
             }
           });
@@ -2343,7 +2343,7 @@
       window.updateImagePositionButtons = function(img) {
         if (!img) return;
         const isLeft = img.classList.contains('align-left') || img.style.float === 'left';
-        const isRight = img.classList.contains('align-rig ht') || img.style.float === 'right';
+        const isRight = img.classList.contains('align-right') || img.style.float === 'right';
         const isCenter = !isLeft && !isRight;
 
         const btnLeft = document.getElementById('btn-align-left');
@@ -2403,7 +2403,7 @@
         const block = img.closest('p, figure') || img;
         if (direction < 0) {
           const prev = block.previousElementSibling;
-          if (pre v) {
+          if (prev) {
             canvas.insertBefore(block, prev);
           }
         } else {
@@ -2435,7 +2435,7 @@
         }
 
         const badge = document.getElementById('resizer-val-badge');
-        if (badge) badge.tex tContent = `${pct}%`;
+        if (badge) badge.textContent = `${pct}%`;
         const slider = document.getElementById('resizer-slider');
         if (slider && slider.value != pct) slider.value = pct;
 
@@ -2494,7 +2494,7 @@
       });
 
       window.addEventListener('resize', () => {
-        if (window.activeM ateriImg) {
+        if (window.activeMateriImg) {
           if (typeof window.repositionMateriResizer === 'function') window.repositionMateriResizer();
           if (typeof window.repositionResizeOverlay === 'function') window.repositionResizeOverlay();
         }
@@ -2543,7 +2543,7 @@
               window.syncModalPageData(index);
 
               setTimeout(() => {
-                const insertedImg = canvas.querySelector(`img[src="${data .url}"]`);
+                const insertedImg = canvas.querySelector(`img[src="${data.url}"]`);
                 if (insertedImg) window.selectMateriImageForResize(insertedImg);
               }, 120);
             }
@@ -2593,7 +2593,7 @@
 
                   setTimeout(() => {
                     const insertedImg = canvas.querySelector(`img[src="${data.url}"]`);
-                    if (insertedImg) window.selectMateriIm ageForResize(insertedImg);
+                    if (insertedImg) window.selectMateriImageForResize(insertedImg);
                   }, 120);
                 }
                 if (typeof toast === 'function') toast('Screenshot berhasil ditempel! Tarik gambar dengan kursor untuk geser posisi.', 'success');
@@ -2871,7 +2871,7 @@
                 }
 
                 let targetBlock = e.target.closest('p, figure, h2, h3, h4, pre, ul, ol, div');
-                if (targetBlock && ta rgetBlock.parentNode === canvas) {
+                if (targetBlock && targetBlock.parentNode === canvas) {
                   let ind = canvas.querySelector('.editor-drop-indicator');
                   if (!ind) {
                     ind = document.createElement('div');
@@ -2881,7 +2881,7 @@
                   if (e.clientY < rect.top + rect.height / 2) {
                     canvas.insertBefore(ind, targetBlock);
                   } else {
-                    canvas.insertBefore(ind, targetBlock.nextSib ling);
+                    canvas.insertBefore(ind, targetBlock.nextSibling);
                   }
                 }
               }
@@ -2896,7 +2896,7 @@
             canvas.addEventListener('drop', (e) => {
               if (!draggedImgEl) return;
               e.preventDefault();
-              canvas.querySelectorAll('.editor-drop-indicator').forEach(el => el.remov e());
+              canvas.querySelectorAll('.editor-drop-indicator').forEach(el => el.remove());
 
               const blockToMove = draggedImgEl.closest('p, figure') || draggedImgEl;
               const targetNode = e.target;
@@ -2907,7 +2907,7 @@
               if (targetNode && targetNode !== blockToMove && targetNode !== draggedImgEl) {
                 const targetBlock = targetNode.closest('p, figure, h2, h3, h4, pre, ul, ol, div');
                 if (targetBlock && targetBlock !== blockToMove && targetBlock.parentNode === canvas) {
-                  const rect = targetBlock.get BoundingClientRect();
+                  const rect = targetBlock.getBoundingClientRect();
                   const relY = e.clientY - rect.top;
                   if (relY < rect.height / 2) {
                     canvas.insertBefore(blockToMove, targetBlock);
@@ -2934,7 +2934,7 @@
               }
 
               setTimeout(() => {
-                canvas.querySelectorAll('p, figu re').forEach(f => {
+                canvas.querySelectorAll('p, figure').forEach(f => {
                   if (!f.querySelector('img') && !f.textContent.trim()) f.remove();
                 });
                 window.syncModalPageData(idx);
@@ -2984,7 +2984,7 @@
 
       window.tambahHalamanMateriBaru = function() {
         window.syncAllModalPages();
-        if (!Array.isArray(window.c urrentModalPages)) {
+        if (!Array.isArray(window.currentModalPages)) {
           window.currentModalPages = [{ halaman: 1, judul: '', konten: '' }];
         }
         window.currentModalPages.push({
@@ -3105,7 +3105,7 @@
 
       window.tutupModalMateri = function() {
         if (typeof window.closeMateriImageResizer === 'function') {
-          window.closeMateriImageResi);
+          window.closeMateriImageResizer();
         }
         const modal = document.getElementById('modal-materi');
         if (modal) modal.style.display = 'none';
@@ -3115,7 +3115,7 @@
       document.addEventListener('DOMContentLoaded', () => {
         const pagesContainer = document.getElementById('materi-pages-container');
         if (pagesContainer) {
-          pagener.addEventListener('scroll', () => {
+          pagesContainer.addEventListener('scroll', () => {
             if (window.activeMateriImg) {
               if (typeof window.repositionMateriResizer === 'function') window.repositionMateriResizer();
               if (typeof window.repositionResizeOverlay === 'function') window.repositionResizeOverlay();

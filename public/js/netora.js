@@ -696,6 +696,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let _isNavigating = false;
 
   async function seamlessNavigateTo(targetUrl, isPopState = false) {
+    const curParsed = new URL(window.location.href, window.location.origin);
+    const targetParsed = new URL(targetUrl, window.location.origin);
     const curPath = getCleanPath(window.location.href);
     const targetPath = getCleanPath(targetUrl);
 
@@ -705,7 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (curPath === targetPath && !isPopState) {
+    if (curParsed.pathname === targetParsed.pathname && curParsed.search === targetParsed.search && !isPopState) {
       window.scrollTo(0, 0);
       return;
     }
@@ -1454,7 +1456,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <!-- Teks Peringatan Kustom Sesuai Permintaan User -->
         <p class="netora-study-text" style="margin: 0 0 20px; font-size: 13.5px; color: #475569; line-height: 1.5; font-weight: 500;">
-          Halo, <strong style="color: #0D5BFF; font-weight: 800;">${escapeHtml(userName)}</strong> kamu telah melebihi batas waktu yang telah di anjurkan untuk belajar.
+          Halo, <strong style="color: #0D5BFF; font-weight: 800;">${escapeHtml(userName)}</strong>, ${escapeHtml(pesanHimbauan)}.
         </p>
 
         <!-- Tombol Aksi -->

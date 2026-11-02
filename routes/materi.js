@@ -30,6 +30,7 @@ function parseMateriPages(item) {
     }];
   }
 
+  const rawFirstPageText = (pages[0].konten || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   return {
     id: item.id,
     judul: item.judul,
@@ -37,7 +38,7 @@ function parseMateriPages(item) {
     total_halaman: pages.length,
     pages_text: `${pages.length} halaman`,
     pages: pages,
-    preview: (pages[0].konten || '').substring(0, 120),
+    preview: rawFirstPageText.substring(0, 140),
     created_at: item.created_at
   };
 }
