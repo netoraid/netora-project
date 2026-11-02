@@ -17,19 +17,104 @@ const { initSocket } = require('./services/socket');
 // Inisialisasi Supabase Database
 const { supabase } = require('./database/supabase');
 
-// Verifikasi Koneksi Database Supabase
-(async () => {
-  try {
-    const { error } = await supabase.from('users').select('id').limit(1);
-    if (error) {
-      console.error('❌ [DATABASE] Gagal terhubung ke Supabase:', error.message);
-    } else {
-      console.log('✅ [DATABASE] Terhubung sukses ke Supabase PostgreSQL!');
-    }
-  } catch (err) {
-    console.error('❌ [DATABASE] Error koneksi Supabase:', err.message);
+// ============================================================
+// SYSTEM DIAGNOSTICS & TERMINAL HEALTH ALERTS (PTERODACTYL)
+// ============================================================
+
+// 1. Verifikasi Variabel Lingkungan (.env)
+function checkEnvVariables() {
+  const missingVars = [];
+  if (!process.env.SUPABASE_URL) missingVars.push('SUPABASE_URL');
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY && !process.env.SUPABASE_ANON_KEY) missingVars.push('SUPABASE_SERVICE_ROLE_KEY / SUPABASE_ANON_KEY');
+  if (!process.env.SESSION_SECRET) missingVars.push('SESSION_SECRET (menggunakan secret bawaan)');
+
+  if (missingVars.length > 0) {
+    console.log(`\n┌────────────────────────────────────────────────────────┐`);
+    console.log(`│ ⚠️  [ENV ALERT] Variabel lingkungan berikut perlu dicek:│`);
+    missingVars.forEach(v => {
+      const line = `  • ${v}`;
+      console.log(`│ ${line.slice(0, 54).padEnd(54)} │`);
+    });
+    console.log(`└────────────────────────────────────────────────────────┘\n`);
   }
-})();
+}
+checkEnvVariables();
+
+// 2. Health Check Database Supabase (Boot & Heartbeat Monitor)
+let isDatabaseOnline = false;
+
+async function checkDatabaseHealth(isInitial = false) {
+  const startTime = Date.now();
+  try {
+    const { data, error } = await supabase.from('users').select('id').limit(1);
+    const latency = Date.now() - startTime;
+
+    if (error) {
+      if (isDatabaseOnline || isInitial) {
+        console.error(`\n┌────────────────────────────────────────────────────────┐`);
+        console.error(`│ ❌ [DATABASE ALERT] KONEKSI KE SUPABASE GAGAL / TERPUTUS │`);
+        console.error(`│ Pesan   : ${(error.message || 'Unknown error').slice(0, 44).padEnd(44)} │`);
+        console.error(`│ Kode    : ${(error.code || 'N/A').slice(0, 44).padEnd(44)} │`);
+        console.error(`│ Waktu   : ${new Date().toLocaleTimeString('id-ID')} WIB                               │`);
+        console.error(`│ Solusi  : Cek SUPABASE_URL / API KEY di file .env       │`);
+        console.error(`└────────────────────────────────────────────────────────┘\n`);
+      }
+      isDatabaseOnline = false;
+      return false;
+    }
+
+    if (!isDatabaseOnline) {
+      if (!isInitial) {
+        console.log(`\n✅ [DATABASE RECONNECTED] Koneksi ke Supabase PostgreSQL berhasil pulih kembali! (Latency: ${latency}ms)\n`);
+      } else {
+        console.log(`✅ [DATABASE] Terhubung sukses ke Supabase PostgreSQL! (Latency: ${latency}ms)`);
+      }
+      isDatabaseOnline = true;
+    }
+    return true;
+  } catch (err) {
+    if (isDatabaseOnline || isInitial) {
+      console.error(`\n┌────────────────────────────────────────────────────────┐`);
+      console.error(`│ ❌ [DATABASE ALERT] KONEKSI KE SUPABASE TERPUTUS!       │`);
+      console.error(`│ Penyebab: ${(err.message || 'Koneksi jaringan error').slice(0, 44).padEnd(44)} │`);
+      console.error(`│ Waktu   : ${new Date().toLocaleTimeString('id-ID')} WIB                               │`);
+      console.error(`│ Status  : Server mencoba rekoneksi otomatis...          │`);
+      console.error(`└────────────────────────────────────────────────────────┘\n`);
+    }
+    isDatabaseOnline = false;
+    return false;
+  }
+}
+
+// Jalankan saat pertama kali boot
+checkDatabaseHealth(true);
+
+// Jalankan monitor berkala setiap 60 detik (heartbeat)
+setInterval(() => {
+  checkDatabaseHealth(false);
+}, 60000);
+
+// 3. Global Exception & Rejection Handlers (Mencegah Silent Crash di Pterodactyl)
+process.on('uncaughtException', (err) => {
+  console.error(`\n┌────────────────────────────────────────────────────────┐`);
+  console.error(`│ ❌ [SYSTEM CRITICAL ALERT] Uncaught Exception           │`);
+  console.error(`│ Pesan  : ${(err.message || 'Unknown').slice(0, 45).padEnd(45)} │`);
+  console.error(`│ Waktu  : ${new Date().toLocaleTimeString('id-ID')} WIB                               │`);
+  if (err.stack) {
+    const firstStack = err.stack.split('\n')[1]?.trim() || '';
+    console.error(`│ Lokasi : ${firstStack.slice(0, 45).padEnd(45)} │`);
+  }
+  console.error(`└────────────────────────────────────────────────────────┘\n`);
+});
+
+process.on('unhandledRejection', (reason) => {
+  const reasonMsg = (reason && reason.message) ? reason.message : String(reason);
+  console.error(`\n┌────────────────────────────────────────────────────────┐`);
+  console.error(`│ ⚠️  [SYSTEM WARNING] Unhandled Promise Rejection         │`);
+  console.error(`│ Alasan : ${reasonMsg.slice(0, 45).padEnd(45)} │`);
+  console.error(`│ Waktu  : ${new Date().toLocaleTimeString('id-ID')} WIB                               │`);
+  console.error(`└────────────────────────────────────────────────────────┘\n`);
+});
 
 // Direktori Public (HTML, CSS, JS, Aset) & Uploads
 const publicDir = path.join(__dirname, 'public');
@@ -52,7 +137,7 @@ const publicLogo = path.join(assetsDir, 'logo.png');
 if (fs.existsSync(rootLogo) && !fs.existsSync(publicLogo)) {
   try {
     fs.copyFileSync(rootLogo, publicLogo);
-  } catch (e) {}
+  } catch (e) { }
 }
 
 const defaultAvatarSvg = path.join(uploadsDir, 'default.svg');
@@ -63,7 +148,7 @@ if (fs.existsSync(defaultAvatarSvg)) {
     if (!fs.existsSync(defaultAvatarPng) || (fs.existsSync(publicLogo) && fs.statSync(defaultAvatarPng).size === fs.statSync(publicLogo).size)) {
       fs.copyFileSync(defaultAvatarSvg, defaultAvatarPng);
     }
-  } catch (e) {}
+  } catch (e) { }
 }
 
 const app = express();
@@ -213,17 +298,6 @@ app.use('/api/profil', require('./routes/profil'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/guru', require('./routes/guru'));
 
-// Endpoint Pengaturan Batas Waktu Belajar Siswa (Dapat diakses oleh klien siswa)
-const { getDurasiSetting } = require('./services/settings');
-app.get('/api/setting/durasi', async (req, res) => {
-  try {
-    const setting = await getDurasiSetting();
-    res.json({ success: true, setting });
-  } catch (err) {
-    res.status(500).json({ error: 'Gagal memuat pengaturan durasi.' });
-  }
-});
-
 // Route Utama: Masuk ke Halaman Login terlebih dahulu (atau langsung ke Dashboard sesuai role)
 app.get('/', async (req, res) => {
   if (req.session && req.session.userId) {
@@ -240,7 +314,7 @@ app.get('/', async (req, res) => {
       if (user && user.role === 'guru') {
         return res.redirect('/guru.html');
       }
-    } catch (e) {}
+    } catch (e) { }
     return res.redirect('/beranda.html');
   }
   res.redirect('/login.html');
@@ -252,6 +326,17 @@ app.use((req, res) => {
     return res.status(404).sendFile(path.join(publicDir, '404.html'));
   }
   res.status(404).json({ error: 'Endpoint tidak ditemukan (404)' });
+});
+
+// Global Express Error Handler (500)
+app.use((err, req, res, next) => {
+  console.error(`\n❌ [API ERROR ALERT] ${req.method} ${req.originalUrl}`);
+  console.error(`   ↳ Pesan Error : ${err.message || err}`);
+  if (err.stack) {
+    const line = err.stack.split('\n')[1]?.trim() || '';
+    console.error(`   ↳ Lokasi Kode : ${line}`);
+  }
+  res.status(500).json({ error: 'Terjadi kesalahan internal pada server.', detail: err.message });
 });
 
 // Jalankan Server (HTTP + Socket.io)

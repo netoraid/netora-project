@@ -5,6 +5,11 @@ node_modules/
 *.apk
 .env
 database/settings.json
+public/uploads/materi/*
+public/uploads/*.png
+public/uploads/*.jpg
+public/uploads/*.jpeg
+public/uploads/*.webp
+!public/uploads/default.svg
 .DS_Store
 Thumbs.db
-
