@@ -40,8 +40,8 @@ window.initPengumumanPage = function() {
     if (!list || list.length === 0) {
       container.innerHTML = `
         <div class="netora-fade-in" style="background:#FFFFFF; border-radius:20px; padding:36px 20px; text-align:center; margin:16px; border:1px solid #E2E8F0; box-shadow:0 4px 16px rgba(0,0,0,0.03);">
-          <div style="width:56px; height:56px; border-radius:18px; background:#F1F5F9; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px; color:#94A3B8;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <div style="width:38px; height:38px; border-radius:11px; background:#F1F5F9; display:inline-flex; align-items:center; justify-content:center; margin-bottom:10px; color:#94A3B8;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
           </div>
           <h3 style="margin:0 0 6px; font-size:16px; font-weight:800; color:#1E293B;">Belum Ada Notifikasi</h3>
           <p style="margin:0 auto; font-size:12.5px; color:#64748B; max-width:280px; line-height:1.5;">Saat ini belum ada notifikasi baru. Pemberitahuan resmi dari admin akan muncul di sini.</p>

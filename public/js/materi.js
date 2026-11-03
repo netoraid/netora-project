@@ -18,7 +18,7 @@ window.initMateriPage = async function() {
       desc: 'Pelajari konfigurasi RouterOS, manajemen bandwidth Simple Queue & Queue Tree, Hotspot, NAT Firewall, serta Winbox.',
       iconColor: '#0D5BFF',
       iconBg: 'rgba(13, 91, 255, 0.1)',
-      icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`
+      icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`
     },
     'cisco': {
       id: 'cisco',
@@ -27,7 +27,7 @@ window.initMateriPage = async function() {
       desc: 'Simulasi interaktif jaringan komputer, konfigurasi VLAN, VTP, Trunking Switch Layer 2/3, STP, dan protokol routing Cisco IOS.',
       iconColor: '#0284C7',
       iconBg: 'rgba(2, 132, 199, 0.1)',
-      icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><path d="M6 8h12"></path><path d="M6 12h8"></path></svg>`
+      icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><path d="M6 8h12"></path><path d="M6 12h8"></path></svg>`
     },
     'server-linux': {
       id: 'server-linux',
@@ -36,7 +36,7 @@ window.initMateriPage = async function() {
       desc: 'Administrasi Linux Debian/Ubuntu Server, manajemen service Nginx/Apache Web Server, SSH Remote, konfigurasi DNS, dan hosting.',
       iconColor: '#10B981',
       iconBg: 'rgba(16, 185, 129, 0.1)',
-      icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`
+      icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`
     }
   };
 
@@ -380,7 +380,7 @@ window.initMateriPage = async function() {
       }
 
       materiContainer.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + list.map((item) => {
-        const icon = cat ? cat.icon : `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`;
+        const icon = cat ? cat.icon : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`;
         const pagesCount = item.total_halaman || (item.pages && Array.isArray(item.pages) ? item.pages.length : (item.isi ? 1 : 1));
         const pagesText = item.pages_text || `${pagesCount} halaman`;
 
@@ -426,8 +426,8 @@ window.initMateriPage = async function() {
       if (list.length === 0) {
         videoContainer.innerHTML = `
           <div class="netora-fade-in" style="text-align:center; padding:32px 18px; background:#FFFFFF; border-radius:18px; margin:0 16px 12px; border:1.5px dashed #CBD5E1; box-shadow:0 2px 12px rgba(15,23,42,0.02);">
-            <div style="width:48px; height:48px; border-radius:14px; background:rgba(239,68,68,0.08); color:#DC2626; display:inline-flex; align-items:center; justify-content:center; margin-bottom:10px;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(239,68,68,0.08); color:#DC2626; display:inline-flex; align-items:center; justify-content:center; margin-bottom:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
             </div>
             <h4 style="margin:0 0 4px; font-size:15px; font-weight:800; color:#1E293B;">
               ${q ? 'Vidio Tidak Ditemukan' : `Belum Ada Vidio Praktik di Kategori ${cat ? cat.name : ''}`}
@@ -522,15 +522,15 @@ window.initMateriPage = async function() {
   function getMateriIcon(kategori, judul) {
     const text = ((kategori || '') + ' ' + (judul || '')).toLowerCase();
     if (text.includes('cisco') || text.includes('packet tracer') || text.includes('switch') || text.includes('vlan')) {
-      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><path d="M6 8h12"></path><path d="M6 12h8"></path></svg>`;
+      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><path d="M6 8h12"></path><path d="M6 12h8"></path></svg>`;
     }
     if (text.includes('mikrotik') || text.includes('router') || text.includes('queue') || text.includes('bandwidth')) {
-      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
+      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
     }
     if (text.includes('linux') || text.includes('server') || text.includes('nginx') || text.includes('ssh') || text.includes('debian') || text.includes('ubuntu')) {
-      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`;
+      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`;
     }
-    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`;
+    return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`;
   }
 
   // 2. Halaman Detail Materi (materi-detail.html)

@@ -192,8 +192,8 @@ window.loadMateriBeranda = async function() {
     } else {
       container.innerHTML = `
         <div class="materi-empty-card" style="text-align:center; padding:36px 20px; background:#FFFFFF; border-radius:20px; border:1.5px dashed #CBD5E1; box-shadow:0 4px 18px rgba(13,91,255,0.03); margin:0; width:100%; box-sizing:border-box;">
-          <div style="width:52px; height:52px; border-radius:16px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <div style="width:38px; height:38px; border-radius:11px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
               <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
             </svg>

@@ -7,7 +7,7 @@
   <meta name="description" content="Netora — Rangkuman Materi Lengkap Teknik Komputer dan Jaringan.">
   <title>Netora — Materi</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.9">
+  <link rel="stylesheet" href="css/netora.css?v=2026.15">
   <style>
     /* NETORA v2 — KATEGORI PEMBELAJARAN (RESPONSIF & RAPIH) */
     .materi-kategori-wrap {
@@ -100,14 +100,19 @@
     }
 
     .materi-cat-iconbox {
-      width: 44px !important;
-      height: 44px !important;
-      border-radius: 13px !important;
+      width: 34px !important;
+      height: 34px !important;
+      border-radius: 10px !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       transition: transform 0.25s ease !important;
       flex-shrink: 0 !important;
+    }
+
+    .materi-cat-iconbox svg {
+      width: 17px !important;
+      height: 17px !important;
     }
 
     .materi-cat-card:hover .materi-cat-iconbox {
@@ -293,8 +298,8 @@
 
     <!-- Card Hero Biru (Kategori & Informasi Materi) -->
     <div class="hero-card-blue" id="materi-hero-card">
-      <div class="hero-blue-iconbox" style="font-size:26px;">
-        <svg style="width:26px; height:26px;" viewBox="0 0 24 24" fill="currentColor">
+      <div class="hero-blue-iconbox">
+        <svg style="width:18px; height:18px;" viewBox="0 0 24 24" fill="currentColor">
           <path
             d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" />
         </svg>
@@ -318,7 +323,7 @@
         <div class="materi-cat-card" data-cat="mikrotik" onclick="pilihKategoriMateri('mikrotik')">
           <div class="materi-cat-top">
             <div class="materi-cat-iconbox materi-cat-icon-mikrotik">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
@@ -341,7 +346,7 @@
         <div class="materi-cat-card" data-cat="cisco" onclick="pilihKategoriMateri('cisco')">
           <div class="materi-cat-top">
             <div class="materi-cat-iconbox materi-cat-icon-cisco">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                 <line x1="8" y1="21" x2="16" y2="21"></line>
                 <line x1="12" y1="17" x2="12" y2="21"></line>
@@ -366,7 +371,7 @@
         <div class="materi-cat-card" data-cat="server-linux" onclick="pilihKategoriMateri('server-linux')">
           <div class="materi-cat-top">
             <div class="materi-cat-iconbox materi-cat-icon-server-linux">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="4 17 10 11 4 5"></polyline>
                 <line x1="12" y1="19" x2="20" y2="19"></line>
               </svg>
@@ -461,8 +466,8 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.14"></script>
-  <script src="js/materi.js?v=2026.14"></script>
+  <script src="js/netora.js?v=2026.15"></script>
+  <script src="js/materi.js?v=2026.15"></script>
 </body>
 
 </html>

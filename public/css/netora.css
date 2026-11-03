@@ -440,17 +440,17 @@ body {
 }
 
 .menu-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 .menu-icon svg {
-  width: 26px;
-  height: 26px;
+  width: 18px;
+  height: 18px;
 }
 
 /* Icon Variants */
@@ -511,8 +511,8 @@ body {
   color: var(--purple);
 }
 .chevron svg {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   stroke: currentColor;
   fill: none;
 }
@@ -769,13 +769,17 @@ textarea.input-field {
 }
 
 .toast-icon-box {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+.toast-icon-box svg {
+  width: 14px;
+  height: 14px;
 }
 
 .toast-msg-text {
@@ -1181,9 +1185,9 @@ body.auth-page {
 }
 
 .auth-feature-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1193,8 +1197,8 @@ body.auth-page {
 }
 
 .auth-feature-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 16px;
+  height: 16px;
   stroke: currentColor;
   fill: none;
   stroke-width: 2;
@@ -1794,9 +1798,9 @@ body.beranda-page {
 }
 
 .menu-card-responsive .menu-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 16px;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1805,8 +1809,8 @@ body.beranda-page {
 }
 
 .menu-card-responsive .menu-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
 }
 
 /* Harmonisasi Warna Ikon Modul Pembelajaran */
@@ -2241,10 +2245,10 @@ body.beranda-page {
   border-radius: 12px;
 }
 
-/* Ukuran Ikon Sekitar 28–32 px */
+/* Ukuran Ikon Sekitar 20–22 px */
 .nav-tab-icon {
-  width: 30px;
-  height: 30px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2253,8 +2257,8 @@ body.beranda-page {
 }
 
 .nav-tab-icon svg {
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   display: block;
   fill: currentColor;
 }
@@ -2307,12 +2311,12 @@ body {
     max-width: 100%;
   }
   .nav-tab-icon {
-    width: 26px;
-    height: 26px;
+    width: 20px;
+    height: 20px;
   }
   .nav-tab-icon svg {
-    width: 26px;
-    height: 26px;
+    width: 18px;
+    height: 18px;
   }
   .nav-tab-label {
     font-size: 13px;
@@ -2781,9 +2785,9 @@ body.admin-page {
 }
 
 .kpi-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2791,8 +2795,8 @@ body.admin-page {
 }
 
 .kpi-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
 }
 
 .kpi-blue { background: rgba(59, 142, 255, 0.18); border: 1px solid rgba(59, 142, 255, 0.4); color: var(--blue); }
@@ -3228,25 +3232,25 @@ body.admin-page {
   }
 
   .menu-card-iconbox {
-    width: 48px !important;
-    height: 48px !important;
-    border-radius: 14px !important;
-    margin-bottom: 14px !important;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    margin-bottom: 8px !important;
   }
 
   .menu-card-title {
-    font-size: 16px !important;
-    margin-bottom: 6px !important;
+    font-size: 15px !important;
+    margin-bottom: 4px !important;
   }
 
   .menu-card-desc {
-    font-size: 12.5px !important;
-    line-height: 1.5 !important;
+    font-size: 12px !important;
+    line-height: 1.45 !important;
   }
 
   .circle-arrow-btn {
-    width: 32px !important;
-    height: 32px !important;
+    width: 26px !important;
+    height: 26px !important;
     transition: transform 0.2s ease !important;
   }
 
@@ -3848,16 +3852,21 @@ body.admin-page {
 }
 
 .hero-blue-iconbox {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 18px;
   flex-shrink: 0;
+}
+
+.hero-blue-iconbox svg {
+  width: 18px !important;
+  height: 18px !important;
 }
 
 .hero-blue-text h3 {
@@ -3928,15 +3937,26 @@ body.admin-page {
 }
 
 .menu-card-iconbox {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  margin-bottom: 12px;
+  font-size: 16px;
+  margin-bottom: 8px;
   position: relative;
+}
+
+.menu-card-iconbox svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+.menu-card-iconbox img {
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: contain;
 }
 
 .iconbox-video {
@@ -4122,19 +4142,24 @@ body.admin-page {
 }
 
 .item-square-thumb {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   background: #0B132B;
   color: #FFFFFF;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 15px;
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
+}
+
+.item-square-thumb svg {
+  width: 18px !important;
+  height: 18px !important;
 }
 
 .item-thumb-duration {
@@ -4384,8 +4409,8 @@ body.admin-page {
 }
 
 .nav-tab-item svg {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   stroke: currentColor;
   fill: none;
 }
@@ -6230,4 +6255,59 @@ textarea.form-input {
   box-shadow: 0 8px 24px rgba(13, 91, 255, 0.08);
   border-color: #BFDBFE;
 }
+
+/* ============================================================== */
+/* STANDARISASI UKURAN IKON SELURUH WEB (COMPACT & PROPORTIONAL) */
+/* ============================================================== */
+.materi-cat-iconbox {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 10px !important;
+}
+
+.materi-cat-iconbox svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+.item-chevron-icon svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.category-btn-back svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+.admin-tab-btn svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.guru-tab-btn svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.subpage-back-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.subpage-action-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.materi-cat-cta-arrow {
+  width: 26px !important;
+  height: 26px !important;
+}
+
+.materi-cat-cta-arrow svg {
+  width: 11px !important;
+  height: 11px !important;
+}
+
 

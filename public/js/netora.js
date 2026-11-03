@@ -208,17 +208,17 @@ function confirmDialog(message, options = {}) {
       iconBg = 'rgba(239, 68, 68, 0.12)';
       iconColor = '#EF4444';
       btnStyle = 'background: linear-gradient(135deg, #EF4444, #DC2626); color: #FFFFFF; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);';
-      iconSvg = `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>`;
+      iconSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>`;
     } else if (type === 'warning') {
       iconBg = 'rgba(245, 158, 11, 0.12)';
       iconColor = '#F59E0B';
       btnStyle = 'background: linear-gradient(135deg, #F59E0B, #D97706); color: #FFFFFF; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);';
-      iconSvg = `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+      iconSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
     } else {
       iconBg = 'rgba(13, 91, 255, 0.12)';
       iconColor = '#0D5BFF';
       btnStyle = 'background: linear-gradient(135deg, #0D5BFF, #0040C1); color: #FFFFFF; box-shadow: 0 4px 14px rgba(13, 91, 255, 0.35);';
-      iconSvg = `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
+      iconSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
     }
 
     const overlay = document.createElement('div');
@@ -239,7 +239,7 @@ function confirmDialog(message, options = {}) {
 
     overlay.innerHTML = `
       <div style="background:#FFFFFF; border-radius:24px; padding:28px 24px; max-width:390px; width:100%; box-shadow:0 25px 60px rgba(0,0,0,0.22); text-align:center; border:1px solid rgba(0,0,0,0.06); animation:netoraScaleIn 0.25s cubic-bezier(0.16,1,0.3,1) forwards;">
-        <div style="width:58px; height:58px; border-radius:18px; background:${iconBg}; color:${iconColor}; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px;">
+        <div style="width:42px; height:42px; border-radius:12px; background:${iconBg}; color:${iconColor}; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
           ${iconSvg}
         </div>
         <h3 style="margin:0 0 8px; font-size:18px; font-weight:800; color:#0F172A; line-height:1.35;">${escapeHtml(title)}</h3>
@@ -1436,8 +1436,8 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.innerHTML = `
       <div class="netora-study-modal-box" style="background: #FFFFFF; border-radius: 20px; padding: 24px 20px 20px; max-width: 360px; width: 100%; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.05); text-align: center; position: relative; animation: netoraStudyScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
         <!-- Glowing Animated Clock Icon -->
-        <div class="netora-study-icon-wrap" style="width: 52px; height: 52px; border-radius: 16px; background: rgba(239, 68, 68, 0.09); color: #EF4444; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; animation: netoraStudyPulse 2.4s infinite;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="netora-study-icon-wrap" style="width: 40px; height: 40px; border-radius: 12px; background: rgba(239, 68, 68, 0.09); color: #EF4444; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 10px; animation: netoraStudyPulse 2.4s infinite;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>

@@ -16,21 +16,21 @@ window.initQuizPage = function() {
   function getTopicIconSvg(kategoriStr) {
     const text = (kategoriStr || '').toLowerCase();
     if (text.includes('cisco') || text.includes('packet tracer') || text.includes('switch') || text.includes('vlan')) {
-      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
     }
     if (text.includes('mikrotik') || text.includes('router') || text.includes('queue') || text.includes('bandwidth')) {
-      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
+      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
     }
     if (text.includes('server') || text.includes('linux') || text.includes('nginx') || text.includes('ssh')) {
-      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`;
+      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`;
     }
     if (text.includes('subnet') || text.includes('ip') || text.includes('cidr') || text.includes('kalkulator')) {
-      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="8" y1="14" x2="8" y2="14"/></svg>`;
+      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="8" y1="14" x2="8" y2="14"/></svg>`;
     }
     if (text.includes('firewall') || text.includes('keamanan') || text.includes('security')) {
-      return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
     }
-    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`;
+    return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`;
   }
 
   function parseKategoriItem(item) {
@@ -188,8 +188,8 @@ window.initQuizPage = function() {
       if (quizFilterRow) quizFilterRow.style.display = 'none';
       quizContainer.innerHTML = `
         <div class="netora-fade-in" style="background:#FFFFFF; border-radius:20px; padding:36px 20px; text-align:center; margin:16px; box-shadow:0 4px 18px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
-          <div style="width:52px; height:52px; border-radius:14px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <div style="width:38px; height:38px; border-radius:10px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           </div>
           <h4 style="margin:0 0 8px; color:#1E293B; font-size:16px; font-weight:800;">Belum Ada Kuis Tersedia di Database</h4>
           <p style="margin:0 0 16px; font-size:13px; color:#64748B; line-height:1.5; max-width:360px; margin-left:auto; margin-right:auto;">
@@ -214,8 +214,8 @@ window.initQuizPage = function() {
     if (filtered.length === 0) {
       quizContainer.innerHTML = `
         <div class="netora-fade-in" style="background:#FFFFFF; border-radius:20px; padding:32px 20px; text-align:center; margin:16px; box-shadow:0 4px 18px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
-          <div style="width:48px; height:48px; border-radius:14px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <div style="width:36px; height:36px; border-radius:10px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           </div>
           <h4 style="margin:0 0 6px; color:#1E293B; font-size:15px; font-weight:800;">Belum Ada Kuis di Kategori Ini</h4>
           <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Kuis untuk kategori ini belum dibuat oleh Guru atau Admin. Silakan pilih kategori lain.</p>
@@ -284,8 +284,8 @@ window.initQuizPage = function() {
     if (currentQuestions.length === 0) {
       quizContainer.innerHTML = `
         <div style="background:#FFFFFF; border-radius:18px; padding:30px 20px; text-align:center; margin:16px; box-shadow:0 4px 18px rgba(13,91,255,0.06);">
-          <div style="width:48px; height:48px; border-radius:12px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <div style="width:36px; height:36px; border-radius:10px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
           </div>
           <h4 style="margin:0 0 8px; color:#1E293B;">Soal Belum Tersedia</h4>
           <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Soal kuis untuk topik ini belum ditambahkan oleh instruktur di Dashboard Admin.</p>
@@ -413,8 +413,8 @@ window.initQuizPage = function() {
   async function submitQuiz() {
     quizContainer.innerHTML = `
       <div style="background:#FFFFFF; border-radius:20px; padding:40px 20px; margin:16px; text-align:center; box-shadow:0 4px 18px rgba(13,91,255,0.06);">
-        <div style="width:48px; height:48px; border-radius:12px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <div style="width:36px; height:36px; border-radius:10px; background:rgba(13,91,255,0.08); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
         </div>
         <h4 style="margin:0 0 6px; color:#1E293B;">Memproses Hasil Evaluasi...</h4>
         <p style="margin:0; font-size:12.5px; color:#64748B;">Menyinkronkan rekapan skor ke basis data Netora.</p>
@@ -501,10 +501,10 @@ window.initQuizPage = function() {
 
     quizContainer.innerHTML = `
       <div style="background:#FFFFFF; border-radius:22px; padding:32px 24px; margin:16px; text-align:center; box-shadow:0 4px 20px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
-        <div style="width:56px; height:56px; border-radius:16px; background:${isLulus ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; color:${isLulus ? '#10B981' : '#EF4444'}; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px;">
+        <div style="width:42px; height:42px; border-radius:12px; background:${isLulus ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; color:${isLulus ? '#10B981' : '#EF4444'}; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
           ${isLulus 
-            ? `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>` 
-            : `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`}
+            ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>` 
+            : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`}
         </div>
         
         <div style="margin-bottom:14px;">
