@@ -2426,20 +2426,58 @@ body {
    PENGUMUMAN & SUB-HALAMAN (DESKTOP & MOBILE FRIENDLY)
    ======================================================== */
 
-/* Grid Pengumuman: 2 Kolom Luas di Desktop, 1 Kolom Rapi di Mobile */
+/* Container Pengumuman: Terstruktur di Mobile & Desktop */
 #pengumuman-container {
   display: flex;
   flex-direction: column;
   gap: 16px;
   margin-bottom: 36px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.history-single-wrap {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.history-empty-card {
+  width: 100%;
+  max-width: 540px;
+  margin: 16px auto;
+  box-sizing: border-box;
+}
+
+.notif-single-wrap {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.notif-empty-card {
+  width: 100%;
+  max-width: 520px;
+  margin: 24px auto;
+  box-sizing: border-box;
+}
+
+.progres-section-wrap {
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 @media (min-width: 768px) {
   #pengumuman-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    align-items: stretch;
+    display: block;
+    max-width: 1200px;
+    margin: 20px auto 40px;
+    padding: 0 24px;
+    box-sizing: border-box;
   }
 }
 
@@ -3362,8 +3400,10 @@ body.admin-page {
 
   .desktop-grid-2col > div,
   .desktop-grid-2col .white-item-card,
+  .desktop-grid-2col .notif-card-item,
   .desktop-grid-2col .video-card-item,
-  .desktop-grid-2col .skeleton-item-card {
+  .desktop-grid-2col .skeleton-item-card,
+  .desktop-grid-2col .skeleton-notif-card {
     margin: 0 !important;
     width: 100% !important;
     box-sizing: border-box !important;
@@ -3455,13 +3495,38 @@ body.admin-page {
   }
 
   #quiz-history-container {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 14px !important;
+    width: 100% !important;
+    display: block !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
   }
 
-  #quiz-history-container > div {
-    margin: 0 !important;
+  .history-single-wrap {
+    max-width: 720px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .history-empty-card {
+    max-width: 540px !important;
+    margin: 24px auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .notif-single-wrap {
+    max-width: 680px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .notif-empty-card {
+    max-width: 520px !important;
+    margin: 32px auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   /* Notifikasi / Pengumuman di Desktop */
@@ -3470,6 +3535,7 @@ body.admin-page {
     margin: 20px auto 40px !important;
     padding: 0 24px !important;
     box-sizing: border-box !important;
+    display: block !important;
   }
 
   /* Profil Pengguna di Desktop: Terpusat Elegan Simetris 820px */

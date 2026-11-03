@@ -6,52 +6,32 @@ window.initPengumumanPage = function() {
 
   function renderSkeleton() {
     container.innerHTML = `
-      <div class="skeleton-notif-card">
-        <div class="skeleton-notif-header">
-          <div class="netora-skeleton" style="width:72px; height:18px; border-radius:6px;"></div>
-          <div class="netora-skeleton" style="width:96px; height:13px; border-radius:4px;"></div>
+      <div class="desktop-grid-2col">
+        <div class="skeleton-notif-card">
+          <div class="skeleton-notif-header">
+            <div class="netora-skeleton" style="width:72px; height:18px; border-radius:6px;"></div>
+            <div class="netora-skeleton" style="width:96px; height:13px; border-radius:4px;"></div>
+          </div>
+          <div class="netora-skeleton skeleton-line h-18 w-75" style="margin-top:4px;"></div>
+          <div class="netora-skeleton skeleton-line w-100"></div>
+          <div class="netora-skeleton skeleton-line w-60"></div>
         </div>
-        <div class="netora-skeleton skeleton-line h-18 w-75" style="margin-top:4px;"></div>
-        <div class="netora-skeleton skeleton-line w-100"></div>
-        <div class="netora-skeleton skeleton-line w-60"></div>
-      </div>
-      <div class="skeleton-notif-card">
-        <div class="skeleton-notif-header">
-          <div class="netora-skeleton" style="width:84px; height:18px; border-radius:6px;"></div>
-          <div class="netora-skeleton" style="width:90px; height:13px; border-radius:4px;"></div>
+        <div class="skeleton-notif-card">
+          <div class="skeleton-notif-header">
+            <div class="netora-skeleton" style="width:84px; height:18px; border-radius:6px;"></div>
+            <div class="netora-skeleton" style="width:90px; height:13px; border-radius:4px;"></div>
+          </div>
+          <div class="netora-skeleton skeleton-line h-18 w-90" style="margin-top:4px;"></div>
+          <div class="netora-skeleton skeleton-line w-100"></div>
+          <div class="netora-skeleton skeleton-line w-40"></div>
         </div>
-        <div class="netora-skeleton skeleton-line h-18 w-90" style="margin-top:4px;"></div>
-        <div class="netora-skeleton skeleton-line w-100"></div>
-        <div class="netora-skeleton skeleton-line w-40"></div>
-      </div>
-      <div class="skeleton-notif-card">
-        <div class="skeleton-notif-header">
-          <div class="netora-skeleton" style="width:64px; height:18px; border-radius:6px;"></div>
-          <div class="netora-skeleton" style="width:92px; height:13px; border-radius:4px;"></div>
-        </div>
-        <div class="netora-skeleton skeleton-line h-18 w-60" style="margin-top:4px;"></div>
-        <div class="netora-skeleton skeleton-line w-100"></div>
-        <div class="netora-skeleton skeleton-line w-50"></div>
       </div>
     `;
   }
 
-  function renderPengumuman(list) {
-    if (!list || list.length === 0) {
-      container.innerHTML = `
-        <div class="netora-fade-in" style="background:#FFFFFF; border-radius:20px; padding:36px 20px; text-align:center; margin:16px; border:1px solid #E2E8F0; box-shadow:0 4px 16px rgba(0,0,0,0.03);">
-          <div style="width:38px; height:38px; border-radius:11px; background:#F1F5F9; display:inline-flex; align-items:center; justify-content:center; margin-bottom:10px; color:#94A3B8;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          </div>
-          <h3 style="margin:0 0 6px; font-size:16px; font-weight:800; color:#1E293B;">Belum Ada Notifikasi</h3>
-          <p style="margin:0 auto; font-size:12.5px; color:#64748B; max-width:280px; line-height:1.5;">Saat ini belum ada notifikasi baru. Pemberitahuan resmi dari admin akan muncul di sini.</p>
-        </div>
-      `;
-      return;
-    }
-
-    container.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + list.map(item => `
-      <div class="notif-card-item white-item-card" style="background:#FFFFFF; border-radius:18px; padding:18px 20px; box-shadow:0 4px 18px rgba(13,91,255,0.05); border:1.5px solid ${item.penting ? 'rgba(239,68,68,0.35)' : 'rgba(0,0,0,0.06)'}; position:relative; overflow:hidden;">
+  function renderNotifCard(item) {
+    return `
+      <div class="notif-card-item white-item-card" style="background:#FFFFFF; border-radius:18px; padding:18px 20px; box-shadow:0 4px 18px rgba(13,91,255,0.05); border:1.5px solid ${item.penting ? 'rgba(239,68,68,0.35)' : 'rgba(0,0,0,0.06)'}; position:relative; overflow:hidden; margin-bottom:12px;">
         ${item.penting ? `<div style="position:absolute; top:0; left:0; width:4px; height:100%; background:#EF4444;"></div>` : ''}
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <div style="display:flex; align-items:center; gap:6px;">
@@ -69,7 +49,33 @@ window.initPengumumanPage = function() {
           ${escapeHtml(item.isi)}
         </p>
       </div>
-    `).join('') + '</div>';
+    `;
+  }
+
+  function renderPengumuman(list) {
+    if (!list || list.length === 0) {
+      container.innerHTML = `
+        <div class="netora-fade-in notif-empty-card" style="background:#FFFFFF; border-radius:22px; padding:38px 24px; text-align:center; max-width:520px; margin:32px auto; border:1.5px solid #E2E8F0; box-shadow:0 4px 18px rgba(13,91,255,0.05); box-sizing:border-box;">
+          <div style="width:48px; height:48px; border-radius:14px; background:rgba(13,91,255,0.08); display:inline-flex; align-items:center; justify-content:center; margin:0 auto 12px; color:#0D5BFF;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          </div>
+          <h3 style="margin:0 0 6px; font-size:16.5px; font-weight:800; color:#1E293B;">Belum Ada Notifikasi</h3>
+          <p style="margin:0 auto; font-size:13px; color:#64748B; max-width:320px; line-height:1.55;">Saat ini belum ada notifikasi baru. Pemberitahuan resmi dari admin akan muncul di sini.</p>
+        </div>
+      `;
+      return;
+    }
+
+    if (list.length === 1) {
+      container.innerHTML = `
+        <div class="netora-fade-in notif-single-wrap" style="max-width:680px; margin:0 auto; width:100%; box-sizing:border-box;">
+          ${renderNotifCard(list[0])}
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + list.map(renderNotifCard).join('') + '</div>';
   }
 
   // Jika container belum memiliki konten skeleton, isi dengan skeleton shimmer
