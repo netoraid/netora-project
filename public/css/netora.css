@@ -3129,7 +3129,8 @@ body.admin-page {
 }
 
 /* ========================================================================== */
-/* RESPONSIVE DESKTOP ADAPTATION (Widescreen >= 768px & 992px)               */
+/* ========================================================================== */
+/* RESPONSIVE DESKTOP ADAPTATION (Widescreen >= 768px & 992px) - UNIFIED 1200PX*/
 /* ========================================================================== */
 @media (min-width: 768px) {
   html, body {
@@ -3158,263 +3159,226 @@ body.admin-page {
     display: none !important;
   }
 
-  /* Tampilkan navbar navigasi atas khusus desktop */
-  .desktop-top-nav-links {
-    display: flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    flex-wrap: wrap !important;
-  }
-
   /* Header Desktop yang lebih lega, elegan & Full Width */
   .app-top-header-royal {
-    padding: 20px 0 !important;
+    padding: 18px 0 !important;
     border-bottom-left-radius: 24px !important;
     border-bottom-right-radius: 24px !important;
     box-shadow: 0 8px 30px rgba(13, 91, 255, 0.15) !important;
     width: 100% !important;
+    box-sizing: border-box !important;
   }
 
-  /* Header Nav Row Desktop Wrapping & Centered Container */
+  /* Header Nav Row & Subpage Header: Symmetrical Unified 1200px Container */
   .header-nav-row,
   .subpage-header-row {
-    max-width: 1380px !important;
+    max-width: 1200px !important;
     margin: 0 auto !important;
-    padding: 0 36px !important;
+    padding: 0 24px !important;
     width: 100% !important;
     box-sizing: border-box !important;
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
-    flex-wrap: wrap !important;
-    gap: 14px !important;
+    flex-wrap: nowrap !important;
+    gap: 16px !important;
+    min-height: 48px !important;
   }
+
   .header-greeting-title {
     font-size: 21px !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
   }
   .header-greeting-sub {
     font-size: 13px !important;
+    margin: 3px 0 0 !important;
+  }
+
+  /* Tampilkan navbar navigasi atas khusus desktop di tengah-kanan */
+  .desktop-top-nav-links {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin: 0 auto !important;
+    flex-shrink: 0 !important;
+  }
+
+  .desktop-nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-decoration: none !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    padding: 8px 14px !important;
+    border-radius: 10px !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+
+  .desktop-nav-link svg {
+    width: 15px !important;
+    height: 15px !important;
+    stroke: currentColor !important;
+    stroke-width: 2 !important;
+    fill: none !important;
+    flex-shrink: 0 !important;
+  }
+
+  .desktop-nav-link:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #FFFFFF !important;
+  }
+
+  .desktop-nav-link.active {
+    background: rgba(255, 255, 255, 0.22) !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
   }
 
   /* Banner Carousel Desktop Container */
   .banner-carousel-wrap {
-    max-width: 1380px !important;
-    margin: 24px auto 14px !important;
+    max-width: 1200px !important;
+    margin: 22px auto 16px !important;
     border-radius: 24px !important;
-    box-shadow: 0 8px 32px rgba(13, 91, 255, 0.09) !important;
-  }
-
-  /* Grid Menu Utama: Di desktop otomatis 4 kolom sejajar & proporsional */
-  .menu-grid-2x2 {
-    max-width: 1380px !important;
-    margin: 0 auto !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 20px !important;
-    padding: 0 36px !important;
+    box-shadow: 0 8px 32px rgba(13, 91, 255, 0.1) !important;
     box-sizing: border-box !important;
+    overflow: hidden !important;
   }
 
-  .menu-card-2x2 {
-    padding: 20px !important;
-    min-height: auto !important;
-    border-radius: 22px !important;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  }
-
-  .menu-card-2x2:hover {
-    transform: translateY(-4px) !important;
-    box-shadow: 0 12px 28px rgba(13, 91, 255, 0.12) !important;
-    border-color: rgba(13, 91, 255, 0.22) !important;
-  }
-
-  .menu-card-2x2:hover .circle-arrow-btn {
-    transform: translateX(3px);
-  }
-
-  .menu-card-iconbox {
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 10px !important;
-    margin-bottom: 8px !important;
-  }
-
-  .menu-card-title {
-    font-size: 15px !important;
-    margin-bottom: 4px !important;
-  }
-
-  .menu-card-desc {
-    font-size: 12px !important;
-    line-height: 1.45 !important;
-  }
-
-  .circle-arrow-btn {
-    width: 26px !important;
-    height: 26px !important;
-    transition: transform 0.2s ease !important;
-  }
-
-  /* Section Header padding desktop */
+  /* Section Header: Symmetrical Left Alignment with Content */
   .section-header-orange {
-    max-width: 1380px !important;
-    margin: 32px auto 16px !important;
-    padding: 0 36px !important;
-    font-size: 20px !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Section Modul Terbaru di Dashboard Siswa Desktop (2 Kolom Rapi) */
-  .beranda-materi-section {
-    max-width: 1380px !important;
-    margin: 36px auto 0 !important;
-    padding: 0 36px 48px !important;
-    box-sizing: border-box !important;
-  }
-
-  .beranda-materi-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    margin-bottom: 18px !important;
-  }
-
-  .beranda-materi-title {
-    font-size: 18px !important;
+    max-width: 1200px !important;
+    margin: 28px auto 16px !important;
+    padding: 0 24px !important;
+    font-size: 19px !important;
     font-weight: 800 !important;
-    color: #0F172A !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
   }
 
-  .beranda-materi-bar {
-    width: 4px !important;
-    height: 18px !important;
-    background: #0D5BFF !important;
-    border-radius: 4px !important;
-    display: inline-block !important;
-  }
-
-  .beranda-materi-more {
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    color: #0D5BFF !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    padding: 7px 16px !important;
-    border-radius: 12px !important;
-    background: rgba(13, 91, 255, 0.08) !important;
-    text-decoration: none !important;
-    transition: all 0.2s ease !important;
-  }
-
-  .beranda-materi-more:hover {
-    background: #0D5BFF !important;
-    color: #FFFFFF !important;
-    transform: translateX(2px) !important;
-  }
-
-  #beranda-materi-list {
+  /* Grid 4 Menu Utama di Beranda: Simetris Rata 4 Kolom */
+  .menu-features-grid {
+    max-width: 1200px !important;
+    margin: 0 auto 36px !important;
+    padding: 0 24px !important;
+    box-sizing: border-box !important;
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(4, 1fr) !important;
     gap: 18px !important;
   }
 
-  #beranda-materi-list .white-item-card {
-    padding: 14px 18px !important;
-    border-radius: 18px !important;
-    transition: all 0.22s ease !important;
-  }
-
-  #beranda-materi-list .white-item-card:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 24px rgba(13, 91, 255, 0.1) !important;
-    border-color: rgba(13, 91, 255, 0.2) !important;
-  }
-
-  /* Hero Card Dark di Desktop: Lebih lebar, teks dan router side-by-side */
-  .hero-card-dark {
-    max-width: 1380px !important;
-    margin: -10px auto 24px !important;
-    padding: 34px 40px !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    gap: 28px !important;
-    box-sizing: border-box !important;
-  }
-
-  .hero-card-content {
-    flex: 1 !important;
-    max-width: 580px !important;
+  .feature-menu-card {
+    min-height: 156px !important;
+    padding: 22px 16px 18px !important;
+    border-radius: 22px !important;
     display: flex !important;
     flex-direction: column !important;
-    align-items: flex-start !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
   }
 
-  .hero-card-dark h3,
-  .hero-card-title {
-    font-size: 24px !important;
-    font-weight: 800 !important;
-    line-height: 1.35 !important;
-    margin: 8px 0 10px !important;
-  }
-
-  .hero-card-dark p,
-  .hero-card-desc {
-    font-size: 13.5px !important;
-    line-height: 1.6 !important;
-    color: #94A3B8 !important;
-    margin: 0 0 20px !important;
-  }
-
-  .hero-card-actions {
+  .feature-icon-wrapper {
+    width: 66px !important;
+    height: 66px !important;
+    margin-bottom: 12px !important;
     display: flex !important;
     align-items: center !important;
-    gap: 12px !important;
+    justify-content: center !important;
   }
 
-  .hero-router-illu {
-    position: static !important;
-    width: 200px !important;
-    height: 150px !important;
-    flex-shrink: 0 !important;
+  .icon-old-quiz-box {
+    width: 66px !important;
+    height: 66px !important;
+    border-radius: 18px !important;
   }
 
-  /* Hero Card Blue di Desktop */
-  .hero-card-blue {
-    max-width: 1380px !important;
-    margin: 24px auto !important;
-    padding: 24px 34px !important;
-    box-sizing: border-box !important;
+  .feature-card-title {
+    font-size: 14.5px !important;
+    font-weight: 800 !important;
+    line-height: 1.3 !important;
   }
 
-  .hero-blue-text h3 {
-    font-size: 20px !important;
-  }
-
-  .hero-blue-text p {
-    font-size: 13.5px !important;
-  }
-
-  /* Filter Pills di Desktop */
-  .filter-pills-row {
-    max-width: 1380px !important;
+  /* Kategori Pembelajaran di Materi & Video */
+  .materi-kategori-wrap {
+    max-width: 1200px !important;
     margin: 0 auto !important;
-    padding: 4px 36px 18px !important;
+    padding: 16px 24px 32px !important;
     box-sizing: border-box !important;
   }
 
-  /* Segmented Pill Control (Kalkulator Subnet/Network/Broadcast/Range) di Desktop: Terpusat Elegan */
+  .materi-category-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
+  }
+
+  .materi-cat-card {
+    min-height: 124px !important;
+    padding: 18px 20px !important;
+    border-radius: 20px !important;
+  }
+
+  /* Banner Kategori Aktif di Desktop (Materi & Video) */
+  .category-active-banner {
+    max-width: 1200px !important;
+    margin: 20px auto 18px !important;
+    padding: 18px 24px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border-radius: 20px !important;
+  }
+
+  #search-materi-box,
+  #search-video-box {
+    max-width: 1200px !important;
+    margin: 0 auto 16px !important;
+    padding: 0 24px !important;
+    box-sizing: border-box !important;
+  }
+
+  #materi-container,
+  #video-container {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 0 24px 36px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Grid 2 Kolom untuk Item Cards di Desktop */
+  .desktop-grid-2col {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 18px !important;
+    box-sizing: border-box !important;
+  }
+
+  .desktop-grid-2col > div,
+  .desktop-grid-2col .white-item-card,
+  .desktop-grid-2col .video-card-item,
+  .desktop-grid-2col .skeleton-item-card {
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Segmented Pill Control di Desktop (Kalkulator) */
   .segmented-pill-bar {
     max-width: 540px !important;
-    margin: 24px auto 20px !important;
+    margin: 22px auto 18px !important;
     padding: 6px !important;
     border-radius: 16px !important;
     box-shadow: 0 4px 18px rgba(13, 91, 255, 0.08) !important;
     border: 1.5px solid #E2E8F0 !important;
     background: #FFFFFF !important;
+    box-sizing: border-box !important;
   }
 
   .segmented-pill-btn {
@@ -3426,20 +3390,20 @@ body.admin-page {
 
   /* Kalkulator Split 2 Kolom di Desktop (Input Kiri, Hasil Kanan) */
   .calc-desktop-split {
-    max-width: 1380px !important;
+    max-width: 1200px !important;
     margin: 0 auto !important;
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 24px !important;
-    padding: 0 36px !important;
+    padding: 0 24px !important;
     align-items: start !important;
     box-sizing: border-box !important;
   }
 
   #history-container {
-    max-width: 1380px !important;
-    margin: 24px auto 40px !important;
-    padding: 0 36px !important;
+    max-width: 1200px !important;
+    margin: 24px auto 36px !important;
+    padding: 0 24px !important;
     box-sizing: border-box !important;
   }
 
@@ -3449,51 +3413,44 @@ body.admin-page {
     gap: 14px !important;
   }
 
-  /* Banner Kategori Aktif di Desktop (Materi & Video) */
-  .category-active-banner {
-    max-width: 1380px !important;
-    margin: 24px auto 18px !important;
-    padding: 20px 28px !important;
-    width: calc(100% - 72px) !important;
-    box-sizing: border-box !important;
-  }
-
-  #search-materi-box,
-  #search-video-box {
-    max-width: 1380px !important;
-    margin: 0 auto 16px !important;
-    padding: 0 36px !important;
-    box-sizing: border-box !important;
-  }
-
-  #materi-container,
-  #video-container {
-    max-width: 1380px !important;
-    margin: 0 auto !important;
-    padding: 0 36px 36px !important;
-    box-sizing: border-box !important;
-  }
-
   /* Quiz Container & Filter di Desktop */
   #quiz-filter-row {
-    max-width: 1380px !important;
+    max-width: 1200px !important;
     margin: 20px auto 14px !important;
-    padding: 0 36px !important;
+    padding: 0 24px !important;
     box-sizing: border-box !important;
   }
 
   #quiz-container {
-    max-width: 1380px !important;
+    max-width: 1200px !important;
     margin: 0 auto !important;
-    padding: 16px 36px 40px !important;
+    padding: 0 24px 36px !important;
     box-sizing: border-box !important;
   }
 
-  /* Progress Siswa di Desktop: Simetris Bounded 1380px */
+  /* Progress Siswa di Desktop: Simetris Bounded 1200px */
+  .stat-summary-grid {
+    max-width: 1200px !important;
+    margin: 20px auto 16px !important;
+    padding: 0 24px !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 18px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+
+  .stat-card-progress {
+    padding: 16px 14px 14px !important;
+    border-radius: 18px !important;
+    min-height: 104px !important;
+    box-sizing: border-box !important;
+  }
+
   .progres-section-wrap {
-    max-width: 1380px !important;
+    max-width: 1200px !important;
     margin: 0 auto !important;
-    padding: 0 36px 16px !important;
+    padding: 0 24px 20px !important;
     box-sizing: border-box !important;
   }
 
@@ -3503,21 +3460,36 @@ body.admin-page {
     gap: 14px !important;
   }
 
+  #quiz-history-container > div {
+    margin: 0 !important;
+  }
+
   /* Notifikasi / Pengumuman di Desktop */
   #pengumuman-container {
-    max-width: 1380px !important;
-    margin: 20px auto 48px !important;
-    padding: 0 36px !important;
+    max-width: 1200px !important;
+    margin: 20px auto 40px !important;
+    padding: 0 24px !important;
     box-sizing: border-box !important;
   }
 
-  /* Profil Pengguna di Desktop: Terpusat Elegan Simetris */
-  .profil-desktop-wrap,
-  .profil-tab-bar,
+  /* Profil Pengguna di Desktop: Terpusat Elegan Simetris 820px */
+  .profil-desktop-wrap {
+    max-width: 820px !important;
+    margin: 0 auto 20px !important;
+    box-sizing: border-box !important;
+    border-radius: 24px !important;
+  }
+
+  .profil-tab-bar {
+    max-width: 820px !important;
+    margin: 0 auto 18px !important;
+    box-sizing: border-box !important;
+  }
+
   .profil-tab-content {
     max-width: 820px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
     box-sizing: border-box !important;
   }
 
@@ -3525,122 +3497,12 @@ body.admin-page {
   #materi-detail-container {
     max-width: 960px !important;
     margin: 24px auto 40px !important;
-    padding: 0 36px !important;
+    padding: 0 24px !important;
     box-sizing: border-box !important;
   }
 
-  /* Grid 3 Kolom untuk Video, Quiz, Materi di Desktop */
-  .desktop-grid-3col {
-    max-width: 1380px !important;
-    margin: 0 auto !important;
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 18px !important;
-    padding: 0 36px !important;
-    box-sizing: border-box !important;
-  }
-
-  .desktop-grid-2col {
-    max-width: 1380px !important;
-    margin: 0 auto !important;
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 18px !important;
-    padding: 0 36px !important;
-    box-sizing: border-box !important;
-  }
-
-  .stat-summary-grid {
-    max-width: 1380px !important;
-    margin: 0 auto !important;
-    padding: 16px 36px !important;
-    box-sizing: border-box !important;
-  }
-
-  .white-item-card,
-  .video-card-item {
+  #materi-detail-container > div {
     margin: 0 !important;
-  }
-
-  /* Splash & Auth Desktop Adaptation (2 Kolom Lebar di Layar Komputer) */
-  .splash-desktop-split {
-    display: grid !important;
-    grid-template-columns: 1.15fr 0.85fr !important;
-    gap: 40px !important;
-    align-items: center !important;
-    padding: 44px 50px 36px !important;
-    text-align: left !important;
-  }
-
-  .splash-text-col {
-    text-align: left !important;
-  }
-
-  .splash-text-col h1 {
-    font-size: 38px !important;
-  }
-
-  .splash-text-col h3 {
-    font-size: 20px !important;
-    max-width: 100% !important;
-    margin: 0 0 16px 0 !important;
-    text-align: left !important;
-  }
-
-  .splash-features-grid {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    margin: 20px 0 28px !important;
-  }
-
-  .splash-feature-item {
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    font-size: 13.5px !important;
-    color: #E2E8F0 !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    padding: 10px 16px !important;
-    border-radius: 12px !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  }
-
-  .splash-illu-col {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    height: 320px !important;
-  }
-
-  .splash-illu-col svg {
-    max-width: 440px !important;
-    height: 100% !important;
-  }
-
-  /* Auth Desktop Split (Showcase di Kiri, Form Card di Kanan) */
-  .auth-desktop-split {
-    display: grid !important;
-    grid-template-columns: 0.95fr 1.05fr !important;
-    gap: 40px !important;
-    align-items: start !important;
-    padding: 36px 44px !important;
-  }
-
-  .auth-showcase-col {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 18px !important;
-    padding-top: 10px !important;
-  }
-
-  .auth-form-card-col {
-    background: rgba(255, 255, 255, 0.04) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 24px !important;
-    padding: 28px 24px !important;
-    backdrop-filter: blur(10px) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3) !important;
   }
 
   /* Responsive Display Utilities */
@@ -3798,23 +3660,28 @@ body.admin-page {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 44px;
+  gap: 12px;
 }
 
 .subpage-back-btn {
   color: #FFFFFF;
   text-decoration: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 36px;
   height: 36px;
+  min-width: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  transition: 0.2s;
+  background: rgba(255, 255, 255, 0.16);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .subpage-back-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateX(-2px);
 }
 
 .subpage-title {
@@ -3822,21 +3689,30 @@ body.admin-page {
   font-size: 18px;
   font-weight: 800;
   color: #FFFFFF;
-  text-align: center;
-  flex: 1;
+  line-height: 1.25;
+  letter-spacing: -0.2px;
 }
 
 .subpage-action-btn {
   width: 36px;
   height: 36px;
+  min-width: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  display: flex;
+  background: rgba(255, 255, 255, 0.16);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   color: #FFFFFF;
   text-decoration: none;
   font-size: 16px;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.subpage-action-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
 }
 
 /* Card Hero Gelap (Midnight Cyber-Navy di Beranda) */
@@ -4506,29 +4382,33 @@ body.admin-page {
   align-items: center;
   justify-content: center;
   gap: 3px;
-  color: #94A3B8;
+  color: #64748B;
   text-decoration: none;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
   position: relative;
   flex: 1;
 }
 
 .nav-tab-item.active {
   color: #0D5BFF;
+  font-weight: 800;
 }
 
 .nav-tab-item svg {
-  width: 18px;
-  height: 18px;
+  width: 19px;
+  height: 19px;
   stroke: currentColor;
-  fill: none;
+  fill: none !important;
+  stroke-width: 2;
+  transition: transform 0.2s ease, stroke-width 0.2s ease;
 }
 
 .nav-tab-item.active svg {
-  fill: #0D5BFF;
+  fill: none !important;
   stroke: #0D5BFF;
+  stroke-width: 2.3;
 }
 
 .nav-notif-dot {

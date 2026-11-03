@@ -51,7 +51,7 @@ window.initPengumumanPage = function() {
     }
 
     container.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + list.map(item => `
-      <div style="background:#FFFFFF; border-radius:18px; padding:18px 16px; margin:0 16px 14px; box-shadow:0 3px 16px rgba(13,91,255,0.05); border:1px solid ${item.penting ? 'rgba(239,68,68,0.35)' : 'rgba(0,0,0,0.06)'}; position:relative; overflow:hidden;">
+      <div class="notif-card-item white-item-card" style="background:#FFFFFF; border-radius:18px; padding:18px 20px; box-shadow:0 4px 18px rgba(13,91,255,0.05); border:1.5px solid ${item.penting ? 'rgba(239,68,68,0.35)' : 'rgba(0,0,0,0.06)'}; position:relative; overflow:hidden;">
         ${item.penting ? `<div style="position:absolute; top:0; left:0; width:4px; height:100%; background:#EF4444;"></div>` : ''}
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <div style="display:flex; align-items:center; gap:6px;">

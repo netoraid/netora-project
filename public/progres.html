@@ -6,7 +6,7 @@
   <meta name="description" content="Netora — Rekap Progress Belajar, Nilai Kuis, dan Pencapaian Siswa TKJ.">
   <title>Netora — Progress Belajar</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.29">
+  <link rel="stylesheet" href="css/netora.css?v=2026.30">
   <style>
     .stat-summary-grid {
       display: grid;
@@ -16,38 +16,34 @@
       box-sizing: border-box;
       width: 100%;
     }
-    @media (min-width: 480px) {
-      .stat-summary-grid {
-        gap: 12px;
-        padding: 16px;
-      }
-    }
     .stat-card-progress {
       background: #FFFFFF;
-      border-radius: 16px;
-      padding: 12px 6px 10px;
+      border-radius: 18px;
+      padding: 14px 8px 12px;
       text-align: center;
-      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
-      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 16px rgba(13, 91, 255, 0.05);
+      border: 1.5px solid #E2E8F0;
       min-width: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-sizing: border-box;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
     .stat-card-progress:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
+      box-shadow: 0 8px 24px rgba(13, 91, 255, 0.1);
+      border-color: #BFDBFE;
     }
     .stat-icon-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
-      margin-bottom: 6px;
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      margin-bottom: 8px;
       flex-shrink: 0;
       transition: transform 0.2s ease;
     }
@@ -74,11 +70,11 @@
       font-weight: 900;
       color: #0F172A;
       line-height: 1.15;
-      margin: 0 0 3px;
+      margin: 0 0 4px;
       letter-spacing: -0.4px;
     }
     .stat-card-lbl {
-      font-size: clamp(9px, 2.3vw, 10.5px);
+      font-size: clamp(9px, 2.2vw, 10.5px);
       font-weight: 700;
       color: #64748B;
       text-transform: uppercase;
@@ -92,10 +88,11 @@
     .skill-progress-card {
       background: #FFFFFF;
       border-radius: 18px;
-      padding: 16px 18px;
+      padding: 16px 20px;
       margin-bottom: 12px;
-      box-shadow: 0 2px 12px rgba(13, 91, 255, 0.04);
-      border: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 3px 14px rgba(13, 91, 255, 0.04);
+      border: 1.5px solid #E2E8F0;
+      box-sizing: border-box;
     }
     .skill-progress-header {
       display: flex;
@@ -128,20 +125,26 @@
       border-radius: 10px;
       transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    @media (min-width: 768px) {
+      .stat-summary-grid {
+        max-width: 1200px;
+        margin: 20px auto 16px;
+        padding: 0 24px;
+        gap: 18px;
+      }
+      .stat-card-progress {
+        padding: 18px 14px 16px;
+        border-radius: 20px;
+      }
+      .skill-progress-card {
+        margin-bottom: 0;
+      }
+    }
   </style>
 </head>
 <body style="background:#E2E8F0; margin:0; padding:0;">
 
   <div class="netora-mobile-app">
-    <style>
-      .stat-summary-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; padding: 14px 16px !important; width: 100% !important; box-sizing: border-box !important; }
-      .stat-card-progress { background: #FFFFFF !important; border-radius: 16px !important; padding: 12px 6px 10px !important; text-align: center !important; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important; border: 1px solid #E2E8F0 !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; min-width: 0 !important; }
-      .stat-card-val { font-size: clamp(17px, 4.4vw, 22px) !important; font-weight: 900 !important; color: #0F172A !important; line-height: 1.15 !important; }
-      .stat-card-lbl { font-size: clamp(9px, 2.3vw, 10.5px) !important; font-weight: 700 !important; color: #64748B !important; text-transform: uppercase !important; }
-      .skill-progress-card { background: #FFFFFF !important; border-radius: 18px !important; padding: 16px 18px !important; margin-bottom: 12px !important; border: 1px solid #E2E8F0 !important; box-shadow: 0 2px 12px rgba(13, 91, 255, 0.04) !important; }
-      .skill-name { font-size: 13.5px !important; font-weight: 800 !important; color: #1E293B !important; display: flex !important; align-items: center !important; gap: 8px !important; }
-      .skill-pct { font-size: 13px !important; font-weight: 800 !important; color: #0D5BFF !important; }
-    </style>
 
     <!-- Top Status Bar & Header Biru Royal -->
     <header class="app-top-header-royal">
@@ -184,9 +187,9 @@
     </header>
 
     <!-- Ringkasan Statistik Siswa (3 Kotak Indikator Responsif) -->
-    <div class="stat-summary-grid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; padding:14px 16px; box-sizing:border-box; width:100%;">
+    <div class="stat-summary-grid">
       <!-- 1. Skor Tertinggi (Trophy Emas/Amber) -->
-      <div class="stat-card-progress" style="background:#FFFFFF; border-radius:16px; padding:12px 6px 10px; text-align:center; box-shadow:0 2px 10px rgba(15, 23, 42, 0.04); border:1px solid #E2E8F0; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <div class="stat-card-progress">
         <div class="stat-icon-badge badge-amber" style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:10px; margin-bottom:6px; background:rgba(245, 158, 11, 0.1); border:1px solid rgba(245, 158, 11, 0.25); color:#D97706;" title="Skor Tertinggi">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
@@ -201,7 +204,7 @@
       </div>
 
       <!-- 2. Rata-rata Nilai (Chart Biru Royal) -->
-      <div class="stat-card-progress" style="background:#FFFFFF; border-radius:16px; padding:12px 6px 10px; text-align:center; box-shadow:0 2px 10px rgba(15, 23, 42, 0.04); border:1px solid #E2E8F0; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <div class="stat-card-progress">
         <div class="stat-icon-badge badge-blue" style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:10px; margin-bottom:6px; background:rgba(13, 91, 255, 0.09); border:1px solid rgba(13, 91, 255, 0.22); color:#0D5BFF;" title="Rata-rata Nilai">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
@@ -213,7 +216,7 @@
       </div>
 
       <!-- 3. Kuis Selesai (Check Hijau Emerald) -->
-      <div class="stat-card-progress" style="background:#FFFFFF; border-radius:16px; padding:12px 6px 10px; text-align:center; box-shadow:0 2px 10px rgba(15, 23, 42, 0.04); border:1px solid #E2E8F0; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <div class="stat-card-progress">
         <div class="stat-icon-badge badge-green" style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:10px; margin-bottom:6px; background:rgba(16, 185, 129, 0.1); border:1px solid rgba(16, 185, 129, 0.25); color:#10B981;" title="Kuis Selesai">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
@@ -342,7 +345,7 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.29"></script>
-  <script src="js/progres.js?v=2026.29"></script>
+  <script src="js/netora.js?v=2026.30"></script>
+  <script src="js/progres.js?v=2026.30"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@
     content="Netora — Kalkulator IP Subnetting, Network, Broadcast, dan CIDR Range Otentik Standar RFC.">
   <title>Netora — Kalkulator IP Subnetting Real-time</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.28">
+  <link rel="stylesheet" href="css/netora.css?v=2026.30">
   <style>
     /* Spotlight card dynamic */
     .spotlight-card {
@@ -136,7 +136,7 @@
     
 
     <!-- Segmented Tabs Filter Pill (Subnet / Network / Broadcast / Range) -->
-    <div class="segmented-pill-bar" role="tablist" style="margin-top: 16px;">
+    <div class="segmented-pill-bar" role="tablist">
       <button type="button" class="segmented-pill-btn active" data-tab="subnet" id="tab-btn-subnet">Subnet</button>
       <button type="button" class="segmented-pill-btn" data-tab="network" id="tab-btn-network">Network</button>
       <button type="button" class="segmented-pill-btn" data-tab="broadcast" id="tab-btn-broadcast">Broadcast</button>
@@ -147,8 +147,8 @@
     <div class="calc-desktop-split">
 
       <!-- Kolom 1: Form Input -->
-      <div
-        style="background:#FFFFFF; border-radius:20px; padding:20px; margin-bottom:16px; box-shadow:0 4px 18px rgba(13,91,255,0.05); border:1px solid rgba(0,0,0,0.04);">
+      <div class="calc-form-card"
+        style="background:#FFFFFF; border-radius:20px; padding:22px 24px; margin-bottom:16px; box-shadow:0 4px 18px rgba(13,91,255,0.05); border:1.5px solid #E2E8F0; box-sizing:border-box;">
         <div class="form-group" style="margin-bottom:14px;">
           <label for="ip-address"
             style="display:block; font-size:12.5px; font-weight:700; color:#475569; margin-bottom:6px;">Alamat
@@ -189,7 +189,7 @@
       <div>
 
         <!-- Spotlight Card Sesuai Tab yang Dipilih (Subnet / Network / Broadcast / Range) -->
-        <div id="spotlight-card" class="spotlight-card spotlight-subnet">
+        <div id="spotlight-card" class="spotlight-card spotlight-subnet" style="border-radius:20px; padding:18px 22px; margin-bottom:16px; box-sizing:border-box;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span id="spotlight-tag" class="spotlight-tag"
               style="background:#DCFCE7; color:#166534; display:inline-flex; align-items:center; gap:6px;">
@@ -212,7 +212,7 @@
         </div>
 
         <!-- Card Output Rincian Lengkap Hasil Kalkulasi Real-time -->
-        <div id="output-calc" class="calc-result-card-blue">
+        <div id="output-calc" class="calc-result-card-blue" style="border-radius:20px; padding:20px 22px; border:1.5px solid #E2E8F0; box-shadow:0 4px 18px rgba(13,91,255,0.05); box-sizing:border-box;">
 
           <div class="calc-row-item" id="row-subnet">
             <span class="calc-label-text">
@@ -466,8 +466,8 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.28"></script>
-  <script src="js/kalkulator.js?v=2026.28"></script>
+  <script src="js/netora.js?v=2026.30"></script>
+  <script src="js/kalkulator.js?v=2026.30"></script>
 </body>
 
 </html>
