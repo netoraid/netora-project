@@ -276,7 +276,7 @@ app.get('/uploads/default.png', (req, res) => {
 // Header anti-cache untuk file JS dan HTML agar perubahan script selalu termuat segar
 app.use((req, res, next) => {
   const p = (req.path || '').toLowerCase();
-  if (p.endsWith('.js') || p.endsWith('.html')) {
+  if (p.endsWith(".js") || p.endsWith(".html") || p.endsWith(".css") || req.path === "/" || !p.includes(".")) {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');

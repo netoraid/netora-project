@@ -316,6 +316,7 @@ window.initQuizPage = function() {
     const selectedAns = userAnswers[q.id] || null;
 
     quizContainer.innerHTML = `
+      <div style="max-width:820px; margin:0 auto; box-sizing:border-box;">
       <!-- Progress Bar Biru -->
       <div style="margin:16px 16px 12px;">
         <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:700; color:#64748B; margin-bottom:6px;">
@@ -362,6 +363,7 @@ window.initQuizPage = function() {
                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                </button>`}
         </div>
+      </div>
       </div>
     `;
 
@@ -500,7 +502,7 @@ window.initQuizPage = function() {
     ` : '';
 
     quizContainer.innerHTML = `
-      <div style="background:#FFFFFF; border-radius:22px; padding:32px 24px; margin:16px; text-align:center; box-shadow:0 4px 20px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
+      <div style="background:#FFFFFF; border-radius:22px; padding:32px 24px; margin:16px auto; max-width:820px; text-align:center; box-shadow:0 4px 20px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
         <div style="width:42px; height:42px; border-radius:12px; background:${isLulus ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; color:${isLulus ? '#10B981' : '#EF4444'}; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
           ${isLulus 
             ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>` 
