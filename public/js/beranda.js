@@ -138,7 +138,7 @@ window.initBerandaPage = async function() {
   }
 
   // Muat modul materi terbaru secara dinamis di Beranda
-  window.loadMateriBeranda();
+  if (document.getElementById('beranda-materi-list')) window.loadMateriBeranda();
 };
 
 window.loadMateriBeranda = async function() {
