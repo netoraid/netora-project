@@ -6420,3 +6420,11 @@ textarea.form-input {
 }
 
 
+
+/* Hide sub-features from desktop top navbar */
+.desktop-nav-link[href="materi.html"],
+.desktop-nav-link[href="video.html"],
+.desktop-nav-link[href="quiz.html"],
+.desktop-nav-link[href="kalkulator.html"] {
+  display: none !important;
+}
