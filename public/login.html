@@ -6,10 +6,11 @@
   <meta name="description" content="Netora - Platform Pembelajaran Teknik Komputer dan Jaringan (TKJ). Masuk atau daftar untuk mulai belajar.">
   <title>Netora — Platform Belajar TKJ</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.21">
+  <link rel="stylesheet" href="css/netora.css?v=2026.22">
   <style>
     /* ===================================================
-       NETORA AUTH SYSTEM (FOCUSED LOGIN & REGISTER)
+       NETORA WELCOME OPENING & AUTH SYSTEM
+       RESPONSIVE DESKTOP & MOBILE-FIRST
     =================================================== */
     *, *::before, *::after {
       box-sizing: border-box;
@@ -56,47 +57,202 @@
       box-sizing: border-box;
     }
 
-    /* Focused Auth Card Shell */
+    /* ===================================================
+       1. OPENING / WELCOME SCREEN (MULAI SEKARANG)
+    =================================================== */
+    .welcome-card-shell {
+      width: 100%;
+      max-width: 520px;
+      background: #FFFFFF;
+      border-radius: 28px;
+      border: 1.5px solid #E2E8F0;
+      box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.08), 0 0 1px rgba(15, 23, 42, 0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 32px 34px;
+      text-align: center;
+      margin: auto;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .welcome-logo-box {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      box-shadow: 0 8px 24px rgba(13, 91, 255, 0.08);
+    }
+    .welcome-logo-box img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+    }
+
+    .welcome-brand-title {
+      margin: 0 0 2px;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.6px;
+      color: #0F172A;
+    }
+    .welcome-brand-title span {
+      color: #0D5BFF;
+    }
+
+    .welcome-headline {
+      margin: 10px 0 8px;
+      font-size: 18.5px;
+      font-weight: 800;
+      color: #1E293B;
+      line-height: 1.4;
+      letter-spacing: -0.2px;
+    }
+    .welcome-desc {
+      margin: 0 auto 24px;
+      font-size: 13.5px;
+      color: #64748B;
+      line-height: 1.6;
+      max-width: 420px;
+    }
+
+    /* 3 Feature cards */
+    .welcome-feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+    .welcome-feature-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 16px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1E293B;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .welcome-feature-card:hover {
+      background: #F1F5F9;
+      border-color: #CBD5E1;
+    }
+    .welcome-feature-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* CTA Mulai Sekarang */
+    .btn-cta-start {
+      width: 100%;
+      height: 54px;
+      background: linear-gradient(135deg, #FF7A00 0%, #FF9500 100%);
+      border: none;
+      border-radius: 27px;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 10px 28px rgba(255, 122, 0, 0.36);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      touch-action: manipulation;
+      letter-spacing: 0.2px;
+    }
+    .btn-cta-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(255, 122, 0, 0.44);
+    }
+    .btn-cta-start:active {
+      transform: scale(0.98);
+    }
+
+    /* ===================================================
+       2. AUTH SCREEN (MASUK & DAFTAR SISWA - FOCUSED)
+    =================================================== */
     .auth-card-shell {
       width: 100%;
-      max-width: 460px;
+      max-width: 470px;
       background: #FFFFFF;
-      border-radius: 26px;
+      border-radius: 28px;
       border: 1.5px solid #E2E8F0;
       box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.08), 0 0 1px rgba(15, 23, 42, 0.06);
       display: flex;
       flex-direction: column;
       margin: auto;
-      padding: 38px 34px 34px;
+      padding: 30px 32px 34px;
       transition: all 0.25s ease;
       box-sizing: border-box;
     }
 
     /* Mobile Adaptivity */
-    @media (max-width: 500px) {
+    @media (max-width: 540px) {
       .page-main-container {
         padding: 0;
         align-items: stretch;
       }
+      .welcome-card-shell,
       .auth-card-shell {
         border-radius: 0;
         border: none;
         box-shadow: none;
         min-height: 100vh;
         min-height: 100dvh;
-        padding: 36px 20px max(28px, env(safe-area-inset-bottom, 28px));
-        justify-content: center;
+        max-width: 100%;
+        padding: 28px 20px max(28px, env(safe-area-inset-bottom, 28px));
+        justify-content: space-between;
       }
+    }
+
+    /* Back to Welcome Button */
+    .btn-back-welcome {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+      background: #F1F5F9;
+      border: 1px solid #E2E8F0;
+      padding: 7px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-back-welcome:hover {
+      background: #E2E8F0;
+      color: #0F172A;
+    }
+    .btn-back-welcome:active {
+      transform: scale(0.97);
     }
 
     /* Logo & Header */
     .auth-brand-header {
       text-align: center;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
     .auth-brand-logo {
-      width: 52px;
-      height: 52px;
+      width: 50px;
+      height: 50px;
       border-radius: 16px;
       background: #FFFFFF;
       border: 1.5px solid #E2E8F0;
@@ -113,7 +269,7 @@
     }
     .auth-brand-title {
       margin: 0;
-      font-size: 24px;
+      font-size: 23px;
       font-weight: 900;
       letter-spacing: -0.5px;
       color: #0F172A;
@@ -128,7 +284,7 @@
       color: #64748B;
       letter-spacing: 0.6px;
       text-transform: uppercase;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     /* Segmented Tab Switcher */
@@ -140,7 +296,7 @@
       border-radius: 16px;
       padding: 4px;
       gap: 6px;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       box-sizing: border-box;
     }
     .auth-tab-btn {
@@ -354,6 +510,35 @@
     .auth-toggle-link.orange { color: #FF7A00; }
     .auth-toggle-link:hover { text-decoration: underline; }
 
+    /* Screen transition states */
+    .screen-fade-enter {
+      animation: screenSmoothEnter 0.32s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+      will-change: opacity, transform;
+    }
+    .screen-fade-exit {
+      animation: screenSmoothExit 0.22s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+      pointer-events: none !important;
+      will-change: opacity, transform;
+    }
+    .screen-fade-exit-back {
+      animation: screenSmoothExitBack 0.22s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+      pointer-events: none !important;
+      will-change: opacity, transform;
+    }
+
+    @keyframes screenSmoothEnter {
+      0% { opacity: 0.1; transform: translate3d(36px, 0, 0); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
+    @keyframes screenSmoothExit {
+      0% { opacity: 1; transform: translate3d(0, 0, 0); }
+      100% { opacity: 0.1; transform: translate3d(-30px, 0, 0); }
+    }
+    @keyframes screenSmoothExitBack {
+      0% { opacity: 1; transform: translate3d(0, 0, 0); }
+      100% { opacity: 0.1; transform: translate3d(30px, 0, 0); }
+    }
+
     /* Transitions */
     .fade-panel {
       animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -372,8 +557,68 @@
   <!-- Page Main Container -->
   <div class="page-main-container">
 
-    <!-- AUTH SCREEN (MASUK & DAFTAR SISWA) -->
-    <div id="auth-view" class="auth-card-shell fade-panel">
+    <!-- ============================================== -->
+    <!-- 1. OPENING / WELCOME SCREEN (MULAI SEKARANG)   -->
+    <!-- ============================================== -->
+    <div id="welcome-view" class="welcome-card-shell fade-panel">
+      <div>
+        <!-- Logo -->
+        <div class="welcome-logo-box">
+          <img src="assets/logo.png" alt="Netora Logo">
+        </div>
+
+        <h1 class="welcome-brand-title">Net<span>ora</span></h1>
+
+        <h2 class="welcome-headline">Platform Belajar Jaringan Komputer SMK</h2>
+        <p class="welcome-desc">Pelajari konfigurasi MikroTik, subnetting IPv4, kuis mandiri, dan video praktikum terstruktur dalam satu platform terpadu.</p>
+
+        <!-- 3 Fitur unggulan -->
+        <div class="welcome-feature-list">
+          <div class="welcome-feature-card">
+            <div class="welcome-feature-icon" style="background: rgba(13,91,255,0.08); color: #0D5BFF;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <span>Modul MikroTik, Cisco & Linux Server</span>
+          </div>
+
+          <div class="welcome-feature-card">
+            <div class="welcome-feature-icon" style="background: rgba(255,122,0,0.08); color: #FF7A00;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="8" y1="14" x2="8" y2="14.01"/></svg>
+            </div>
+            <span>Kalkulator IP Subnetting & CIDR</span>
+          </div>
+
+          <div class="welcome-feature-card">
+            <div class="welcome-feature-icon" style="background: rgba(22,163,74,0.08); color: #16A34A;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <span>Kuis Kompetensi & Rekap Nilai Real-time</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tombol Mulai Sekarang -->
+      <div style="padding-top: 10px;">
+        <button id="btn-mulai-sekarang" type="button" class="btn-cta-start">
+          <span>Mulai Sekarang</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- 2. AUTH SCREEN (MASUK & DAFTAR SISWA - FOCUSED)-->
+    <!-- ============================================== -->
+    <div id="auth-view" class="auth-card-shell fade-panel" style="display: none;">
+
+      <!-- Top Nav: Tombol Kembali ke Opening -->
+      <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 12px;">
+        <button id="btn-back-to-welcome" type="button" class="btn-back-welcome">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+          <span>Kembali</span>
+        </button>
+      </div>
 
       <!-- Brand Logo Header -->
       <div class="auth-brand-header">
@@ -499,8 +744,8 @@
   </div><!-- /page-main-container -->
 
   <!-- Scripts -->
-  <script src="js/netora.js?v=2026.21"></script>
-  <script src="js/auth.js?v=2026.21"></script>
+  <script src="js/netora.js?v=2026.22"></script>
+  <script src="js/auth.js?v=2026.22"></script>
   <script>
     // ===== Password Visibility Toggle =====
     function togglePasswordVisibility(inputId, btn) {
@@ -511,9 +756,84 @@
         btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
       } else {
         input.type = 'password';
-        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
       }
     }
+
+    // ===== Screen Navigation Logic (Welcome Opening <-> Auth) =====
+    const welcomeView = document.getElementById('welcome-view');
+    const authView = document.getElementById('auth-view');
+    const btnMulai = document.getElementById('btn-mulai-sekarang');
+    const btnBack = document.getElementById('btn-back-to-welcome');
+
+    let isScreenTransitioning = false;
+
+    function showAuthScreen(tabMode = 'login', immediate = false) {
+      if (!welcomeView || !authView) return;
+      if (isScreenTransitioning && !immediate) return;
+
+      if (immediate) {
+        welcomeView.style.display = 'none';
+        welcomeView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        authView.style.display = 'flex';
+        authView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        authView.classList.add('screen-fade-enter');
+        switchAuthTab(tabMode, true);
+        return;
+      }
+
+      isScreenTransitioning = true;
+      welcomeView.classList.remove('screen-fade-enter');
+      welcomeView.classList.add('screen-fade-exit');
+
+      setTimeout(() => {
+        welcomeView.style.display = 'none';
+        welcomeView.classList.remove('screen-fade-exit');
+
+        authView.style.display = 'flex';
+        authView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        authView.classList.add('screen-fade-enter');
+        switchAuthTab(tabMode, true);
+
+        setTimeout(() => {
+          isScreenTransitioning = false;
+        }, 340);
+      }, 220);
+    }
+
+    function showWelcomeScreen(immediate = false) {
+      if (!welcomeView || !authView) return;
+      if (isScreenTransitioning && !immediate) return;
+
+      if (immediate) {
+        authView.style.display = 'none';
+        authView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        welcomeView.style.display = 'flex';
+        welcomeView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        welcomeView.classList.add('screen-fade-enter');
+        return;
+      }
+
+      isScreenTransitioning = true;
+      authView.classList.remove('screen-fade-enter');
+      authView.classList.add('screen-fade-exit-back');
+
+      setTimeout(() => {
+        authView.style.display = 'none';
+        authView.classList.remove('screen-fade-exit-back');
+
+        welcomeView.style.display = 'flex';
+        welcomeView.classList.remove('screen-fade-exit', 'screen-fade-exit-back');
+        welcomeView.classList.add('screen-fade-enter');
+
+        setTimeout(() => {
+          isScreenTransitioning = false;
+        }, 340);
+      }, 220);
+    }
+
+    if (btnMulai) btnMulai.addEventListener('click', () => showAuthScreen('login'));
+    if (btnBack) btnBack.addEventListener('click', () => showWelcomeScreen());
 
     // ===== Tab Switcher (Masuk <-> Daftar Siswa) =====
     const tabBtnLogin = document.getElementById('tab-btn-login');
@@ -572,19 +892,25 @@
     }
 
     window.switchAuthTab = switchAuthTab;
+    window.showAuthScreen = showAuthScreen;
+    window.showWelcomeScreen = showWelcomeScreen;
 
     if (tabBtnLogin) tabBtnLogin.addEventListener('click', () => switchAuthTab('login'));
     if (tabBtnReg) tabBtnReg.addEventListener('click', () => switchAuthTab('register'));
 
-    // Auto-detect URL parameter
+    // Auto-detect URL parameter (jika dari register.html atau link khusus, langsung ke form)
     (function initFromUrl() {
       const p = new URLSearchParams(window.location.search);
       const tab = p.get('tab') || p.get('action');
+      const registered = p.get('registered');
 
       if (tab === 'register') {
-        switchAuthTab('register', true);
+        showAuthScreen('register', true);
+      } else if (tab === 'login' || registered === 'true') {
+        showAuthScreen('login', true);
       } else {
-        switchAuthTab('login', true);
+        // Tampilan awal: Selalu buka layar Opening / Sambutan Mulai Sekarang
+        showWelcomeScreen(true);
       }
     })();
   </script>
