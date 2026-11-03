@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (filtered.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" style="text-align:center; padding:32px; color:#94A3B8;">
+          <td colspan="7" style="text-align:center; padding:32px; color:#94A3B8;">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-bottom:8px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <div style="font-weight:700;">Tidak ada riwayat nilai yang cocok dengan filter.</div>
           </td>
@@ -247,9 +247,154 @@ document.addEventListener('DOMContentLoaded', async () => {
           <td>
             <span style="font-size:11.5px; font-weight:700; background:#F1F5F9; color:#475569; padding:4px 8px; border-radius:8px;">Kuis TKJ</span>
           </td>
+          <td style="text-align:center;">
+            <button type="button" class="btn-review-nilai-guru" onclick="window.bukaModalDetailJawabanGuru(${item.id})" style="padding:5px 12px; border-radius:8px; border:1.5px solid #CBD5E1; background:#FFFFFF; color:#0D5BFF; font-weight:700; font-size:11.5px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>Review</span>
+            </button>
+          </td>
         </tr>
       `;
     }).join('');
+  }
+
+  // Helper Modal Review Detail Jawaban Kuis Siswa Guru
+  window.bukaModalDetailJawabanGuru = async function(id) {
+    const modal = document.getElementById('modal-detail-jawaban-guru');
+    const metaContainer = document.getElementById('modal-review-guru-meta');
+    const bodyContainer = document.getElementById('modal-review-guru-body');
+    if (!modal) return;
+
+    modal.style.display = 'flex';
+    if (metaContainer) metaContainer.innerHTML = '<div style="color:#64748B; font-size:13px;">Memuat data review...</div>';
+    if (bodyContainer) bodyContainer.innerHTML = '<div style="text-align:center; padding:30px; color:#64748B;">Mengambil rincian butir soal dan jawaban siswa...</div>';
+
+    try {
+      const res = await fetch(`/api/guru/quiz-detail/${id}`);
+      const data = await res.json();
+      if (!res.ok || !data.success || !data.submission) {
+        if (bodyContainer) {
+          bodyContainer.innerHTML = `
+            <div style="text-align:center; padding:30px; color:#EF4444; background:#FEF2F2; border-radius:12px; border:1px solid #FECACA;">
+              <p style="margin:0; font-weight:700;">Data rincian butir jawaban kuis tidak ditemukan atau telah diarsipkan.</p>
+            </div>
+          `;
+        }
+        return;
+      }
+
+      const s = data.submission;
+      const isLulus = s.lulus;
+
+      let formattedDate = '-';
+      if (s.tanggal) {
+        try {
+          formattedDate = new Date(s.tanggal).toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) + ' WIB';
+        } catch(e) {}
+      }
+
+      if (metaContainer) {
+        metaContainer.innerHTML = `
+          <div>
+            <h4 style="margin:0 0 4px; font-size:16px; font-weight:800; color:#0F172A;">${escapeHtml(s.siswa_nama)}</h4>
+            <div style="font-size:12.5px; color:#64748B; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+              <span>Email: <strong>${escapeHtml(s.siswa_email || '-')}</strong></span>
+              <span>•</span>
+              <span>Topik: <strong style="color:#0D5BFF;">${escapeHtml(s.topic_title || 'Kuis TKJ')}</strong></span>
+              <span>•</span>
+              <span>Waktu: ${formattedDate}</span>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="text-align:right;">
+              <span style="font-size:11px; color:#64748B; display:block; font-weight:700; text-transform:uppercase;">Skor Ujian</span>
+              <strong style="font-size:26px; font-weight:900; color:${isLulus ? '#16A34A' : '#DC2626'};">${s.skor}</strong>
+              <span style="font-size:11.5px; color:#64748B;">/100</span>
+            </div>
+            <span class="badge-status ${isLulus ? 'badge-pass' : 'badge-fail'}" style="font-size:12px; padding:6px 12px; border-radius:8px;">
+              ${isLulus ? 'LULUS' : 'REMIDI'}
+            </span>
+          </div>
+        `;
+      }
+
+      if (bodyContainer) {
+        const reviewList = Array.isArray(s.review) ? s.review : [];
+        if (reviewList.length === 0) {
+          bodyContainer.innerHTML = `
+            <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:18px; text-align:center; color:#92400E; font-size:13px;">
+              <p style="margin:0; font-weight:700;">Rincian butir soal per jawaban belum terekam pada sesi pengerjaan ini.</p>
+              <p style="margin:4px 0 0; font-size:12px;">Pengerjaan kuis selanjutnya oleh siswa akan otomatis menampilkan seluruh rincian jawaban dan kunci jawaban.</p>
+            </div>
+          `;
+          return;
+        }
+
+        bodyContainer.innerHTML = reviewList.map(item => `
+          <div style="background:#FFFFFF; border:1.5px solid ${item.is_benar ? '#86EFAC' : '#FECACA'}; border-radius:16px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <span style="font-weight:800; font-size:13px; color:#334155;">Soal #${item.no}</span>
+              <span style="font-size:11.5px; font-weight:800; padding:3px 10px; border-radius:20px; display:inline-flex; align-items:center; gap:4px; ${item.is_benar ? 'background:#DCFCE7; color:#15803D;' : 'background:#FEE2E2; color:#DC2626;'}">
+                ${item.is_benar ? '✅ Jawaban Benar' : '❌ Jawaban Salah'}
+              </span>
+            </div>
+            <p style="font-size:13.5px; font-weight:700; color:#0F172A; margin:0 0 12px; line-height:1.5;">${escapeHtml(item.pertanyaan)}</p>
+
+            <div style="display:flex; flex-direction:column; gap:8px; font-size:12.5px; margin-bottom:10px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 12px; border-radius:10px; ${item.is_benar ? 'background:#F0FDF4; border:1px solid #BBF7D0; color:#166534;' : 'background:#FEF2F2; border:1px solid #FECACA; color:#991B1B;'}">
+                <div>
+                  <span style="font-weight:700;">Jawaban Siswa:</span>
+                  <span style="font-weight:800; margin-left:4px;">[${escapeHtml(item.jawaban_user)}] ${escapeHtml(item.jawaban_user_text)}</span>
+                </div>
+                <span style="font-weight:800; font-size:12px;">${item.is_benar ? '✓ Benar' : '✗ Salah'}</span>
+              </div>
+
+              ${!item.is_benar ? `
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 12px; border-radius:10px; background:#F0FDF4; border:1px solid #BBF7D0; color:#166534;">
+                  <div>
+                    <span style="font-weight:700;">Kunci Jawaban yang Benar:</span>
+                    <span style="font-weight:800; margin-left:4px;">[${escapeHtml(item.jawaban_benar)}] ${escapeHtml(item.jawaban_benar_text)}</span>
+                  </div>
+                  <span style="font-weight:800; font-size:12px;">✓ Kunci</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <div style="background:${item.is_benar ? '#F8FAFC' : '#FFFBEB'}; border:1px solid ${item.is_benar ? '#E2E8F0' : '#FDE68A'}; border-radius:10px; padding:10px 12px; font-size:12px; color:${item.is_benar ? '#475569' : '#92400E'}; line-height:1.45;">
+              <strong style="color:${item.is_benar ? '#0D5BFF' : '#B45309'};">Penjelasan:</strong> ${escapeHtml(item.penjelasan)}
+            </div>
+          </div>
+        `).join('');
+      }
+    } catch (err) {
+      if (bodyContainer) {
+        bodyContainer.innerHTML = '<div style="color:#EF4444; text-align:center; padding:20px;">Terjadi kesalahan saat memuat rincian kuis.</div>';
+      }
+    }
+  };
+
+  function tutupModalDetailJawabanGuru() {
+    const modal = document.getElementById('modal-detail-jawaban-guru');
+    if (modal) modal.style.display = 'none';
+  }
+
+  const btnCloseModalReviewGuru = document.getElementById('btn-close-modal-detail-jawaban-guru');
+  if (btnCloseModalReviewGuru) btnCloseModalReviewGuru.addEventListener('click', tutupModalDetailJawabanGuru);
+
+  const btnTutupModalReviewGuru = document.getElementById('btn-tutup-modal-detail-jawaban-guru');
+  if (btnTutupModalReviewGuru) btnTutupModalReviewGuru.addEventListener('click', tutupModalDetailJawabanGuru);
+
+  const modalReviewGuruOverlay = document.getElementById('modal-detail-jawaban-guru');
+  if (modalReviewGuruOverlay) {
+    modalReviewGuruOverlay.addEventListener('click', (e) => {
+      if (e.target === modalReviewGuruOverlay) tutupModalDetailJawabanGuru();
+    });
   }
 
   // Filter & Search Event Listeners Nilai

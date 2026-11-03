@@ -3,6 +3,7 @@ const router = express.Router();
 const { supabase } = require('../database/supabase');
 const { requireGuru } = require('../middleware/auth');
 const { broadcastQuizDataChanged } = require('../services/socket');
+const { getQuizSubmissionById } = require('../services/quiz_history');
 
 // Seluruh endpoint guru wajib melewati proteksi requireGuru
 router.use(requireGuru);
@@ -147,6 +148,21 @@ router.get('/nilai', async (req, res) => {
   } catch (err) {
     console.error('Guru Nilai Error:', err);
     return res.status(500).json({ error: 'Gagal memuat riwayat nilai siswa.' });
+  }
+});
+
+// 2b. GET /api/guru/quiz-detail/:id - Detail Review Jawaban Soal Siswa untuk Guru
+router.get('/quiz-detail/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const detail = await getQuizSubmissionById(id);
+    if (!detail) {
+      return res.status(404).json({ error: 'Rincian pengerjaan kuis siswa tidak ditemukan.' });
+    }
+    return res.json({ success: true, submission: detail });
+  } catch (err) {
+    console.error('Guru Quiz Detail Error:', err);
+    return res.status(500).json({ error: 'Gagal memuat rincian kuis siswa.' });
   }
 });
 

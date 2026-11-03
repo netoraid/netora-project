@@ -11,6 +11,7 @@ window.initQuizPage = function() {
   let currentIndex = 0;
   let userAnswers = {};
   let currentCategory = 'all';
+  let activeTopicTitle = 'Kuis Pembelajaran';
 
   function getTopicIconSvg(kategoriStr) {
     const text = (kategoriStr || '').toLowerCase();
@@ -255,6 +256,7 @@ window.initQuizPage = function() {
 
   // 2. Mulai Kuis Interaktif
   window.startQuizTopic = function(topicId, topicTitle, category) {
+    activeTopicTitle = topicTitle || 'Kuis Pembelajaran';
     if (quizHeroBanner) quizHeroBanner.style.display = 'none';
     if (quizFilterRow) quizFilterRow.style.display = 'none';
     if (quizHeaderTitle) quizHeaderTitle.textContent = topicTitle;
@@ -423,7 +425,10 @@ window.initQuizPage = function() {
       const res = await fetch('/api/quiz/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jawaban: userAnswers })
+        body: JSON.stringify({
+          jawaban: userAnswers,
+          topicTitle: activeTopicTitle
+        })
       });
       const data = await res.json();
 
@@ -439,6 +444,67 @@ window.initQuizPage = function() {
 
   function renderQuizResult(data) {
     const isLulus = data.lulus;
+    const reviewItems = Array.isArray(data.review) ? data.review : [];
+
+    const reviewHtml = reviewItems.length > 0 ? `
+      <div style="margin-top:28px; text-align:left; border-top:1.5px dashed #E2E8F0; padding-top:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:18px;">
+          <div>
+            <h3 style="margin:0; font-size:16.5px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+              <span>Pembahasan & Evaluasi Soal</span>
+            </h3>
+            <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Periksa butir soal yang benar dan pelajari kunci jawaban serta penjelasan untuk jawaban yang keliru</p>
+          </div>
+          <span style="background:#EFF6FF; color:#0D5BFF; font-weight:800; font-size:12px; padding:5px 14px; border-radius:12px; border:1px solid #BFDBFE;">
+            ${data.benar} / ${data.total} Soal Benar
+          </span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          ${reviewItems.map(item => `
+            <div style="background:#FFFFFF; border:1.5px solid ${item.is_benar ? '#86EFAC' : '#FECACA'}; border-radius:16px; padding:16px 18px; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span style="font-weight:800; font-size:13px; color:#334155;">Soal #${item.no}</span>
+                <span style="font-size:11.5px; font-weight:800; padding:3px 12px; border-radius:20px; display:inline-flex; align-items:center; gap:4px; ${item.is_benar ? 'background:#DCFCE7; color:#15803D;' : 'background:#FEE2E2; color:#DC2626;'}">
+                  ${item.is_benar ? '✅ Jawaban Benar' : '❌ Jawaban Salah'}
+                </span>
+              </div>
+              <p style="font-size:14px; font-weight:700; color:#0F172A; margin:0 0 14px; line-height:1.5;">${escapeHtml(item.pertanyaan)}</p>
+
+              <div style="display:flex; flex-direction:column; gap:8px; font-size:12.5px; margin-bottom:12px;">
+                <!-- Jawaban Siswa -->
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 12px; border-radius:10px; ${item.is_benar ? 'background:#F0FDF4; border:1px solid #BBF7D0; color:#166534;' : 'background:#FEF2F2; border:1px solid #FECACA; color:#991B1B;'}">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-weight:700;">Jawaban Anda:</span>
+                    <span style="font-weight:800;">[${escapeHtml(item.jawaban_user)}] ${escapeHtml(item.jawaban_user_text)}</span>
+                  </div>
+                  <span style="font-weight:800; font-size:12px; flex-shrink:0;">${item.is_benar ? '✓ Benar' : '✗ Salah'}</span>
+                </div>
+
+                <!-- Kunci Jawaban Benar (Jika jawaban siswa salah) -->
+                ${!item.is_benar ? `
+                  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 12px; border-radius:10px; background:#F0FDF4; border:1px solid #BBF7D0; color:#166534;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span style="font-weight:700;">Kunci Jawaban yang Benar:</span>
+                      <span style="font-weight:800;">[${escapeHtml(item.jawaban_benar)}] ${escapeHtml(item.jawaban_benar_text)}</span>
+                    </div>
+                    <span style="font-weight:800; font-size:12px; flex-shrink:0;">✓ Kunci</span>
+                  </div>
+                ` : ''}
+              </div>
+
+              <!-- Kotak Penjelasan -->
+              <div style="background:${item.is_benar ? '#F8FAFC' : '#FFFBEB'}; border:1px solid ${item.is_benar ? '#E2E8F0' : '#FDE68A'}; border-radius:10px; padding:10px 14px; font-size:12px; color:${item.is_benar ? '#334155' : '#92400E'}; line-height:1.5;">
+                <strong style="color:${item.is_benar ? '#0D5BFF' : '#B45309'}; display:inline-block; margin-right:4px;">💡 Penjelasan:</strong>
+                <span>${escapeHtml(item.penjelasan)}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : '';
+
     quizContainer.innerHTML = `
       <div style="background:#FFFFFF; border-radius:22px; padding:32px 24px; margin:16px; text-align:center; box-shadow:0 4px 20px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
         <div style="width:56px; height:56px; border-radius:16px; background:${isLulus ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; color:${isLulus ? '#10B981' : '#EF4444'}; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px;">
@@ -460,7 +526,7 @@ window.initQuizPage = function() {
           Anda menjawab benar <strong>${data.benar}</strong> dari <strong>${data.total}</strong> soal. Nilai kompetensi telah tersimpan pada modul rekapitulasi progres.
         </p>
 
-        <div style="display:flex; flex-direction:column; gap:10px; max-width:320px; margin:0 auto;">
+        <div style="display:flex; flex-direction:column; gap:10px; max-width:320px; margin:0 auto 20px;">
           <button type="button" class="btn-hero-orange" style="justify-content:center; width:100%; border-radius:12px; padding:12px; display:inline-flex; align-items:center; gap:8px;" onclick="renderTopicList()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
             <span>Pilih Topik Kuis Lain</span>
@@ -469,23 +535,45 @@ window.initQuizPage = function() {
             Kembali ke Beranda
           </a>
         </div>
+
+        ${reviewHtml}
       </div>
     `;
   }
 
   function renderQuizResultFallback() {
-    quizContainer.innerHTML = `
-      <div style="background:#FFFFFF; border-radius:22px; padding:32px 24px; margin:16px; text-align:center; box-shadow:0 4px 20px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
-        <div style="width:56px; height:56px; border-radius:16px; background:rgba(13,91,255,0.1); color:#0D5BFF; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px;">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-        </div>
-        <h3 style="margin:0 0 8px; color:#1E293B;">Sesi Kuis Selesai</h3>
-        <p style="font-size:13px; color:#64748B; margin:0 0 20px;">Jawaban evaluasi Anda telah berhasil direkam ke sistem Netora.</p>
-        <button type="button" class="btn-hero-orange" style="justify-content:center; width:100%; border-radius:12px; padding:12px; max-width:320px; margin:0 auto;" onclick="renderTopicList()">
-          Kembali ke Daftar Kuis
-        </button>
-      </div>
-    `;
+    let fallbackBenar = 0;
+    const fallbackReviews = currentQuestions.map((q, idx) => {
+      const uAns = (userAnswers[q.id] || '').trim().toUpperCase();
+      const cAns = (q.jawaban_benar || 'A').trim().toUpperCase();
+      const isCorrect = (uAns === cAns);
+      if (isCorrect) fallbackBenar++;
+      const mapP = { A: q.pilihan_a, B: q.pilihan_b, C: q.pilihan_c, D: q.pilihan_d };
+      return {
+        no: idx + 1,
+        id: q.id,
+        pertanyaan: q.pertanyaan,
+        jawaban_user: uAns || '-',
+        jawaban_user_text: mapP[uAns] || (uAns ? uAns : 'Tidak dijawab'),
+        jawaban_benar: cAns,
+        jawaban_benar_text: mapP[cAns] || cAns,
+        is_benar: isCorrect,
+        penjelasan: isCorrect
+          ? 'Jawaban Anda Benar! Pemahaman konsep materi Anda sudah tepat.'
+          : `Jawaban Anda Belum Tepat. Pilihan yang benar adalah [${cAns}]: "${mapP[cAns]}".`
+      };
+    });
+
+    const total = currentQuestions.length || 1;
+    const skor = Math.round((fallbackBenar / total) * 100);
+
+    renderQuizResult({
+      skor,
+      benar: fallbackBenar,
+      total,
+      lulus: skor >= 70,
+      review: fallbackReviews
+    });
   }
 
   loadQuizData();

@@ -8,6 +8,7 @@ const { supabase } = require('../database/supabase');
 const { requireAdmin } = require('../middleware/auth');
 const { broadcastPengumuman, broadcastHapusPengumuman, broadcastQuizDataChanged, broadcastMateriBaru, broadcastDurasiSetting } = require('../services/socket');
 const { getDurasiSetting, updateDurasiSetting } = require('../services/settings');
+const { getQuizSubmissionById } = require('../services/quiz_history');
 const pengumumanRouter = require('./pengumuman');
 
 // Direktori upload gambar materi
@@ -208,6 +209,21 @@ router.get('/aktivitas', async (req, res) => {
   } catch (err) {
     console.error('Admin Aktivitas Error:', err);
     return res.status(500).json({ error: 'Gagal memuat aktivitas siswa.' });
+  }
+});
+
+// 2b. GET /api/admin/quiz-detail/:id - Detail Review Jawaban Soal Siswa
+router.get('/quiz-detail/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const detail = await getQuizSubmissionById(id);
+    if (!detail) {
+      return res.status(404).json({ error: 'Rincian pengerjaan kuis siswa tidak ditemukan.' });
+    }
+    return res.json({ success: true, submission: detail });
+  } catch (err) {
+    console.error('Admin Quiz Detail Error:', err);
+    return res.status(500).json({ error: 'Gagal memuat rincian kuis siswa.' });
   }
 });
 
