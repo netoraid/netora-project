@@ -2224,7 +2224,7 @@ window.initAdminDashboard = async function() {
     if (list.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" style="text-align:center; padding:30px; color:#64748B;">
+          <td colspan="5" style="text-align:center; padding:30px; color:#64748B;">
             ${globalVideos.length === 0 ? 'Belum ada vidio praktik. Klik "+ Tambah Vidio Baru" untuk menambahkan vidio YouTube.' : 'Tidak ada vidio yang cocok dengan pencarian.'}
           </td>
         </tr>
@@ -2265,9 +2265,6 @@ window.initAdminDashboard = async function() {
               else { badgeClass = 'badge-blue'; label = 'MikroTik'; }
               return `<span class="badge ${badgeClass}" style="font-size:11.5px; font-weight:700;">${escapeHtml(label)}</span>`;
             })()}
-          </td>
-          <td>
-            <span style="font-size:12.5px; font-weight:700; color:#334155;">${escapeHtml(v.durasi || '15:00')}</span>
           </td>
           <td style="text-align:center;">
             <div style="display:inline-flex; align-items:center; gap:6px;">
@@ -2355,7 +2352,7 @@ window.initAdminDashboard = async function() {
     else katVal = 'MikroTik';
 
     document.getElementById('input-video-kategori').value = katVal;
-    document.getElementById('input-video-durasi').value = v.durasi || '15:00';
+    if (document.getElementById('input-video-durasi')) document.getElementById('input-video-durasi').value = v.durasi || '';
     document.getElementById('input-video-url').value = v.url_youtube || '';
     document.getElementById('input-video-deskripsi').value = v.deskripsi || '';
 
@@ -2385,7 +2382,7 @@ window.initAdminDashboard = async function() {
       const id = document.getElementById('input-video-id').value;
       const judul = document.getElementById('input-video-judul').value.trim();
       const kategori = (document.getElementById('input-video-kategori').value || '').trim();
-      const durasi = document.getElementById('input-video-durasi').value.trim() || '15:00';
+      const durasi = (document.getElementById('input-video-durasi')?.value || '').trim();
       const url_youtube = document.getElementById('input-video-url').value.trim();
       const deskripsi = document.getElementById('input-video-deskripsi').value.trim();
 

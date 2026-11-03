@@ -1530,13 +1530,12 @@
                 <th style="width:110px;">Thumbnail</th>
                 <th>Judul & Deskripsi Vidio</th>
                 <th style="width:160px;">Kategori</th>
-                <th style="width:90px;">Durasi</th>
                 <th style="width:120px; text-align:center;">Aksi</th>
               </tr>
             </thead>
             <tbody id="tbody-video-admin">
               <tr>
-                <td colspan="6" style="text-align:center; padding:30px; color:#64748B;">Memuat daftar vidio praktik...
+                <td colspan="5" style="text-align:center; padding:30px; color:#64748B;">Memuat daftar vidio praktik...
                 </td>
               </tr>
             </tbody>
@@ -3300,24 +3299,17 @@
               placeholder="Contoh: Konfigurasi Hotspot & User Login MikroTik" required style="background:#FFFFFF;">
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
-            <div>
-              <label
-                style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kategori
-                Materi *</label>
-              <select id="input-video-kategori" class="input-field" required style="background:#FFFFFF; font-size:13.5px; font-weight:600; cursor:pointer;">
-                <option value="" disabled selected>-- Wajib Pilih Kategori --</option>
-                <option value="MikroTik">MikroTik</option>
-                <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
-                <option value="Server dan Linux">Server dan Linux</option>
-              </select>
-            </div>
-            <div>
-              <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Durasi
-                Video (Menit:Detik)</label>
-              <input type="text" id="input-video-durasi" class="input-field" placeholder="Contoh: 15:30"
-                style="background:#FFFFFF;">
-            </div>
+          <div style="margin-bottom:14px;">
+            <label
+              style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Kategori
+              Materi *</label>
+            <select id="input-video-kategori" class="input-field" required style="background:#FFFFFF; font-size:13.5px; font-weight:600; cursor:pointer;">
+              <option value="" disabled selected>-- Wajib Pilih Kategori --</option>
+              <option value="MikroTik">MikroTik</option>
+              <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
+              <option value="Server dan Linux">Server dan Linux</option>
+            </select>
+            <input type="hidden" id="input-video-durasi" value="">
           </div>
 
           <div style="margin-bottom:14px;">
