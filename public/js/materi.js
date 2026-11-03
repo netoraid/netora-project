@@ -455,14 +455,11 @@ window.initMateriPage = async function() {
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF" style="margin-left:1.5px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                     </div>
                   </div>
-                  <span class="item-thumb-duration" style="position:absolute; bottom:3px; right:4px; font-size:9.5px; font-weight:700; padding:1.5px 5px; background:rgba(15,23,42,0.85); color:#FFFFFF; border-radius:4px; line-height:1;">${escapeHtml(v.durasi || '15:00')}</span>
                 </div>
                 <div class="item-meta-col">
                   <h4 class="item-title-text">${escapeHtml(v.judul)}</h4>
                   <div class="item-sub-text">
                     <span style="color:#DC2626; font-weight:700;">${escapeHtml(cat ? cat.name : (v.kategori || 'Praktikum'))}</span>
-                    <span>•</span>
-                    <span>${escapeHtml(v.durasi || '15:00')}</span>
                   </div>
                 </div>
               </div>

@@ -394,14 +394,11 @@ window.initVideoPage = async function() {
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF" style="margin-left:1.5px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                   </div>
                 </div>
-                <span class="item-thumb-duration" style="position:absolute; bottom:3px; right:4px; font-size:9.5px; font-weight:700; padding:1.5px 5px; background:rgba(15,23,42,0.85); color:#FFFFFF; border-radius:4px; line-height:1;">${escapeHtml(v.durasi || '15:00')}</span>
               </div>
               <div class="item-meta-col">
                 <h4 class="item-title-text">${escapeHtml(v.judul)}</h4>
                 <div class="item-sub-text">
                   <span style="color:#DC2626; font-weight:700;">${escapeHtml(cat ? cat.name : (v.kategori || 'Praktikum'))}</span>
-                  <span>•</span>
-                  <span>${escapeHtml(v.durasi || '15:00')}</span>
                 </div>
               </div>
             </div>
@@ -426,10 +423,6 @@ window.initVideoPage = async function() {
               <!-- Baris Meta & Link Buka YouTube -->
               <div style="margin-top:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
                 <div style="display:flex; align-items:center; gap:6px;">
-                  <span style="font-size:11.5px; font-weight:700; color:#475569; background:#F1F5F9; padding:4px 10px; border-radius:8px; display:inline-flex; align-items:center; gap:4px;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    ${escapeHtml(v.durasi || '15:00')}
-                  </span>
                   <span style="font-size:11.5px; font-weight:700; color:#0D5BFF; background:rgba(13,91,255,0.08); padding:4px 10px; border-radius:8px;">
                     ${escapeHtml(cat ? cat.name : (v.kategori || 'Praktikum'))}
                   </span>

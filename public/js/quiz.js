@@ -472,7 +472,7 @@ window.initQuizPage = function() {
               </div>
               <p style="font-size:14px; font-weight:700; color:#0F172A; margin:0 0 14px; line-height:1.5;">${escapeHtml(item.pertanyaan)}</p>
 
-              <div style="display:flex; flex-direction:column; gap:8px; font-size:12.5px; margin-bottom:12px;">
+              <div style="display:flex; flex-direction:column; gap:8px; font-size:12.5px;">
                 <!-- Jawaban Siswa -->
                 <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 12px; border-radius:10px; ${item.is_benar ? 'background:#F0FDF4; border:1px solid #BBF7D0; color:#166534;' : 'background:#FEF2F2; border:1px solid #FECACA; color:#991B1B;'}">
                   <div style="display:flex; align-items:center; gap:8px;">
@@ -492,12 +492,6 @@ window.initQuizPage = function() {
                     <span style="font-weight:800; font-size:12px; flex-shrink:0;">✓ Kunci</span>
                   </div>
                 ` : ''}
-              </div>
-
-              <!-- Kotak Penjelasan -->
-              <div style="background:${item.is_benar ? '#F8FAFC' : '#FFFBEB'}; border:1px solid ${item.is_benar ? '#E2E8F0' : '#FDE68A'}; border-radius:10px; padding:10px 14px; font-size:12px; color:${item.is_benar ? '#334155' : '#92400E'}; line-height:1.5;">
-                <strong style="color:${item.is_benar ? '#0D5BFF' : '#B45309'}; display:inline-block; margin-right:4px;">💡 Penjelasan:</strong>
-                <span>${escapeHtml(item.penjelasan)}</span>
               </div>
             </div>
           `).join('')}

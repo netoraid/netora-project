@@ -332,10 +332,6 @@ window.initAdminDashboard = async function() {
                 </div>
               ` : ''}
             </div>
-
-            <div style="background:${item.is_benar ? '#F8FAFC' : '#FFFBEB'}; border:1px solid ${item.is_benar ? '#E2E8F0' : '#FDE68A'}; border-radius:10px; padding:10px 12px; font-size:12px; color:${item.is_benar ? '#475569' : '#92400E'}; line-height:1.45;">
-              <strong style="color:${item.is_benar ? '#0D5BFF' : '#B45309'};">Penjelasan:</strong> ${escapeHtml(item.penjelasan)}
-            </div>
           </div>
         `).join('');
       }
