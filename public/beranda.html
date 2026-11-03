@@ -6,7 +6,7 @@
   <meta name="description" content="Netora - Dashboard Pembelajaran Terpadu Jurusan Teknik Komputer dan Jaringan (TKJ), Cisco, MikroTik, dan Linux Server.">
   <title>Netora — Beranda Pembelajaran TKJ</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.24">
+  <link rel="stylesheet" href="css/netora.css?v=2026.25">
   <style>
     /* ===== Banner Carousel ===== */
     .banner-carousel-wrap {
@@ -95,10 +95,10 @@
       }
     }
 
-    /* ===== 3 Menu Utama Fitur (Simetris, Jernih & Elegan) ===== */
+    /* ===== 4 Menu Utama Fitur (Simetris, Jernih & Elegan) ===== */
     .menu-features-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       padding: 0 14px;
       margin-bottom: 28px;
@@ -108,7 +108,7 @@
     .feature-menu-card {
       background: #FFFFFF;
       border-radius: 20px;
-      padding: 16px 8px 14px;
+      padding: 18px 10px 16px;
       text-decoration: none;
       display: flex;
       flex-direction: column;
@@ -141,6 +141,7 @@
       margin-bottom: 10px;
       flex-shrink: 0;
       background: transparent;
+      position: relative;
     }
 
     .feature-icon-img {
@@ -156,9 +157,47 @@
       transform: scale(1.06);
     }
 
+    /* Style Logo Kuis Lama agar seimbang dengan icon 3D lainnya */
+    .icon-old-quiz-box {
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      background: rgba(124, 58, 237, 0.10);
+      border: 2px solid #7C3AED;
+      color: #7C3AED;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-sizing: border-box;
+      transition: transform 0.25s ease;
+    }
+
+    .feature-menu-card:hover .icon-old-quiz-box {
+      transform: scale(1.06);
+    }
+
+    .icon-old-quiz-box svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .badge-mini-quiz {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #7C3AED;
+      color: #FFFFFF;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1.5px 5px;
+      border-radius: 5px;
+      box-shadow: 0 2px 6px rgba(124, 58, 237, 0.35);
+    }
+
     .feature-card-title {
       margin: 0;
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 800;
       color: #0F172A;
       line-height: 1.25;
@@ -167,7 +206,8 @@
 
     @media (min-width: 768px) {
       .menu-features-grid {
-        gap: 18px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
         padding: 0 24px;
       }
       .feature-menu-card {
@@ -179,6 +219,13 @@
         height: 70px;
         margin-bottom: 12px;
       }
+      .icon-old-quiz-box {
+        border-radius: 20px;
+      }
+      .icon-old-quiz-box svg {
+        width: 34px;
+        height: 34px;
+      }
       .feature-card-title {
         font-size: 15px;
       }
@@ -188,20 +235,34 @@
       .menu-features-grid {
         max-width: 1380px;
         margin: 0 auto 36px !important;
-        gap: 24px;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 22px;
         padding: 0 36px;
       }
       .feature-menu-card {
-        padding: 28px 18px 24px;
+        padding: 26px 16px 22px;
         border-radius: 24px;
       }
       .feature-icon-wrapper {
-        width: 84px;
-        height: 84px;
+        width: 82px;
+        height: 82px;
         margin-bottom: 14px;
       }
+      .icon-old-quiz-box {
+        border-radius: 22px;
+      }
+      .icon-old-quiz-box svg {
+        width: 40px;
+        height: 40px;
+      }
+      .badge-mini-quiz {
+        font-size: 10px;
+        padding: 2px 6px;
+        top: -6px;
+        right: -6px;
+      }
       .feature-card-title {
-        font-size: 17px;
+        font-size: 16.5px;
         letter-spacing: -0.3px;
       }
     }
@@ -296,13 +357,13 @@
     <!-- Judul Bagian: Menu Utama -->
     <div class="section-header-orange">Menu Utama Pembelajaran</div>
 
-    <!-- 3 Kolom Grid Menu Utama Fitur (Urutan: Kalkulator IP, Modul Materi, Vidio Praktik) -->
+    <!-- 4 Kolom Grid Menu Utama Fitur (Kalkulator IP, Modul Materi, Vidio Praktik, Kuis Kompetensi) -->
     <div class="menu-features-grid">
       
       <!-- 1. Kalkulator IP (Paling Kiri) -->
       <a href="kalkulator.html" class="feature-menu-card menu-card" id="card-menu-kalkulator" title="Kalkulator Subnetting IP Real-time">
         <div class="feature-icon-wrapper">
-          <img src="assets/icon-kalkulator-beranda.png?v=2026.24" alt="Kalkulator IP" class="feature-icon-img" loading="eager">
+          <img src="assets/icon-kalkulator-beranda.png?v=2026.25" alt="Kalkulator IP" class="feature-icon-img" loading="eager">
         </div>
         <h4 class="feature-card-title">Kalkulator IP</h4>
       </a>
@@ -310,7 +371,7 @@
       <!-- 2. Modul Materi (Sebelahnya) -->
       <a href="materi.html" class="feature-menu-card menu-card" id="card-menu-materi" title="Modul Materi Praktikum & Teori TKJ">
         <div class="feature-icon-wrapper">
-          <img src="assets/icon-materi-beranda.png?v=2026.24" alt="Modul Materi" class="feature-icon-img" loading="eager">
+          <img src="assets/icon-materi-beranda.png?v=2026.25" alt="Modul Materi" class="feature-icon-img" loading="eager">
         </div>
         <h4 class="feature-card-title">Modul Materi</h4>
       </a>
@@ -318,9 +379,26 @@
       <!-- 3. Vidio Praktik (Sebelahnya Lagi) -->
       <a href="video.html" class="feature-menu-card menu-card" id="card-menu-video" title="Vidio Praktik & Tutorial Jaringan">
         <div class="feature-icon-wrapper">
-          <img src="assets/icon-video-beranda.png?v=2026.24" alt="Vidio Praktik" class="feature-icon-img" loading="eager">
+          <img src="assets/icon-video-beranda.png?v=2026.25" alt="Vidio Praktik" class="feature-icon-img" loading="eager">
         </div>
         <h4 class="feature-card-title">Vidio Praktik</h4>
+      </a>
+
+      <!-- 4. Kuis Kompetensi (Logo Lama) -->
+      <a href="quiz.html" class="feature-menu-card menu-card" id="card-menu-quiz" title="Kuis Kompetensi TKJ & Evaluasi Nilai">
+        <div class="feature-icon-wrapper">
+          <div class="icon-old-quiz-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span class="badge-mini-quiz">KUIS</span>
+          </div>
+        </div>
+        <h4 class="feature-card-title">Kuis Kompetensi</h4>
       </a>
 
     </div>
@@ -355,7 +433,7 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.24"></script>
-  <script src="js/beranda.js?v=2026.24"></script>
+  <script src="js/netora.js?v=2026.25"></script>
+  <script src="js/beranda.js?v=2026.25"></script>
 </body>
 </html>
