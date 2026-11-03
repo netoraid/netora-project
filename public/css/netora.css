@@ -3311,9 +3311,9 @@ body.admin-page {
   }
 
   .feature-menu-card {
-    min-height: 156px !important;
-    padding: 22px 16px 18px !important;
-    border-radius: 22px !important;
+    min-height: 136px !important;
+    padding: 18px 14px 16px !important;
+    border-radius: 20px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -3323,9 +3323,9 @@ body.admin-page {
   }
 
   .feature-icon-wrapper {
-    width: 66px !important;
-    height: 66px !important;
-    margin-bottom: 12px !important;
+    width: 52px !important;
+    height: 52px !important;
+    margin-bottom: 10px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -3644,9 +3644,9 @@ body.admin-page {
 .app-top-header-royal {
   background: #0D5BFF;
   color: #FFFFFF;
-  padding: 16px 20px 24px;
-  border-bottom-left-radius: 26px;
-  border-bottom-right-radius: 26px;
+  padding: 13px 16px 18px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
   position: relative;
   z-index: 10;
   box-shadow: 0 8px 24px rgba(13, 91, 255, 0.2);
@@ -3677,15 +3677,15 @@ body.admin-page {
 
 .header-greeting-title {
   margin: 0;
-  font-size: 19px;
+  font-size: 16.5px;
   font-weight: 800;
   color: #FFFFFF;
   letter-spacing: -0.3px;
 }
 
 .header-greeting-sub {
-  margin: 3px 0 0;
-  font-size: 12px;
+  margin: 2px 0 0;
+  font-size: 11px;
   color: rgba(255, 255, 255, 0.82);
   font-weight: 500;
 }
@@ -3940,17 +3940,17 @@ body.admin-page {
 .section-header-orange {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 16px;
+  gap: 7px;
+  font-size: 14px;
   font-weight: 800;
   color: #1E293B;
-  margin: 18px 16px 12px;
+  margin: 14px 14px 10px;
 }
 
 .section-header-orange::before {
   content: '';
-  width: 4px;
-  height: 16px;
+  width: 3.5px;
+  height: 14px;
   background: #FF7A00;
   border-radius: 4px;
   display: inline-block;
@@ -4169,9 +4169,9 @@ body.admin-page {
 /* White List Cards (Video, Materi, Quiz) */
 .white-item-card {
   background: #FFFFFF;
-  border-radius: 18px;
-  padding: 14px 16px;
-  margin: 0 16px 12px;
+  border-radius: 14px;
+  padding: 11px 13px;
+  margin: 0 14px 9px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4195,9 +4195,9 @@ body.admin-page {
 }
 
 .item-square-thumb {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   background: #0B132B;
   color: #FFFFFF;
   display: flex;
@@ -4211,8 +4211,8 @@ body.admin-page {
 }
 
 .item-square-thumb svg {
-  width: 18px !important;
-  height: 18px !important;
+  width: 15px !important;
+  height: 15px !important;
 }
 
 .item-thumb-duration {
@@ -4428,7 +4428,7 @@ body.admin-page {
   display: flex !important;
   justify-content: space-around !important;
   align-items: center !important;
-  height: 60px !important;
+  height: 54px !important;
   padding-bottom: max(2px, env(safe-area-inset-bottom, 2px)) !important;
   border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05) !important;
@@ -4463,8 +4463,8 @@ body.admin-page {
 }
 
 .nav-tab-item svg {
-  width: 19px;
-  height: 19px;
+  width: 18px;
+  height: 18px;
   stroke: currentColor;
   fill: none !important;
   stroke-width: 2;
