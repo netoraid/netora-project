@@ -205,7 +205,6 @@ window.initVideoPage = async function() {
     // Update Banner Info Kategori Aktif
     const catIcon = document.getElementById('cat-video-active-icon');
     const catTitle = document.getElementById('cat-video-active-title');
-    const catDesc = document.getElementById('cat-video-active-desc');
 
     if (catIcon) {
       catIcon.innerHTML = cat.icon;
@@ -214,10 +213,6 @@ window.initVideoPage = async function() {
     }
     if (catTitle) {
       catTitle.textContent = `Vidio: ${cat.name}`;
-    }
-    if (catDesc) {
-      const totalVideo = allVideos.filter(v => getCategoryKey(v) === normalizedKey).length;
-      catDesc.textContent = `${cat.desc} (${totalVideo} Vidio Praktik)`;
     }
 
     renderVideoCards();

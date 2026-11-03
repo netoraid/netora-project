@@ -200,7 +200,6 @@ window.initMateriPage = async function() {
       // Update Banner Info Kategori Aktif
       const catIcon = document.getElementById('cat-active-icon');
       const catTitle = document.getElementById('cat-active-title');
-      const catDesc = document.getElementById('cat-active-desc');
 
       if (catIcon) {
         catIcon.innerHTML = cat.icon;
@@ -209,10 +208,6 @@ window.initMateriPage = async function() {
       }
       if (catTitle) {
         catTitle.textContent = `Materi: ${cat.name}`;
-      }
-      if (catDesc) {
-        const totalMateri = allMateri.filter(m => getMateriCategoryKey(m) === normalizedKey).length;
-        catDesc.textContent = `${cat.desc} (${totalMateri} Modul Pembelajaran)`;
       }
 
       renderMateriCards();
