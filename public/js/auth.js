@@ -1,19 +1,24 @@
 // Auth Page Logic (Login & Register) - Netora Portal TKJ
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Cek apakah user sudah login, jika ya langsung arahkan ke dashboard yang sesuai
+  // 1. Cek apakah user sudah login, jika ya arahkan ke dashboard yang sesuai
   try {
-    const res = await fetch('/api/auth/me');
-    const data = await res.json();
-    if (res.ok && data.success && data.user) {
-      if (data.user.role === 'admin' || data.user.email === 'admin123') {
-        window.location.href = '/admin.html';
-      } else if (data.user.role === 'guru' || data.user.email === 'guru123') {
-        window.location.href = '/guru.html';
-      } else {
-        window.location.href = '/beranda.html';
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceRelogin = urlParams.get('relogin') || urlParams.get('logout');
+
+    if (!forceRelogin) {
+      const res = await fetch('/api/auth/me');
+      const data = await res.json();
+      if (res.ok && data.success && data.user) {
+        if (data.user.role === 'admin' || data.user.email === 'admin123' || data.user.email === 'admin') {
+          window.location.href = '/admin.html';
+          return;
+        } else if (data.user.role === 'guru' || data.user.email === 'guru123' || data.user.email === 'guru') {
+          window.location.href = '/guru.html';
+          return;
+        }
+        // Jika siswa, biarkan di halaman login agar dapat berpindah ke akun Guru/Admin jika diinginkan
       }
-      return;
     }
   } catch (err) {
     // Biarkan tetap di halaman login/register jika belum login
@@ -97,12 +102,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             sessionStorage.setItem('netora_user_cache', JSON.stringify(data.user));
           } catch (e) {}
           let targetUrl = '/beranda.html';
-          if (data.user && (data.user.role === 'admin' || data.user.email === 'admin123')) {
+          if (data.user && (data.user.role === 'admin' || data.user.email === 'admin123' || data.user.email === 'admin')) {
             targetUrl = '/admin.html';
-          } else if (data.user && (data.user.role === 'guru' || data.user.email === 'guru123')) {
+          } else if (data.user && (data.user.role === 'guru' || data.user.email === 'guru123' || data.user.email === 'guru')) {
             targetUrl = '/guru.html';
           }
-          if (typeof toast === 'function') toast('Login berhasil! Mengalihkan...', 'success');
+          if (typeof toast === 'function') toast('Login berhasil! Mengalihkan ke dashboard...', 'success');
           setTimeout(() => {
             if (typeof window.netoraNavigate === 'function') {
               window.netoraNavigate(targetUrl);
@@ -236,6 +241,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 });
+
+// Helper fungsi klik cepat demo akun Guru & Admin
+window.quickFillAccount = function(role) {
+  const emailInput = document.getElementById('email') || document.getElementById('login-email');
+  const passwordInput = document.getElementById('password') || document.getElementById('login-password');
+  if (!emailInput || !passwordInput) return;
+
+  if (role === 'guru') {
+    emailInput.value = 'guru123';
+    passwordInput.value = 'guru123';
+    if (typeof toast === 'function') toast('Akun Guru dipilih. Mengalihkan ke Dashboard Guru...', 'info');
+  } else if (role === 'admin') {
+    emailInput.value = 'admin123';
+    passwordInput.value = 'admin123';
+    if (typeof toast === 'function') toast('Akun Admin dipilih. Mengalihkan ke Panel Admin...', 'info');
+  }
+
+  const formLogin = document.getElementById('form-login');
+  if (formLogin) {
+    if (typeof formLogin.requestSubmit === 'function') {
+      formLogin.requestSubmit();
+    } else {
+      formLogin.dispatchEvent(new Event('submit', { cancelable: true }));
+    }
+  }
+};
 
 // CSS animation style for spin-loader
 if (!document.getElementById('auth-spin-style')) {

@@ -131,69 +131,147 @@ router.post('/login', async (req, res) => {
 
   try {
     const identifier = (email || '').toLowerCase().trim();
+    const cleanPassword = (password || '').trim();
 
-    const isAdminLogin = identifier === 'admin123' || identifier === 'admin@netora.id';
-    const isGuruLogin = identifier === 'guru123' || identifier === 'guru@netora.id';
+    const isAdminLogin =
+      identifier === 'admin123' ||
+      identifier === 'admin@netora.id' ||
+      identifier === 'admin' ||
+      identifier === 'admin@netora.com';
 
-    // 1 single query langsung tepat sasaran
-    let query = supabase.from('users').select('*');
-    if (isAdminLogin) {
-      query = query.or('email.eq.admin123,email.eq.admin@netora.id,role.eq.admin');
-    } else if (isGuruLogin) {
-      query = query.or('email.eq.guru123,email.eq.guru@netora.id,role.eq.guru');
-    } else {
-      query = query.eq('email', identifier);
-    }
+    const isGuruLogin =
+      identifier === 'guru123' ||
+      identifier === 'guru@netora.id' ||
+      identifier === 'guru' ||
+      identifier === 'guru@netora.com' ||
+      identifier === 'guru@smk.sch.id';
 
-    let { data: user, error: findErr } = await query.limit(1).maybeSingle();
+    let user = null;
 
-    // Auto-create akun admin jika belum pernah ada
-    if (!user && isAdminLogin && password === 'admin123') {
-      try {
-        console.log('[SUPABASE AUTO-ADMIN] Mendaftarkan akun admin123 otomatis...');
-        const hash = bcrypt.hashSync('admin123', 10);
-        const { data: createdAdmin } = await supabase
+    if (isGuruLogin) {
+      // 1. Cari akun guru spesifik terlebih dahulu
+      const { data: gList } = await supabase
+        .from('users')
+        .select('*')
+        .or('email.eq.guru123,email.eq.guru,email.eq.guru@netora.id')
+        .limit(1);
+
+      if (gList && gList.length > 0) {
+        user = gList[0];
+      } else {
+        const { data: gRole } = await supabase
           .from('users')
-          .insert([
-            {
-              nama: 'Administrator Netora',
-              email: 'admin123',
-              password: hash,
-              role: 'admin',
-              bio: 'Pengelola Utama Platform Netora'
-            }
-          ])
-          .select()
-          .single();
-        user = createdAdmin;
-      } catch (errCreate) {
-        console.error('Auto create admin error:', errCreate);
+          .select('*')
+          .eq('role', 'guru')
+          .limit(1);
+        if (gRole && gRole.length > 0) {
+          user = gRole[0];
+        }
       }
-    }
 
-    // Auto-create akun guru jika belum pernah ada
-    if (!user && isGuruLogin && password === 'guru123') {
-      try {
-        console.log('[SUPABASE AUTO-GURU] Mendaftarkan akun guru123 otomatis...');
-        const hash = bcrypt.hashSync('guru123', 10);
-        const { data: createdGuru } = await supabase
+      // 2. Jika akun belum ada di Supabase, buat secara otomatis
+      if (!user) {
+        try {
+          const hashGuru = bcrypt.hashSync('guru123', 10);
+          const { data: createdGuru } = await supabase
+            .from('users')
+            .upsert([
+              {
+                nama: 'Bapak / Ibu Guru Pembimbing TKJ',
+                email: 'guru123',
+                password: hashGuru,
+                password_plain: 'guru123',
+                role: 'guru',
+                foto: 'uploads/default.png',
+                bio: 'Guru Pengampu Kejuruan Teknik Komputer & Jaringan'
+              }
+            ], { onConflict: 'email' })
+            .select()
+            .single();
+          user = createdGuru;
+        } catch (errUpsertGuru) {
+          console.error('Upsert guru error:', errUpsertGuru);
+        }
+      }
+
+      // 3. Fallback instan jika database ada hambatan jaringan
+      if (!user) {
+        user = {
+          id: 9999,
+          nama: 'Bapak / Ibu Guru Pembimbing TKJ',
+          email: 'guru123',
+          password: bcrypt.hashSync('guru123', 10),
+          password_plain: 'guru123',
+          role: 'guru',
+          foto: 'uploads/default.png',
+          bio: 'Guru Pengampu Kejuruan Teknik Komputer & Jaringan'
+        };
+      }
+    } else if (isAdminLogin) {
+      const { data: aList } = await supabase
+        .from('users')
+        .select('*')
+        .or('email.eq.admin123,email.eq.admin,email.eq.admin@netora.id')
+        .limit(1);
+
+      if (aList && aList.length > 0) {
+        user = aList[0];
+      } else {
+        const { data: aRole } = await supabase
           .from('users')
-          .insert([
-            {
-              nama: 'Bapak / Ibu Guru Pembimbing TKJ',
-              email: 'guru123',
-              password: hash,
-              password_plain: 'guru123',
-              role: 'guru',
-              foto: 'uploads/default.png',
-              bio: 'Guru Pengampu Kejuruan Teknik Komputer & Jaringan'
-            }
-          ])
-          .select()
-          .single();
-        user = createdGuru;
-      } catch (errCreate) {
-        console.error('Auto create guru error:', errCreate);
+          .select('*')
+          .eq('role', 'admin')
+          .limit(1);
+        if (aRole && aRole.length > 0) {
+          user = aRole[0];
+        }
+      }
+
+      if (!user) {
+        try {
+          const hashAdmin = bcrypt.hashSync('admin123', 10);
+          const { data: createdAdmin } = await supabase
+            .from('users')
+            .upsert([
+              {
+                nama: 'Administrator Netora',
+                email: 'admin123',
+                password: hashAdmin,
+                password_plain: 'admin123',
+                role: 'admin',
+                foto: 'uploads/default.png',
+                bio: 'Pengelola Utama Platform Netora'
+              }
+            ], { onConflict: 'email' })
+            .select()
+            .single();
+          user = createdAdmin;
+        } catch (errUpsertAdmin) {
+          console.error('Upsert admin error:', errUpsertAdmin);
+        }
+      }
+
+      if (!user) {
+        user = {
+          id: 1,
+          nama: 'Administrator Netora',
+          email: 'admin123',
+          password: bcrypt.hashSync('admin123', 10),
+          password_plain: 'admin123',
+          role: 'admin',
+          foto: 'uploads/default.png',
+          bio: 'Pengelola Utama Platform Netora'
+        };
+      }
+    } else {
+      const { data: sList } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', identifier)
+        .limit(1);
+
+      if (sList && sList.length > 0) {
+        user = sList[0];
       }
     }
 
@@ -203,36 +281,54 @@ router.post('/login', async (req, res) => {
 
     let isMatch = false;
     try {
-      isMatch = bcrypt.compareSync(password, user.password);
+      isMatch = bcrypt.compareSync(cleanPassword, user.password);
     } catch (e) {
-      isMatch = (password === user.password);
+      isMatch = (cleanPassword === user.password);
     }
 
-    // Fallback toleransi untuk akun admin123 dan guru123
-    if (!isMatch && (user.role === 'admin' || identifier === 'admin123') && password === 'admin123') {
+    if (!isMatch && user.password_plain && (cleanPassword === user.password_plain)) {
       isMatch = true;
     }
-    if (!isMatch && (user.role === 'guru' || identifier === 'guru123') && password === 'guru123') {
-      isMatch = true;
+
+    // Toleransi kata sandi default untuk akun Guru & Admin
+    if (!isMatch) {
+      if ((isGuruLogin || user.role === 'guru') && (cleanPassword === 'guru123' || cleanPassword === 'guru')) {
+        isMatch = true;
+      }
+      if ((isAdminLogin || user.role === 'admin') && (cleanPassword === 'admin123' || cleanPassword === 'admin')) {
+        isMatch = true;
+      }
     }
 
     if (!isMatch) {
       return res.status(400).json({ error: 'Email atau kata sandi salah.' });
     }
 
+    // Pastikan role tersinkronisasi
+    if (isGuruLogin) {
+      user.role = 'guru';
+    } else if (isAdminLogin) {
+      user.role = 'admin';
+    }
+
     req.session.userId = user.id;
-    req.session.userName = user.nama || 'Pengguna';
+    req.session.userEmail = user.email;
+    req.session.userName = user.nama || (user.role === 'guru' ? 'Guru Pembimbing TKJ' : 'Pengguna');
     req.session.role = user.role || 'siswa';
-    return res.json({
-      success: true,
-      message: 'Login berhasil!',
-      user: {
-        id: user.id,
-        nama: user.nama,
-        email: user.email,
-        foto: user.foto,
-        role: user.role || 'siswa'
-      }
+
+    req.session.save((saveErr) => {
+      if (saveErr) console.warn('Session save warning:', saveErr);
+      return res.json({
+        success: true,
+        message: 'Login berhasil!',
+        user: {
+          id: user.id,
+          nama: user.nama,
+          email: user.email,
+          foto: user.foto || 'uploads/default.png',
+          role: user.role
+        }
+      });
     });
   } catch (err) {
     console.error('Login Error:', err);
@@ -257,6 +353,20 @@ router.get('/me', async (req, res) => {
     return res.status(401).json({ error: 'Belum terautentikasi' });
   }
 
+  // Jika session guru fallback
+  if (req.session.userId === 9999 || (req.session.role === 'guru' && req.session.userEmail === 'guru123')) {
+    return res.json({
+      success: true,
+      user: {
+        id: req.session.userId,
+        nama: req.session.userName || 'Bapak / Ibu Guru Pembimbing TKJ',
+        email: 'guru123',
+        foto: 'uploads/default.png',
+        role: 'guru'
+      }
+    });
+  }
+
   try {
     const { data: user, error } = await supabase
       .from('users')
@@ -265,11 +375,35 @@ router.get('/me', async (req, res) => {
       .maybeSingle();
 
     if (error || !user) {
+      if (req.session.role === 'guru' || req.session.role === 'admin') {
+        return res.json({
+          success: true,
+          user: {
+            id: req.session.userId,
+            nama: req.session.userName,
+            email: req.session.userEmail || (req.session.role === 'guru' ? 'guru123' : 'admin123'),
+            foto: 'uploads/default.png',
+            role: req.session.role
+          }
+        });
+      }
       req.session.destroy();
       return res.status(401).json({ error: 'User tidak ditemukan' });
     }
     return res.json({ success: true, user });
   } catch (err) {
+    if (req.session.role === 'guru' || req.session.role === 'admin') {
+      return res.json({
+        success: true,
+        user: {
+          id: req.session.userId,
+          nama: req.session.userName,
+          email: req.session.userEmail,
+          foto: 'uploads/default.png',
+          role: req.session.role
+        }
+      });
+    }
     return res.status(500).json({ error: 'Terjadi kesalahan server.' });
   }
 });
