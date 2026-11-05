@@ -8,7 +8,7 @@
     content="Dashboard Administrator Netora - Monitoring Aktivitas Siswa, Kuis, Modul, dan Nilai Ujian TKJ.">
   <title>Netora — Dashboard Admin Monitoring Siswa</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.41">
+  <link rel="stylesheet" href="css/netora.css?v=2026.42">
   <style>
     /* ===================================================
        NETORA ADMIN CONSOLE — LIGHT EDTECH THEME
@@ -117,6 +117,27 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
+    }
+
+    .btn-admin-logout {
+      background: rgba(239, 68, 68, 0.95) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      color: #FFFFFF !important;
+      font-weight: 700 !important;
+      padding: 6px 13px !important;
+      border-radius: 8px !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(239, 68, 68, 0.25);
+      transition: all 0.2s ease;
+    }
+    .btn-admin-logout:hover {
+      background: #DC2626 !important;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(220, 38, 38, 0.35);
     }
 
     .admin-clock-pill {
@@ -879,14 +900,9 @@
         </div>
       </div>
 
-      <div class="admin-header-right" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-        <div class="admin-clock-pill" id="admin-live-clock">
-          <span class="dot-online"></span>
-          <span id="live-time-text">Memuat waktu...</span>
-        </div>
-
+      <div class="admin-header-right" style="display:flex; align-items:center; gap:10px;">
         <a href="beranda.html" class="btn-web-siswa">
-          <svg style="width:16px; height:16px; stroke:currentColor; fill:none;" viewBox="0 0 24 24" stroke-width="2.5">
+          <svg style="width:15px; height:15px; stroke:currentColor; fill:none;" viewBox="0 0 24 24" stroke-width="2.5">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
             <polyline points="15 3 21 3 21 9" />
             <line x1="10" y1="14" x2="21" y2="3" />
@@ -894,20 +910,14 @@
           <span>Lihat Web Siswa</span>
         </a>
 
-        <div class="admin-profile-pill">
-          <img src="uploads/default.svg" id="admin-avatar" alt="Avatar Admin" class="admin-avatar-mini">
-          <div class="admin-profile-text">
-            <strong id="admin-nama">Administrator</strong>
-            <span>Super Admin</span>
-          </div>
-          <button id="btn-admin-logout" class="btn-logout-mini" title="Keluar dari Panel Admin">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-          </button>
-        </div>
+        <button id="btn-admin-logout" class="btn-admin-logout" type="button" title="Keluar dari Panel Admin">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          <span>Keluar</span>
+        </button>
       </div>
     </header>
 
@@ -3584,8 +3594,8 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.41"></script>
-  <script src="js/admin.js?v=2026.41"></script>
+  <script src="js/netora.js?v=2026.42"></script>
+  <script src="js/admin.js?v=2026.42"></script>
 </body>
 
 </html>

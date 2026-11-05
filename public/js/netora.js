@@ -1583,9 +1583,188 @@ document.addEventListener('DOMContentLoaded', () => {
     }, TICK_INTERVAL * 1000);
   }
 
+  // ==========================================
+  // FITUR PENGINGAT WAKTU SHOLAT 5 WAKTU
+  // ==========================================
+  const PRAYER_SCHEDULE = [
+    { name: 'Subuh', hour: 4, minute: 25 },
+    { name: 'Dzuhur', hour: 11, minute: 55 },
+    { name: 'Ashar', hour: 15, minute: 15 },
+    { name: 'Maghrib', hour: 17, minute: 55 },
+    { name: 'Isya', hour: 19, minute: 10 }
+  ];
+
+  function showPrayerModal(prayerName) {
+    if (document.getElementById('netora-prayer-modal-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'netora-prayer-modal-overlay';
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      transition: opacity 0.25s ease-out;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    `;
+
+    overlay.innerHTML = `
+      <div style="
+        background: #FFFFFF;
+        width: 100%;
+        max-width: 400px;
+        border-radius: 18px;
+        padding: 30px 24px 26px;
+        text-align: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-top: 5px solid #10B981;
+        transform: translateY(20px) scale(0.96);
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        box-sizing: border-box;
+      ">
+        <div style="
+          width: 64px;
+          height: 64px;
+          background: #ECFDF5;
+          color: #059669;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 16px;
+          box-shadow: 0 4px 14px rgba(16, 185, 129, 0.2);
+        ">
+          <!-- Mosque SVG Icon -->
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3c-1.5 1.5-3 3.5-3 6 0 1.5.5 3 1.5 4h3c1-1 1.5-2.5 1.5-4 0-2.5-1.5-4.5-3-6z"/>
+            <path d="M4 21V10l3-2v13"/>
+            <path d="M20 21V10l-3-2v13"/>
+            <path d="M2 21h20"/>
+            <path d="M9 21v-5a3 3 0 0 1 6 0v5"/>
+            <path d="M12 2v2"/>
+          </svg>
+        </div>
+
+        <h3 style="
+          margin: 0 0 8px;
+          color: #0F172A;
+          font-size: 20px;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+        ">Waktunya Sholat ${prayerName}</h3>
+
+        <p style="
+          margin: 0 0 22px;
+          color: #475569;
+          font-size: 14.5px;
+          line-height: 1.5;
+          font-weight: 500;
+        ">Matikan perangkat Anda dan segera laksanakan ibadah.</p>
+
+        <button type="button" id="btn-close-prayer-popup" style="
+          width: 100%;
+          background: #10B981;
+          color: #FFFFFF;
+          border: none;
+          border-radius: 10px;
+          padding: 11px 20px;
+          font-size: 14px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+        ">Saya Mengerti</button>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    requestAnimationFrame(() => {
+      overlay.style.opacity = '1';
+      const card = overlay.firstElementChild;
+      if (card) card.style.transform = 'translateY(0) scale(1)';
+    });
+
+    function closeModal() {
+      overlay.style.opacity = '0';
+      const card = overlay.firstElementChild;
+      if (card) card.style.transform = 'translateY(15px) scale(0.96)';
+      setTimeout(() => {
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      }, 250);
+    }
+
+    const btnClose = overlay.querySelector('#btn-close-prayer-popup');
+    if (btnClose) {
+      btnClose.addEventListener('click', closeModal);
+      btnClose.addEventListener('mouseenter', () => {
+        btnClose.style.background = '#059669';
+      });
+      btnClose.addEventListener('mouseleave', () => {
+        btnClose.style.background = '#10B981';
+      });
+    }
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal();
+    });
+  }
+
+  function checkPrayerTimes() {
+    try {
+      const now = new Date();
+      const currentH = now.getHours();
+      const currentM = now.getMinutes();
+      const currentTotalMin = currentH * 60 + currentM;
+
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const date = String(now.getDate()).padStart(2, '0');
+      const todayStr = `${year}-${month}-${date}`;
+
+      for (const prayer of PRAYER_SCHEDULE) {
+        const prayerTotalMin = prayer.hour * 60 + prayer.minute;
+        if (currentTotalMin >= prayerTotalMin && currentTotalMin < prayerTotalMin + 45) {
+          const dismissKey = `netora_prayer_dismissed_${todayStr}_${prayer.name}`;
+          if (!localStorage.getItem(dismissKey)) {
+            localStorage.setItem(dismissKey, 'true');
+            showPrayerModal(prayer.name);
+            break;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('[NETORA] checkPrayerTimes err:', err);
+    }
+  }
+
+  let _netoraPrayerTimer = null;
+  function initPrayerReminder() {
+    if (_netoraPrayerTimer) return;
+    checkPrayerTimes();
+    _netoraPrayerTimer = setInterval(checkPrayerTimes, 20000);
+  }
+
+  window.testPrayerReminder = function(namaSholat = 'Dzuhur') {
+    showPrayerModal(namaSholat);
+  };
+
   function startAllFeatures() {
     loadSocketIoScript(startSocket);
     initStudyDurationTracker();
+    initPrayerReminder();
   }
 
   if (document.readyState === 'loading') {
