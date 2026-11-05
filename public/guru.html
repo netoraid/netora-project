@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -135,6 +135,27 @@
     .btn-web-siswa:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-admin-logout {
+      background: rgba(239, 68, 68, 0.95) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      color: #FFFFFF !important;
+      font-weight: 700 !important;
+      padding: 6px 13px !important;
+      border-radius: 8px !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(239, 68, 68, 0.25);
+      transition: all 0.2s ease;
+    }
+    .btn-admin-logout:hover {
+      background: #DC2626 !important;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(220, 38, 38, 0.35);
     }
 
     .guru-profile-pill {
@@ -567,27 +588,24 @@
         </div>
       </div>
 
-      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-        <div class="guru-clock-pill">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <span id="live-time-text">Memuat Waktu...</span>
-        </div>
-
+      <div style="display:flex; align-items:center; gap:10px;">
         <a href="beranda.html" class="btn-web-siswa" title="Lihat Tampilan Web Siswa">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
           <span>Web Siswa</span>
         </a>
 
-        <div class="guru-profile-pill">
-          <img src="uploads/default.svg" id="guru-avatar" alt="Avatar Guru" class="guru-avatar-mini">
-          <div class="guru-profile-text">
-            <strong id="guru-nama">Guru Pembimbing</strong>
-            <span>Pendidik TKJ</span>
-          </div>
-          <button id="btn-guru-logout" class="btn-logout-mini" title="Keluar dari Akun Guru">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          </button>
-        </div>
+        <button id="btn-guru-logout" class="btn-admin-logout" type="button" title="Keluar dari Akun Guru">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          <span>Keluar</span>
+        </button>
       </div>
     </header>
 
@@ -766,105 +784,46 @@
          TAB 3: BANK SOAL & PEMBUATAN MATERI KUIS
          ====================================================================== -->
     <div id="tab-quiz" class="guru-tab-content">
-      <!-- 1. Formulir Buat Paket Kuis Baru (Bisa Langsung Banyak Soal) -->
-      <div class="card-panel" style="border-left: 4px solid #0D5BFF !important;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
-          <div>
-            <h3 style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-              <span>Buat Paket Kuis Baru (Multi-Soal)</span>
-            </h3>
-          </div>
-        </div>
-
-        <form id="form-tambah-quiz-guru">
-          <!-- Pengaturan Umum Kuis -->
-          <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:16px; margin-bottom:18px;">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom:14px;">
-              <div class="form-group">
-                <label for="input-kategori-quiz" style="font-weight:700; font-size:12.5px;">Topik / Kategori Kuis Kejuruan TKJ *</label>
-                <select id="input-kategori-quiz" class="input-field" required>
-                  <option value="Cisco Packet Tracer">Cisco Packet Tracer & Routing</option>
-                  <option value="Dasar Mikrotik RouterOS">Dasar Mikrotik RouterOS</option>
-                  <option value="Subnetting IP & CIDR">Subnetting IP & CIDR</option>
-                  <option value="Firewall & Keamanan Jaringan">Firewall & Keamanan Jaringan</option>
-                  <option value="Administrasi Server Linux">Administrasi Server Linux</option>
-                  <option value="Teknik Komputer & Jaringan Umum">Teknik Komputer & Jaringan Umum</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="input-judul-quiz-guru" style="font-weight:700; font-size:12.5px;">Judul / Nama Kuis *</label>
-                <input type="text" id="input-judul-quiz-guru" class="input-field" placeholder="Contoh: Kuis 1: Konfigurasi VLAN & Trunking" required>
-              </div>
-            </div>
-
-            <!-- Kontrol Jumlah Soal Cepat -->
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; border-top:1px dashed #CBD5E1; padding-top:12px;">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <label for="input-jumlah-soal-guru" style="font-size:12.5px; font-weight:700; color:#334155;">Atur Jumlah Soal:</label>
-                <input type="number" id="input-jumlah-soal-guru" min="1" max="50" value="5" class="input-field" style="width:70px; text-align:center; padding:6px; font-weight:800; font-size:14px;">
-                <span style="font-size:12px; color:#64748B;">Butir</span>
-              </div>
-              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                <span style="font-size:11.5px; color:#64748B; margin-right:2px;">Pilihan Cepat:</span>
-                <button type="button" class="btn-quick-soal-guru" data-soal="1" style="padding:4px 10px; border-radius:8px; border:1px solid #CBD5E1; background:#FFFFFF; font-size:11.5px; font-weight:700; cursor:pointer;">1 Soal</button>
-                <button type="button" class="btn-quick-soal-guru" data-soal="2" style="padding:4px 10px; border-radius:8px; border:1px solid #CBD5E1; background:#FFFFFF; font-size:11.5px; font-weight:700; cursor:pointer;">2 Soal</button>
-                <button type="button" class="btn-quick-soal-guru" data-soal="3" style="padding:4px 10px; border-radius:8px; border:1px solid #CBD5E1; background:#FFFFFF; font-size:11.5px; font-weight:700; cursor:pointer;">3 Soal</button>
-                <button type="button" class="btn-quick-soal-guru" data-soal="5" style="padding:4px 10px; border-radius:8px; border:1px solid #0D5BFF; background:#EFF6FF; color:#0D5BFF; font-size:11.5px; font-weight:700; cursor:pointer;">5 Soal</button>
-                <button type="button" class="btn-quick-soal-guru" data-soal="10" style="padding:4px 10px; border-radius:8px; border:1px solid #CBD5E1; background:#FFFFFF; font-size:11.5px; font-weight:700; cursor:pointer;">10 Soal</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Container Kartu-Kartu Butir Soal Dinamis -->
-          <div id="container-soal-guru" style="display:flex; flex-direction:column; gap:16px; margin-bottom:18px;">
-            <!-- Kartu soal digenerate via guru.js -->
-          </div>
-
-          <!-- Baris Aksi Bawah -->
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-top:1px solid #E2E8F0; padding-top:16px;">
-            <button type="button" id="btn-tambah-butir-guru" class="btn-secondary" style="display:inline-flex; align-items:center; gap:6px;">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              <span>Tambah 1 Butir Soal Lagi</span>
-            </button>
-
-            <button type="submit" id="btn-submit-quiz" class="btn-primary" style="display:inline-flex; align-items:center; gap:8px; padding:10px 22px;">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              <span id="btn-submit-label-guru">Simpan Paket Kuis (5 Soal)</span>
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- 2. Tabel Bank Soal Kuis yang Sudah Ada -->
       <div class="card-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:16px;">
-          <div>
-            <h3 style="margin:0; font-size:17px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
-              <span>Daftar Bank Soal Kuis</span>
-            </h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <div style="width:36px; height:36px; border-radius:10px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+              </svg>
+            </div>
+            <div>
+              <h3 style="margin:0; font-size:16px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+                <span>Bank Soal & Pengaturan Kuis</span>
+              </h3>
+            </div>
+            <span id="badge-total-quiz-guru" class="badge-tag purple" style="font-size:11px; padding:3px 10px;">0 Butir Soal Terdaftar</span>
           </div>
 
-          <button id="btn-refresh-quiz" class="btn-secondary">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-            <span>Segarkan Bank Soal</span>
-          </button>
-        </div>
-
-        <!-- Filter & Search Bank Soal -->
-        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:12px; margin-bottom:16px;">
-          <input type="text" id="search-quiz-input" class="input-field" placeholder="Cari pertanyaan soal kuis...">
-          <select id="filter-quiz-kategori" class="input-field">
-            <option value="all">Semua Kategori</option>
-            <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
-            <option value="Dasar Mikrotik RouterOS">Dasar Mikrotik RouterOS</option>
-            <option value="Subnetting IP & CIDR">Subnetting IP & CIDR</option>
-            <option value="Firewall & Keamanan Jaringan">Firewall & Keamanan Jaringan</option>
-            <option value="Administrasi Server Linux">Administrasi Server Linux</option>
-            <option value="Topologi & Kabel Jaringan">Topologi & Kabel Jaringan</option>
-          </select>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <input type="text" id="search-quiz-input" class="input-field" placeholder="Cari butir soal / kategori..."
+              style="width:180px; padding:6px 10px; font-size:12px;">
+            <select id="filter-quiz-kategori" class="input-field"
+              style="width:140px; padding:6px 10px; font-size:12px;">
+              <option value="all">Semua Kategori</option>
+              <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
+              <option value="Mikrotik">Mikrotik</option>
+              <option value="Server & Linux">Server & Linux</option>
+              <option value="Umum">Umum</option>
+            </select>
+            <button id="btn-tambah-soal-guru" type="button" class="btn-primary"
+              style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Tambah Soal Kuis</span>
+            </button>
+            <button id="btn-refresh-quiz" class="btn-secondary" style="padding:6px 10px; font-size:12px;" title="Segarkan Data Bank Soal">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </button>
+          </div>
         </div>
 
         <!-- Tabel Bank Soal -->
@@ -872,11 +831,11 @@
           <table class="admin-table" id="table-quiz-guru">
             <thead>
               <tr>
-                <th style="width:50px;">No</th>
-                <th style="width:140px;">Kategori</th>
-                <th>Pertanyaan</th>
-                <th style="width:200px;">Pilihan & Kunci</th>
-                <th style="width:130px; text-align:center;">Aksi</th>
+                <th style="width:45px;">No</th>
+                <th style="width:170px;">Kategori</th>
+                <th>Pertanyaan & Opsi Pilihan</th>
+                <th style="width:90px; text-align:center;">Kunci</th>
+                <th style="width:120px; text-align:center;">Aksi</th>
               </tr>
             </thead>
             <tbody id="tbody-quiz-guru">
@@ -895,80 +854,154 @@
   </div>
 
   <!-- ======================================================================
-       MODAL EDIT SOAL KUIS (KHUSUS GURU)
+       MODAL TAMBAH & EDIT SOAL KUIS (KHUSUS GURU)
        ====================================================================== -->
-  <div id="modal-edit-quiz-guru" class="guru-modal-overlay">
-    <div class="guru-modal-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-        <h3 style="margin:0; font-size:17px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          <span>Edit Soal Kuis</span>
-        </h3>
-        <button type="button" id="btn-close-modal-quiz" style="background:none; border:none; cursor:pointer; color:#64748B; padding:4px;" title="Tutup">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+  <div id="modal-soal-quiz-guru"
+    style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(6px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+    <div class="card-panel"
+      style="width:100%; max-width:820px; background:#FFFFFF; border:1px solid #CBD5E1; box-shadow:0 25px 60px rgba(0,0,0,0.18); border-radius:24px; max-height:92vh; overflow-y:auto; position:relative; padding:24px;">
+
+      <!-- Header Modal -->
+      <div
+        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #F1F5F9; padding-bottom:14px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div
+            style="width:42px; height:42px; border-radius:12px; background:#EFF6FF; border:1px solid #BFDBFE; display:flex; align-items:center; justify-content:center; color:#0D5BFF;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="7"></circle>
+              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+            </svg>
+          </div>
+          <div>
+            <h3 id="modal-soal-title-guru" style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Buat Paket Kuis Baru</h3>
+          </div>
+        </div>
+        <button id="btn-close-modal-soal-guru" type="button"
+          style="background:#F1F5F9; border:none; color:#64748B; width:34px; height:34px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;"
+          title="Tutup Modal">&times;</button>
       </div>
 
-      <form id="form-edit-quiz-guru">
-        <input type="hidden" id="edit-quiz-id">
+      <form id="form-soal-quiz-guru">
+        <input type="hidden" id="soal-id-guru" value="">
 
-        <div class="form-group" style="margin-bottom:12px;">
-          <label for="edit-quiz-kategori">Kategori Kejuruan</label>
-          <select id="edit-quiz-kategori" class="input-field" required>
-            <option value="Cisco Packet Tracer">Cisco Packet Tracer & Routing</option>
-            <option value="Dasar Mikrotik RouterOS">Dasar Mikrotik RouterOS</option>
-            <option value="Subnetting IP & CIDR">Subnetting IP & CIDR</option>
-            <option value="Firewall & Keamanan Jaringan">Firewall & Keamanan Jaringan</option>
-            <option value="Administrasi Server Linux">Administrasi Server Linux</option>
-            <option value="Teknik Komputer & Jaringan Umum">Teknik Komputer & Jaringan Umum</option>
-          </select>
-        </div>
-
-        <div class="form-group" style="margin-bottom:12px;">
-          <label for="edit-quiz-judul">Judul / Paket Kuis</label>
-          <input type="text" id="edit-quiz-judul" class="input-field" placeholder="Nama Paket Kuis..." required>
-        </div>
-
-        <div class="form-group" style="margin-bottom:12px;">
-          <label for="edit-quiz-pertanyaan">Pertanyaan Soal</label>
-          <textarea id="edit-quiz-pertanyaan" rows="3" class="input-field" required></textarea>
-        </div>
-
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
-          <div class="form-group">
-            <label for="edit-quiz-a">Opsi A</label>
-            <input type="text" id="edit-quiz-a" class="input-field" required>
+        <!-- Baris Pengaturan Kategori & Judul Kuis -->
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:16px; margin-bottom:16px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+            <div class="form-group">
+              <label for="input-soal-kategori-guru" style="font-size:12.5px; font-weight:700;">Kategori Kejuruan *</label>
+              <select id="input-soal-kategori-guru" class="input-field" required>
+                <option value="Cisco Packet Tracer">Cisco Packet Tracer</option>
+                <option value="Mikrotik">Mikrotik</option>
+                <option value="Server & Linux">Server & Linux</option>
+                <option value="Umum">Umum (TKJ)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="input-soal-judul-guru" style="font-size:12.5px; font-weight:700;">Judul / Nama Kuis *</label>
+              <input type="text" id="input-soal-judul-guru" class="input-field" placeholder="Contoh: Kuis 1: Konfigurasi Dasar Cisco" required>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="edit-quiz-b">Opsi B</label>
-            <input type="text" id="edit-quiz-b" class="input-field" required>
-          </div>
-          <div class="form-group">
-            <label for="edit-quiz-c">Opsi C</label>
-            <input type="text" id="edit-quiz-c" class="input-field" required>
-          </div>
-          <div class="form-group">
-            <label for="edit-quiz-d">Opsi D</label>
-            <input type="text" id="edit-quiz-d" class="input-field" required>
+
+          <!-- Kontrol Jumlah Soal Cepat (Hanya muncul saat Tambah Baru) -->
+          <div id="wrap-jumlah-soal-guru" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; border-top:1px dashed #CBD5E1; padding-top:12px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <label for="input-jumlah-soal-guru" style="font-size:12px; font-weight:700; color:#334155;">Jumlah Soal:</label>
+              <input type="number" id="input-jumlah-soal-guru" min="1" max="50" value="5" class="input-field" style="width:70px; text-align:center; padding:5px; font-weight:800; font-size:13.5px;">
+              <span style="font-size:11.5px; color:#64748B;">Butir</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span style="font-size:11px; color:#64748B;">Pilihan Cepat:</span>
+              <button type="button" class="btn-quick-soal-guru" data-soal="1" style="padding:4px 9px; border-radius:8px; border:1px solid #CBD5E1; background:#FFFFFF; font-size:11px; font-weight:700; cursor:pointer;">1 Soal</button>
+              <button type="button" class="btn-quick-soal-guru" data-soal="2" style="padding:4px 9px; border-radius:8px; border:1px solid #CBD5E1; background:#FFFFFF; font-size:11px; font-weight:700; cursor:pointer;">2 Soal</button>
+              <button type="button" class="btn-quick-soal-guru" data-soal="3" style="padding:4px 9px; border-radius:8px; border:1px solid #CBD5E1; background:#FFFFFF; font-size:11px; font-weight:700; cursor:pointer;">3 Soal</button>
+              <button type="button" class="btn-quick-soal-guru" data-soal="5" style="padding:4px 9px; border-radius:8px; border:1px solid #0D5BFF; background:#EFF6FF; color:#0D5BFF; font-size:11px; font-weight:700; cursor:pointer;">5 Soal</button>
+              <button type="button" class="btn-quick-soal-guru" data-soal="10" style="padding:4px 9px; border-radius:8px; border:1px solid #CBD5E1; background:#FFFFFF; font-size:11px; font-weight:700; cursor:pointer;">10 Soal</button>
+            </div>
           </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:20px;">
-          <label for="edit-quiz-kunci">Kunci Jawaban Benar</label>
-          <select id="edit-quiz-kunci" class="input-field" style="max-width:200px; font-weight:800; color:#0D5BFF;" required>
-            <option value="A">Pilihan A</option>
-            <option value="B">Pilihan B</option>
-            <option value="C">Pilihan C</option>
-            <option value="D">Pilihan D</option>
-          </select>
+        <!-- Section A: Mode Multi Soal (Tambah Baru) -->
+        <div id="wrap-multi-soal-guru" style="display:flex; flex-direction:column; gap:14px; margin-bottom:16px;">
+          <div id="container-soal-guru" style="display:flex; flex-direction:column; gap:14px;">
+            <!-- Kartu butir soal guru diinjeksi via guru.js -->
+          </div>
+
+          <div style="display:flex; justify-content:flex-start;">
+            <button type="button" id="btn-tambah-butir-guru" class="btn-secondary" style="display:inline-flex; align-items:center; gap:6px; font-size:12px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>Tambah 1 Butir Soal Lagi</span>
+            </button>
+          </div>
         </div>
 
-        <div style="display:flex; justify-content:flex-end; gap:10px;">
-          <button type="button" id="btn-cancel-edit-quiz" class="btn-secondary">Batal</button>
-          <button type="submit" class="btn-primary">Simpan Perubahan</button>
+        <!-- Section B: Mode Edit Single Soal -->
+        <div id="wrap-single-soal-guru" style="display:none;">
+          <div class="form-group" style="margin-bottom:14px;">
+            <label for="input-soal-pertanyaan-guru" style="font-size:12.5px; font-weight:700;">Pertanyaan Soal</label>
+            <textarea id="input-soal-pertanyaan-guru" class="input-field" rows="3"
+              placeholder="Tuliskan butir pertanyaan kuis..."></textarea>
+          </div>
+
+          <div
+            style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:14px; margin-bottom:14px;">
+            <span
+              style="font-size:11.5px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:10px;">Pilihan
+              Ganda Jawaban:</span>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span
+                  style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">A</span>
+                <input type="text" id="input-soal-a-guru" class="input-field" placeholder="Isi teks pilihan A..."
+                  style="background:#FFFFFF;">
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span
+                  style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">B</span>
+                <input type="text" id="input-soal-b-guru" class="input-field" placeholder="Isi teks pilihan B..."
+                  style="background:#FFFFFF;">
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span
+                  style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">C</span>
+                <input type="text" id="input-soal-c-guru" class="input-field" placeholder="Isi teks pilihan C..."
+                  style="background:#FFFFFF;">
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span
+                  style="width:26px; height:26px; border-radius:6px; background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; flex-shrink:0;">D</span>
+                <input type="text" id="input-soal-d-guru" class="input-field" placeholder="Isi teks pilihan D..."
+                  style="background:#FFFFFF;">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:14px;">
+            <label for="input-soal-kunci-guru" style="font-size:12.5px; font-weight:700; color:#15803D;">Kunci Jawaban Benar</label>
+            <select id="input-soal-kunci-guru" class="input-field" style="font-weight:700; color:#15803D; max-width:200px;">
+              <option value="A">Opsi A</option>
+              <option value="B">Opsi B</option>
+              <option value="C">Opsi C</option>
+              <option value="D">Opsi D</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #F1F5F9; padding-top:16px;">
+          <button type="button" id="btn-batal-modal-soal-guru" class="btn-secondary"
+            style="padding:10px 18px; font-size:13px;">Batal</button>
+          <button type="submit" id="btn-simpan-soal-guru" class="btn-primary"
+            style="padding:10px 22px; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span id="btn-simpan-soal-label-guru">Simpan Paket Kuis (5 Soal)</span>
+          </button>
         </div>
       </form>
     </div>
+  </div>
     <!-- ========================================== -->
     <!-- MODAL REVIEW DETAIL JAWABAN KUIS SISWA GURU-->
     <!-- ========================================== -->
@@ -1014,6 +1047,6 @@
   </div>
 
   <script src="js/netora.js?v=2026.43"></script>
-  <script src="js/guru.js?v=2026.43"></script>
+  <script src="js/guru.js?v=2026.44"></script>
 </body>
 </html>
