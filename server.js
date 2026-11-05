@@ -298,6 +298,60 @@ app.use('/api/profil', require('./routes/profil'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/guru', require('./routes/guru'));
 
+// Endpoint Overview KPI Belajar untuk Dashboard Siswa & Publik
+app.get('/api/overview-stats', async (req, res) => {
+  try {
+    const [usersRes, materiRes, videoRes, quizRes, scoresRes] = await Promise.all([
+      supabase.from('users').select('id, email, role'),
+      supabase.from('materi').select('id, kategori'),
+      supabase.from('video').select('id', { count: 'exact', head: true }),
+      supabase.from('quiz').select('id', { count: 'exact', head: true }),
+      supabase.from('nilai_quiz').select('skor')
+    ]);
+
+    const allUsers = usersRes.data || [];
+    const siswaList = allUsers.filter(u => u.role !== 'admin' && u.email !== 'admin123' && u.email !== 'admin@netora.id');
+    const totalSiswa = siswaList.length;
+
+    const allMateri = materiRes.data || [];
+    const totalMateri = allMateri.length;
+    const totalVideo = videoRes.count || 0;
+
+    const scores = (scoresRes.data || []).map(s => s.skor);
+    const totalKuis = scores.length;
+
+    let avgSkor = 0;
+    let lulusCount = 0;
+    let remidiCount = 0;
+
+    if (totalKuis > 0) {
+      const sum = scores.reduce((acc, curr) => acc + curr, 0);
+      avgSkor = Math.round((sum / totalKuis) * 10) / 10;
+      lulusCount = scores.filter(s => s >= 70).length;
+      remidiCount = totalKuis - lulusCount;
+    }
+
+    const persenLulus = totalKuis > 0 ? Math.round((lulusCount / totalKuis) * 100) : 0;
+
+    return res.json({
+      success: true,
+      stats: {
+        totalSiswa,
+        totalMateri,
+        totalVideo,
+        totalKuis,
+        avgSkor,
+        lulusCount,
+        remidiCount,
+        persenLulus
+      }
+    });
+  } catch (err) {
+    console.error('Overview Stats Error:', err);
+    return res.status(500).json({ error: 'Gagal memuat overview statistik.' });
+  }
+});
+
 // Route Utama: Masuk ke Halaman Login terlebih dahulu (atau langsung ke Dashboard sesuai role)
 app.get('/', async (req, res) => {
   if (req.session && req.session.userId) {

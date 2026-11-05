@@ -123,15 +123,19 @@ window.initAdminDashboard = async function() {
       globalStats = data.stats;
       const s = globalStats;
 
-      // Update KPI
-      document.getElementById('stat-total-siswa').textContent = s.totalSiswa;
-      document.getElementById('stat-total-kuis').textContent = s.totalKuis;
-      document.getElementById('stat-avg-skor').textContent = s.avgSkor;
-      document.getElementById('stat-persen-lulus').textContent = s.persenLulus + '%';
-      document.getElementById('stat-lulus-count').textContent = s.lulusCount;
-      document.getElementById('stat-remidi-count').textContent = s.remidiCount;
-      document.getElementById('stat-total-materi').textContent = s.totalMateri;
-      document.getElementById('stat-total-video').textContent = s.totalVideo;
+      // Update KPI (jika ada pada tampilan)
+      const setStat = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      };
+      setStat('stat-total-siswa', s.totalSiswa);
+      setStat('stat-total-kuis', s.totalKuis);
+      setStat('stat-avg-skor', s.avgSkor);
+      setStat('stat-persen-lulus', s.persenLulus + '%');
+      setStat('stat-lulus-count', s.lulusCount);
+      setStat('stat-remidi-count', s.remidiCount);
+      setStat('stat-total-materi', s.totalMateri);
+      setStat('stat-total-video', s.totalVideo);
 
       // Update Distribusi Nilai Bars
       const dist = s.distribusiNilai;

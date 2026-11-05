@@ -8,7 +8,7 @@
     content="Dashboard Administrator Netora - Monitoring Aktivitas Siswa, Kuis, Modul, dan Nilai Ujian TKJ.">
   <title>Netora — Dashboard Admin Monitoring Siswa</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.34">
+  <link rel="stylesheet" href="css/netora.css?v=2026.37">
   <style>
     /* ===================================================
        NETORA ADMIN CONSOLE — LIGHT EDTECH THEME
@@ -981,100 +981,6 @@
     <!-- TAB 1: OVERVIEW & AKTIVITAS SISWA LIVE     -->
     <!-- ========================================== -->
     <div id="tab-overview" class="admin-tab-content active">
-
-      <!-- KPI STATS CARDS ROW (6 METRICS) -->
-      <section class="admin-kpi-grid">
-        <div class="kpi-card">
-          <div class="kpi-icon kpi-blue">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-            </svg>
-          </div>
-          <div class="kpi-body">
-            <span class="kpi-title">Total Siswa Terdaftar</span>
-            <h2 class="kpi-value" id="stat-total-siswa">0</h2>
-            <span class="kpi-sub" style="color:#0D5BFF;">Siswa Aktif Belajar</span>
-          </div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-icon kpi-purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-              <line x1="16" y1="13" x2="8" y2="13" />
-              <line x1="16" y1="17" x2="8" y2="17" />
-              <polyline points="10 9 9 9 8 9" />
-            </svg>
-          </div>
-          <div class="kpi-body">
-            <span class="kpi-title">Ujian Kuis Dikerjakan</span>
-            <h2 class="kpi-value" id="stat-total-kuis">0</h2>
-            <span class="kpi-sub" style="color:#7C3AED;">Total Ujian Selesai</span>
-          </div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-icon kpi-cyan">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10" />
-              <path d="m9 12 2 2 4-4" />
-            </svg>
-          </div>
-          <div class="kpi-body">
-            <span class="kpi-title">Rata-Rata Nilai Kuis</span>
-            <h2 class="kpi-value" id="stat-avg-skor">0</h2>
-            <span class="kpi-sub" style="color:#0284C7;">Skala 0 - 100</span>
-          </div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-icon kpi-green">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-              <path d="M4 22h16" />
-              <path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34" />
-              <path d="M18 14.66V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34" />
-              <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
-            </svg>
-          </div>
-          <div class="kpi-body">
-            <span class="kpi-title">Tingkat Kelulusan</span>
-            <h2 class="kpi-value" id="stat-persen-lulus">0%</h2>
-            <span class="kpi-sub" style="color:#16A34A;"><span id="stat-lulus-count">0</span> Lulus / <span
-                id="stat-remidi-count">0</span> Remidi</span>
-          </div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-icon kpi-orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-            </svg>
-          </div>
-          <div class="kpi-body">
-            <span class="kpi-title">Modul Teori TKJ</span>
-            <h2 class="kpi-value" id="stat-total-materi">0</h2>
-            <span class="kpi-sub" style="color:#EA580C;">Modul Teori Aktif</span>
-          </div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-icon kpi-red">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-          <div class="kpi-body">
-            <span class="kpi-title">Vidio Praktik</span>
-            <h2 class="kpi-value" id="stat-total-video">0</h2>
-            <span class="kpi-sub" style="color:#DC2626;">Vidio Praktik Aktif</span>
-          </div>
-        </div>
-      </section>
 
       <!-- Distribusi Nilai Siswa -->
       <div class="card-panel" style="margin-bottom:20px;">
@@ -3588,8 +3494,8 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.34"></script>
-  <script src="js/admin.js?v=2026.34"></script>
+  <script src="js/netora.js?v=2026.37"></script>
+  <script src="js/admin.js?v=2026.37"></script>
 </body>
 
 </html>

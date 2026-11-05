@@ -178,6 +178,40 @@ window.initBerandaPage = async function() {
 
   // Muat modul materi terbaru secara dinamis di Beranda
   if (document.getElementById('beranda-materi-list')) window.loadMateriBeranda();
+
+  // Muat overview statistik pembelajaran TKJ siswa secara dinamis
+  if (document.getElementById('stat-total-siswa')) {
+    window.loadOverviewStats();
+  }
+};
+
+window.loadOverviewStats = async function() {
+  const el = document.getElementById('stat-total-siswa');
+  if (!el) return;
+
+  try {
+    const res = await fetch('/api/overview-stats?t=' + Date.now());
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data.success || !data.stats) return;
+
+    const s = data.stats;
+    const setTxt = (id, val) => {
+      const target = document.getElementById(id);
+      if (target) target.textContent = val;
+    };
+
+    setTxt('stat-total-siswa', s.totalSiswa ?? 0);
+    setTxt('stat-total-kuis', s.totalKuis ?? 0);
+    setTxt('stat-avg-skor', s.avgSkor ?? 0);
+    setTxt('stat-persen-lulus', (s.persenLulus ?? 0) + '%');
+    setTxt('stat-lulus-count', s.lulusCount ?? 0);
+    setTxt('stat-remidi-count', s.remidiCount ?? 0);
+    setTxt('stat-total-materi', s.totalMateri ?? 0);
+    setTxt('stat-total-video', s.totalVideo ?? 0);
+  } catch (err) {
+    console.warn('loadOverviewStats error:', err);
+  }
 };
 
 window.loadMateriBeranda = async function() {

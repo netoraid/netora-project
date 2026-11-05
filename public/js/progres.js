@@ -185,6 +185,29 @@ window.initProgresPage = function() {
   }
 
   loadProgressData();
+
+  // Muat ringkasan KPI Overview Pembelajaran TKJ
+  if (document.getElementById('stat-total-siswa')) {
+    fetch('/api/overview-stats?t=' + Date.now())
+      .then(res => res.json())
+      .then(data => {
+        if (!data || !data.success || !data.stats) return;
+        const s = data.stats;
+        const setTxt = (id, val) => {
+          const target = document.getElementById(id);
+          if (target) target.textContent = val;
+        };
+        setTxt('stat-total-siswa', s.totalSiswa ?? 0);
+        setTxt('stat-total-kuis', s.totalKuis ?? 0);
+        setTxt('stat-avg-skor', s.avgSkor ?? 0);
+        setTxt('stat-persen-lulus', (s.persenLulus ?? 0) + '%');
+        setTxt('stat-lulus-count', s.lulusCount ?? 0);
+        setTxt('stat-remidi-count', s.remidiCount ?? 0);
+        setTxt('stat-total-materi', s.totalMateri ?? 0);
+        setTxt('stat-total-video', s.totalVideo ?? 0);
+      })
+      .catch(err => console.warn('Gagal memuat overview-stats:', err));
+  }
 };
 
 if (document.readyState === 'loading') {
