@@ -308,7 +308,7 @@ window.initAdminDashboard = async function() {
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
               <span style="font-weight:800; font-size:13px; color:#334155;">Soal #${item.no}</span>
               <span style="font-size:11.5px; font-weight:800; padding:3px 10px; border-radius:20px; display:inline-flex; align-items:center; gap:4px; ${item.is_benar ? 'background:#DCFCE7; color:#15803D;' : 'background:#FEE2E2; color:#DC2626;'}">
-                ${item.is_benar ? '✅ Jawaban Benar' : '❌ Jawaban Salah'}
+                ${item.is_benar ? 'Jawaban Benar' : 'Jawaban Salah'}
               </span>
             </div>
             <p style="font-size:13.5px; font-weight:700; color:#0F172A; margin:0 0 12px; line-height:1.5;">${escapeHtml(item.pertanyaan)}</p>
@@ -319,7 +319,7 @@ window.initAdminDashboard = async function() {
                   <span style="font-weight:700;">Jawaban Siswa:</span>
                   <span style="font-weight:800; margin-left:4px;">[${escapeHtml(item.jawaban_user)}] ${escapeHtml(item.jawaban_user_text)}</span>
                 </div>
-                <span style="font-weight:800; font-size:12px;">${item.is_benar ? '✓ Benar' : '✗ Salah'}</span>
+                <span style="font-weight:800; font-size:12px;">${item.is_benar ? 'Benar' : 'Salah'}</span>
               </div>
 
               ${!item.is_benar ? `
@@ -328,7 +328,7 @@ window.initAdminDashboard = async function() {
                     <span style="font-weight:700;">Kunci Jawaban yang Benar:</span>
                     <span style="font-weight:800; margin-left:4px;">[${escapeHtml(item.jawaban_benar)}] ${escapeHtml(item.jawaban_benar_text)}</span>
                   </div>
-                  <span style="font-weight:800; font-size:12px;">✓ Kunci</span>
+                  <span style="font-weight:800; font-size:12px;">Kunci</span>
                 </div>
               ` : ''}
             </div>
@@ -2537,10 +2537,10 @@ window.initAdminDashboard = async function() {
     if (badgeStatus) {
       if (enabled) {
         badgeStatus.className = 'badge badge-green';
-        badgeStatus.textContent = '● Sistem Pembatasan Aktif';
+        badgeStatus.textContent = 'Sistem Pembatasan Aktif';
       } else {
         badgeStatus.className = 'badge badge-red';
-        badgeStatus.textContent = '○ Sistem Dinonaktifkan';
+        badgeStatus.textContent = 'Sistem Dinonaktifkan';
       }
     }
 
