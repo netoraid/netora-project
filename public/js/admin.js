@@ -1913,7 +1913,8 @@ window.initAdminDashboard = async function() {
     if (!modal) return;
 
     document.getElementById('modal-soal-title').textContent = 'Buat Paket Kuis Baru (Multi-Soal)';
-    document.getElementById('modal-soal-subtitle').textContent = 'Masukkan judul kuis dan input butir-butir soal sekaligus';
+    const subTitleEl1 = document.getElementById('modal-soal-subtitle');
+    if (subTitleEl1) subTitleEl1.textContent = 'Masukkan judul kuis dan input butir-butir soal sekaligus';
     document.getElementById('soal-id').value = '';
     document.getElementById('input-soal-kategori').value = 'Cisco Packet Tracer';
     document.getElementById('input-soal-judul').value = '';
@@ -1937,7 +1938,8 @@ window.initAdminDashboard = async function() {
     if (!modal) return;
 
     document.getElementById('modal-soal-title').textContent = 'Edit Soal Kuis #' + item.id;
-    document.getElementById('modal-soal-subtitle').textContent = 'Perbarui pertanyaan, opsi pilihan, atau kunci jawaban butir ini';
+    const subTitleEl2 = document.getElementById('modal-soal-subtitle');
+    if (subTitleEl2) subTitleEl2.textContent = 'Perbarui pertanyaan, opsi pilihan, atau kunci jawaban butir ini';
     document.getElementById('soal-id').value = item.id;
     document.getElementById('input-soal-kategori').value = item.kategori_utama || item.kategori || 'Cisco Packet Tracer';
     document.getElementById('input-soal-judul').value = item.judul_kuis || item.kategori_utama || item.kategori || '';

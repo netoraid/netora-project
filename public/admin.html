@@ -8,7 +8,7 @@
     content="Dashboard Administrator Netora - Monitoring Aktivitas Siswa, Kuis, Modul, dan Nilai Ujian TKJ.">
   <title>Netora — Dashboard Admin Monitoring Siswa</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.38">
+  <link rel="stylesheet" href="css/netora.css?v=2026.39">
   <style>
     /* ===================================================
        NETORA ADMIN CONSOLE — LIGHT EDTECH THEME
@@ -844,8 +844,6 @@
               ADMIN CONSOLE
             </span>
           </div>
-          <p style="margin:2px 0 0; font-size:12px; opacity:0.9;">Pusat Kontrol & Monitoring Aktivitas Pembelajaran TKJ
-          </p>
         </div>
       </div>
 
@@ -1003,7 +1001,6 @@
               </svg>
               <span>Daftar Seluruh Akun Siswa Terdaftar</span>
             </h3>
-            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola data akun siswa dan pantau performa nilai kuis</p>
           </div>
 
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -1073,7 +1070,6 @@
               </svg>
               <span>Distribusi Skor Ujian Siswa</span>
             </h3>
-            <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Perbandingan predikat Sangat Baik, Kompeten, dan Remidial</p>
           </div>
           <span class="badge badge-blue">Standar KKM: 70</span>
         </div>
@@ -1124,7 +1120,6 @@
               </svg>
               <span>Feed Aktivitas Ujian Siswa Real-time</span>
             </h3>
-            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Riwayat pengerjaan kuis dan evaluasi nilai siswa</p>
           </div>
 
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -1190,7 +1185,6 @@
               </svg>
               <span>Kelola Modul Pembelajaran TKJ</span>
             </h3>
-            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola modul teori dan lembar kerja praktikum siswa.</p>
           </div>
 
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -1259,7 +1253,6 @@
               </svg>
               <span>Vidio Praktik & Tutorial YouTube</span>
             </h3>
-            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola tautan video tutorial dan praktikum siswa.</p>
           </div>
 
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -1326,7 +1319,6 @@
               </svg>
               <span>Bank Soal & Pengaturan Kuis</span>
             </h3>
-            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola bank soal pilihan ganda dan kunci jawaban kuis.</p>
           </div>
 
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -1396,7 +1388,6 @@
             </div>
             <div>
               <h3 style="margin:0; font-size:18.5px; font-weight:800; color:#0F172A;">Pengaturan Batas Waktu Belajar Siswa</h3>
-              <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Atur batas durasi maksimal penggunaan web Netora untuk siswa.</p>
             </div>
           </div>
           <div style="display:flex; align-items:center; gap:8px;">
@@ -1414,7 +1405,6 @@
               <label for="setting-durasi-enabled" style="font-weight:700; font-size:14.5px; color:#0F172A; display:block; cursor:pointer;">
                 Status Pembatasan Waktu Belajar
               </label>
-              <p style="margin:3px 0 0; font-size:12px; color:#64748B;">Jika diaktifkan, web akan menghitung durasi siswa dan memunculkan pop-up saat melampaui batas.</p>
             </div>
             <label class="switch-container" style="position:relative; display:inline-block; width:52px; height:28px; cursor:pointer; margin:0;">
               <input type="checkbox" id="setting-durasi-enabled" checked style="opacity:0; width:0; height:0;">
@@ -1510,12 +1500,9 @@
 
             <!-- Jeda Pengingat Ulang (Snooze) -->
             <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:18px;">
-              <label for="setting-durasi-snooze" style="font-weight:700; font-size:14px; color:#0F172A; margin-bottom:6px; display:block;">
+              <label for="setting-durasi-snooze" style="font-weight:700; font-size:14px; color:#0F172A; margin-bottom:10px; display:block;">
                 Jeda Pengingat Ulang (Snooze)
               </label>
-              <p style="margin:0 0 10px; font-size:12px; color:#64748B;">
-                Waktu tunda sebelum pop-up muncul kembali jika siswa menekan tombol "Saya Mengerti".
-              </p>
               <select id="setting-durasi-snooze" class="input-field" style="width:100%; padding:10px 12px; font-size:13.5px; font-weight:600;">
                 <option value="5">5 Menit</option>
                 <option value="10" selected>10 Menit (Standar)</option>
@@ -1588,7 +1575,6 @@
             </svg>
             <span>Terbitkan Notifikasi Baru</span>
           </h3>
-          <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Notifikasi akan langsung tampil di halaman Notifikasi seluruh siswa.</p>
 
           <form id="form-tambah-pengumuman">
             <div class="form-group" style="margin-bottom:14px;">
@@ -1682,7 +1668,6 @@
             </div>
             <div>
               <h3 id="modal-soal-title" style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Buat Paket Kuis Baru</h3>
-              <p id="modal-soal-subtitle" style="margin:2px 0 0; font-size:12px; color:#64748B;">Atur kategori, judul kuis, dan butir-butir soal evaluasi</p>
             </div>
           </div>
           <button id="btn-close-modal-soal" type="button"
@@ -1833,7 +1818,6 @@
             <div>
               <h3 id="modal-materi-title" style="margin:0; font-size:18px; font-weight:800; color:#0F172A;">Tambah Modul
                 Materi Baru</h3>
-              <p style="margin:2px 0 0; font-size:12.5px; color:#64748B;">Lengkapi judul, kategori materi, dan isi lembar kerja pembelajaran.</p>
             </div>
           </div>
           <button id="btn-close-modal-materi" onclick="tutupModalMateri()" type="button"
@@ -3124,7 +3108,6 @@
             <div>
               <h3 id="modal-video-title" style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Tambah
                 Vidio Praktik Baru</h3>
-              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Masukkan detail dan tautan video YouTube untuk praktikum siswa</p>
             </div>
           </div>
           <button id="btn-close-modal-video" type="button"
@@ -3228,10 +3211,7 @@
               </svg>
             </div>
             <div>
-              <h3 style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Detail Akun & Kredensial Siswa
-              </h3>
-              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Informasi profil, akses kata sandi, dan performa
-                siswa</p>
+              <h3 style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Detail Akun & Kredensial Siswa</h3>
             </div>
           </div>
           <button id="btn-close-modal-detail"
@@ -3365,8 +3345,6 @@
             </svg>
             <span>Ubah / Atur Ulang Kata Sandi</span>
           </h4>
-          <p style="margin:0 0 10px; font-size:11.5px; color:#64748B;">Atur kata sandi baru jika siswa lupa password
-            akun mereka.</p>
           <div style="display:flex; gap:8px;">
             <input type="text" id="modal-input-new-pwd" class="input-field" placeholder="Masukkan kata sandi baru..."
               style="font-size:12.5px; padding:8px 12px; background:#FFFFFF;">
@@ -3408,8 +3386,6 @@
             </div>
             <div>
               <h3 style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Tambah Akun Siswa Baru</h3>
-              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Daftarkan akun siswa langsung dari panel
-                administrator</p>
             </div>
           </div>
           <button id="btn-close-modal-tambah-siswa" type="button"
@@ -3475,7 +3451,6 @@
             </div>
             <div>
               <h3 style="margin:0; font-size:17.5px; font-weight:800; color:#0F172A;">Review Hasil Kuis Siswa</h3>
-              <p style="margin:2px 0 0; font-size:12px; color:#64748B;">Rincian jawaban yang dipilih siswa beserta kunci jawaban benar dan pembahasannya</p>
             </div>
           </div>
           <button id="btn-close-modal-detail-jawaban-admin" type="button"
@@ -3501,8 +3476,8 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.38"></script>
-  <script src="js/admin.js?v=2026.38"></script>
+  <script src="js/netora.js?v=2026.39"></script>
+  <script src="js/admin.js?v=2026.39"></script>
 </body>
 
 </html>
