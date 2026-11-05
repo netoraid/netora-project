@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
     const { data: list, error } = await supabase
       .from('video')
       .select('*')
-      .order('id', { ascending: true });
+      .order('id', { ascending: false });
 
     if (error) {
       console.error('Fetch Video Supabase Error:', error);
@@ -51,8 +51,9 @@ router.get('/', async (req, res) => {
       return {
         ...v,
         videoId: yt.videoId,
-        thumbnail_url: yt.thumbnailUrl,
+        thumbnail_url: yt.thumbnailUrl || (yt.videoId ? `https://img.youtube.com/vi/${yt.videoId}/hqdefault.jpg` : ''),
         url_youtube: yt.embedUrl || v.url_youtube,
+        direct_url: yt.directUrl || v.url_youtube,
         kategori: v.kategori || 'MikroTik',
         durasi: v.durasi || '15:00'
       };

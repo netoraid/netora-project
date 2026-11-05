@@ -9,8 +9,17 @@ window.initVideoPage = async function() {
     });
   }
 
-  // Definisi Master 2 Kategori Vidio Praktik NETORA
+  // Definisi Master Kategori Vidio Praktik NETORA
   const CATEGORIES = {
+    'all': {
+      id: 'all',
+      name: 'Semua Vidio Praktik',
+      badgeText: 'Katalog Lengkap',
+      desc: 'Seluruh vidio tutorial praktikum yang telah diunggah oleh Guru dan Admin Netora.',
+      iconColor: '#0D5BFF',
+      iconBg: 'rgba(13, 91, 255, 0.1)',
+      icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>`
+    },
     'mikrotik': {
       id: 'mikrotik',
       name: 'MikroTik',
@@ -28,6 +37,15 @@ window.initVideoPage = async function() {
       iconColor: '#0284C7',
       iconBg: 'rgba(2, 132, 199, 0.1)',
       icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><path d="M6 8h12"></path><path d="M6 12h8"></path></svg>`
+    },
+    'server-linux': {
+      id: 'server-linux',
+      name: 'Server dan Linux',
+      badgeText: 'Sistem Operasi & Layanan Server',
+      desc: 'Administrasi Linux Debian/Ubuntu Server, manajemen service Nginx/Apache Web Server, SSH Remote, konfigurasi DNS, dan hosting.',
+      iconColor: '#10B981',
+      iconBg: 'rgba(16, 185, 129, 0.1)',
+      icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`
     }
   };
 
@@ -40,6 +58,9 @@ window.initVideoPage = async function() {
     if (k.includes('cisco') || k.includes('packet tracer')) {
       return 'cisco';
     }
+    if (k.includes('server') || k.includes('linux') || k.includes('debian') || k.includes('ubuntu')) {
+      return 'server-linux';
+    }
     if (k.includes('mikro') || k.includes('routeros')) {
       return 'mikrotik';
     }
@@ -49,6 +70,13 @@ window.initVideoPage = async function() {
     if (t.includes('cisco') || t.includes('packet tracer')) {
       return 'cisco';
     }
+    if (t.includes('server') || t.includes('linux') || t.includes('debian') || t.includes('ubuntu') || t.includes('nginx') || t.includes('apache')) {
+      return 'server-linux';
+    }
+    if (t.includes('mikrotik') || t.includes('routeros') || t.includes('winbox') || t.includes('routerboard')) {
+      return 'mikrotik';
+    }
+
     return 'mikrotik'; // fallback default
   }
 
