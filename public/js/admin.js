@@ -103,8 +103,8 @@ window.initAdminDashboard = async function() {
     });
   }
 
-  // Inisialisasi tab pertama saat halaman dibuka
-  window.switchAdminTab('tab-overview');
+  // Inisialisasi tab pertama saat halaman dibuka (Manajemen Siswa)
+  window.switchAdminTab('tab-siswa');
 
   // 4. Data State
   let globalStats = null;

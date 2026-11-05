@@ -8,7 +8,7 @@
     content="Dashboard Administrator Netora - Monitoring Aktivitas Siswa, Kuis, Modul, dan Nilai Ujian TKJ.">
   <title>Netora — Dashboard Admin Monitoring Siswa</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.37">
+  <link rel="stylesheet" href="css/netora.css?v=2026.38">
   <style>
     /* ===================================================
        NETORA ADMIN CONSOLE — LIGHT EDTECH THEME
@@ -883,17 +883,8 @@
 
     <!-- DESKTOP ADMIN SUB-NAV TABS (Tampil di Desktop/Tablet) -->
     <div class="admin-nav-bar desktop-only-nav">
-      <button class="admin-tab-btn active" data-tab="tab-overview" onclick="switchAdminTab('tab-overview')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <rect x="3" y="3" width="7" height="7" />
-          <rect x="14" y="3" width="7" height="7" />
-          <rect x="14" y="14" width="7" height="7" />
-          <rect x="3" y="14" width="7" height="7" />
-        </svg>
-        <span>Overview & Aktivitas Siswa</span>
-      </button>
-
-      <button class="admin-tab-btn" data-tab="tab-siswa" onclick="switchAdminTab('tab-siswa')">
+      <!-- 1. Manajemen Siswa (Pertama) -->
+      <button class="admin-tab-btn active" data-tab="tab-siswa" onclick="switchAdminTab('tab-siswa')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
           <circle cx="9" cy="7" r="4" />
@@ -903,45 +894,61 @@
         <span>Manajemen Siswa</span>
       </button>
 
-      <button class="admin-tab-btn" data-tab="tab-pengumuman" onclick="switchAdminTab('tab-pengumuman')">
+      <!-- 2. Overview Siswa -->
+      <button class="admin-tab-btn" data-tab="tab-overview" onclick="switchAdminTab('tab-overview')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
         </svg>
-        <span>Kelola Notifikasi</span>
+        <span>Overview Siswa</span>
       </button>
 
+      <!-- 3. Upload Modul -->
       <button class="admin-tab-btn" data-tab="tab-materi" onclick="switchAdminTab('tab-materi')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
         </svg>
-        <span>Kelola Modul Materi</span>
+        <span>Upload Modul</span>
       </button>
 
+      <!-- 4. Upload Video -->
       <button class="admin-tab-btn" data-tab="tab-video" onclick="switchAdminTab('tab-video')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
           <line x1="8" y1="21" x2="16" y2="21"></line>
           <line x1="12" y1="17" x2="12" y2="21"></line>
         </svg>
-        <span>Kelola Vidio Praktik</span>
+        <span>Upload Video</span>
       </button>
 
+      <!-- 5. Bank Soal Kuis -->
       <button class="admin-tab-btn" data-tab="tab-quiz" onclick="switchAdminTab('tab-quiz')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <circle cx="12" cy="8" r="7"></circle>
           <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
         </svg>
-        <span>Setting & Bank Soal Kuis</span>
+        <span>Bank Soal Kuis</span>
       </button>
 
+      <!-- 6. Timer Belajar -->
       <button class="admin-tab-btn" data-tab="tab-durasi" onclick="switchAdminTab('tab-durasi')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
         </svg>
-        <span>Batas Waktu Belajar</span>
+        <span>Timer Belajar</span>
+      </button>
+
+      <!-- 7. Notifikasi (Baru yang Terakhir) -->
+      <button class="admin-tab-btn" data-tab="tab-pengumuman" onclick="switchAdminTab('tab-pengumuman')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        <span>Notifikasi</span>
       </button>
     </div>
 
@@ -960,13 +967,13 @@
         <div class="admin-select-wrapper">
           <select id="admin-tab-select-mobile" class="admin-mobile-select"
             onchange="window.switchAdminTab && window.switchAdminTab(this.value)" aria-label="Pilih Halaman Admin">
-            <option value="tab-overview">Overview & Aktivitas Siswa</option>
-            <option value="tab-siswa">Manajemen Data Siswa</option>
-            <option value="tab-pengumuman">Kelola Notifikasi</option>
-            <option value="tab-materi">Kelola Modul Materi</option>
-            <option value="tab-video">Kelola Vidio Praktik</option>
-            <option value="tab-quiz">Setting & Bank Soal Kuis</option>
-            <option value="tab-durasi">Batas Waktu Belajar Siswa</option>
+            <option value="tab-siswa" selected>1. Manajemen Siswa</option>
+            <option value="tab-overview">2. Overview Siswa</option>
+            <option value="tab-materi">3. Upload Modul</option>
+            <option value="tab-video">4. Upload Video</option>
+            <option value="tab-quiz">5. Bank Soal Kuis</option>
+            <option value="tab-durasi">6. Timer Belajar</option>
+            <option value="tab-pengumuman">7. Notifikasi</option>
           </select>
           <div class="admin-select-chevron">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -978,9 +985,78 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 1: OVERVIEW & AKTIVITAS SISWA LIVE     -->
+    <!-- TAB 1: MANAJEMEN DATA SISWA               -->
     <!-- ========================================== -->
-    <div id="tab-overview" class="admin-tab-content active">
+    <div id="tab-siswa" class="admin-tab-content active" style="display:block;">
+      <div class="card-panel">
+        <div class="panel-header-flex"
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h3
+              style="margin:0; font-size:18px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span>Daftar Seluruh Akun Siswa Terdaftar</span>
+            </h3>
+            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola data akun siswa dan pantau performa nilai kuis</p>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <input type="text" id="search-siswa" class="input-field" placeholder="Cari nama atau email siswa..."
+              style="width:230px; padding:9px 14px; font-size:13px;">
+            <button id="btn-tambah-siswa" type="button" class="btn-primary"
+              style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Tambah Siswa Baru</span>
+            </button>
+            <button id="btn-reset-all-siswa" type="button" class="btn-action-delete"
+              style="padding:9px 14px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span>Reset Seluruh Akun Siswa</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width:50px;">No</th>
+                <th>Informasi Siswa</th>
+                <th>Alamat Email</th>
+                <th>Kredensial Password</th>
+                <th style="text-align:center;">Total Kuis</th>
+                <th style="text-align:center;">Rata-Rata Skor</th>
+                <th style="text-align:center;">Skor Tertinggi</th>
+                <th style="text-align:center;">Aksi Manajemen</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-siswa">
+              <tr>
+                <td colspan="8" style="text-align:center; padding:30px; color:#64748B;">Memuat data siswa...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: OVERVIEW & AKTIVITAS SISWA LIVE     -->
+    <!-- ========================================== -->
+    <div id="tab-overview" class="admin-tab-content" style="display:none;">
 
       <!-- Distribusi Nilai Siswa -->
       <div class="card-panel" style="margin-bottom:20px;">
@@ -1098,165 +1174,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 2: MANAJEMEN DATA SISWA               -->
-    <!-- ========================================== -->
-    <div id="tab-siswa" class="admin-tab-content">
-      <div class="card-panel">
-        <div class="panel-header-flex"
-          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
-          <div>
-            <h3
-              style="margin:0; font-size:18px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-              <span>Daftar Seluruh Akun Siswa Terdaftar</span>
-            </h3>
-            <p style="margin:3px 0 0; font-size:12.5px; color:#64748B;">Kelola data akun siswa dan pantau performa nilai kuis</p>
-          </div>
-
-          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-            <input type="text" id="search-siswa" class="input-field" placeholder="Cari nama atau email siswa..."
-              style="width:230px; padding:9px 14px; font-size:13px;">
-            <button id="btn-tambah-siswa" type="button" class="btn-primary"
-              style="padding:9px 16px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-              <span>Tambah Siswa Baru</span>
-            </button>
-            <button id="btn-reset-all-siswa" type="button" class="btn-action-delete"
-              style="padding:9px 14px; font-size:12.5px; display:inline-flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              </svg>
-              <span>Reset Seluruh Akun Siswa</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="admin-table-wrapper">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th style="width:50px;">No</th>
-                <th>Informasi Siswa</th>
-                <th>Alamat Email</th>
-                <th>Kredensial Password</th>
-                <th style="text-align:center;">Total Kuis</th>
-                <th style="text-align:center;">Rata-Rata Skor</th>
-                <th style="text-align:center;">Skor Tertinggi</th>
-                <th style="text-align:center;">Aksi Manajemen</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-siswa">
-              <tr>
-                <td colspan="8" style="text-align:center; padding:30px; color:#64748B;">Memuat data siswa...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- TAB 3: KELOLA NOTIFIKASI & PENGUMUMAN      -->
-    <!-- ========================================== -->
-    <div id="tab-pengumuman" class="admin-tab-content">
-      <div class="admin-announcement-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-
-        <!-- Form Tambah Notifikasi Baru -->
-        <div class="card-panel">
-          <h3
-            style="margin:0 0 6px; font-size:16px; font-weight:800; color:#0D5BFF; display:flex; align-items:center; gap:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-            <span>Terbitkan Notifikasi Baru</span>
-          </h3>
-          <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Notifikasi akan langsung tampil di halaman Notifikasi seluruh siswa.</p>
-
-          <form id="form-tambah-pengumuman">
-            <div class="form-group" style="margin-bottom:14px;">
-              <label for="pengumuman-judul">Judul Notifikasi</label>
-              <input type="text" id="pengumuman-judul" class="input-field"
-                placeholder="Contoh: Jadwal Ujian Praktik Mikrotik" required>
-            </div>
-
-            <div class="form-group" style="margin-bottom:14px;">
-              <label for="pengumuman-isi">Isi Notifikasi Lengkap</label>
-              <textarea id="pengumuman-isi" class="input-field" rows="4"
-                placeholder="Tuliskan isi detail notifikasi atau pengumuman untuk siswa..." required></textarea>
-            </div>
-
-            <div class="form-group" style="margin-bottom:14px;">
-              <label for="pengumuman-kategori">Kategori (Opsional)</label>
-              <select id="pengumuman-kategori" class="input-field">
-                <option value="Notifikasi">Notifikasi Umum</option>
-                <option value="Praktikum">Praktikum Jaringan</option>
-                <option value="Kuis">Ujian & Kuis</option>
-                <option value="Kurikulum">Kurikulum & Materi</option>
-              </select>
-            </div>
-
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:18px;">
-              <input type="checkbox" id="pengumuman-penting"
-                style="width:16px; height:16px; accent-color:#EF4444; cursor:pointer;">
-              <label for="pengumuman-penting"
-                style="font-size:13px; color:#0F172A; cursor:pointer; font-weight:600;">Tandai sebagai
-                <strong>PENTING</strong> (Border Merah)</label>
-            </div>
-
-            <button type="submit" class="btn-primary"
-              style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
-              <span>Terbitkan Notifikasi</span>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-              </svg>
-            </button>
-          </form>
-        </div>
-
-        <!-- Daftar Notifikasi Aktif -->
-        <div class="card-panel">
-          <div class="panel-header-flex"
-            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-            <h3
-              style="margin:0; font-size:16px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-              <span>Daftar Notifikasi Aktif</span>
-            </h3>
-            <span class="badge badge-purple" id="badge-total-pengumuman">0 Notifikasi</span>
-          </div>
-
-          <div id="admin-pengumuman-list"
-            style="display:flex; flex-direction:column; gap:12px; max-height:540px; overflow-y:auto; padding-right:4px;">
-            <!-- Render via admin.js -->
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- TAB 4: KELOLA MODUL MATERI                 -->
+    <!-- TAB 2: OVERVIEW & AKTIVITAS SISWA LIVE     -->
     <!-- ========================================== -->
     <div id="tab-materi" class="admin-tab-content">
       <div class="card-panel">
@@ -1324,7 +1242,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 5: KELOLA VIDIO PRAKTIK                -->
+    <!-- TAB 3: KELOLA MODUL MATERI                 -->
     <!-- ========================================== -->
     <div id="tab-video" class="admin-tab-content">
       <div class="card-panel">
@@ -1393,7 +1311,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 5: SETTING & BANK SOAL KUIS            -->
+    <!-- TAB 4: KELOLA VIDIO PRAKTIK                 -->
     <!-- ========================================== -->
     <div id="tab-quiz" class="admin-tab-content">
       <div class="card-panel">
@@ -1461,7 +1379,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 6: PENGATURAN BATAS WAKTU BELAJAR SISWA-->
+    <!-- TAB 5: SETTING & BANK SOAL KUIS            -->
     <!-- ========================================== -->
     <div id="tab-durasi" class="admin-tab-content">
       <div class="card-panel" style="max-width:980px; margin:0 auto 24px;">
@@ -1650,6 +1568,95 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL TAMBAH & EDIT SOAL KUIS              -->
+    <!-- ========================================== -->
+    <div id="tab-pengumuman" class="admin-tab-content" style="display:none;">
+      <div class="admin-announcement-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+        <!-- Form Tambah Notifikasi Baru -->
+        <div class="card-panel">
+          <h3
+            style="margin:0 0 6px; font-size:16px; font-weight:800; color:#0D5BFF; display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Terbitkan Notifikasi Baru</span>
+          </h3>
+          <p style="margin:0 0 16px; font-size:12.5px; color:#64748B;">Notifikasi akan langsung tampil di halaman Notifikasi seluruh siswa.</p>
+
+          <form id="form-tambah-pengumuman">
+            <div class="form-group" style="margin-bottom:14px;">
+              <label for="pengumuman-judul">Judul Notifikasi</label>
+              <input type="text" id="pengumuman-judul" class="input-field"
+                placeholder="Contoh: Jadwal Ujian Praktik Mikrotik" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom:14px;">
+              <label for="pengumuman-isi">Isi Notifikasi Lengkap</label>
+              <textarea id="pengumuman-isi" class="input-field" rows="4"
+                placeholder="Tuliskan isi detail notifikasi atau pengumuman untuk siswa..." required></textarea>
+            </div>
+
+            <div class="form-group" style="margin-bottom:14px;">
+              <label for="pengumuman-kategori">Kategori (Opsional)</label>
+              <select id="pengumuman-kategori" class="input-field">
+                <option value="Notifikasi">Notifikasi Umum</option>
+                <option value="Praktikum">Praktikum Jaringan</option>
+                <option value="Kuis">Ujian & Kuis</option>
+                <option value="Kurikulum">Kurikulum & Materi</option>
+              </select>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:18px;">
+              <input type="checkbox" id="pengumuman-penting"
+                style="width:16px; height:16px; accent-color:#EF4444; cursor:pointer;">
+              <label for="pengumuman-penting"
+                style="font-size:13px; color:#0F172A; cursor:pointer; font-weight:600;">Tandai sebagai
+                <strong>PENTING</strong> (Border Merah)</label>
+            </div>
+
+            <button type="submit" class="btn-primary"
+              style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
+              <span>Terbitkan Notifikasi</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </form>
+        </div>
+
+        <!-- Daftar Notifikasi Aktif -->
+        <div class="card-panel">
+          <div class="panel-header-flex"
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h3
+              style="margin:0; font-size:16px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D5BFF" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>Daftar Notifikasi Aktif</span>
+            </h3>
+            <span class="badge badge-purple" id="badge-total-pengumuman">0 Notifikasi</span>
+          </div>
+
+          <div id="admin-pengumuman-list"
+            style="display:flex; flex-direction:column; gap:12px; max-height:540px; overflow-y:auto; padding-right:4px;">
+            <!-- Render via admin.js -->
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -3494,8 +3501,8 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.37"></script>
-  <script src="js/admin.js?v=2026.37"></script>
+  <script src="js/netora.js?v=2026.38"></script>
+  <script src="js/admin.js?v=2026.38"></script>
 </body>
 
 </html>
