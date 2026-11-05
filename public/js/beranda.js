@@ -146,14 +146,16 @@ window.loadMateriBeranda = async function() {
   if (!container) return;
 
   function getIcon(kat, jud) {
-    const text = (kat + ' ' + jud).toLowerCase();
-    if (text.includes('cisco') || text.includes('packet tracer') || text.includes('switch') || text.includes('vlan')) {
+    const k = (kat || '').toLowerCase().trim();
+    const t = (jud || '').toLowerCase().trim();
+
+    if (k.includes('cisco') || (!k && (t.includes('cisco') || t.includes('packet tracer')))) {
       return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
     }
-    if (text.includes('mikrotik') || text.includes('router') || text.includes('queue') || text.includes('bandwidth')) {
+    if (k.includes('mikro') || (!k && (t.includes('mikrotik') || t.includes('routeros') || t.includes('winbox')))) {
       return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
     }
-    if (text.includes('linux') || text.includes('server') || text.includes('nginx') || text.includes('ssh')) {
+    if (k.includes('server') || k.includes('linux') || (!k && (t.includes('linux') || t.includes('server') || t.includes('nginx') || t.includes('ssh')))) {
       return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`;
     }
     return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`;

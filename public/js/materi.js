@@ -42,19 +42,32 @@ window.initMateriPage = async function() {
 
   // Helper Pemetaan Kategori Dinamis & Kompatibel (Anti-salah eja di database)
   function getMateriCategoryKey(m) {
+    if (!m) return 'mikrotik';
     const k = (m.kategori || '').toLowerCase().trim();
-    const t = (m.judul || '').toLowerCase().trim();
-    const combined = k + ' ' + t;
 
-    if (k.includes('cisco') || combined.includes('cisco') || combined.includes('packet tracer') || combined.includes('vlan') || combined.includes('trunking')) {
+    // 1. Prioritaskan kategori eksplisit dari database (Authoritative)
+    if (k.includes('cisco') || k.includes('packet tracer')) {
       return 'cisco';
     }
-    if (k.includes('mikro') || combined.includes('mikrotik') || combined.includes('routeros') || combined.includes('winbox') || combined.includes('queue')) {
+    if (k.includes('mikro') || k.includes('routeros')) {
       return 'mikrotik';
     }
-    if (k.includes('server') || k.includes('linux') || combined.includes('linux') || combined.includes('debian') || combined.includes('ubuntu') || combined.includes('nginx') || combined.includes('ssh')) {
+    if (k.includes('server') || k.includes('linux') || k.includes('debian') || k.includes('ubuntu')) {
       return 'server-linux';
     }
+
+    // 2. Fallback HANYA jika kategori di database kosong / tidak terdefinisi
+    const t = (m.judul || '').toLowerCase().trim();
+    if (t.includes('cisco') || t.includes('packet tracer')) {
+      return 'cisco';
+    }
+    if (t.includes('mikrotik') || t.includes('routeros') || t.includes('winbox') || t.includes('routerboard')) {
+      return 'mikrotik';
+    }
+    if (t.includes('server') || t.includes('linux') || t.includes('debian') || t.includes('ubuntu') || t.includes('nginx') || t.includes('apache')) {
+      return 'server-linux';
+    }
+
     return 'mikrotik'; // fallback default
   }
 
@@ -515,14 +528,16 @@ window.initMateriPage = async function() {
 
   // Preset Icon Mapping (SVG)
   function getMateriIcon(kategori, judul) {
-    const text = ((kategori || '') + ' ' + (judul || '')).toLowerCase();
-    if (text.includes('cisco') || text.includes('packet tracer') || text.includes('switch') || text.includes('vlan')) {
+    const k = (kategori || '').toLowerCase().trim();
+    const t = (judul || '').toLowerCase().trim();
+
+    if (k.includes('cisco') || (!k && (t.includes('cisco') || t.includes('packet tracer')))) {
       return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><path d="M6 8h12"></path><path d="M6 12h8"></path></svg>`;
     }
-    if (text.includes('mikrotik') || text.includes('router') || text.includes('queue') || text.includes('bandwidth')) {
+    if (k.includes('mikro') || (!k && (t.includes('mikrotik') || t.includes('routeros') || t.includes('winbox')))) {
       return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
     }
-    if (text.includes('linux') || text.includes('server') || text.includes('nginx') || text.includes('ssh') || text.includes('debian') || text.includes('ubuntu')) {
+    if (k.includes('server') || k.includes('linux') || (!k && (t.includes('linux') || t.includes('server') || t.includes('nginx') || t.includes('ssh') || t.includes('debian') || t.includes('ubuntu')))) {
       return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`;
     }
     return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`;

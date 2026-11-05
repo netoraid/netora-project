@@ -9,7 +9,7 @@ window.initVideoPage = async function() {
     });
   }
 
-  // Definisi Master 3 Kategori NETORA (Sama persis dengan materi.js)
+  // Definisi Master 2 Kategori Vidio Praktik NETORA
   const CATEGORIES = {
     'mikrotik': {
       id: 'mikrotik',
@@ -28,32 +28,26 @@ window.initVideoPage = async function() {
       iconColor: '#0284C7',
       iconBg: 'rgba(2, 132, 199, 0.1)',
       icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><path d="M6 8h12"></path><path d="M6 12h8"></path></svg>`
-    },
-    'server-linux': {
-      id: 'server-linux',
-      name: 'Server dan Linux',
-      badgeText: 'Sistem Operasi & Layanan Server',
-      desc: 'Administrasi Linux Debian/Ubuntu Server, manajemen service Nginx/Apache Web Server, SSH Remote, konfigurasi DNS, dan hosting.',
-      iconColor: '#10B981',
-      iconBg: 'rgba(16, 185, 129, 0.1)',
-      icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`
     }
   };
 
-  // Helper Pemetaan Kategori Dinamis & Kompatibel
+  // Helper Pemetaan Kategori Dinamis & Kompatibel (Anti-salah eja di database)
   function getCategoryKey(item) {
+    if (!item) return 'mikrotik';
     const k = (item.kategori || '').toLowerCase().trim();
-    const t = (item.judul || '').toLowerCase().trim();
-    const combined = k + ' ' + t;
 
-    if (k.includes('cisco') || combined.includes('cisco') || combined.includes('packet tracer') || combined.includes('vlan') || combined.includes('trunking')) {
+    // 1. Prioritaskan kategori eksplisit dari database (Authoritative)
+    if (k.includes('cisco') || k.includes('packet tracer')) {
       return 'cisco';
     }
-    if (k.includes('mikro') || combined.includes('mikrotik') || combined.includes('routeros') || combined.includes('winbox') || combined.includes('queue')) {
+    if (k.includes('mikro') || k.includes('routeros')) {
       return 'mikrotik';
     }
-    if (k.includes('server') || k.includes('linux') || combined.includes('linux') || combined.includes('debian') || combined.includes('ubuntu') || combined.includes('nginx') || combined.includes('ssh')) {
-      return 'server-linux';
+
+    // 2. Fallback HANYA jika kategori di database kosong / tidak terdefinisi
+    const t = (item.judul || '').toLowerCase().trim();
+    if (t.includes('cisco') || t.includes('packet tracer')) {
+      return 'cisco';
     }
     return 'mikrotik'; // fallback default
   }
@@ -143,11 +137,9 @@ window.initVideoPage = async function() {
   function updateCategoryBadges() {
     const countVideoMikrotik = allVideos.filter(v => getCategoryKey(v) === 'mikrotik').length;
     const countVideoCisco = allVideos.filter(v => getCategoryKey(v) === 'cisco').length;
-    const countVideoServer = allVideos.filter(v => getCategoryKey(v) === 'server-linux').length;
 
     const badgeMikrotik = document.getElementById('badge-video-count-mikrotik');
     const badgeCisco = document.getElementById('badge-video-count-cisco');
-    const badgeServer = document.getElementById('badge-video-count-server-linux');
 
     if (badgeMikrotik) {
       badgeMikrotik.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoMikrotik} Vidio</span>`;
@@ -155,16 +147,12 @@ window.initVideoPage = async function() {
     if (badgeCisco) {
       badgeCisco.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoCisco} Vidio</span>`;
     }
-    if (badgeServer) {
-      badgeServer.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoServer} Vidio</span>`;
-    }
   }
 
   window.pilihKategoriVideo = function(catKey, pushState = true) {
     let normalizedKey = String(catKey || '').toLowerCase().trim();
     if (!CATEGORIES[normalizedKey]) {
       if (/cisco/i.test(normalizedKey)) normalizedKey = 'cisco';
-      else if (/server|linux/i.test(normalizedKey)) normalizedKey = 'server-linux';
       else normalizedKey = 'mikrotik';
     }
     const cat = CATEGORIES[normalizedKey];
