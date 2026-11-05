@@ -14,7 +14,10 @@ window.initBerandaCarousel = function() {
   let current = 0;
   const total = track.children.length;
   let startX = 0;
+  let startY = 0;
   let isDragging = false;
+  let mouseStartX = 0;
+  let isMouseDown = false;
 
   function goTo(idx) {
     current = (idx + total) % total;
@@ -23,22 +26,37 @@ window.initBerandaCarousel = function() {
   }
 
   function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
 
   function startAuto() {
     if (window._netoraBannerTimer) clearInterval(window._netoraBannerTimer);
-    window._netoraBannerTimer = setInterval(next, 4000);
+    window._netoraBannerTimer = setInterval(next, 4500);
   }
 
   dots.forEach(dot => {
-    dot.onclick = () => {
+    dot.onclick = (e) => {
+      e.stopPropagation();
       goTo(parseInt(dot.dataset.idx || '0'));
       startAuto();
     };
   });
 
+  // Pause on desktop hover
+  const wrap = track.parentElement;
+  if (wrap) {
+    wrap.onmouseenter = () => {
+      if (window._netoraBannerTimer) clearInterval(window._netoraBannerTimer);
+    };
+    wrap.onmouseleave = () => {
+      startAuto();
+    };
+  }
+
+  // Touch Swipe for Mobile
   track.ontouchstart = e => {
     if (!e.touches || !e.touches[0]) return;
     startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
     isDragging = true;
     if (window._netoraBannerTimer) clearInterval(window._netoraBannerTimer);
   };
@@ -46,8 +64,29 @@ window.initBerandaCarousel = function() {
   track.ontouchend = e => {
     if (!isDragging || !e.changedTouches || !e.changedTouches[0]) return;
     const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 40) dx < 0 ? next() : goTo(current - 1);
+    const dy = e.changedTouches[0].clientY - startY;
+    // Only swipe if horizontal motion exceeds vertical motion
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 35) {
+      dx < 0 ? next() : prev();
+    }
     isDragging = false;
+    startAuto();
+  };
+
+  // Mouse Drag for Desktop
+  track.onmousedown = e => {
+    mouseStartX = e.clientX;
+    isMouseDown = true;
+    if (window._netoraBannerTimer) clearInterval(window._netoraBannerTimer);
+  };
+
+  track.onmouseup = e => {
+    if (!isMouseDown) return;
+    const dx = e.clientX - mouseStartX;
+    if (Math.abs(dx) > 40) {
+      dx < 0 ? next() : prev();
+    }
+    isMouseDown = false;
     startAuto();
   };
 
