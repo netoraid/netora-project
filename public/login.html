@@ -8,7 +8,7 @@
     content="Netora - Platform Pembelajaran Teknik Komputer dan Jaringan (TKJ). Masuk atau daftar untuk mulai belajar.">
   <title>Netora — Platform Belajar TKJ</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.43">
+  <link rel="stylesheet" href="css/netora.css?v=2026.50">
   <style>
     /* ===================================================
        NETORA WELCOME OPENING & AUTH SYSTEM
@@ -43,12 +43,12 @@
       z-index: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at 12% 18%, rgba(13, 91, 255, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 88% 82%, rgba(255, 122, 0, 0.10) 0%, transparent 40%),
+        radial-gradient(circle at 12% 18%, rgba(13, 91, 255, 0.10) 0%, transparent 40%),
+        radial-gradient(circle at 88% 82%, rgba(255, 122, 0, 0.08) 0%, transparent 40%),
         #F8FAFC;
     }
 
-    /* Outer layout container */
+    /* Outer layout container - Vertically & Horizontally Centered */
     .page-main-container {
       position: relative;
       z-index: 1;
@@ -56,9 +56,10 @@
       min-height: 100vh;
       min-height: 100dvh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px 20px;
+      padding: 24px 16px;
       box-sizing: border-box;
     }
 
@@ -67,15 +68,14 @@
     =================================================== */
     .welcome-card-shell {
       width: 100%;
-      max-width: 520px;
+      max-width: 480px;
       background: #FFFFFF;
-      border-radius: 28px;
-      border: 1.5px solid #E2E8F0;
-      box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.08), 0 0 1px rgba(15, 23, 42, 0.06);
+      border-radius: 26px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 16px 40px -10px rgba(15, 23, 42, 0.08), 0 0 1px rgba(15, 23, 42, 0.06);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: 40px 32px 34px;
+      padding: 34px 28px 28px;
       text-align: center;
       margin: auto;
       transition: all 0.3s ease;
@@ -83,29 +83,29 @@
     }
 
     .welcome-logo-box {
-      width: 72px;
-      height: 72px;
-      border-radius: 22px;
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
       background: #FFFFFF;
-      border: 1.5px solid #E2E8F0;
+      border: 1px solid #E2E8F0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 14px;
-      box-shadow: 0 8px 24px rgba(13, 91, 255, 0.08);
+      margin: 0 auto 12px;
+      box-shadow: 0 6px 20px rgba(13, 91, 255, 0.08);
     }
 
     .welcome-logo-box img {
-      width: 52px;
-      height: 52px;
+      width: 40px;
+      height: 40px;
       object-fit: contain;
     }
 
     .welcome-brand-title {
       margin: 0 0 2px;
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 900;
-      letter-spacing: -0.6px;
+      letter-spacing: -0.5px;
       color: #0F172A;
     }
 
@@ -114,40 +114,40 @@
     }
 
     .welcome-headline {
-      margin: 10px 0 8px;
-      font-size: 18.5px;
+      margin: 8px 0 6px;
+      font-size: 17px;
       font-weight: 800;
       color: #1E293B;
-      line-height: 1.4;
+      line-height: 1.35;
       letter-spacing: -0.2px;
     }
 
     .welcome-desc {
-      margin: 0 auto 24px;
-      font-size: 13.5px;
+      margin: 0 auto 20px;
+      font-size: 13px;
       color: #64748B;
-      line-height: 1.6;
-      max-width: 420px;
+      line-height: 1.55;
+      max-width: 390px;
     }
 
     /* 3 Feature cards */
     .welcome-feature-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-bottom: 28px;
+      gap: 9px;
+      margin-bottom: 24px;
       text-align: left;
     }
 
     .welcome-feature-card {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 13px 16px;
+      gap: 12px;
+      padding: 11px 14px;
       background: #F8FAFC;
       border: 1px solid #E2E8F0;
-      border-radius: 16px;
-      font-size: 13px;
+      border-radius: 14px;
+      font-size: 12.5px;
       font-weight: 600;
       color: #1E293B;
       transition: background 0.2s ease, border-color 0.2s ease;
@@ -159,43 +159,53 @@
     }
 
     .welcome-feature-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 11px;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
 
+    .welcome-feature-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
     /* CTA Mulai Sekarang */
     .btn-cta-start {
       width: 100%;
-      height: 54px;
+      height: 48px;
       background: linear-gradient(135deg, #FF7A00 0%, #FF9500 100%);
       border: none;
-      border-radius: 27px;
+      border-radius: 24px;
       color: #FFFFFF;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      box-shadow: 0 10px 28px rgba(255, 122, 0, 0.36);
+      gap: 8px;
+      box-shadow: 0 8px 24px rgba(255, 122, 0, 0.32);
       transition: transform 0.15s ease, box-shadow 0.15s ease;
       touch-action: manipulation;
       letter-spacing: 0.2px;
     }
 
     .btn-cta-start:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 34px rgba(255, 122, 0, 0.44);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(255, 122, 0, 0.40);
     }
 
     .btn-cta-start:active {
       transform: scale(0.98);
+    }
+
+    .btn-cta-start svg {
+      width: 16px;
+      height: 16px;
     }
 
     /* ===================================================
@@ -203,36 +213,41 @@
     =================================================== */
     .auth-card-shell {
       width: 100%;
-      max-width: 470px;
+      max-width: 420px;
       background: #FFFFFF;
-      border-radius: 28px;
-      border: 1.5px solid #E2E8F0;
-      box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.08), 0 0 1px rgba(15, 23, 42, 0.06);
+      border-radius: 24px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 16px 40px -10px rgba(15, 23, 42, 0.08), 0 0 1px rgba(15, 23, 42, 0.06);
       display: flex;
       flex-direction: column;
+      justify-content: center;
       margin: auto;
-      padding: 30px 32px 34px;
+      padding: 26px 24px 24px;
       transition: all 0.25s ease;
       box-sizing: border-box;
     }
 
-    /* Mobile Adaptivity */
+    /* Mobile Adaptivity: Selalu Berada di Tengah Layar (Center Vertikal & Horisontal) */
     @media (max-width: 540px) {
       .page-main-container {
-        padding: 0;
-        align-items: stretch;
+        padding: 16px 14px;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: 100vh;
+        min-height: 100dvh;
       }
 
       .welcome-card-shell,
       .auth-card-shell {
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
-        min-height: 100vh;
-        min-height: 100dvh;
-        max-width: 100%;
-        padding: 28px 20px max(28px, env(safe-area-inset-bottom, 28px));
-        justify-content: space-between;
+        border-radius: 22px !important;
+        border: 1px solid #E2E8F0 !important;
+        box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.08) !important;
+        min-height: auto !important;
+        max-width: 410px !important;
+        width: 100% !important;
+        padding: 22px 18px 20px !important;
+        justify-content: center !important;
+        margin: auto !important;
       }
     }
 
@@ -240,55 +255,62 @@
     .btn-back-welcome {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 13px;
+      gap: 5px;
+      font-size: 11.5px;
       font-weight: 700;
       color: #475569;
-      background: #F1F5F9;
+      background: #F8FAFC;
       border: 1px solid #E2E8F0;
-      padding: 7px 12px;
-      border-radius: 12px;
+      padding: 5px 10px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.15s ease;
+      line-height: 1.2;
     }
 
     .btn-back-welcome:hover {
-      background: #E2E8F0;
+      background: #F1F5F9;
       color: #0F172A;
+      border-color: #CBD5E1;
     }
 
     .btn-back-welcome:active {
       transform: scale(0.97);
     }
 
+    .btn-back-welcome svg {
+      width: 13px;
+      height: 13px;
+    }
+
     /* Logo & Header */
     .auth-brand-header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
     }
 
     .auth-brand-logo {
-      width: 50px;
-      height: 50px;
-      border-radius: 16px;
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
       background: #FFFFFF;
-      border: 1.5px solid #E2E8F0;
+      border: 1px solid #E2E8F0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       box-shadow: 0 4px 14px rgba(13, 91, 255, 0.08);
     }
 
     .auth-brand-logo img {
-      width: 36px;
-      height: 36px;
+      width: 30px;
+      height: 30px;
       object-fit: contain;
     }
 
     .auth-brand-title {
       margin: 0;
-      font-size: 23px;
+      font-size: 22px;
       font-weight: 900;
       letter-spacing: -0.5px;
       color: #0F172A;
@@ -300,12 +322,12 @@
     }
 
     .auth-brand-sub {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       color: #64748B;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
     /* Segmented Tab Switcher */
@@ -313,24 +335,24 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       background: #F1F5F9;
-      border: 1.5px solid #E2E8F0;
-      border-radius: 16px;
-      padding: 4px;
-      gap: 6px;
-      margin-bottom: 20px;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 3px;
+      gap: 4px;
+      margin-bottom: 16px;
       box-sizing: border-box;
     }
 
     .auth-tab-btn {
-      min-height: 46px;
+      min-height: 38px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       border: none;
       background: transparent;
-      border-radius: 12px;
-      font-size: 14px;
+      border-radius: 9px;
+      font-size: 13px;
       font-weight: 700;
       color: #64748B;
       cursor: pointer;
@@ -338,40 +360,51 @@
       touch-action: manipulation;
     }
 
+    .auth-tab-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
     .auth-tab-btn:hover:not(.active) {
       color: #0F172A;
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.6);
     }
 
     .auth-tab-btn.active.tab-login {
       background: #0D5BFF;
       color: #FFFFFF;
       font-weight: 800;
-      box-shadow: 0 4px 14px rgba(13, 91, 255, 0.28);
+      box-shadow: 0 3px 10px rgba(13, 91, 255, 0.25);
     }
 
     .auth-tab-btn.active.tab-register {
       background: #FF7A00;
       color: #FFFFFF;
       font-weight: 800;
-      box-shadow: 0 4px 14px rgba(255, 122, 0, 0.28);
+      box-shadow: 0 3px 10px rgba(255, 122, 0, 0.25);
     }
 
     /* In-card Error Banner */
     .auth-error-banner {
       display: none;
       align-items: flex-start;
-      gap: 10px;
-      padding: 12px 14px;
+      gap: 8px;
+      padding: 10px 12px;
       background: #FEF2F2;
-      border: 1.5px solid #FECACA;
-      border-radius: 14px;
+      border: 1px solid #FECACA;
+      border-radius: 11px;
       color: #DC2626;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      line-height: 1.45;
-      margin-bottom: 18px;
+      line-height: 1.4;
+      margin-bottom: 14px;
       animation: fadeIn 0.2s ease-out;
+    }
+
+    .auth-error-banner svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
     }
 
     /* Form Fields */
@@ -380,11 +413,12 @@
     }
 
     .form-header-meta {
-      margin-bottom: 18px;
+      margin-bottom: 14px;
+      text-align: left;
     }
 
     .form-title {
-      font-size: 18px;
+      font-size: 16.5px;
       font-weight: 800;
       color: #0F172A;
       margin: 0;
@@ -392,21 +426,22 @@
     }
 
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 13px;
+      text-align: left;
     }
 
     .form-group:last-of-type {
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
 
     .form-label {
       display: block;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 800;
       color: #475569;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 7px;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
     }
 
     .input-wrapper {
@@ -418,7 +453,7 @@
 
     .input-icon {
       position: absolute;
-      left: 14px;
+      left: 13px;
       top: 50%;
       transform: translateY(-50%);
       color: #94A3B8;
@@ -426,17 +461,24 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 18px;
+      height: 18px;
+    }
+
+    .input-icon svg {
+      width: 16px;
+      height: 16px;
     }
 
     /* Crucial: 16px font-size prevents mobile auto-zoom on iOS & Android */
     .form-input {
       width: 100%;
-      height: 50px;
+      height: 46px;
       background: #F8FAFC;
-      border: 1.5px solid #CBD5E1;
-      border-radius: 14px;
-      padding: 0 46px 0 44px;
-      font-size: 16px !important;
+      border: 1px solid #CBD5E1;
+      border-radius: 12px;
+      padding: 0 42px 0 38px;
+      font-size: 15px !important;
       font-family: inherit;
       color: #0F172A;
       font-weight: 500;
@@ -448,31 +490,41 @@
 
     .form-input::placeholder {
       color: #94A3B8;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .form-input:focus {
       background: #FFFFFF;
       border-color: #0D5BFF;
-      box-shadow: 0 0 0 3px rgba(13, 91, 255, 0.16);
+      box-shadow: 0 0 0 3px rgba(13, 91, 255, 0.14);
     }
 
     .form-input.focus-orange:focus {
       border-color: #FF7A00;
-      box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.16);
+      box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.14);
+    }
+
+    /* Clean browser autofill background */
+    .form-input:-webkit-autofill,
+    .form-input:-webkit-autofill:hover,
+    .form-input:-webkit-autofill:focus {
+      -webkit-text-fill-color: #0F172A;
+      -webkit-box-shadow: 0 0 0px 1000px #F8FAFC inset;
+      transition: background-color 5000s ease-in-out 0s;
+      border-radius: 12px;
     }
 
     /* Eye toggle button */
     .btn-pwd-eye {
       position: absolute;
-      right: 6px;
+      right: 5px;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       background: transparent;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -485,46 +537,56 @@
     .btn-pwd-eye:hover,
     .btn-pwd-eye:active {
       color: #334155;
-      background: rgba(0, 0, 0, 0.05);
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-pwd-eye svg {
+      width: 16px;
+      height: 16px;
     }
 
     /* Submit Button */
     .btn-submit-action {
       width: 100%;
-      min-height: 52px;
+      min-height: 46px;
       border: none;
-      border-radius: 14px;
-      font-size: 15.5px;
+      border-radius: 12px;
+      font-size: 14.5px;
       font-weight: 800;
       color: #FFFFFF;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
       letter-spacing: 0.2px;
       touch-action: manipulation;
       box-sizing: border-box;
     }
 
+    .btn-submit-action svg {
+      width: 15px;
+      height: 15px;
+    }
+
     .btn-submit-action.btn-blue {
       background: linear-gradient(135deg, #0D5BFF 0%, #2563EB 100%);
-      box-shadow: 0 8px 24px rgba(13, 91, 255, 0.32);
+      box-shadow: 0 6px 20px rgba(13, 91, 255, 0.28);
     }
 
     .btn-submit-action.btn-blue:hover {
-      box-shadow: 0 12px 28px rgba(13, 91, 255, 0.42);
+      box-shadow: 0 10px 24px rgba(13, 91, 255, 0.36);
       transform: translateY(-1px);
     }
 
     .btn-submit-action.btn-orange {
       background: linear-gradient(135deg, #FF7A00 0%, #EA580C 100%);
-      box-shadow: 0 8px 24px rgba(255, 122, 0, 0.32);
+      box-shadow: 0 6px 20px rgba(255, 122, 0, 0.28);
     }
 
     .btn-submit-action.btn-orange:hover {
-      box-shadow: 0 12px 28px rgba(255, 122, 0, 0.42);
+      box-shadow: 0 10px 24px rgba(255, 122, 0, 0.36);
       transform: translateY(-1px);
     }
 
@@ -532,19 +594,30 @@
       transform: scale(0.98) !important;
     }
 
+    /* Loading Spinner Animation */
+    @keyframes spin-loader {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .spin-loader {
+      animation: spin-loader 0.8s linear infinite !important;
+      transform-origin: center;
+    }
+
     /* Switch mode helper text */
     .auth-toggle-hint {
       text-align: center;
-      font-size: 13px;
+      font-size: 12.5px;
       color: #64748B;
-      margin-top: 18px;
+      margin-top: 14px;
       margin-bottom: 0;
     }
 
     .auth-toggle-link {
       font-weight: 700;
       text-decoration: none;
-      padding: 4px 6px;
+      padding: 3px 5px;
       display: inline-block;
       cursor: pointer;
     }
@@ -563,18 +636,18 @@
 
     /* Screen transition states */
     .screen-fade-enter {
-      animation: screenSmoothEnter 0.32s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+      animation: screenSmoothEnter 0.28s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
       will-change: opacity, transform;
     }
 
     .screen-fade-exit {
-      animation: screenSmoothExit 0.22s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+      animation: screenSmoothExit 0.20s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
       pointer-events: none !important;
       will-change: opacity, transform;
     }
 
     .screen-fade-exit-back {
-      animation: screenSmoothExitBack 0.22s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+      animation: screenSmoothExitBack 0.20s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
       pointer-events: none !important;
       will-change: opacity, transform;
     }
@@ -582,7 +655,7 @@
     @keyframes screenSmoothEnter {
       0% {
         opacity: 0.1;
-        transform: translate3d(36px, 0, 0);
+        transform: translate3d(24px, 0, 0);
       }
 
       100% {
@@ -599,7 +672,7 @@
 
       100% {
         opacity: 0.1;
-        transform: translate3d(-30px, 0, 0);
+        transform: translate3d(-20px, 0, 0);
       }
     }
 
@@ -611,19 +684,19 @@
 
       100% {
         opacity: 0.1;
-        transform: translate3d(30px, 0, 0);
+        transform: translate3d(20px, 0, 0);
       }
     }
 
     /* Transitions */
     .fade-panel {
-      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(6px);
+        transform: translateY(5px);
       }
 
       to {
@@ -662,7 +735,7 @@
         <div class="welcome-feature-list">
           <div class="welcome-feature-card">
             <div class="welcome-feature-icon" style="background: rgba(13,91,255,0.08); color: #0D5BFF;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10" />
                 <line x1="2" y1="12" x2="22" y2="12" />
@@ -674,7 +747,7 @@
 
           <div class="welcome-feature-card">
             <div class="welcome-feature-icon" style="background: rgba(255,122,0,0.08); color: #FF7A00;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <rect x="4" y="2" width="16" height="20" rx="2" />
                 <line x1="8" y1="6" x2="16" y2="6" />
@@ -688,7 +761,7 @@
 
           <div class="welcome-feature-card">
             <div class="welcome-feature-icon" style="background: rgba(22,163,74,0.08); color: #16A34A;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                 <polyline points="22 4 12 14.01 9 11.01" />
@@ -700,10 +773,10 @@
       </div>
 
       <!-- Tombol Mulai Sekarang -->
-      <div style="padding-top: 10px;">
+      <div style="padding-top: 6px;">
         <button id="btn-mulai-sekarang" type="button" class="btn-cta-start">
           <span>Mulai Sekarang</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round">
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />
@@ -719,9 +792,9 @@
     <div id="auth-view" class="auth-card-shell fade-panel" style="display: none;">
 
       <!-- Top Nav: Tombol Kembali ke Opening -->
-      <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 12px;">
+      <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 8px;">
         <button id="btn-back-to-welcome" type="button" class="btn-back-welcome">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 12H5" />
             <path d="M12 19l-7-7 7-7" />
@@ -742,7 +815,7 @@
       <!-- Segmented Tab Switcher (Masuk / Daftar Siswa) -->
       <div class="auth-tab-group" role="tablist">
         <button id="tab-btn-login" type="button" class="auth-tab-btn active tab-login" role="tab" aria-selected="true">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
             stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -750,7 +823,7 @@
           <span>Masuk</span>
         </button>
         <button id="tab-btn-register" type="button" class="auth-tab-btn" role="tab" aria-selected="false">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
             stroke-linecap="round" stroke-linejoin="round">
             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
             <circle cx="8.5" cy="7" r="4" />
@@ -775,7 +848,7 @@
             <label for="email" class="form-label">Email atau Username</label>
             <div class="input-wrapper">
               <span class="input-icon">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
@@ -790,7 +863,7 @@
             <label for="password" class="form-label">Kata Sandi</label>
             <div class="input-wrapper">
               <span class="input-icon">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" />
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -800,7 +873,7 @@
                 autocomplete="current-password">
               <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('password', this)"
                 title="Lihat/Sembunyikan kata sandi" aria-label="Toggle password visibility">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                   <circle cx="12" cy="12" r="3" />
@@ -811,7 +884,7 @@
 
           <button type="submit" id="btn-submit-login" class="btn-submit-action btn-blue">
             <span>Masuk Sekarang</span>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round">
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
@@ -819,7 +892,7 @@
           </button>
         </form>
 
-        <p class="auth-toggle-hint" style="margin-top: 18px;">
+        <p class="auth-toggle-hint" style="margin-top: 14px;">
           Belum memiliki akun siswa?
           <a href="#" onclick="switchAuthTab('register'); return false;" class="auth-toggle-link orange">Daftar Akun
             Baru</a>
@@ -838,7 +911,7 @@
             <label for="reg-nama" class="form-label">Nama Lengkap Siswa</label>
             <div class="input-wrapper">
               <span class="input-icon">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
@@ -853,7 +926,7 @@
             <label for="reg-email" class="form-label">Alamat Email</label>
             <div class="input-wrapper">
               <span class="input-icon">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                   <polyline points="22,6 12,13 2,6" />
@@ -868,7 +941,7 @@
             <label for="reg-password" class="form-label">Kata Sandi (Min. 6 Karakter)</label>
             <div class="input-wrapper">
               <span class="input-icon">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" />
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -878,7 +951,7 @@
                 autocomplete="new-password">
               <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('reg-password', this)"
                 title="Lihat/Sembunyikan kata sandi" aria-label="Toggle password visibility">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                   <circle cx="12" cy="12" r="3" />
@@ -889,7 +962,7 @@
 
           <button type="submit" id="btn-submit-register" class="btn-submit-action btn-orange">
             <span>Buat Akun Siswa</span>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round">
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
@@ -908,8 +981,8 @@
   </div><!-- /page-main-container -->
 
   <!-- Scripts -->
-  <script src="js/netora.js?v=2026.43"></script>
-  <script src="js/auth.js?v=2026.43"></script>
+  <script src="js/netora.js?v=2026.50"></script>
+  <script src="js/auth.js?v=2026.50"></script>
   <script>
     // ===== Password Visibility Toggle =====
     function togglePasswordVisibility(inputId, btn) {
