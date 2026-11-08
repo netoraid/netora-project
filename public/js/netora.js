@@ -767,11 +767,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 5. Seamless Native-Grade Navigation (Bebas Patah-Patah, Native 60fps Transition)
   let _isNavigating = false;
+  let _currentActivePath = getCleanPath(window.location.href);
 
   async function seamlessNavigateTo(targetUrl, isPopState = false) {
     const curParsed = new URL(window.location.href, window.location.origin);
     const targetParsed = new URL(targetUrl, window.location.origin);
-    const curPath = getCleanPath(window.location.href);
+    const previousPath = _currentActivePath;
     const targetPath = getCleanPath(targetUrl);
 
     // Halaman panel admin, guru, atau autentikasi menggunakan navigasi browser penuh
@@ -781,7 +782,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Jika perpindahan di dalam halaman yang sama (misal query parameter video.html?kategori=mikrotik)
-    if (curPath === targetPath) {
+    if (previousPath === targetPath) {
       if (isPopState) {
         // Biarkan listener internal halaman (seperti di video.js & materi.js) menangani URL state tanpa merusak DOM
         return;
@@ -792,7 +793,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    if (_isNavigating) return;
+    if (_isNavigating && !isPopState) return;
     _isNavigating = true;
 
     try {
@@ -839,6 +840,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Ganti konten DOM halaman tujuan (berisi Shimmer Skeleton)
           curApp.innerHTML = newApp.innerHTML;
+          _currentActivePath = targetPath;
           window.scrollTo(0, 0);
           updateActiveTabs(targetPath);
 

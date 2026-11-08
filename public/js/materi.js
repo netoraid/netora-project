@@ -264,8 +264,13 @@ window.initMateriPage = async function() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // Sinkronisasi navigasi tombol Back / Forward di browser
-    window.addEventListener('popstate', () => {
+    // Sinkronisasi navigasi tombol Back / Forward di browser (Aman & Khusus Halaman Materi)
+    if (window._netoraMateriPopstateHandler) {
+      window.removeEventListener('popstate', window._netoraMateriPopstateHandler);
+    }
+    window._netoraMateriPopstateHandler = function() {
+      const isMateriPage = window.location.pathname.endsWith('materi.html') || window.location.pathname === '/materi.html';
+      if (!isMateriPage) return;
       const urlParams = new URLSearchParams(window.location.search);
       const cat = urlParams.get('kategori') || urlParams.get('kat');
       if (cat) {
@@ -273,7 +278,8 @@ window.initMateriPage = async function() {
       } else {
         window.kembaliKeKategori(false);
       }
-    });
+    };
+    window.addEventListener('popstate', window._netoraMateriPopstateHandler);
 
     async function loadMateri(isSilent = false) {
       if (!isSilent && (!allMateri || allMateri.length === 0)) {
