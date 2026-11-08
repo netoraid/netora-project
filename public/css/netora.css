@@ -4608,40 +4608,65 @@ body.admin-page {
 }
 
 .nav-tab-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  color: #64748B;
-  text-decoration: none;
-  font-size: 11px;
-  font-weight: 700;
-  transition: all 0.18s ease;
-  position: relative;
-  flex: 1;
-  padding: 2px 0;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  color: #64748B !important;
+  text-decoration: none !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  transition: all 0.18s ease !important;
+  position: relative !important;
+  flex: 1 !important;
+  padding: 2px 0 !important;
+  box-sizing: border-box !important;
 }
 
 .nav-tab-item.active {
-  color: #0D5BFF;
-  font-weight: 800;
+  color: #0D5BFF !important;
+  font-weight: 800 !important;
 }
 
+.app-bottom-nav-white .nav-tab-item svg,
 .nav-tab-item svg {
-  width: 22px;
-  height: 22px;
-  stroke: currentColor;
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  stroke: currentColor !important;
   fill: none !important;
-  stroke-width: 2.1;
-  transition: transform 0.2s ease, stroke-width 0.2s ease;
+  stroke-width: 2.1 !important;
+  display: block !important;
+  margin: 0 auto !important;
+  transition: transform 0.2s ease, stroke-width 0.2s ease !important;
 }
 
+.app-bottom-nav-white .nav-tab-item.active svg,
 .nav-tab-item.active svg {
   fill: none !important;
-  stroke: #0D5BFF;
-  stroke-width: 2.4;
-  transform: translateY(-1px);
+  stroke: #0D5BFF !important;
+  stroke-width: 2.4 !important;
+  transform: translateY(-1px) !important;
+}
+
+.app-bottom-nav-white .nav-tab-item span,
+.nav-tab-item span {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  color: inherit !important;
+  margin-top: 1px !important;
+  white-space: nowrap !important;
+}
+
+.app-bottom-nav-white .nav-tab-item.active span,
+.nav-tab-item.active span {
+  color: #0D5BFF !important;
+  font-weight: 800 !important;
 }
 
 .nav-notif-dot {
@@ -6533,6 +6558,19 @@ textarea.form-input {
 }
 
 
+
+/* Standarisasi Navigasi Bawah Seluruh Halaman Mobile */
+.app-bottom-nav-white .nav-tab-item svg,
+.nav-tab-item svg {
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
 
 /* Hide sub-features from desktop top navbar */
 .desktop-nav-link[href="materi.html"],

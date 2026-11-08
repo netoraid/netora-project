@@ -733,7 +733,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return _htmlPageCache.get(clean);
     }
     try {
-      const res = await fetch(url);
+      const controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+      const timer = controller ? setTimeout(() => controller.abort(), 3500) : null;
+      const res = await fetch(url, controller ? { signal: controller.signal } : {});
+      if (timer) clearTimeout(timer);
       if (!res.ok) throw new Error('Fetch status ' + res.status);
       const htmlText = await res.text();
       _htmlPageCache.set(clean, htmlText);
@@ -777,9 +780,16 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (curParsed.pathname === targetParsed.pathname && curParsed.search === targetParsed.search && !isPopState) {
-      window.scrollTo(0, 0);
-      return;
+    // Jika perpindahan di dalam halaman yang sama (misal query parameter video.html?kategori=mikrotik)
+    if (curPath === targetPath) {
+      if (isPopState) {
+        // Biarkan listener internal halaman (seperti di video.js & materi.js) menangani URL state tanpa merusak DOM
+        return;
+      }
+      if (curParsed.search === targetParsed.search) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
     }
 
     if (_isNavigating) return;
@@ -839,13 +849,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       };
 
-      // Gunakan W3C Native View Transition API untuk kehalusan maksimal seperti aplikasi native
+      // Gunakan W3C Native View Transition API untuk kehalusan maksimal 60fps
       if (document.startViewTransition) {
         try {
-          const transition = document.startViewTransition(() => {
+          document.startViewTransition(() => {
             performDomSwap();
           });
-          await transition.finished;
         } catch (e) {
           performDomSwap();
         }
@@ -860,7 +869,8 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Seamless navigation error:', globalNavErr);
       window.location.href = targetUrl;
     } finally {
-      _isNavigating = false;
+      // Bebaskan lock segera agar responsivitas navigasi instan dan anti-delay
+      setTimeout(() => { _isNavigating = false; }, 50);
     }
   }
 

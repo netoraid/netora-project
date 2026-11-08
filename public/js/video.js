@@ -163,24 +163,53 @@ window.initVideoPage = async function() {
   }
 
   function updateCategoryBadges() {
+    const totalVideos = allVideos.length;
     const countVideoMikrotik = allVideos.filter(v => getCategoryKey(v) === 'mikrotik').length;
     const countVideoCisco = allVideos.filter(v => getCategoryKey(v) === 'cisco').length;
+    const countVideoServer = allVideos.filter(v => getCategoryKey(v) === 'server-linux').length;
 
+    const badgeAll = document.getElementById('badge-video-count-all');
     const badgeMikrotik = document.getElementById('badge-video-count-mikrotik');
     const badgeCisco = document.getElementById('badge-video-count-cisco');
+    const badgeServer = document.getElementById('badge-video-count-server-linux');
+    const cardServer = document.getElementById('card-cat-server-linux');
 
+    if (badgeAll) {
+      badgeAll.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${totalVideos} Total Vidio</span>`;
+    }
     if (badgeMikrotik) {
       badgeMikrotik.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoMikrotik} Vidio</span>`;
     }
     if (badgeCisco) {
       badgeCisco.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoCisco} Vidio</span>`;
     }
+    if (badgeServer) {
+      badgeServer.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoServer} Vidio</span>`;
+    }
+    if (cardServer) {
+      cardServer.style.display = 'flex';
+    }
+
+    // Update filter pills count di tampilan aktif
+    const pillAll = document.getElementById('pill-count-all');
+    const pillMikrotik = document.getElementById('pill-count-mikrotik');
+    const pillCisco = document.getElementById('pill-count-cisco');
+    const pillServer = document.getElementById('pill-count-server-linux');
+    const pillServerBtn = document.getElementById('pill-server-linux');
+
+    if (pillAll) pillAll.textContent = String(totalVideos);
+    if (pillMikrotik) pillMikrotik.textContent = String(countVideoMikrotik);
+    if (pillCisco) pillCisco.textContent = String(countVideoCisco);
+    if (pillServer) pillServer.textContent = String(countVideoServer);
+    if (pillServerBtn) pillServerBtn.style.display = 'inline-block';
   }
 
   window.pilihKategoriVideo = function(catKey, pushState = true) {
     let normalizedKey = String(catKey || '').toLowerCase().trim();
     if (!CATEGORIES[normalizedKey]) {
       if (/cisco/i.test(normalizedKey)) normalizedKey = 'cisco';
+      else if (/server|linux/i.test(normalizedKey)) normalizedKey = 'server-linux';
+      else if (/all|semua/i.test(normalizedKey)) normalizedKey = 'all';
       else normalizedKey = 'mikrotik';
     }
     const cat = CATEGORIES[normalizedKey];
@@ -198,13 +227,11 @@ window.initVideoPage = async function() {
     // Update Tampilan DOM
     const kategoriSec = document.getElementById('video-kategori-section');
     const listSec = document.getElementById('video-list-section');
-    const heroCard = document.getElementById('video-hero-card');
     const topBackBtn = document.getElementById('video-top-back-btn');
     const headerTitle = document.getElementById('video-header-title');
 
     if (kategoriSec) kategoriSec.style.display = 'none';
     if (listSec) listSec.style.display = 'block';
-    if (heroCard) heroCard.style.display = 'none';
 
     if (topBackBtn) {
       topBackBtn.onclick = (e) => {
@@ -215,8 +242,17 @@ window.initVideoPage = async function() {
     }
 
     if (headerTitle) {
-      headerTitle.textContent = `Vidio ${cat.name}`;
+      headerTitle.textContent = cat.name;
     }
+
+    // Update state active pada filter pills
+    document.querySelectorAll('#video-filter-pills .filter-pill').forEach(pill => {
+      if (pill.getAttribute('data-cat') === normalizedKey) {
+        pill.classList.add('active');
+      } else {
+        pill.classList.remove('active');
+      }
+    });
 
     // Update Banner Info Kategori Aktif
     const catIcon = document.getElementById('cat-video-active-icon');
@@ -228,7 +264,7 @@ window.initVideoPage = async function() {
       catIcon.style.background = cat.iconBg;
     }
     if (catTitle) {
-      catTitle.textContent = `Vidio: ${cat.name}`;
+      catTitle.textContent = cat.name;
     }
 
     renderVideoCards();
@@ -247,13 +283,11 @@ window.initVideoPage = async function() {
 
     const kategoriSec = document.getElementById('video-kategori-section');
     const listSec = document.getElementById('video-list-section');
-    const heroCard = document.getElementById('video-hero-card');
     const topBackBtn = document.getElementById('video-top-back-btn');
     const headerTitle = document.getElementById('video-header-title');
 
     if (kategoriSec) kategoriSec.style.display = 'block';
     if (listSec) listSec.style.display = 'none';
-    if (heroCard) heroCard.style.display = 'flex';
 
     if (topBackBtn) {
       topBackBtn.onclick = null;
@@ -272,8 +306,13 @@ window.initVideoPage = async function() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Sinkronisasi navigasi tombol Back / Forward di browser
-  window.addEventListener('popstate', () => {
+  // Sinkronisasi navigasi tombol Back / Forward di browser (aman tanpa listener ganda)
+  if (window._netoraVideoPopstateHandler) {
+    window.removeEventListener('popstate', window._netoraVideoPopstateHandler);
+  }
+  window._netoraVideoPopstateHandler = function() {
+    const isVideoPage = window.location.pathname.endsWith('video.html') || window.location.pathname === '/video.html';
+    if (!isVideoPage) return;
     const urlParams = new URLSearchParams(window.location.search);
     const cat = urlParams.get('kategori') || urlParams.get('kat');
     if (cat) {
@@ -281,7 +320,8 @@ window.initVideoPage = async function() {
     } else {
       window.kembaliKeKategoriVideo(false);
     }
-  });
+  };
+  window.addEventListener('popstate', window._netoraVideoPopstateHandler);
 
   async function loadVideosAndMateri() {
     renderVideoSkeleton();
@@ -363,8 +403,10 @@ window.initVideoPage = async function() {
     const q = (inputSearch ? inputSearch.value : '').toLowerCase().trim();
     const cat = CATEGORIES[currentActiveCategory];
 
-    // Filter video berdasarkan kategori aktif
-    let list = allVideos.filter(v => getCategoryKey(v) === currentActiveCategory);
+    // Filter video berdasarkan kategori aktif (Dukungan 'all' untuk melihat seluruh koleksi)
+    let list = (currentActiveCategory === 'all')
+      ? allVideos.slice()
+      : allVideos.filter(v => getCategoryKey(v) === currentActiveCategory);
 
     if (q) {
       list = list.filter(v => v.judul.toLowerCase().includes(q) || (v.deskripsi || '').toLowerCase().includes(q));
