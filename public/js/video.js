@@ -163,54 +163,33 @@ window.initVideoPage = async function() {
   }
 
   function updateCategoryBadges() {
-    const totalVideos = allVideos.length;
     const countVideoMikrotik = allVideos.filter(v => getCategoryKey(v) === 'mikrotik').length;
     const countVideoCisco = allVideos.filter(v => getCategoryKey(v) === 'cisco').length;
-    const countVideoServer = allVideos.filter(v => getCategoryKey(v) === 'server-linux').length;
 
-    const badgeAll = document.getElementById('badge-video-count-all');
     const badgeMikrotik = document.getElementById('badge-video-count-mikrotik');
     const badgeCisco = document.getElementById('badge-video-count-cisco');
-    const badgeServer = document.getElementById('badge-video-count-server-linux');
-    const cardServer = document.getElementById('card-cat-server-linux');
 
-    if (badgeAll) {
-      badgeAll.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${totalVideos} Total Vidio</span>`;
-    }
     if (badgeMikrotik) {
       badgeMikrotik.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoMikrotik} Vidio</span>`;
     }
     if (badgeCisco) {
       badgeCisco.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoCisco} Vidio</span>`;
     }
-    if (badgeServer) {
-      badgeServer.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg><span>${countVideoServer} Vidio</span>`;
-    }
-    if (cardServer) {
-      cardServer.style.display = 'flex';
-    }
 
     // Update filter pills count di tampilan aktif
-    const pillAll = document.getElementById('pill-count-all');
     const pillMikrotik = document.getElementById('pill-count-mikrotik');
     const pillCisco = document.getElementById('pill-count-cisco');
-    const pillServer = document.getElementById('pill-count-server-linux');
-    const pillServerBtn = document.getElementById('pill-server-linux');
 
-    if (pillAll) pillAll.textContent = String(totalVideos);
     if (pillMikrotik) pillMikrotik.textContent = String(countVideoMikrotik);
     if (pillCisco) pillCisco.textContent = String(countVideoCisco);
-    if (pillServer) pillServer.textContent = String(countVideoServer);
-    if (pillServerBtn) pillServerBtn.style.display = 'inline-block';
   }
 
   window.pilihKategoriVideo = function(catKey, pushState = true) {
     let normalizedKey = String(catKey || '').toLowerCase().trim();
-    if (!CATEGORIES[normalizedKey]) {
-      if (/cisco/i.test(normalizedKey)) normalizedKey = 'cisco';
-      else if (/server|linux/i.test(normalizedKey)) normalizedKey = 'server-linux';
-      else if (/all|semua/i.test(normalizedKey)) normalizedKey = 'all';
-      else normalizedKey = 'mikrotik';
+    if (/cisco/i.test(normalizedKey)) {
+      normalizedKey = 'cisco';
+    } else {
+      normalizedKey = 'mikrotik';
     }
     const cat = CATEGORIES[normalizedKey];
     if (!cat) return;

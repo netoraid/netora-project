@@ -9,15 +9,6 @@ window.initKalkulatorPage = async function() {
   const btnHitung = document.getElementById('btn-hitungs');
   const historyList = document.getElementById('history-list');
 
-  // Spotlight elements
-  const spotlightCard = document.getElementById('spotlight-card');
-  const spotlightTag = document.getElementById('spotlight-tag');
-  const spotlightVal = document.getElementById('spotlight-val');
-  const spotlightDesc = document.getElementById('spotlight-desc');
-  const btnCopySpotlight = document.getElementById('btn-copy-spotlight');
-
-  // Active state
-  let currentActiveTab = 'subnet';
   let currentResult = null;
 
   // Populate CIDR dropdown (1 to 32)
@@ -37,31 +28,6 @@ window.initKalkulatorPage = async function() {
   // Load history dari LocalStorage
   let history = JSON.parse(localStorage.getItem('netora_ip_calc_history') || '[]');
   renderHistory();
-
-  // Tab buttons listener
-  document.querySelectorAll('.segmented-pill-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.segmented-pill-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentActiveTab = btn.dataset.tab;
-      
-      // Jika data sudah dihitung, update tampilan tab
-      if (currentResult) {
-        updateSpotlightView();
-      } else {
-        calculateSubnet(false);
-      }
-    });
-  });
-
-  // Tombol Salin Nilai Spotlight
-  if (btnCopySpotlight) {
-    btnCopySpotlight.addEventListener('click', () => {
-      if (spotlightVal && spotlightVal.textContent) {
-        copyText(spotlightVal.textContent, 'Nilai disalin!');
-      }
-    });
-  }
 
   // Tombol Hitung
   if (btnHitung) {
@@ -235,77 +201,6 @@ window.initKalkulatorPage = async function() {
       localStorage.setItem('netora_ip_calc_history', JSON.stringify(history));
       renderHistory();
       toast('Perhitungan Subnetting berhasil diperbarui!', 'success');
-    }
-  }
-
-  function updateSpotlightView() {
-    if (!currentResult || !spotlightCard) return;
-
-    const { netStr, cidr, maskStr, bcastStr, rangeStr, totalHosts, wildcardStr, maskBinary } = currentResult;
-
-    // Reset highlight pada tabel rincian
-    ['row-subnet', 'row-network', 'row-broadcast', 'row-range'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.classList.remove('highlight-active');
-    });
-
-    spotlightCard.className = 'spotlight-card';
-
-    if (currentActiveTab === 'subnet') {
-      spotlightCard.classList.add('spotlight-subnet');
-      spotlightTag.style.background = '#DCFCE7';
-      spotlightTag.style.color = '#166534';
-      spotlightTag.innerHTML = `
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-        <span>SUBNET MASK INFO</span>
-      `;
-      spotlightVal.textContent = `${maskStr} (/${cidr})`;
-      spotlightDesc.textContent = `Netmask Biner: ${maskBinary}. Alokasi: ${cidr} bit Network dan ${32 - cidr} bit Host (Wildcard: ${wildcardStr}).`;
-      
-      const r = document.getElementById('row-subnet');
-      if (r) r.classList.add('highlight-active');
-
-    } else if (currentActiveTab === 'network') {
-      spotlightCard.classList.add('spotlight-network');
-      spotlightTag.style.background = '#DBEAFE';
-      spotlightTag.style.color = '#1E40AF';
-      spotlightTag.innerHTML = `
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-        <span>NETWORK ADDRESS</span>
-      `;
-      spotlightVal.textContent = `${netStr} /${cidr}`;
-      spotlightDesc.textContent = `Network Address adalah alamat identitas utama subnet yang dihitung dari bitwise AND IP & Netmask.`;
-      
-      const r = document.getElementById('row-network');
-      if (r) r.classList.add('highlight-active');
-
-    } else if (currentActiveTab === 'broadcast') {
-      spotlightCard.classList.add('spotlight-broadcast');
-      spotlightTag.style.background = '#F3E8FF';
-      spotlightTag.style.color = '#6B21A8';
-      spotlightTag.innerHTML = `
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
-        <span>BROADCAST ADDRESS</span>
-      `;
-      spotlightVal.textContent = bcastStr;
-      spotlightDesc.textContent = `Broadcast Address adalah alamat IP tertinggi pada subnet untuk transmisi data serentak ke seluruh host.`;
-      
-      const r = document.getElementById('row-broadcast');
-      if (r) r.classList.add('highlight-active');
-
-    } else if (currentActiveTab === 'range') {
-      spotlightCard.classList.add('spotlight-range');
-      spotlightTag.style.background = '#FFEDD5';
-      spotlightTag.style.color = '#C2410C';
-      spotlightTag.innerHTML = `
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-        <span>USABLE HOST RANGE</span>
-      `;
-      spotlightVal.textContent = rangeStr;
-      spotlightDesc.textContent = `Tersedia ${totalHosts.toLocaleString('id-ID')} alamat IP valid yang siap digunakan perangkat komputer, laptop, smartphone, atau server.`;
-      
-      const r = document.getElementById('row-range');
-      if (r) r.classList.add('highlight-active');
     }
   }
 

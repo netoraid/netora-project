@@ -6,7 +6,7 @@
   <meta name="description" content="Netora — Panduan Vidio Praktik Pembelajaran dan Konfigurasi Jaringan TKJ.">
   <title>Netora — Vidio Praktik</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.50">
+  <link rel="stylesheet" href="css/netora.css?v=2026.51">
   <style>
     /* NETORA v2 — KATEGORI PEMBELAJARAN (RESPONSIF & RAPIH) */
     .materi-kategori-wrap {
@@ -294,28 +294,6 @@
         <span>Pilih Kategori Pembelajaran</span>
       </div>
 
-      <!-- Card Shortcut: Semua Vidio Praktik -->
-      <div class="materi-cat-card" data-cat="all" onclick="pilihKategoriVideo('all')" style="margin-bottom:14px; background:linear-gradient(135deg, #F0F7FF, #FFFFFF) !important; border:1.5px solid #BFDBFE !important;">
-        <div class="materi-cat-top">
-          <div class="materi-cat-iconbox" style="background:#0D5BFF; color:#FFFFFF;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
-          </div>
-          <span class="materi-cat-badge materi-cat-badge-blue" id="badge-video-count-all">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
-            <span>... Total Vidio</span>
-          </span>
-        </div>
-        <div class="materi-cat-bottom">
-          <div>
-            <h3 class="materi-cat-title" style="margin-bottom:2px;">Semua Vidio Praktik</h3>
-            <span style="font-size:11.5px; color:#64748B; font-weight:600;">Akses seluruh koleksi praktikum TKJ lengkap tanpa filter</span>
-          </div>
-          <span class="materi-cat-cta-arrow" style="background:#0D5BFF;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </span>
-        </div>
-      </div>
-
       <div class="materi-category-grid">
         <!-- 1. Kategori MikroTik -->
         <div class="materi-cat-card" data-cat="mikrotik" onclick="pilihKategoriVideo('mikrotik')">
@@ -364,28 +342,6 @@
             </span>
           </div>
         </div>
-
-        <!-- 3. Kategori Server dan Linux -->
-        <div class="materi-cat-card" id="card-cat-server-linux" data-cat="server-linux" onclick="pilihKategoriVideo('server-linux')">
-          <div class="materi-cat-top">
-            <div class="materi-cat-iconbox" style="background:#F0FDF4; color:#10B981; border:1px solid rgba(16,185,129,0.18);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="4 17 10 11 4 5"></polyline>
-                <line x1="12" y1="19" x2="20" y2="19"></line>
-              </svg>
-            </div>
-            <span class="materi-cat-badge" style="background:rgba(16,185,129,0.1); color:#059669; border:1px solid rgba(16,185,129,0.2);" id="badge-video-count-server-linux">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-              <span>... Vidio</span>
-            </span>
-          </div>
-          <div class="materi-cat-bottom">
-            <h3 class="materi-cat-title">Server dan Linux</h3>
-            <span class="materi-cat-cta-arrow" style="background:#10B981;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-            </span>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -414,10 +370,8 @@
 
       <!-- Filter Pills Bar Cepat (Navigasi Kategori Instan) -->
       <div id="video-filter-pills" class="filter-pills-row" style="padding: 4px 16px 14px;">
-        <button type="button" class="filter-pill active" data-cat="all" onclick="pilihKategoriVideo('all')">Semua Vidio (<span id="pill-count-all">0</span>)</button>
-        <button type="button" class="filter-pill" data-cat="mikrotik" onclick="pilihKategoriVideo('mikrotik')">MikroTik (<span id="pill-count-mikrotik">0</span>)</button>
+        <button type="button" class="filter-pill active" data-cat="mikrotik" onclick="pilihKategoriVideo('mikrotik')">MikroTik (<span id="pill-count-mikrotik">0</span>)</button>
         <button type="button" class="filter-pill" data-cat="cisco" onclick="pilihKategoriVideo('cisco')">Cisco Packet Tracer (<span id="pill-count-cisco">0</span>)</button>
-        <button type="button" class="filter-pill" id="pill-server-linux" data-cat="server-linux" onclick="pilihKategoriVideo('server-linux')">Server & Linux (<span id="pill-count-server-linux">0</span>)</button>
       </div>
 
       <!-- Input Pencarian (Toggle) -->
@@ -474,7 +428,7 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.50"></script>
-  <script src="js/video.js?v=2026.50"></script>
+  <script src="js/netora.js?v=2026.51"></script>
+  <script src="js/video.js?v=2026.51"></script>
 </body>
 </html>
