@@ -6,9 +6,9 @@ window.initPengumumanPage = function() {
 
   function renderSkeleton() {
     container.innerHTML = `
-      <div class="desktop-grid-2col">
-        <div class="skeleton-notif-card">
-          <div class="skeleton-notif-header">
+      <div class="desktop-grid-2col" style="display:flex; flex-direction:column; gap:12px; width:100%; box-sizing:border-box;">
+        <div class="skeleton-notif-card" style="background:#FFFFFF; border-radius:18px; padding:16px 18px; border:1.5px solid #E2E8F0; box-shadow:0 4px 16px rgba(13,91,255,0.05); box-sizing:border-box;">
+          <div class="skeleton-notif-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
             <div class="netora-skeleton" style="width:72px; height:18px; border-radius:6px;"></div>
             <div class="netora-skeleton" style="width:96px; height:13px; border-radius:4px;"></div>
           </div>
@@ -16,8 +16,8 @@ window.initPengumumanPage = function() {
           <div class="netora-skeleton skeleton-line w-100"></div>
           <div class="netora-skeleton skeleton-line w-60"></div>
         </div>
-        <div class="skeleton-notif-card">
-          <div class="skeleton-notif-header">
+        <div class="skeleton-notif-card" style="background:#FFFFFF; border-radius:18px; padding:16px 18px; border:1.5px solid #E2E8F0; box-sizing:border-box;">
+          <div class="skeleton-notif-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
             <div class="netora-skeleton" style="width:84px; height:18px; border-radius:6px;"></div>
             <div class="netora-skeleton" style="width:90px; height:13px; border-radius:4px;"></div>
           </div>
@@ -32,26 +32,26 @@ window.initPengumumanPage = function() {
   function renderNotifCard(item) {
     const isPenting = Boolean(item.penting);
     return `
-      <article class="notif-card-item ${isPenting ? 'is-penting' : ''}">
-        ${isPenting ? `<div class="notif-accent-stripe"></div>` : ''}
-        <div class="notif-card-header">
-          <div class="notif-badges-group">
+      <article class="notif-card-item ${isPenting ? 'is-penting' : ''}" style="background:#FFFFFF; border-radius:18px; padding:16px 18px; margin-bottom:12px; border:1.5px solid ${isPenting ? 'rgba(239,68,68,0.38)' : '#E2E8F0'}; box-shadow:0 4px 16px rgba(13,91,255,0.05); position:relative; overflow:hidden; display:flex; flex-direction:column; gap:8px; width:100%; box-sizing:border-box;">
+        ${isPenting ? `<div class="notif-accent-stripe" style="position:absolute; top:0; left:0; width:4px; height:100%; background:#EF4444;"></div>` : ''}
+        <div class="notif-card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; width:100%;">
+          <div class="notif-badges-group" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
             ${isPenting ? `
-              <span class="badge-notif-penting">
+              <span class="badge-notif-penting" style="font-size:10.5px; font-weight:800; color:#EF4444; background:rgba(239,68,68,0.1); padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; letter-spacing:0.3px;">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                 <span>PENTING</span>
               </span>
             ` : ''}
-            <span class="badge-notif-kategori">${escapeHtml(item.kategori || 'Notifikasi')}</span>
+            <span class="badge-notif-kategori" style="font-size:10.5px; font-weight:800; color:#0D5BFF; background:rgba(13,91,255,0.08); padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center;">${escapeHtml(item.kategori || 'Notifikasi')}</span>
           </div>
-          <div class="notif-date-badge">
+          <div class="notif-date-badge" style="font-size:11px; color:#64748B; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
             <span>${formatTanggal(item.created_at)}</span>
           </div>
         </div>
 
-        <h3 class="notif-card-title">${escapeHtml(item.judul)}</h3>
-        <p class="notif-card-body">${escapeHtml(item.isi)}</p>
+        <h3 class="notif-card-title" style="margin:2px 0 0; font-size:15.5px; font-weight:800; color:#1E293B; line-height:1.4; word-break:break-word;">${escapeHtml(item.judul)}</h3>
+        <p class="notif-card-body" style="margin:0; font-size:13px; color:#475569; line-height:1.6; white-space:pre-line; word-break:break-word;">${escapeHtml(item.isi)}</p>
       </article>
     `;
   }
@@ -79,7 +79,7 @@ window.initPengumumanPage = function() {
       return;
     }
 
-    container.innerHTML = '<div class="desktop-grid-2col netora-fade-in">' + list.map(renderNotifCard).join('') + '</div>';
+    container.innerHTML = '<div class="desktop-grid-2col netora-fade-in" style="display:flex; flex-direction:column; gap:12px; width:100%; box-sizing:border-box;">' + list.map(renderNotifCard).join('') + '</div>';
   }
 
   // Jika container belum memiliki konten skeleton, isi dengan skeleton shimmer
