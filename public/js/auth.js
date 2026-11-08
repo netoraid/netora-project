@@ -100,6 +100,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (res.ok && data.success) {
           try {
             sessionStorage.setItem('netora_user_cache', JSON.stringify(data.user));
+            const cachedToken = localStorage.getItem('netora_device_push_token');
+            const cachedPlatform = localStorage.getItem('netora_device_platform') || 'android';
+            if (cachedToken && typeof window.sendDeviceTokenToBackend === 'function') {
+              window.sendDeviceTokenToBackend(cachedToken, cachedPlatform);
+            }
           } catch (e) {}
           let targetUrl = '/beranda.html';
           if (data.user && (data.user.role === 'admin' || data.user.email === 'admin123' || data.user.email === 'admin')) {

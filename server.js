@@ -300,6 +300,33 @@ app.use('/api/profil', require('./routes/profil'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/guru', require('./routes/guru'));
 
+// Endpoint API Simpan Device Push Token dari Aplikasi Mobile Android
+const { saveDeviceToken } = require('./services/push_notification');
+app.post('/api/save-device-token', async (req, res) => {
+  const { token, platform, userId } = req.body;
+  if (!token || typeof token !== 'string') {
+    return res.status(400).json({ error: 'Push token perangkat wajib disertakan.' });
+  }
+
+  const activeUserId = req.session && req.session.userId ? req.session.userId : (userId || null);
+  const result = await saveDeviceToken({
+    token: token.trim(),
+    platform: platform || 'android',
+    userId: activeUserId
+  });
+
+  if (result.success) {
+    return res.json({
+      success: true,
+      message: 'Push token perangkat berhasil didaftarkan!',
+      token: result.token,
+      source: result.source
+    });
+  }
+
+  return res.status(500).json({ error: result.error || 'Gagal menyimpan push token.' });
+});
+
 // Endpoint Overview KPI Belajar untuk Dashboard Siswa & Publik
 app.get('/api/overview-stats', async (req, res) => {
   try {

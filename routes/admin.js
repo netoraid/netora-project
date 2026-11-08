@@ -9,6 +9,7 @@ const { requireAdmin } = require('../middleware/auth');
 const { broadcastPengumuman, broadcastHapusPengumuman, broadcastQuizDataChanged, broadcastMateriBaru, broadcastDurasiSetting } = require('../services/socket');
 const { getDurasiSetting, updateDurasiSetting } = require('../services/settings');
 const { getQuizSubmissionById } = require('../services/quiz_history');
+const { sendPushNotification } = require('../services/push_notification');
 const pengumumanRouter = require('./pengumuman');
 
 // Direktori upload gambar materi
@@ -552,6 +553,13 @@ router.post('/pengumuman', async (req, res) => {
     try {
       if (pengumumanRouter.invalidateCache) pengumumanRouter.invalidateCache();
       broadcastPengumuman(created);
+
+      // Trigger Push Notification ke seluruh smartphone Android/iOS siswa & guru
+      sendPushNotification({
+        title: `Pengumuman Baru: ${created.judul}`,
+        body: (created.isi || '').replace(/<[^>]*>?/gm, '').slice(0, 150),
+        data: { type: 'pengumuman', id: created.id, url: 'https://netora.web.id/beranda.html' }
+      }).catch(errPush => console.warn('Push notif pengumuman warning:', errPush.message));
     } catch (e) {}
 
     return res.json({
@@ -712,6 +720,13 @@ router.post('/materi', async (req, res) => {
 
     try {
       broadcastMateriBaru({ id: created ? created.id : null, judul: judul.trim(), kategori: kat });
+
+      // Trigger Push Notification ke seluruh smartphone saat ada materi baru
+      sendPushNotification({
+        title: `Materi Baru: ${judul.trim()}`,
+        body: `Modul materi baru kategori ${kat} telah diterbitkan. Yuk buka Netora dan pelajari sekarang!`,
+        data: { type: 'materi', id: created ? created.id : null, url: 'https://netora.web.id/materi.html' }
+      }).catch(errPush => console.warn('Push notif materi warning:', errPush.message));
     } catch(e) {}
 
     return res.json({
@@ -1254,6 +1269,22 @@ router.post('/durasi-setting', async (req, res) => {
   } catch (err) {
     console.error('Admin Update Durasi Setting Error:', err);
     return res.status(500).json({ error: 'Gagal menyimpan pengaturan durasi belajar.' });
+  }
+});
+
+// 20. POST /api/admin/test-push - Kirim Notifikasi Tes ke Seluruh Smartphone
+router.post('/test-push', async (req, res) => {
+  try {
+    const { title, body } = req.body;
+    const result = await sendPushNotification({
+      title: title || 'Tes Push Notification Netora',
+      body: body || 'Ini adalah notifikasi uji coba dari panel admin Netora!',
+      data: { type: 'test', url: 'https://netora.web.id' }
+    });
+    return res.json({ success: true, result });
+  } catch (err) {
+    console.error('Test Push Error:', err);
+    return res.status(500).json({ error: 'Gagal mengirim notifikasi tes.' });
   }
 });
 

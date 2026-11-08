@@ -41,6 +41,75 @@ function getUserAvatarUrl(user) {
 }
 window.getUserAvatarUrl = getUserAvatarUrl;
 
+// ============================================================
+// PUSH NOTIFICATION LISTENER & INTEGRASI REACT NATIVE WEBVIEW
+// ============================================================
+function sendDeviceTokenToBackend(token, platform) {
+  if (!token) return;
+  try {
+    localStorage.setItem('netora_device_push_token', token);
+    localStorage.setItem('netora_device_platform', platform || 'android');
+  } catch (e) {}
+
+  fetch('/api/save-device-token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      token: token,
+      platform: platform || 'android'
+    })
+  })
+  .then(res => res.json())
+  .then(resData => {
+    if (resData && resData.success) {
+      console.log('✅ [PUSH NOTIF] Token perangkat tersinkronisasi ke server Netora.');
+    }
+  })
+  .catch(err => {
+    console.warn('⚠️ [PUSH NOTIF] Gagal mengirim device token:', err);
+  });
+}
+window.sendDeviceTokenToBackend = sendDeviceTokenToBackend;
+
+// 1. Tangkap pesan token dari React Native WebView (window dan document)
+function handleMobileBridgeMessage(event) {
+  if (!event) return;
+  try {
+    let payload = event.data;
+    if (typeof payload === 'string') {
+      try { payload = JSON.parse(payload); } catch (e) {}
+    }
+    if (payload && (payload.type === 'PUSH_TOKEN' || payload.type === 'DEVICE_TOKEN' || payload.action === 'SET_PUSH_TOKEN')) {
+      const token = payload.token || payload.deviceToken;
+      const platform = payload.platform || 'android';
+      if (token) {
+        sendDeviceTokenToBackend(token, platform);
+      }
+    }
+  } catch (e) {}
+}
+
+window.addEventListener('message', handleMobileBridgeMessage);
+document.addEventListener('message', handleMobileBridgeMessage);
+
+// 2. Beri tahu aplikasi React Native bahwa Web sudah siap menerima token
+try {
+  if (window.ReactNativeWebView && typeof window.ReactNativeWebView.postMessage === 'function') {
+    window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'WEBVIEW_READY' }));
+  }
+} catch (e) {}
+
+// 3. Sinkronkan token tersimpan saat web dimuat
+try {
+  const cachedToken = localStorage.getItem('netora_device_push_token');
+  const cachedPlatform = localStorage.getItem('netora_device_platform') || 'android';
+  if (cachedToken) {
+    setTimeout(() => {
+      sendDeviceTokenToBackend(cachedToken, cachedPlatform);
+    }, 1500);
+  }
+} catch (e) {}
+
 // 3. Ambil data user aktif dengan Smart Cache (0ms load saat berpindah halaman)
 let _netoraUserCache = null;
 let _netoraUserPromise = null;
