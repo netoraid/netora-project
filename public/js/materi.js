@@ -642,97 +642,12 @@ window.initMateriPage = async function() {
         }
 
         function renderDetailView(pageNumber) {
-          if (pageNumber === null && totalPages > 1) {
-            renderChapterListView();
-          } else {
-            const curPage = Math.max(1, Math.min(totalPages, pageNumber || 1));
-            renderReaderView(curPage);
-          }
-        }
-
-        function renderChapterListView() {
-          detailContainer.innerHTML = `
-            <div class="netora-fade-in" style="padding-bottom: 24px;">
-              <!-- Header Overview Card -->
-              <div style="background:#FFFFFF; border-radius:22px; padding:20px; margin:16px; box-shadow:0 4px 20px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                  <span style="font-size:11.5px; font-weight:800; color:#0D5BFF; background:rgba(13,91,255,0.08); padding:4px 12px; border-radius:20px;">
-                    ${escapeHtml(item.kategori || 'TKJ')}
-                  </span>
-                  <span class="badge badge-blue" style="font-size:11.5px; padding:4px 12px; background:#EFF6FF; color:#0D5BFF; border:1px solid #BFDBFE; font-weight:800; border-radius:12px;">
-                    ${totalPages} Halaman
-                  </span>
-                </div>
-
-                <h2 style="margin:0 0 8px; font-size:22px; font-weight:800; color:#1E293B; line-height:1.3;">
-                  ${escapeHtml(item.judul)}
-                </h2>
-                <p style="margin:0 0 16px; font-size:13px; color:#64748B; line-height:1.5;">
-                  Pilih salah satu bab atau halaman di bawah ini untuk memulai belajar, atau tekan tombol Mulai Membaca.
-                </p>
-
-                <div style="display:flex; gap:10px;">
-                  <button type="button" id="btn-mulai-baca" class="btn-primary" style="flex:1; padding:12px; font-size:13.5px; font-weight:700; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; cursor:pointer;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                    <span>Mulai Membaca (Halaman 1)</span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Daftar Halaman (Model Kartu Persis Sesuai Gambar User) -->
-              <div style="margin: 0 16px 12px; display:flex; justify-content:space-between; align-items:center;">
-                <h3 style="margin:0; font-size:15px; font-weight:800; color:#0F172A;">Daftar Bab & Halaman (${totalPages} Halaman)</h3>
-                <span style="font-size:11.5px; color:#64748B; font-weight:600;">Klik untuk baca</span>
-              </div>
-
-              <div class="chapter-list-container" style="display:flex; flex-direction:column; gap:2px;">
-                ${pages.map((p, idx) => {
-                  const halNum = p.halaman || (idx + 1);
-                  const displayTitle = p.judul && p.judul.trim() ? p.judul.trim() : `Halaman ${halNum}`;
-                  return `
-                    <div class="white-item-card btn-buka-halaman" data-hal="${halNum}" style="cursor:pointer; margin-bottom:10px;">
-                      <div class="item-left-flex">
-                        <div class="item-square-thumb" style="background:#0D5BFF; color:#fff; display:flex; align-items:center; justify-content:center;">
-                          ${icon}
-                        </div>
-                        <div class="item-meta-col">
-                          <h4 class="item-title-text" style="font-size:14.5px; font-weight:800; color:#0F172A; margin:0 0 3px;">
-                            ${escapeHtml(displayTitle)}
-                          </h4>
-                          <div class="item-sub-text">
-                            <span style="color:#0D5BFF; font-weight:700;">${escapeHtml(item.kategori || 'TKJ')}</span>
-                            <span>•</span>
-                            <span>Halaman ${halNum} dari ${totalPages}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="item-chevron-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                      </div>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-          `;
-
-          const btnMulaiBaca = document.getElementById('btn-mulai-baca');
-          if (btnMulaiBaca) {
-            btnMulaiBaca.addEventListener('click', () => {
-              renderReaderView(1);
-            });
-          }
-
-          detailContainer.querySelectorAll('.btn-buka-halaman').forEach(card => {
-            card.addEventListener('click', () => {
-              const hal = parseInt(card.dataset.hal) || 1;
-              renderReaderView(hal);
-            });
-          });
+          const curPage = Math.max(1, Math.min(totalPages, pageNumber || 1));
+          renderReaderView(curPage);
         }
 
         function renderReaderView(activePage) {
-          const newUrl = `${window.location.pathname}?id=${materiId}&page=${activePage}`;
+          const newUrl = `${window.location.pathname}?id=${materiId}&page=${activePage}${fromKat ? `&kat=${encodeURIComponent(fromKat)}` : ''}`;
           window.history.replaceState({ page: activePage }, '', newUrl);
 
           const currentPageData = pages[activePage - 1] || pages[0];
@@ -743,24 +658,22 @@ window.initMateriPage = async function() {
           detailContainer.innerHTML = `
             <div class="netora-fade-in" style="padding-bottom:28px;">
               
-              <!-- Navigasi Atas Modul & Stepper -->
-              <div style="margin:14px 16px 10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                ${totalPages > 1 ? `
-                  <button type="button" id="btn-back-to-chapters" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#0D5BFF; font-size:12px; font-weight:700; padding:6px 14px; border-radius:12px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    <span>Daftar Halaman</span>
-                  </button>
-                ` : `<div></div>`}
+              <!-- Navigasi Atas Modul & Stepper Ringkas -->
+              <div style="margin:10px 16px 8px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                <a href="${fromKat ? `materi.html?kategori=${encodeURIComponent(fromKat)}` : 'materi.html'}" style="background:#FFFFFF; border:1px solid #CBD5E1; color:#334155; font-size:11px; font-weight:700; padding:5px 11px; border-radius:8px; display:inline-flex; align-items:center; gap:5px; text-decoration:none; box-shadow:0 1px 4px rgba(0,0,0,0.03); transition:all 0.15s;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                  <span>Daftar Modul</span>
+                </a>
 
-                <div style="display:flex; align-items:center; gap:8px;">
-                  <span style="background:#EFF6FF; border:1px solid #BFDBFE; color:#0D5BFF; font-size:11.5px; font-weight:800; padding:4px 12px; border-radius:20px;">
+                ${totalPages > 1 ? `
+                  <span style="background:#EFF6FF; border:1px solid #BFDBFE; color:#0D5BFF; font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px;">
                     Halaman ${activePage} dari ${totalPages}
                   </span>
-                </div>
+                ` : '<div></div>'}
               </div>
 
-              <!-- Main Reading Card -->
-              <div style="background:#FFFFFF; border-radius:22px; padding:24px 20px; margin:0 16px 16px; box-shadow:0 4px 20px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
+              <!-- Main Reading Card (Tampilan Membaca Bersih) -->
+              <div style="background:#FFFFFF; border-radius:20px; padding:22px 18px; margin:0 16px 16px; box-shadow:0 4px 20px rgba(13,91,255,0.06); border:1px solid rgba(0,0,0,0.04);">
                 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:6px;">
                   <span style="font-size:11.5px; font-weight:800; color:#0D5BFF; background:rgba(13,91,255,0.08); padding:4px 12px; border-radius:20px;">
@@ -783,18 +696,22 @@ window.initMateriPage = async function() {
                 </div>
 
                 <!-- Navigasi Bawah Antar Halaman -->
-                <div style="margin-top:30px; padding-top:18px; border-top:1.5px solid #F1F5F9;">
+                <div style="margin-top:28px; padding-top:16px; border-top:1.5px solid #F1F5F9;">
                   
-                  <!-- Quick Page Indicator Pills (1, 2, 3.. 8) -->
                   ${totalPages > 1 ? `
-                    <div style="margin-bottom:16px;">
-                      <span style="display:block; font-size:11.5px; font-weight:700; color:#64748B; margin-bottom:8px; text-align:center;">Pilih Halaman Cepat:</span>
+                    <div style="margin-bottom:14px; text-align:center;">
+                      <div style="display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:#64748B; background:#F8FAFC; border:1px solid #E2E8F0; padding:4px 12px; border-radius:20px; margin-bottom:10px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        <span>Geser layar atau pilih nomor untuk pindah halaman</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                      </div>
+
                       <div style="display:flex; justify-content:center; align-items:center; gap:6px; flex-wrap:wrap;">
                         ${pages.map((_, pIdx) => {
                           const num = pIdx + 1;
                           const isCur = num === activePage;
                           return `
-                            <button type="button" class="btn-jump-page" data-page="${num}" style="width:34px; height:34px; border-radius:10px; font-size:12px; font-weight:800; border:1px solid ${isCur ? '#0D5BFF' : '#CBD5E1'}; background:${isCur ? '#0D5BFF' : '#FFFFFF'}; color:${isCur ? '#FFFFFF' : '#334155'}; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; box-shadow:${isCur ? '0 3px 10px rgba(13,91,255,0.25)' : 'none'};">
+                            <button type="button" class="btn-jump-page" data-page="${num}" style="width:32px; height:32px; border-radius:8px; font-size:12px; font-weight:800; border:1px solid ${isCur ? '#0D5BFF' : '#CBD5E1'}; background:${isCur ? '#0D5BFF' : '#FFFFFF'}; color:${isCur ? '#FFFFFF' : '#334155'}; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; box-shadow:${isCur ? '0 2px 8px rgba(13,91,255,0.2)' : 'none'};">
                               ${num}
                             </button>
                           `;
@@ -806,20 +723,20 @@ window.initMateriPage = async function() {
                   <!-- Tombol Sebelumnya & Selanjutnya -->
                   <div style="display:flex; gap:10px; align-items:center;">
                     ${activePage > 1 ? `
-                      <button type="button" id="btn-prev-page" class="btn-secondary" style="flex:1; padding:12px 14px; font-size:13px; font-weight:700; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                      <button type="button" id="btn-prev-page" class="btn-secondary" style="flex:1; padding:11px 14px; font-size:12.5px; font-weight:700; border-radius:12px; display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
                         <span>Halaman Sebelumnya</span>
                       </button>
                     ` : ''}
 
                     ${activePage < totalPages ? `
-                      <button type="button" id="btn-next-page" class="btn-primary" style="flex:1; padding:12px 14px; font-size:13px; font-weight:700; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
+                      <button type="button" id="btn-next-page" class="btn-primary" style="flex:1; padding:11px 14px; font-size:12.5px; font-weight:700; border-radius:12px; display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
                         <span>Halaman Berikutnya</span>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                       </button>
                     ` : `
-                      <a href="${fromKat ? `materi.html?kategori=${encodeURIComponent(fromKat)}` : 'materi.html'}" class="btn-primary" style="flex:1; padding:12px 14px; font-size:13.5px; font-weight:800; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; background:#0D5BFF; color:#FFFFFF; box-shadow:0 4px 14px rgba(13,91,255,0.25);">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      <a href="${fromKat ? `materi.html?kategori=${encodeURIComponent(fromKat)}` : 'materi.html'}" class="btn-primary" style="flex:1; padding:11px 14px; font-size:13px; font-weight:800; border-radius:12px; display:inline-flex; align-items:center; justify-content:center; gap:6px; text-decoration:none; background:#0D5BFF; color:#FFFFFF; box-shadow:0 4px 14px rgba(13,91,255,0.25);">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                         <span>Selesai Membaca Modul</span>
                       </a>
                     `}
@@ -865,16 +782,6 @@ window.initMateriPage = async function() {
             }
           });
 
-          const btnBackChapters = document.getElementById('btn-back-to-chapters');
-          if (btnBackChapters) {
-            btnBackChapters.addEventListener('click', () => {
-              const newUrl = `${window.location.pathname}?id=${materiId}`;
-              window.history.replaceState({}, '', newUrl);
-              renderChapterListView();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-          }
-
           const btnPrev = document.getElementById('btn-prev-page');
           if (btnPrev) {
             btnPrev.addEventListener('click', () => {
@@ -899,21 +806,27 @@ window.initMateriPage = async function() {
             });
           });
 
-          // Dukungan Geser / Swipe Layar HP Tanpa Tombol (Gesture Buku)
+          // Dukungan Geser / Swipe Layar HP Tanpa Tombol (Gesture Buku Halus)
           let touchStartX = 0;
           let touchStartY = 0;
+          let touchStartTime = 0;
+
           detailContainer.ontouchstart = (e) => {
             if (e.changedTouches && e.changedTouches[0]) {
               touchStartX = e.changedTouches[0].screenX;
               touchStartY = e.changedTouches[0].screenY;
+              touchStartTime = Date.now();
             }
           };
+
           detailContainer.ontouchend = (e) => {
             if (e.changedTouches && e.changedTouches[0]) {
               const diffX = e.changedTouches[0].screenX - touchStartX;
               const diffY = e.changedTouches[0].screenY - touchStartY;
-              // Swipe horizontal jelas (minimal 55px horizontal dan deviasi vertikal rendah)
-              if (Math.abs(diffX) > 55 && Math.abs(diffY) < 60) {
+              const elapsed = Date.now() - touchStartTime;
+
+              // Swipe horizontal jelas (minimal 45px horizontal, dominan horizontal, dalam waktu < 900ms)
+              if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) * 1.1 && elapsed < 900) {
                 if (diffX < 0 && activePage < totalPages) {
                   // Geser ke kiri -> Halaman Berikutnya
                   renderReaderView(activePage + 1);

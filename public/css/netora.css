@@ -6344,39 +6344,47 @@ textarea.form-input {
 /* Category Detail View Banner / Breadcrumbs */
 .category-active-banner {
   background: #FFFFFF;
-  border-radius: 20px;
-  padding: 16px 20px;
-  margin: 16px;
-  border: 1.5px solid #E2E8F0;
-  box-shadow: 0 4px 18px rgba(13, 91, 255, 0.05);
+  border-radius: 14px;
+  padding: 8px 12px;
+  margin: 10px 16px 12px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 2px 8px rgba(13, 91, 255, 0.04);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
 }
 
 .category-active-left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 8px;
+  min-width: 0;
 }
 
 .category-active-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
+.category-active-icon svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
 .category-active-title {
   margin: 0;
-  font-size: 17px;
+  font-size: 13.5px;
   font-weight: 800;
   color: #0F172A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .category-active-desc {
@@ -6386,24 +6394,27 @@ textarea.form-input {
 .category-btn-back {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: #F1F5F9;
-  border: 1px solid #CBD5E1;
-  color: #1E293B;
-  padding: 8px 16px;
-  border-radius: 12px;
-  font-size: 12.5px;
+  gap: 4px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: #334155;
+  padding: 4px 9px;
+  border-radius: 7px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.3;
 }
 
 .category-btn-back:hover {
-  background: #E2E8F0;
+  background: #EFF6FF;
   color: #0D5BFF;
   border-color: #BFDBFE;
-  transform: translateX(-2px);
+  transform: translateX(-1px);
 }
 
 /* ============================================================== */
@@ -6523,8 +6534,8 @@ textarea.form-input {
 }
 
 .category-btn-back svg {
-  width: 13px !important;
-  height: 13px !important;
+  width: 12px !important;
+  height: 12px !important;
 }
 
 .admin-tab-btn svg {
