@@ -1,5 +1,5 @@
-// Netora PWA Service Worker v2026.51 - Auto Invalidate Cache & Always Fresh Network First
-const CACHE_NAME = 'netora-cache-v2026.51';
+// Netora PWA Service Worker v2026.52 - Auto Invalidate Cache & Always Fresh Network First
+const CACHE_NAME = 'netora-cache-v2026.52';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

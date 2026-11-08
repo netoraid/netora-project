@@ -6,7 +6,7 @@
   <meta name="description" content="Netora - Dashboard Pembelajaran Terpadu Jurusan Teknik Komputer dan Jaringan (TKJ), Cisco, MikroTik, dan Linux Server.">
   <title>Netora — Beranda Pembelajaran TKJ</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="stylesheet" href="css/netora.css?v=2026.49">
+  <link rel="stylesheet" href="css/netora.css?v=2026.52">
   <style>
     /* ===== Banner Hero Netora (Responsif HP & Desktop) ===== */
     .banner-carousel-wrap {
@@ -35,6 +35,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .banner-picture {
+      width: 100%;
+      height: 100%;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
     }
     .banner-img {
       width: 100%;
@@ -82,11 +89,11 @@
         box-shadow: 0 8px 30px rgba(13, 91, 255, 0.14);
       }
       .banner-slide {
-        aspect-ratio: 2 / 1;
-        max-height: 380px;
+        aspect-ratio: 1024 / 254;
+        max-height: 280px;
       }
       .banner-dots {
-        bottom: 14px;
+        bottom: 12px;
         gap: 8px;
       }
       .banner-dot {
@@ -105,8 +112,8 @@
         box-shadow: 0 10px 36px rgba(13, 91, 255, 0.15);
       }
       .banner-slide {
-        aspect-ratio: 2 / 1;
-        max-height: 512px;
+        aspect-ratio: 1024 / 254;
+        max-height: 254px;
       }
     }
 
@@ -327,13 +334,20 @@
     <div class="banner-carousel-wrap">
       <div class="banner-carousel-track" id="bannerTrack">
         <div class="banner-slide">
-          <img src="assets/banner-1.jpg?v=2026.43" alt="Mari Belajar Bareng Netora - TKJ Jauh Lebih Mudah" class="banner-img" loading="eager">
+          <picture class="banner-picture">
+            <img src="assets/banner-1.jpg?v=2026.52" alt="Mari Belajar Bareng Netora - TKJ Jauh Lebih Mudah" class="banner-img" loading="eager">
+          </picture>
         </div>
         <div class="banner-slide">
-          <img src="assets/banner-2.jpg?v=2026.43" alt="Yuk Kepoin Materi Apa Aja Yang Ada - Belajar Bareng Netora Jauh Lebih Asik" class="banner-img" loading="lazy">
+          <picture class="banner-picture">
+            <img src="assets/banner-2.jpg?v=2026.52" alt="Yuk Kepoin Materi Apa Aja Yang Ada - Belajar Bareng Netora Jauh Lebih Asik" class="banner-img" loading="lazy">
+          </picture>
         </div>
         <div class="banner-slide">
-          <img src="assets/banner-3.jpg?v=2026.43" alt="We Are Ready - Netora TKJ" class="banner-img" loading="lazy">
+          <picture class="banner-picture">
+            <source media="(min-width: 768px)" srcset="assets/banner-3-desktop.jpg?v=2026.52">
+            <img src="assets/banner-3.jpg?v=2026.52" alt="We Are Ready - Netora TKJ" class="banner-img" loading="lazy">
+          </picture>
         </div>
       </div>
       <!-- Dots Indicator -->
@@ -414,7 +428,7 @@
 
   </div>
 
-  <script src="js/netora.js?v=2026.49"></script>
-  <script src="js/beranda.js?v=2026.49"></script>
+  <script src="js/netora.js?v=2026.52"></script>
+  <script src="js/beranda.js?v=2026.52"></script>
 </body>
 </html>
