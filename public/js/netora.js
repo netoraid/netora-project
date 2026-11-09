@@ -946,10 +946,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Tombol Back
     const backBtn = e.target.closest('.subpage-back-btn, .btn-back, .back-btn, [data-netora-back]');
-    if (backBtn && !backBtn.hasAttribute('href')) {
-      e.preventDefault();
-      window.netoraBack();
-      return;
+    if (backBtn) {
+      // Jika tombol memiliki handler onclick khusus (misalnya penanganan hierarki kategori materi/video), biarkan handler berjalan
+      if (backBtn.hasAttribute('onclick') || typeof backBtn.onclick === 'function') {
+        return;
+      }
+      if (!backBtn.hasAttribute('href') || backBtn.getAttribute('href') === '#' || backBtn.getAttribute('href').startsWith('javascript:')) {
+        e.preventDefault();
+        window.netoraBack();
+        return;
+      }
     }
 
     const link = e.target.closest('a');

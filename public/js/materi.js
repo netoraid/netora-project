@@ -1,3 +1,32 @@
+// Handler Navigasi Kembali Bertingkat Modul Materi
+window.handleMateriTopBack = function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const listSec = document.getElementById('materi-list-section');
+  if (listSec && listSec.style.display !== 'none') {
+    if (typeof window.kembaliKeKategori === 'function') {
+      window.kembaliKeKategori(true);
+    }
+  } else {
+    if (typeof window.netoraNavigate === 'function') {
+      window.netoraNavigate('beranda.html');
+    } else {
+      window.location.href = 'beranda.html';
+    }
+  }
+};
+
+window.handleMateriDetailBack = function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const urlParams = new URLSearchParams(window.location.search);
+  let fromKat = urlParams.get('kat') || urlParams.get('kategori') || window._currentMateriCategoryKey || '';
+  const target = fromKat ? `materi.html?kategori=${encodeURIComponent(fromKat)}` : 'materi.html';
+  if (typeof window.netoraNavigate === 'function') {
+    window.netoraNavigate(target);
+  } else {
+    window.location.href = target;
+  }
+};
+
 window.initMateriPage = async function() {
   const materiContainer = document.getElementById('materi-container');
   const detailContainer = document.getElementById('materi-detail-container');
@@ -200,9 +229,10 @@ window.initMateriPage = async function() {
 
       if (topBackBtn) {
         topBackBtn.onclick = (e) => {
-          e.preventDefault();
-          window.kembaliKeKategori();
+          if (e && e.preventDefault) e.preventDefault();
+          window.handleMateriTopBack(e);
         };
+        topBackBtn.href = 'javascript:void(0)';
         topBackBtn.title = 'Kembali ke Pilihan Kategori';
       }
 
@@ -248,8 +278,11 @@ window.initMateriPage = async function() {
       if (heroCard) heroCard.style.display = 'flex';
 
       if (topBackBtn) {
-        topBackBtn.onclick = null;
-        topBackBtn.href = 'beranda.html';
+        topBackBtn.onclick = (e) => {
+          if (e && e.preventDefault) e.preventDefault();
+          window.handleMateriTopBack(e);
+        };
+        topBackBtn.href = 'javascript:void(0)';
         topBackBtn.title = 'Kembali ke Beranda';
       }
 
@@ -554,19 +587,24 @@ window.initMateriPage = async function() {
     const urlParams = new URLSearchParams(window.location.search);
     const materiId = urlParams.get('id');
     const requestedPage = parseInt(urlParams.get('page')) || null;
-    const fromKat = urlParams.get('kat') || urlParams.get('kategori') || '';
+    let fromKat = urlParams.get('kat') || urlParams.get('kategori') || window._currentMateriCategoryKey || '';
+    if (fromKat) {
+      window._currentMateriCategoryKey = fromKat;
+    }
 
-    // Selaraskan tombol kembali pada header atas jika siswa datang dari kategori tertentu
+    // Selaraskan tombol kembali pada header atas
     const topBackBtn = document.querySelector('.subpage-back-btn');
-    if (topBackBtn && fromKat) {
-      topBackBtn.href = `materi.html?kategori=${encodeURIComponent(fromKat)}`;
-      topBackBtn.title = 'Kembali ke Kategori Materi';
+    if (topBackBtn) {
+      topBackBtn.onclick = (e) => window.handleMateriDetailBack(e);
+      topBackBtn.href = 'javascript:void(0)';
+      topBackBtn.title = 'Kembali ke Daftar Materi';
     }
 
     const actionCatalogBtn = document.querySelector('.subpage-action-btn');
-    if (actionCatalogBtn && fromKat) {
-      actionCatalogBtn.href = `materi.html?kategori=${encodeURIComponent(fromKat)}`;
-      actionCatalogBtn.title = 'Kembali ke Katalog Kategori';
+    if (actionCatalogBtn) {
+      actionCatalogBtn.onclick = (e) => window.handleMateriDetailBack(e);
+      actionCatalogBtn.href = 'javascript:void(0)';
+      actionCatalogBtn.title = 'Katalog Modul Materi';
     }
 
     if (!materiId) {
@@ -580,6 +618,11 @@ window.initMateriPage = async function() {
 
       if (res.ok && data.success && data.materi) {
         const item = data.materi;
+        const itemCatKey = getMateriCategoryKey(item);
+        if (!fromKat) {
+          fromKat = itemCatKey;
+          window._currentMateriCategoryKey = itemCatKey;
+        }
         const pages = (item.pages && Array.isArray(item.pages) && item.pages.length > 0)
           ? item.pages
           : [{ halaman: 1, judul: '', konten: item.isi || '' }];

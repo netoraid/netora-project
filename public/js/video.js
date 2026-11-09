@@ -1,3 +1,20 @@
+// Handler Navigasi Kembali Bertingkat Vidio Praktik
+window.handleVideoTopBack = function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const listSec = document.getElementById('video-list-section');
+  if (listSec && listSec.style.display !== 'none') {
+    if (typeof window.kembaliKeKategoriVideo === 'function') {
+      window.kembaliKeKategoriVideo(true);
+    }
+  } else {
+    if (typeof window.netoraNavigate === 'function') {
+      window.netoraNavigate('beranda.html');
+    } else {
+      window.location.href = 'beranda.html';
+    }
+  }
+};
+
 window.initVideoPage = async function() {
   const videoContainer = document.getElementById('video-container');
   const materiContainer = document.getElementById('materi-container-video');
@@ -214,9 +231,10 @@ window.initVideoPage = async function() {
 
     if (topBackBtn) {
       topBackBtn.onclick = (e) => {
-        e.preventDefault();
-        window.kembaliKeKategoriVideo();
+        if (e && e.preventDefault) e.preventDefault();
+        window.handleVideoTopBack(e);
       };
+      topBackBtn.href = 'javascript:void(0)';
       topBackBtn.title = 'Kembali ke Pilihan Kategori';
     }
 
@@ -269,8 +287,11 @@ window.initVideoPage = async function() {
     if (listSec) listSec.style.display = 'none';
 
     if (topBackBtn) {
-      topBackBtn.onclick = null;
-      topBackBtn.href = 'beranda.html';
+      topBackBtn.onclick = (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        window.handleVideoTopBack(e);
+      };
+      topBackBtn.href = 'javascript:void(0)';
       topBackBtn.title = 'Kembali ke Beranda';
     }
 

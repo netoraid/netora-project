@@ -18,11 +18,6 @@ window.initKalkulatorPage = async function() {
       optionsHtml += `<option value="${i}" ${i === 24 ? 'selected' : ''}>/${i} — Netmask ${cidrToMask(i)}</option>`;
     }
     selectCidr.innerHTML = optionsHtml;
-
-    // Hitung otomatis saat prefix dropdown diganti
-    selectCidr.addEventListener('change', () => {
-      calculateSubnet(false);
-    });
   }
 
   // Load history dari LocalStorage
@@ -36,15 +31,11 @@ window.initKalkulatorPage = async function() {
     });
   }
 
-  // Input IP keyup/change auto-calculation
+  // Input IP: Submit saat menekan tombol Enter
   if (inputIp) {
-    inputIp.addEventListener('input', () => {
-      if (isValidIPv4(inputIp.value.trim())) {
-        calculateSubnet(false);
-      }
-    });
     inputIp.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
+        e.preventDefault();
         calculateSubnet(true);
       }
     });
@@ -184,10 +175,15 @@ window.initKalkulatorPage = async function() {
     document.getElementById('res-wildcard').textContent = wildcardStr;
     document.getElementById('res-binary-mask').textContent = maskBinary;
 
-    // Perbarui Spotlight Card sesuai tab aktif
-    updateSpotlightView();
+    // Efek visual halus agar pengguna tahu hasil sudah diperbarui
+    const resCard = document.getElementById('output-calc');
+    if (resCard && showToast) {
+      resCard.classList.remove('netora-fade-in');
+      void resCard.offsetWidth;
+      resCard.classList.add('netora-fade-in');
+    }
 
-    // Simpan ke History (jika tombol hitung ditekan)
+    // Simpan ke History & Munculkan Notifikasi Selesai (saat tombol submit ditekan)
     if (showToast) {
       const newRecord = {
         ip: `${ipStr}/${cidr}`,
@@ -200,7 +196,7 @@ window.initKalkulatorPage = async function() {
       history = [newRecord, ...history.filter(item => item.ip !== newRecord.ip)].slice(0, 5);
       localStorage.setItem('netora_ip_calc_history', JSON.stringify(history));
       renderHistory();
-      toast('Perhitungan Subnetting berhasil diperbarui!', 'success');
+      toast('Selesai! Parameter subnet berhasil dihitung.', 'success');
     }
   }
 
